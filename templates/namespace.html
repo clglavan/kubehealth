@@ -211,12 +211,12 @@
   /* ── Inline object describe panel ── */
   .obj-result { padding: 1.5rem 2rem 3rem; }
 
-  .obj-back-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--muted);
-    padding: 0.3rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem;
-    transition: all 0.12s; flex-shrink: 0;
+  .obj-back-link {
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: var(--accent); font-size: 0.85rem; flex-shrink: 0;
+    text-decoration: none; align-self: center;
   }
-  .obj-back-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .obj-back-link:hover { text-decoration: underline; }
 
   .obj-loading {
     display: flex; align-items: center; justify-content: center; gap: 0.75rem;
@@ -613,8 +613,8 @@ function renderObj(info) {
         '<div class="obj-404-title">Object not found</div>' +
         '<div class="obj-404-sub"><span class="kind-chip orphan">' + esc(info.kind) + '</span>&nbsp;' + esc(info.name) + '</div>' +
         '<div class="obj-404-note">This object no longer exists in the cluster. The event was recorded while it was still alive.</div>' +
+        '<button class="obj-back-link" onclick="backToChain()" style="margin-top:0.5rem">&#8592; back to chain</button>' +
       '</div>' +
-      '<div style="text-align:center;margin-top:0.5rem"><button class="obj-back-btn" onclick="backToChain()">&#8592; Back to chain</button></div>' +
     '</div>';
   }
   if (info.error) {
@@ -622,7 +622,7 @@ function renderObj(info) {
       '<div class="obj-icon">&#9888;</div>' +
       '<div class="obj-404-title">Error fetching object</div>' +
       '<div class="obj-404-note">' + esc(info.error) + '</div>' +
-      '<div style="margin-top:1rem"><button class="obj-back-btn" onclick="backToChain()">&#8592; Back</button></div>' +
+      '<button class="obj-back-link" onclick="backToChain()" style="margin-top:0.5rem">&#8592; back to chain</button>' +
     '</div></div>';
   }
 
@@ -630,11 +630,14 @@ function renderObj(info) {
 
   // Header
   h += '<div class="detail-header">';
-  h += '<div class="detail-title"><h2>' + esc(info.name) + '</h2>';
+  h += '<div class="detail-title">';
+  h += '<div style="display:flex;align-items:baseline;gap:0.75rem;margin-bottom:0.35rem">';
+  h += '<h2 style="margin:0">' + esc(info.name) + '</h2>';
+  h += '<button class="obj-back-link" onclick="backToChain()">&#8592; back to chain</button>';
+  h += '</div>';
   h += '<div class="detail-breadcrumb"><span class="breadcrumb-step"><span class="kind-chip d0">' + esc(info.kind) + '</span></span></div>';
   h += '</div><div class="detail-meta">';
   if (info.age) h += '<span class="badge ok">' + esc(info.age) + '</span>';
-  h += '<button class="obj-back-btn" onclick="backToChain()">&#8592; Back</button>';
   h += '</div></div>';
 
   // Labels
