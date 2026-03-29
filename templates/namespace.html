@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Namespace}} — KubeHealth</title>
+<style>
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
+    --text: #e2e8f0; --muted: #64748b;
+    --warn: #f59e0b; --warn-bg: rgba(245,158,11,0.08);
+    --normal: #10b981; --normal-bg: rgba(16,185,129,0.08);
+    --accent: #6366f1; --accent-bg: rgba(99,102,241,0.1);
+    --cascade: #ef4444; --cascade-bg: rgba(239,68,68,0.07);
+    --tree-line: #2a2d3a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter','Segoe UI',system-ui,sans-serif;
+    display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 0.7rem 1.25rem; display: flex; align-items: center; gap: 0.85rem;
+    flex-shrink: 0;
+  }
+  header a.back { color: var(--accent); text-decoration: none; font-size: 0.85rem; flex-shrink: 0; }
+  header h1 { font-size: 1rem; font-weight: 700; }
+  .ns-pills { margin-left: auto; display: flex; gap: 0.4rem; }
+  .badge { font-size: 0.65rem; font-weight: 700; padding: 0.13rem 0.42rem; border-radius: 20px; }
+  .badge.warn    { background: var(--warn-bg);    color: var(--warn);    border: 1px solid rgba(245,158,11,0.25); }
+  .badge.ok      { background: var(--normal-bg);  color: var(--normal);  border: 1px solid rgba(16,185,129,0.2); }
+  .badge.cascade { background: var(--cascade-bg); color: var(--cascade); border: 1px solid rgba(239,68,68,0.3); }
+
+  /* ── App body: sidebar + detail ── */
+  .app-body { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 20vw; min-width: 200px; flex-shrink: 0;
+    background: var(--surface); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .sidebar-top {
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+    display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0;
+  }
+  #sidebar-search {
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text); padding: 0.35rem 0.7rem; border-radius: 6px;
+    font-size: 0.85rem; outline: none;
+  }
+  #sidebar-search:focus { border-color: var(--accent); }
+  .warn-toggle {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 0.35rem 0.65rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem;
+    white-space: nowrap; transition: all 0.12s;
+  }
+  .warn-toggle.active { border-color: var(--warn); color: var(--warn); background: var(--warn-bg); }
+
+  .sidebar-scroll { flex: 1; overflow-y: auto; }
+  .sidebar-scroll::-webkit-scrollbar { width: 4px; }
+  .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-section-title {
+    padding: 0.75rem 1rem 0.35rem;
+    font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--muted);
+  }
+
+  .sidebar-item {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.55rem 1rem; cursor: pointer;
+    transition: background 0.1s; border-left: 3px solid transparent;
+    font-size: 0.9rem;
+  }
+  .sidebar-item:hover { background: rgba(255,255,255,0.03); }
+  .sidebar-item.active {
+    background: var(--accent-bg); border-left-color: var(--accent);
+    color: var(--text);
+  }
+  .sidebar-item.si-warn   { border-left-color: transparent; }
+  .sidebar-item.si-warn.active   { border-left-color: var(--warn); background: var(--warn-bg); }
+  .sidebar-item.si-cascade.active { border-left-color: var(--cascade); background: var(--cascade-bg); }
+  .sidebar-item.hidden { display: none; }
+
+  .si-name {
+    flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--muted); font-size: 0.88rem;
+  }
+  .sidebar-item.active .si-name { color: var(--text); }
+
+  .kind-chip {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 0.12rem 0.42rem; border-radius: 3px; flex-shrink: 0;
+  }
+  .kind-chip.d0 { background: var(--accent-bg);              color: var(--accent); }
+  .kind-chip.d1 { background: rgba(99,102,241,0.07);         color: #818cf8; }
+  .kind-chip.d2 { background: rgba(99,102,241,0.04);         color: var(--muted); }
+  .kind-chip.orphan { background: rgba(100,116,139,0.15);    color: var(--muted); }
+
+  .si-dot { font-size: 0.55rem; flex-shrink: 0; }
+  .si-dot.cascade { color: var(--cascade); }
+  .si-dot.warn    { color: var(--warn); }
+
+  /* ── Detail panel area ── */
+  .detail-area { flex: 1; overflow-y: auto; }
+  .detail-area::-webkit-scrollbar { width: 4px; }
+  .detail-area::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .detail-panel { display: none; padding: 1.5rem 2rem 3rem; }
+  .detail-panel.active { display: block; }
+
+  /* Detail header */
+  .detail-header {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    margin-bottom: 1.5rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .detail-title { flex: 1; }
+  .detail-title h2 {
+    font-size: 1.1rem; font-weight: 700; margin-bottom: 0.35rem;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .detail-breadcrumb {
+    display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;
+  }
+  .breadcrumb-step { display: flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; color: var(--muted); }
+  .breadcrumb-arrow { color: var(--border); font-size: 0.65rem; }
+  .detail-meta { display: flex; gap: 0.4rem; flex-shrink: 0; align-items: flex-start; padding-top: 0.15rem; }
+
+  /* ── Family tree in detail ── */
+  .family-tree { display: flex; flex-direction: column; gap: 0; }
+
+  .member-block { margin-bottom: 1.25rem; }
+
+  /* member header row */
+  .member-header {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.6rem 0.9rem; background: rgba(0,0,0,0.2);
+    border: 1px solid var(--border); border-radius: 8px 8px 0 0;
+  }
+  .member-header.has-warn  { border-left: 3px solid var(--warn); }
+  .member-header.is-cascade { border-left: 3px solid var(--cascade); }
+  .member-title { flex: 1; display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+  .obj-link {
+    color: var(--text); font-weight: 600; font-size: 0.88rem; text-decoration: none;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .obj-link:hover { color: var(--accent); }
+  .member-badges { display: flex; gap: 0.35rem; flex-shrink: 0; }
+
+  /* Indented children */
+  .member-children {
+    margin-left: 1.75rem;
+    border-left: 2px solid var(--tree-line);
+    padding-left: 0;
+  }
+  .member-children .member-block { margin-bottom: 0.65rem; margin-top: 0.5rem; }
+  .member-children .member-header {
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+  }
+  .member-children .member-header.has-warn  { border-left: 3px solid var(--warn); }
+  .member-children .member-header.is-cascade { border-left: 3px solid var(--cascade); }
+
+  .member-children .member-children { margin-left: 1.5rem; }
+
+  /* ── Timeline (always expanded in detail view) ── */
+  .member-timeline {
+    border: 1px solid var(--border); border-top: none;
+    border-radius: 0 0 8px 8px; padding: 0.4rem 1rem 0.6rem 1.1rem;
+    background: rgba(0,0,0,0.1);
+  }
+  .member-children .member-timeline {
+    border-radius: 0 0 8px 0;
+  }
+
+  .tl-item { display: grid; grid-template-columns: 16px 1fr; gap: 0 0.65rem; }
+  .tl-connector { display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+  .tl-connector::after {
+    content: ''; position: absolute; top: 18px; bottom: -4px;
+    left: 50%; transform: translateX(-50%); width: 2px; background: var(--border);
+  }
+  .tl-item:last-child .tl-connector::after { display: none; }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid var(--bg); position: relative; z-index: 1; }
+  .tl-dot.Warning { background: var(--warn); box-shadow: 0 0 0 2px var(--warn-bg); }
+  .tl-dot.Normal  { background: var(--normal); }
+  .tl-content { padding: 4px 0 11px; }
+  .tl-header  { display: flex; align-items: baseline; gap: 0.35rem; flex-wrap: wrap; }
+  .tl-reason  { font-size: 0.8rem; font-weight: 600; color: var(--text); }
+  .tl-reason.Warning { color: var(--warn); }
+  .tl-count   { font-size: 0.67rem; color: var(--muted); background: rgba(255,255,255,0.05); padding: 0.06rem 0.28rem; border-radius: 3px; }
+  .tl-age     { font-size: 0.67rem; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .tl-msg     { font-size: 0.74rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+
+  .no-events { font-size: 0.78rem; color: var(--muted); padding: 0.5rem 0; }
+
+  /* ── Empty placeholder ── */
+  .detail-placeholder {
+    height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.5rem;
+    color: var(--muted); font-size: 0.88rem;
+  }
+  .detail-placeholder .icon { font-size: 2rem; opacity: 0.3; }
+
+  /* ── Inline object describe panel ── */
+  .obj-result { padding: 1.5rem 2rem 3rem; }
+
+  .obj-back-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--muted);
+    padding: 0.3rem 0.75rem; border-radius: 6px; cursor: pointer; font-size: 0.78rem;
+    transition: all 0.12s; flex-shrink: 0;
+  }
+  .obj-back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .obj-loading {
+    display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+    height: 200px; color: var(--muted); font-size: 0.88rem;
+  }
+  .obj-spinner {
+    width: 20px; height: 20px; border: 2px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .obj-404 {
+    text-align: center; padding: 3rem 1.5rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.85rem;
+  }
+  .obj-icon { font-size: 2.5rem; opacity: 0.5; }
+  .obj-404-title { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .obj-404-sub { display: flex; align-items: center; gap: 0.4rem; color: var(--muted); font-size: 0.88rem; }
+  .obj-404-note {
+    font-size: 0.78rem; color: var(--muted); max-width: 400px;
+    text-align: center; line-height: 1.6;
+  }
+
+  .obj-section { margin-bottom: 1.5rem; }
+  .obj-section-title {
+    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .obj-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+  .obj-table td, .obj-table th {
+    padding: 0.35rem 0.65rem; border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: top;
+  }
+  .obj-table th {
+    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+    color: var(--muted); text-align: left;
+  }
+  .obj-key { color: var(--muted); width: 180px; white-space: nowrap; }
+  .obj-val { color: var(--text); }
+  .obj-muted { color: var(--muted); }
+  .obj-msg { max-width: 320px; font-size: 0.78rem; line-height: 1.4; }
+  .obj-ann-key { font-size: 0.75rem; }
+
+  .label-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .label-chip {
+    font-size: 0.72rem; padding: 0.18rem 0.5rem; border-radius: 4px;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.2);
+    color: var(--muted);
+  }
+  .label-chip b { color: var(--text); }
+
+  .cond-badge {
+    font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.4rem;
+    border-radius: 3px; display: inline-block;
+  }
+  .cond-true    { background: var(--normal-bg); color: var(--normal); }
+  .cond-false   { background: var(--warn-bg);   color: var(--warn); }
+  .cond-unknown { background: rgba(255,255,255,0.05); color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="/">← KubeHealth</a>
+  <h1>{{.Namespace}}</h1>
+  <div class="ns-pills">
+    {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
+    {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
+  </div>
+</header>
+
+<div class="app-body">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <input id="sidebar-search" placeholder="Filter…" oninput="filterSidebar(this.value)">
+      <button class="warn-toggle" id="warn-toggle" onclick="toggleWarn(this)">⚠ only</button>
+    </div>
+    <div class="sidebar-scroll">
+
+      {{if .Families}}
+      <div class="sidebar-section-title">Ownership Chains</div>
+      {{range $fi, $fam := .Families}}
+      <div class="sidebar-item {{if $fam.CascadeFailure}}si-cascade{{else if $fam.HasWarning}}si-warn{{end}}"
+           data-panel="dp-fam-{{$fi}}"
+           data-warn="{{if $fam.HasWarning}}1{{else}}0{{end}}"
+           data-text="{{$fam.Root.Kind}} {{$fam.Root.ObjectName}} {{joinStrings $fam.Kinds " "}}"
+           onclick="selectPanel('dp-fam-{{$fi}}', this)">
+        <span class="kind-chip d0">{{$fam.Root.Kind}}</span>
+        <span class="si-name">{{$fam.Root.ObjectName}}</span>
+        {{if $fam.CascadeFailure}}<span class="si-dot cascade">●</span>
+        {{else if $fam.HasWarning}}<span class="si-dot warn">●</span>{{end}}
+      </div>
+      {{end}}
+      {{end}}
+
+      {{if .OrphanKinds}}
+      <div class="sidebar-section-title">Other Objects</div>
+      {{range $ki, $kg := .OrphanKinds}}
+      {{range $oi, $obj := $kg.Objects}}
+      <div class="sidebar-item {{if $obj.HasWarning}}si-warn{{end}}"
+           data-panel="dp-o-{{$ki}}-{{$oi}}"
+           data-warn="{{if $obj.HasWarning}}1{{else}}0{{end}}"
+           data-text="{{$obj.Kind}} {{$obj.ObjectName}}"
+           onclick="selectPanel('dp-o-{{$ki}}-{{$oi}}', this)">
+        <span class="kind-chip orphan">{{$obj.Kind}}</span>
+        <span class="si-name">{{$obj.ObjectName}}</span>
+        {{if $obj.HasWarning}}<span class="si-dot warn">●</span>{{end}}
+      </div>
+      {{end}}
+      {{end}}
+      {{end}}
+
+    </div>
+  </aside>
+
+  <!-- ── Detail area ── -->
+  <div class="detail-area" id="detail-area">
+
+    <!-- Empty state -->
+    <div class="detail-panel active" id="dp-empty">
+      <div class="detail-placeholder">
+        <span class="icon">⎈</span>
+        <span>Select an object from the sidebar</span>
+      </div>
+    </div>
+
+    <!-- Family detail panels -->
+    {{range $fi, $fam := .Families}}
+    <div class="detail-panel" id="dp-fam-{{$fi}}">
+
+      <div class="detail-header">
+        <div class="detail-title">
+          <h2>{{$fam.Root.ObjectName}}</h2>
+          <div class="detail-breadcrumb">
+            <span class="breadcrumb-step">
+              <span class="kind-chip d0">{{$fam.Root.Kind}}</span>
+            </span>
+            {{range $fam.Root.Children}}
+            <span class="breadcrumb-arrow">→</span>
+            <span class="breadcrumb-step">
+              <span class="kind-chip d1">{{.Kind}}</span>
+              {{if .Children}}
+              {{range .Children}}
+              <span class="breadcrumb-arrow">→</span>
+              <span class="kind-chip d2">{{.Kind}}</span>
+              {{end}}
+              {{end}}
+            </span>
+            {{end}}
+          </div>
+        </div>
+        <div class="detail-meta">
+          {{if $fam.CascadeFailure}}<span class="badge cascade">cascade failure</span>{{end}}
+          {{if $fam.WarningCount}}<span class="badge warn">⚠ {{$fam.WarningCount}}</span>{{end}}
+          {{if $fam.NormalCount}}<span class="badge ok">✓ {{$fam.NormalCount}}</span>{{end}}
+        </div>
+      </div>
+
+      <!-- Depth-0 root -->
+      {{$root := $fam.Root}}
+      <div class="member-block">
+        <div class="member-header {{if $root.HasWarning}}{{if $fam.CascadeFailure}}is-cascade{{else}}has-warn{{end}}{{end}}">
+          <div class="member-title">
+            <span class="kind-chip d0">{{$root.Kind}}</span>
+            <a class="obj-link" href="/object/{{$.Namespace}}/{{$root.Kind}}/{{$root.ObjectName}}"
+               onclick="loadObject('{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$root.ObjectName}}</a>
+          </div>
+          <div class="member-badges">
+            {{if $root.WarningCount}}<span class="badge warn">⚠ {{$root.WarningCount}}</span>{{end}}
+            {{if $root.NormalCount}}<span class="badge ok">✓ {{$root.NormalCount}}</span>{{end}}
+          </div>
+        </div>
+        <div class="member-timeline">
+          {{if $root.Events}}
+          {{range $root.Events}}
+          <div class="tl-item">
+            <div class="tl-connector"><div class="tl-dot {{.Type}}"></div></div>
+            <div class="tl-content">
+              <div class="tl-header">
+                <span class="tl-reason {{.Type}}">{{.Reason}}</span>
+                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
+                <span class="tl-age">{{.Age}}</span>
+              </div>
+              <div class="tl-msg">{{.Message}}</div>
+            </div>
+          </div>
+          {{end}}
+          {{else}}<div class="no-events">No events recorded</div>{{end}}
+        </div>
+
+        <!-- Depth-1 children -->
+        {{if $root.Children}}
+        <div class="member-children">
+          {{range $ci, $child := $root.Children}}
+          <div class="member-block">
+            <div class="member-header {{if $child.HasWarning}}has-warn{{end}}">
+              <div class="member-title">
+                <span class="kind-chip d1">{{$child.Kind}}</span>
+                <a class="obj-link" href="/object/{{$.Namespace}}/{{$child.Kind}}/{{$child.ObjectName}}"
+                   onclick="loadObject('{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$child.ObjectName}}</a>
+              </div>
+              <div class="member-badges">
+                {{if $child.WarningCount}}<span class="badge warn">⚠ {{$child.WarningCount}}</span>{{end}}
+                {{if $child.NormalCount}}<span class="badge ok">✓ {{$child.NormalCount}}</span>{{end}}
+              </div>
+            </div>
+            <div class="member-timeline">
+              {{if $child.Events}}
+              {{range $child.Events}}
+              <div class="tl-item">
+                <div class="tl-connector"><div class="tl-dot {{.Type}}"></div></div>
+                <div class="tl-content">
+                  <div class="tl-header">
+                    <span class="tl-reason {{.Type}}">{{.Reason}}</span>
+                    {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
+                    <span class="tl-age">{{.Age}}</span>
+                  </div>
+                  <div class="tl-msg">{{.Message}}</div>
+                </div>
+              </div>
+              {{end}}
+              {{else}}<div class="no-events">No events recorded</div>{{end}}
+            </div>
+
+            <!-- Depth-2 grandchildren -->
+            {{if $child.Children}}
+            <div class="member-children">
+              {{range $gi, $grand := $child.Children}}
+              <div class="member-block">
+                <div class="member-header {{if $grand.HasWarning}}has-warn{{end}}">
+                  <div class="member-title">
+                    <span class="kind-chip d2">{{$grand.Kind}}</span>
+                    <a class="obj-link" href="/object/{{$.Namespace}}/{{$grand.Kind}}/{{$grand.ObjectName}}"
+                       onclick="loadObject('{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$grand.ObjectName}}</a>
+                  </div>
+                  <div class="member-badges">
+                    {{if $grand.WarningCount}}<span class="badge warn">⚠ {{$grand.WarningCount}}</span>{{end}}
+                    {{if $grand.NormalCount}}<span class="badge ok">✓ {{$grand.NormalCount}}</span>{{end}}
+                  </div>
+                </div>
+                <div class="member-timeline">
+                  {{if $grand.Events}}
+                  {{range $grand.Events}}
+                  <div class="tl-item">
+                    <div class="tl-connector"><div class="tl-dot {{.Type}}"></div></div>
+                    <div class="tl-content">
+                      <div class="tl-header">
+                        <span class="tl-reason {{.Type}}">{{.Reason}}</span>
+                        {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
+                        <span class="tl-age">{{.Age}}</span>
+                      </div>
+                      <div class="tl-msg">{{.Message}}</div>
+                    </div>
+                  </div>
+                  {{end}}
+                  {{else}}<div class="no-events">No events recorded</div>{{end}}
+                </div>
+              </div>
+              {{end}}
+            </div>
+            {{end}}
+
+          </div>
+          {{end}}
+        </div>
+        {{end}}
+
+      </div>
+    </div>
+    {{end}}
+
+    <!-- Orphan detail panels -->
+    {{range $ki, $kg := .OrphanKinds}}
+    {{range $oi, $obj := $kg.Objects}}
+    <div class="detail-panel" id="dp-o-{{$ki}}-{{$oi}}">
+      <div class="detail-header">
+        <div class="detail-title">
+          <h2>{{$obj.ObjectName}}</h2>
+          <div class="detail-breadcrumb">
+            <span class="breadcrumb-step"><span class="kind-chip orphan">{{$obj.Kind}}</span></span>
+          </div>
+        </div>
+        <div class="detail-meta">
+          <a href="/object/{{$.Namespace}}/{{$obj.Kind}}/{{$obj.ObjectName}}"
+             style="font-size:0.75rem;color:var(--accent);text-decoration:none;">View YAML →</a>
+          {{if $obj.WarningCount}}<span class="badge warn">⚠ {{$obj.WarningCount}}</span>{{end}}
+          {{if $obj.NormalCount}}<span class="badge ok">✓ {{$obj.NormalCount}}</span>{{end}}
+        </div>
+      </div>
+      <div class="member-block">
+        <div class="member-timeline" style="border-radius:8px;border:1px solid var(--border);">
+          {{if $obj.Events}}
+          {{range $obj.Events}}
+          <div class="tl-item">
+            <div class="tl-connector"><div class="tl-dot {{.Type}}"></div></div>
+            <div class="tl-content">
+              <div class="tl-header">
+                <span class="tl-reason {{.Type}}">{{.Reason}}</span>
+                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
+                <span class="tl-age">{{.Age}}</span>
+              </div>
+              <div class="tl-msg">{{.Message}}</div>
+            </div>
+          </div>
+          {{end}}
+          {{else}}<div class="no-events">No events recorded</div>{{end}}
+        </div>
+      </div>
+    </div>
+    {{end}}
+    {{end}}
+
+    <!-- Inline object describe panel (populated by JS) -->
+    <div class="detail-panel" id="dp-object"></div>
+
+  </div><!-- end detail-area -->
+</div><!-- end app-body -->
+
+<script>
+var showWarnOnly = false;
+var currentFromPanel = null;
+var currentFromItem  = null;
+
+function selectPanel(panelId, item) {
+  document.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+  var panel = document.getElementById(panelId);
+  if (panel) panel.classList.add('active');
+  if (item)  item.classList.add('active');
+}
+
+function toggleWarn(btn) {
+  showWarnOnly = !showWarnOnly;
+  btn.classList.toggle('active', showWarnOnly);
+  applySidebarFilters();
+}
+
+function filterSidebar(q) { applySidebarFilters(q); }
+
+function applySidebarFilters(q) {
+  if (q === undefined) q = document.getElementById('sidebar-search').value;
+  q = q.toLowerCase();
+  var firstVisible = null;
+  var anyActive = false;
+
+  document.querySelectorAll('.sidebar-item').forEach(function(item) {
+    var warnOk = !showWarnOnly || item.dataset.warn === '1';
+    var textOk = !q || item.dataset.text.toLowerCase().includes(q);
+    var show   = warnOk && textOk;
+    item.classList.toggle('hidden', !show);
+    if (show && !firstVisible) firstVisible = item;
+    if (show && item.classList.contains('active')) anyActive = true;
+  });
+
+  if (!anyActive && firstVisible) firstVisible.click();
+}
+
+// ── Inline object describe ──
+
+function loadObject(ns, kind, name, fromPanel) {
+  currentFromPanel = fromPanel;
+  currentFromItem  = document.querySelector('.sidebar-item.active');
+
+  var panel = document.getElementById('dp-object');
+  panel.innerHTML = '<div class="obj-loading"><div class="obj-spinner"></div><span>Loading ' + esc(kind) + '…</span></div>';
+
+  document.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
+  panel.classList.add('active');
+
+  fetch('/api/object/' + encodeURIComponent(ns) + '/' + encodeURIComponent(kind) + '/' + encodeURIComponent(name))
+    .then(function(r) { return r.json(); })
+    .then(function(info) { panel.innerHTML = renderObj(info); })
+    .catch(function(err) {
+      panel.innerHTML = '<div class="obj-result"><div class="obj-loading">Error: ' + esc(String(err)) + '</div></div>';
+    });
+}
+
+function backToChain() {
+  if (!currentFromPanel) return;
+  document.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById(currentFromPanel).classList.add('active');
+  document.querySelectorAll('.sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+  if (currentFromItem) currentFromItem.classList.add('active');
+}
+
+function renderObj(info) {
+  if (info.notFound) {
+    return '<div class="obj-result">' +
+      '<div class="obj-404">' +
+        '<div class="obj-icon">&#128269;</div>' +
+        '<div class="obj-404-title">Object not found</div>' +
+        '<div class="obj-404-sub"><span class="kind-chip orphan">' + esc(info.kind) + '</span>&nbsp;' + esc(info.name) + '</div>' +
+        '<div class="obj-404-note">This object no longer exists in the cluster. The event was recorded while it was still alive.</div>' +
+      '</div>' +
+      '<div style="text-align:center;margin-top:0.5rem"><button class="obj-back-btn" onclick="backToChain()">&#8592; Back to chain</button></div>' +
+    '</div>';
+  }
+  if (info.error) {
+    return '<div class="obj-result"><div class="obj-404">' +
+      '<div class="obj-icon">&#9888;</div>' +
+      '<div class="obj-404-title">Error fetching object</div>' +
+      '<div class="obj-404-note">' + esc(info.error) + '</div>' +
+      '<div style="margin-top:1rem"><button class="obj-back-btn" onclick="backToChain()">&#8592; Back</button></div>' +
+    '</div></div>';
+  }
+
+  var h = '<div class="obj-result">';
+
+  // Header
+  h += '<div class="detail-header">';
+  h += '<div class="detail-title"><h2>' + esc(info.name) + '</h2>';
+  h += '<div class="detail-breadcrumb"><span class="breadcrumb-step"><span class="kind-chip d0">' + esc(info.kind) + '</span></span></div>';
+  h += '</div><div class="detail-meta">';
+  if (info.age) h += '<span class="badge ok">' + esc(info.age) + '</span>';
+  h += '<button class="obj-back-btn" onclick="backToChain()">&#8592; Back</button>';
+  h += '</div></div>';
+
+  // Labels
+  if (info.labels && Object.keys(info.labels).length > 0) {
+    h += '<div class="obj-section"><div class="obj-section-title">Labels</div><div class="label-chips">';
+    Object.keys(info.labels).forEach(function(k) {
+      h += '<span class="label-chip">' + esc(k) + '=<b>' + esc(info.labels[k]) + '</b></span>';
+    });
+    h += '</div></div>';
+  }
+
+  // Sections
+  (info.sections || []).forEach(function(sec) {
+    h += '<div class="obj-section"><div class="obj-section-title">' + esc(sec.title) + '</div>';
+    h += '<table class="obj-table">';
+    sec.rows.forEach(function(row) {
+      h += '<tr><td class="obj-key">' + esc(row.key) + '</td><td class="obj-val">' + esc(row.value) + '</td></tr>';
+    });
+    h += '</table></div>';
+  });
+
+  // Conditions
+  if (info.conditions && info.conditions.length > 0) {
+    h += '<div class="obj-section"><div class="obj-section-title">Conditions</div>';
+    h += '<table class="obj-table"><thead><tr><th>Type</th><th>Status</th><th>Reason</th><th>Message</th></tr></thead><tbody>';
+    var badTrue = ['failed','replicafailure','degraded'];
+    info.conditions.forEach(function(c) {
+      var cls = c.status === 'True'
+        ? (badTrue.indexOf(c.type.toLowerCase()) >= 0 ? 'cond-false' : 'cond-true')
+        : (c.status === 'False' ? 'cond-false' : 'cond-unknown');
+      h += '<tr><td class="obj-key">' + esc(c.type) + '</td>';
+      h += '<td><span class="cond-badge ' + cls + '">' + esc(c.status) + '</span></td>';
+      h += '<td class="obj-muted">' + esc(c.reason || '') + '</td>';
+      h += '<td class="obj-muted obj-msg">' + esc(c.message || '') + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+
+  // Annotations
+  if (info.annotations && Object.keys(info.annotations).length > 0) {
+    h += '<div class="obj-section"><div class="obj-section-title">Annotations</div><table class="obj-table">';
+    Object.keys(info.annotations).forEach(function(k) {
+      h += '<tr><td class="obj-key obj-ann-key">' + esc(k) + '</td><td class="obj-val obj-muted">' + esc(info.annotations[k]) + '</td></tr>';
+    });
+    h += '</table></div>';
+  }
+
+  h += '</div>';
+  return h;
+}
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Auto-select first cascade failure, then first warning, then first item
+document.addEventListener('DOMContentLoaded', function() {
+  var priority = ['.sidebar-item.si-cascade', '.sidebar-item.si-warn', '.sidebar-item'];
+  for (var i = 0; i < priority.length; i++) {
+    var el = document.querySelector(priority[i]);
+    if (el) { el.click(); break; }
+  }
+  applySidebarFilters();
+});
+</script>
+</body>
+</html>

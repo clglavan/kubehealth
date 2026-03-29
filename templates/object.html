@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Kind}}/{{.Name}} — KubeHealth</title>
+<style>
+  :root { --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a; --text: #e2e8f0; --muted: #64748b; --accent: #6366f1; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  header a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+  main { padding: 2rem; max-width: 900px; }
+  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 0.8rem; gap: 0.5rem; }
+  .btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.35rem 0.9rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
+  .btn:hover { border-color: var(--accent); }
+  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; overflow: auto; font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.82rem; line-height: 1.7; white-space: pre; color: var(--text); }
+</style>
+</head>
+<body>
+<header>
+  <div class="breadcrumb">
+    <a href="/">KubeHealth</a> /
+    <a href="/namespace/{{.Namespace}}">{{.Namespace}}</a> /
+    <span>{{.Kind}}/{{.Name}}</span>
+  </div>
+</header>
+<main>
+  <div class="toolbar">
+    <button class="btn" onclick="copyYAML()">⎘ Copy YAML</button>
+  </div>
+  <pre id="yaml-content">{{.YAML}}</pre>
+</main>
+<script>
+function copyYAML() {
+  navigator.clipboard.writeText(document.getElementById('yaml-content').textContent)
+    .then(() => { const b = document.querySelector('.btn'); b.textContent = '✓ Copied!'; setTimeout(() => b.textContent = '⎘ Copy YAML', 2000); });
+}
+</script>
+</body>
+</html>

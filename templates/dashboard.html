@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KubeHealth</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --warn: #f59e0b;
+    --warn-bg: rgba(245,158,11,0.1);
+    --normal: #10b981;
+    --normal-bg: rgba(16,185,129,0.1);
+    --accent: #6366f1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* ---- Header ---- */
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  header h1 { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; }
+  header h1 span { color: var(--accent); }
+  .meta { font-size: 0.8rem; color: var(--muted); }
+  .refresh-btn { background: var(--accent); color: #fff; border: none; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; text-decoration: none; display: inline-block; }
+  .refresh-btn:hover { opacity: 0.85; }
+
+  /* ---- Loading progress bar ---- */
+  .progress-bar { height: 2px; background: var(--border); }
+  .progress-bar.hidden { display: none; }
+  .progress-fill { height: 100%; background: var(--accent); transition: width 0.4s ease; }
+
+  /* ---- Stats ---- */
+  .stats { display: flex; gap: 1rem; padding: 1.5rem 2rem; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; min-width: 140px; }
+  .stat-card .val { font-size: 2rem; font-weight: 700; }
+  .stat-card .lbl { font-size: 0.75rem; color: var(--muted); margin-top: 2px; }
+  .stat-card.warn .val { color: var(--warn); }
+  .stat-card.ok .val { color: var(--normal); }
+
+  /* ---- Namespace grid ---- */
+  main { padding: 0 2rem 2rem; }
+  .ns-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1rem; }
+  .ns-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color 0.2s; }
+  .ns-card:hover { border-color: var(--accent); }
+  .ns-card.has-warnings { border-left: 3px solid var(--warn); }
+
+  .ns-header { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; text-decoration: none; color: var(--text); }
+  .ns-name { font-weight: 600; font-size: 0.95rem; }
+  .ns-badges { display: flex; gap: 0.4rem; }
+  .badge { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 20px; }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); }
+  .badge.ok { background: var(--normal-bg); color: var(--normal); }
+
+  /* ---- Object rows inside card ---- */
+  .obj-list { border-top: 1px solid var(--border); }
+
+  .obj-row {
+    display: grid;
+    grid-template-columns: 8px 1fr auto;
+    gap: 0.3rem 0.7rem;
+    padding: 0.6rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+  .obj-row:last-child { border-bottom: none; }
+
+  .obj-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .obj-dot.warn { background: var(--warn); box-shadow: 0 0 0 2px var(--warn-bg); }
+  .obj-dot.ok   { background: var(--normal); }
+
+  .obj-name {
+    color: var(--accent);
+    font-weight: 500;
+    font-size: 0.82rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .obj-name .kind-chip {
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: rgba(99,102,241,0.15);
+    color: var(--accent);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    margin-right: 0.3rem;
+  }
+  .obj-reasons {
+    grid-column: 2;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .obj-age {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .more-link { display: block; text-align: center; padding: 0.5rem; font-size: 0.78rem; color: var(--accent); text-decoration: none; border-top: 1px solid var(--border); }
+  .more-link:hover { background: rgba(99,102,241,0.08); }
+  .empty-ns { padding: 1rem 1.2rem; font-size: 0.82rem; color: var(--muted); text-align: center; }
+
+  @media (max-width: 600px) { .stats { flex-wrap: wrap; } .ns-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kube<span>Health</span></h1>
+  <div style="display:flex;align-items:center;gap:1.5rem">
+    <span class="meta" id="update-label">Updated: {{.LastUpdated}}</span>
+    <a href="/api/refresh" class="refresh-btn">↻ Refresh</a>
+  </div>
+</header>
+<div class="progress-bar hidden" id="progress-bar">
+  <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+</div>
+<div class="stats">
+  <div class="stat-card"><div class="val">{{len .Namespaces}}</div><div class="lbl">Namespaces</div></div>
+  <div class="stat-card warn"><div class="val">{{.TotalWarn}}</div><div class="lbl">Warnings</div></div>
+  <div class="stat-card ok"><div class="val">{{.TotalNormal}}</div><div class="lbl">Normal Events</div></div>
+</div>
+<main>
+<div class="ns-grid">
+{{range .Namespaces}}
+  <div class="ns-card {{if gt .WarningCount 0}}has-warnings{{end}}">
+    <a class="ns-header" href="/namespace/{{.Namespace}}">
+      <span class="ns-name">{{.Namespace}}</span>
+      <span class="ns-badges">
+        {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
+        {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
+        {{if and (eq .WarningCount 0) (eq .NormalCount 0)}}<span class="badge ok">✓ quiet</span>{{end}}
+      </span>
+    </a>
+    {{if .Objects}}
+    <div class="obj-list">
+      {{$ns := .Namespace}}
+      {{range $i, $o := .Objects}}{{if lt $i 5}}
+      <div class="obj-row">
+        <div class="obj-dot {{if $o.HasWarning}}warn{{else}}ok{{end}}"></div>
+        <div class="obj-name">
+          <span class="kind-chip">{{$o.Kind}}</span>{{$o.ObjectName}}
+        </div>
+        <div class="obj-age">{{$o.Events | firstAge}}</div>
+        <div class="obj-reasons">
+          {{range $j, $e := $o.Events}}{{if lt $j 3}}{{if gt $j 0}} · {{end}}{{$e.Reason}}{{end}}{{end}}
+          {{if gt (len $o.Events) 3}} · …{{end}}
+        </div>
+      </div>
+      {{end}}{{end}}
+    </div>
+    {{if gt (len .Objects) 5}}
+    <a class="more-link" href="/namespace/{{.Namespace}}">View all {{len .Objects}} objects →</a>
+    {{else}}
+    <a class="more-link" href="/namespace/{{.Namespace}}">Open namespace →</a>
+    {{end}}
+    {{else}}
+    <div class="empty-ns">No recent events</div>
+    {{end}}
+  </div>
+{{end}}
+</div>
+</main>
+<script>
+(function() {
+  var lastLoaded = {{len .Namespaces}};
+  var bar  = document.getElementById('progress-bar');
+  var fill = document.getElementById('progress-fill');
+
+  function poll() {
+    fetch('/api/status')
+      .then(function(r) { return r.json(); })
+      .then(function(s) {
+        if (!s.ready) {
+          bar.classList.remove('hidden');
+          fill.style.width = (s.total > 0 ? Math.round(s.loaded / s.total * 100) : 0) + '%';
+        }
+        if (s.loaded !== lastLoaded) { location.reload(); return; }
+        if (s.ready) {
+          bar.classList.add('hidden');
+          setTimeout(poll, 10000);
+        } else {
+          setTimeout(poll, 2000);
+        }
+      })
+      .catch(function() { setTimeout(poll, 3000); });
+  }
+  poll();
+})();
+</script>
+</body>
+</html>
