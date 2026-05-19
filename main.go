@@ -506,6 +506,9 @@ func main() {
 	flag.StringVar(&cfg.Kubeconfig, "kubeconfig", defaultKubeconfig(), "Path to kubeconfig")
 	flag.Parse()
 
+	initAI()
+	initSystemPrompt()
+
 	if namespaceList != "" {
 		for _, ns := range strings.Split(namespaceList, ",") {
 			ns = strings.TrimSpace(ns)
@@ -546,6 +549,12 @@ func main() {
 	mux.HandleFunc("/api/object/", handleAPIObject)
 	mux.HandleFunc("/api/status", handleAPIStatus)
 	mux.HandleFunc("/api/refresh", handleRefresh)
+	mux.HandleFunc("/api/ai/insights/", handleAPIAIInsights)
+	mux.HandleFunc("/api/ai/analyze/", handleAPIAIAnalyze)
+	mux.HandleFunc("/api/ai/config", handleAPIAIConfig)
+	mux.HandleFunc("/api/settings", handleAPISettings)
+	mux.HandleFunc("/api/logs/", handleAPILogs)
+	mux.HandleFunc("/api/correlate/", handleAPICorrelate)
 
 	nsInfo := "all namespaces"
 	if !cfg.AllNS {
@@ -882,35 +891,94 @@ func fetchObjectYAML(namespace, kind, name string) (string, error) {
 	return string(y), nil
 }
 
+// staticGVR is a fast-path lookup for common built-in resource types.
+var staticGVR = map[string]schema.GroupVersionResource{
+	"pod":                   {Group: "", Version: "v1", Resource: "pods"},
+	"pods":                  {Group: "", Version: "v1", Resource: "pods"},
+	"deployment":            {Group: "apps", Version: "v1", Resource: "deployments"},
+	"deployments":           {Group: "apps", Version: "v1", Resource: "deployments"},
+	"replicaset":            {Group: "apps", Version: "v1", Resource: "replicasets"},
+	"replicasets":           {Group: "apps", Version: "v1", Resource: "replicasets"},
+	"statefulset":           {Group: "apps", Version: "v1", Resource: "statefulsets"},
+	"statefulsets":          {Group: "apps", Version: "v1", Resource: "statefulsets"},
+	"daemonset":             {Group: "apps", Version: "v1", Resource: "daemonsets"},
+	"daemonsets":            {Group: "apps", Version: "v1", Resource: "daemonsets"},
+	"service":               {Group: "", Version: "v1", Resource: "services"},
+	"services":              {Group: "", Version: "v1", Resource: "services"},
+	"configmap":             {Group: "", Version: "v1", Resource: "configmaps"},
+	"configmaps":            {Group: "", Version: "v1", Resource: "configmaps"},
+	"persistentvolumeclaim": {Group: "", Version: "v1", Resource: "persistentvolumeclaims"},
+	"job":                   {Group: "batch", Version: "v1", Resource: "jobs"},
+	"jobs":                  {Group: "batch", Version: "v1", Resource: "jobs"},
+	"cronjob":               {Group: "batch", Version: "v1", Resource: "cronjobs"},
+	"ingress":               {Group: "networking.k8s.io", Version: "v1", Resource: "ingresses"},
+	"node":                  {Group: "", Version: "v1", Resource: "nodes"},
+	"nodes":                 {Group: "", Version: "v1", Resource: "nodes"},
+}
+
+// gvrCache holds dynamically discovered GVRs for CRDs and other non-built-in kinds.
+var (
+	gvrCache   sync.Map // map[string]schema.GroupVersionResource
+	gvrDiscoMu sync.Mutex
+)
+
+// kindToGVR resolves a Kubernetes kind to its GroupVersionResource.
+// It first checks the static built-in map, then falls back to live API discovery
+// so that CRDs (e.g. Elasticsearch, Certificate, VirtualService) work automatically.
 func kindToGVR(kind string) (schema.GroupVersionResource, error) {
-	mapping := map[string]schema.GroupVersionResource{
-		"pod":                   {Group: "", Version: "v1", Resource: "pods"},
-		"pods":                  {Group: "", Version: "v1", Resource: "pods"},
-		"deployment":            {Group: "apps", Version: "v1", Resource: "deployments"},
-		"deployments":           {Group: "apps", Version: "v1", Resource: "deployments"},
-		"replicaset":            {Group: "apps", Version: "v1", Resource: "replicasets"},
-		"replicasets":           {Group: "apps", Version: "v1", Resource: "replicasets"},
-		"statefulset":           {Group: "apps", Version: "v1", Resource: "statefulsets"},
-		"statefulsets":          {Group: "apps", Version: "v1", Resource: "statefulsets"},
-		"daemonset":             {Group: "apps", Version: "v1", Resource: "daemonsets"},
-		"daemonsets":            {Group: "apps", Version: "v1", Resource: "daemonsets"},
-		"service":               {Group: "", Version: "v1", Resource: "services"},
-		"services":              {Group: "", Version: "v1", Resource: "services"},
-		"configmap":             {Group: "", Version: "v1", Resource: "configmaps"},
-		"configmaps":            {Group: "", Version: "v1", Resource: "configmaps"},
-		"persistentvolumeclaim": {Group: "", Version: "v1", Resource: "persistentvolumeclaims"},
-		"job":                   {Group: "batch", Version: "v1", Resource: "jobs"},
-		"jobs":                  {Group: "batch", Version: "v1", Resource: "jobs"},
-		"cronjob":               {Group: "batch", Version: "v1", Resource: "cronjobs"},
-		"ingress":               {Group: "networking.k8s.io", Version: "v1", Resource: "ingresses"},
-		"node":                  {Group: "", Version: "v1", Resource: "nodes"},
-		"nodes":                 {Group: "", Version: "v1", Resource: "nodes"},
+	lower := strings.ToLower(kind)
+	if gvr, ok := staticGVR[lower]; ok {
+		return gvr, nil
 	}
-	gvr, ok := mapping[strings.ToLower(kind)]
-	if !ok {
-		return schema.GroupVersionResource{}, fmt.Errorf("unknown kind: %s", kind)
+	if v, ok := gvrCache.Load(lower); ok {
+		return v.(schema.GroupVersionResource), nil
 	}
-	return gvr, nil
+	return discoverGVR(lower)
+}
+
+// discoverGVR queries the API server's discovery endpoint to find the GVR for
+// any kind not in the static map, then caches all results for future lookups.
+func discoverGVR(kindLower string) (schema.GroupVersionResource, error) {
+	gvrDiscoMu.Lock()
+	defer gvrDiscoMu.Unlock()
+
+	// Re-check after acquiring the lock — another goroutine may have just populated it.
+	if v, ok := gvrCache.Load(kindLower); ok {
+		return v.(schema.GroupVersionResource), nil
+	}
+
+	_, lists, err := client.Discovery().ServerGroupsAndResources()
+	if err != nil && lists == nil {
+		return schema.GroupVersionResource{}, fmt.Errorf("API discovery: %w", err)
+	}
+	// Partial errors (some groups unavailable) are acceptable — use what we got.
+
+	var found schema.GroupVersionResource
+	var foundOK bool
+
+	for _, list := range lists {
+		gv, parseErr := schema.ParseGroupVersion(list.GroupVersion)
+		if parseErr != nil {
+			continue
+		}
+		for _, r := range list.APIResources {
+			if strings.Contains(r.Name, "/") {
+				continue // skip sub-resources (pods/log, pods/status, etc.)
+			}
+			key := strings.ToLower(r.Kind)
+			gvr := schema.GroupVersionResource{Group: gv.Group, Version: gv.Version, Resource: r.Name}
+			gvrCache.Store(key, gvr)
+			if key == kindLower {
+				found = gvr
+				foundOK = true
+			}
+		}
+	}
+
+	if !foundOK {
+		return schema.GroupVersionResource{}, fmt.Errorf("unknown kind: %s", kindLower)
+	}
+	return found, nil
 }
 
 // ---- Object describe helpers ----
@@ -1267,15 +1335,16 @@ var tmplFuncs = template.FuncMap{
 	"joinStrings": strings.Join,
 }
 
-func mustParseTemplate(name, file string) *template.Template {
+func mustParseTemplate(name, file string, extras ...string) *template.Template {
+	files := append([]string{file}, extras...)
 	return template.Must(
-		template.New(name).Funcs(tmplFuncs).ParseFS(templateFS, file),
+		template.New(name).Funcs(tmplFuncs).ParseFS(templateFS, files...),
 	)
 }
 
 var (
-	dashboardTmpl = mustParseTemplate("dashboard.html", "templates/dashboard.html")
-	namespaceTmpl = mustParseTemplate("namespace.html", "templates/namespace.html")
+	dashboardTmpl = mustParseTemplate("dashboard.html", "templates/dashboard.html", "templates/ai_modal.html", "templates/settings_modal.html")
+	namespaceTmpl = mustParseTemplate("namespace.html", "templates/namespace.html", "templates/ai_modal.html", "templates/settings_modal.html")
 	objectTmpl    = mustParseTemplate("object.html", "templates/object.html")
 	loadingTmpl   = mustParseTemplate("loading.html", "templates/loading.html")
 )

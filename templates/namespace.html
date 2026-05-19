@@ -30,7 +30,7 @@
   }
   header a.back { color: var(--accent); text-decoration: none; font-size: 0.85rem; flex-shrink: 0; }
   header h1 { font-size: 1rem; font-weight: 700; }
-  .ns-pills { margin-left: auto; display: flex; gap: 0.4rem; }
+  .ns-pills { margin-left: auto; display: flex; gap: 0.4rem; align-items: center; }
   .badge { font-size: 0.65rem; font-weight: 700; padding: 0.13rem 0.42rem; border-radius: 20px; }
   .badge.warn    { background: var(--warn-bg);    color: var(--warn);    border: 1px solid rgba(245,158,11,0.25); }
   .badge.ok      { background: var(--normal-bg);  color: var(--normal);  border: 1px solid rgba(16,185,129,0.2); }
@@ -65,6 +65,20 @@
   .sidebar-scroll { flex: 1; overflow-y: auto; }
   .sidebar-scroll::-webkit-scrollbar { width: 4px; }
   .sidebar-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* AI namespace entry at top of sidebar scroll */
+  .sidebar-ai-entry {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.6rem 1rem; cursor: pointer;
+    border-bottom: 1px solid var(--border);
+    border-left: 3px solid transparent;
+    transition: background 0.1s;
+  }
+  .sidebar-ai-entry:hover { background: rgba(99,102,241,0.05); }
+  .sidebar-ai-entry.active {
+    background: var(--accent-bg); border-left-color: var(--accent);
+  }
+  .sidebar-ai-label { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
 
   .sidebar-section-title {
     padding: 0.75rem 1rem 0.35rem;
@@ -131,7 +145,7 @@
   }
   .breadcrumb-step { display: flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; color: var(--muted); }
   .breadcrumb-arrow { color: var(--border); font-size: 0.65rem; }
-  .detail-meta { display: flex; gap: 0.4rem; flex-shrink: 0; align-items: flex-start; padding-top: 0.15rem; }
+  .detail-meta { display: flex; gap: 0.4rem; flex-shrink: 0; align-items: flex-start; padding-top: 0.15rem; flex-wrap: wrap; }
 
   /* ── Family tree in detail ── */
   .family-tree { display: flex; flex-direction: column; gap: 0; }
@@ -152,7 +166,7 @@
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
   .obj-link:hover { color: var(--accent); }
-  .member-badges { display: flex; gap: 0.35rem; flex-shrink: 0; }
+  .member-badges { display: flex; gap: 0.35rem; flex-shrink: 0; align-items: center; }
 
   /* Indented children */
   .member-children {
@@ -170,7 +184,7 @@
 
   .member-children .member-children { margin-left: 1.5rem; }
 
-  /* ── Timeline (always expanded in detail view) ── */
+  /* ── Timeline ── */
   .member-timeline {
     border: 1px solid var(--border); border-top: none;
     border-radius: 0 0 8px 8px; padding: 0.4rem 1rem 0.6rem 1.1rem;
@@ -200,6 +214,79 @@
 
   .no-events { font-size: 0.78rem; color: var(--muted); padding: 0.5rem 0; }
 
+  /* ── AI object button (inside member-header) ── */
+  .ai-obj-btn {
+    font-size: 0.63rem;
+    padding: 0.1rem 0.45rem;
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(99,102,241,0.2);
+    color: var(--accent);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.12s;
+  }
+  .ai-obj-btn:hover { background: rgba(99,102,241,0.16); }
+  .ai-obj-btn.active { background: rgba(99,102,241,0.18); }
+
+  /* ── AI result below a timeline ── */
+  .member-ai-result {
+    border: 1px solid rgba(99,102,241,0.18);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    padding: 0.65rem 1rem 0.75rem;
+    background: rgba(99,102,241,0.03);
+    font-size: 0.77rem;
+    line-height: 1.65;
+    color: var(--text);
+    margin-bottom: 0;
+  }
+  .member-children .member-ai-result { border-radius: 0 0 8px 0; }
+  .member-ai-result .ai-result-meta {
+    font-size: 0.67rem; color: var(--muted); margin-bottom: 0.4rem;
+    display: flex; gap: 0.45rem; align-items: center;
+  }
+  .member-ai-result .ai-model-text { font-family: monospace; }
+  .member-ai-result strong { color: var(--accent); }
+
+  /* ── AI loading spinner ── */
+  .ai-loading { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); }
+  .ai-spinner {
+    width: 13px; height: 13px; border: 2px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.7s linear infinite; flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── AI namespace full panel ── */
+  .ns-ai-panel { padding: 0 0 2rem; }
+  .ns-ai-header {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.25rem; padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ns-ai-title { flex: 1; }
+  .ns-ai-title h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .ns-ai-meta { font-size: 0.72rem; color: var(--muted); }
+  .ns-ai-placeholder { color: var(--muted); font-size: 0.85rem; padding: 0.5rem 0; }
+  .ns-ai-result-body { font-size: 0.82rem; line-height: 1.7; }
+  .ns-ai-result-body strong { color: var(--accent); }
+  .ns-ai-ts { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.65rem; display: flex; gap: 0.5rem; align-items: center; }
+  .ns-ai-ts .ai-model-text { font-family: monospace; }
+  .ai-analyze-btn {
+    padding: 0.32rem 0.9rem;
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.3);
+    color: var(--accent);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: background 0.12s;
+  }
+  .ai-analyze-btn:hover { background: rgba(99,102,241,0.18); }
+  .ai-analyze-btn.active { opacity: 0.6; cursor: default; }
+
   /* ── Empty placeholder ── */
   .detail-placeholder {
     height: 100%; display: flex; flex-direction: column;
@@ -227,7 +314,6 @@
     border-top-color: var(--accent); border-radius: 50%;
     animation: spin 0.7s linear infinite;
   }
-  @keyframes spin { to { transform: rotate(360deg); } }
 
   .obj-404 {
     text-align: center; padding: 3rem 1.5rem;
@@ -276,6 +362,237 @@
   .cond-true    { background: var(--normal-bg); color: var(--normal); }
   .cond-false   { background: var(--warn-bg);   color: var(--warn); }
   .cond-unknown { background: rgba(255,255,255,0.05); color: var(--muted); }
+
+  /* AI result inside describe panel */
+  .obj-ai-section {
+    margin-top: 1.5rem;
+    border: 1px solid rgba(99,102,241,0.18);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .obj-ai-section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.55rem 0.9rem;
+    background: rgba(99,102,241,0.05);
+    border-bottom: 1px solid rgba(99,102,241,0.12);
+  }
+  .obj-ai-section-title { font-size: 0.72rem; font-weight: 700; color: var(--accent); }
+  .obj-ai-section-body {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    color: var(--text);
+  }
+  .obj-ai-section-body strong { color: var(--accent); }
+  .obj-ai-section-body .ai-result-meta { font-size: 0.67rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .obj-ai-section-body .ai-model-text { font-family: monospace; }
+
+  /* ── Shared AI content rendering ── */
+  .ai-result-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.67rem;
+    color: var(--muted);
+    margin-bottom: 0.55rem;
+  }
+  .ai-result-meta .ai-model-text { font-family: 'SFMono-Regular', Consolas, monospace; }
+  .ai-result-meta .ai-ts { margin-left: auto; }
+
+  .ai-content p { margin: 0.25rem 0; }
+  .ai-section { margin: 0.55rem 0 0.1rem; }
+  .ai-section-label {
+    display: inline-block;
+    font-size: 0.63rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--accent);
+    margin-bottom: 0.15rem;
+  }
+  .ai-list {
+    margin: 0.1rem 0 0.35rem;
+    padding: 0;
+    list-style: none;
+  }
+  .ai-list li {
+    position: relative;
+    padding-left: 1rem;
+    margin-bottom: 0.28rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .ai-list li::before {
+    content: '›';
+    position: absolute;
+    left: 0.05rem;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .ai-content code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.82em;
+    background: rgba(99,102,241,0.12);
+    padding: 0.08em 0.35em;
+    border-radius: 3px;
+    color: #a5b4fc;
+  }
+
+  /* Namespace panel: larger, more readable */
+  #ns-ai-result .ai-result-meta {
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  #ns-ai-result .ai-content {
+    font-size: 0.875rem;
+    line-height: 1.75;
+    color: var(--text);
+  }
+  #ns-ai-result .ai-section { margin: 1.1rem 0 0.3rem; }
+  #ns-ai-result .ai-section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.3rem;
+  }
+  #ns-ai-result .ai-list { margin: 0.25rem 0 0.5rem; }
+  #ns-ai-result .ai-list li {
+    font-size: 0.875rem;
+    margin-bottom: 0.45rem;
+    line-height: 1.6;
+    padding-left: 1.1rem;
+  }
+  #ns-ai-result .ai-content p { font-size: 0.875rem; margin: 0.4rem 0; }
+
+  /* ── Logs button ── */
+  /* ── Correlate button ── */
+  .correlate-btn {
+    font-size: 0.63rem;
+    padding: 0.1rem 0.45rem;
+    background: rgba(139,92,246,0.08);
+    border: 1px solid rgba(139,92,246,0.2);
+    color: #8b5cf6;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.12s;
+  }
+  .correlate-btn:hover { background: rgba(139,92,246,0.14); }
+  .correlate-btn.active { opacity: 0.6; cursor: default; }
+
+  /* ── Correlate result panel ── */
+  .member-correlate-result {
+    margin-top: 0.35rem;
+    border: 1px solid rgba(139,92,246,0.18);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #080b10;
+  }
+  .corr-header {
+    display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    padding: 0.32rem 0.9rem;
+    background: rgba(139,92,246,0.07);
+    border-bottom: 1px solid rgba(139,92,246,0.1);
+    font-size: 0.67rem; color: #8b5cf6;
+    user-select: none;
+  }
+  .corr-header:hover { background: rgba(139,92,246,0.13); }
+  .corr-ns-label {
+    padding: 0.28rem 0.9rem;
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); background: rgba(255,255,255,0.025);
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .corr-row {
+    display: grid; grid-template-columns: 10px 1fr auto;
+    gap: 0 0.55rem; padding: 0.38rem 0.9rem;
+    border-top: 1px solid rgba(255,255,255,0.03); align-items: start;
+  }
+  .corr-dot { width: 7px; height: 7px; border-radius: 50%; margin-top: 4px; }
+  .corr-dot.Warning { background: var(--warn); }
+  .corr-dot.Normal  { background: var(--normal); }
+  .corr-obj { font-size: 0.72rem; font-weight: 500; color: var(--text); }
+  .corr-kind-chip {
+    font-size: 0.59rem; font-weight: 700; text-transform: uppercase;
+    background: rgba(99,102,241,0.1); color: var(--muted);
+    padding: 0.04rem 0.3rem; border-radius: 3px; margin-right: 0.28rem;
+  }
+  .corr-reason { font-size: 0.69rem; color: var(--muted); }
+  .corr-msg { grid-column: 2; font-size: 0.67rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .corr-age { font-size: 0.67rem; color: var(--muted); white-space: nowrap; }
+
+  .logs-btn {
+    font-size: 0.63rem;
+    padding: 0.1rem 0.45rem;
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.2);
+    color: var(--normal);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.12s;
+  }
+  .logs-btn:hover { background: rgba(16,185,129,0.14); }
+  .logs-btn.active { opacity: 0.6; cursor: default; }
+
+  /* ── Logs result panel ── */
+  .member-logs-result {
+    margin-top: 0.35rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #080b10;
+    overflow: hidden;
+  }
+  .logs-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.3rem 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.025);
+    font-size: 0.65rem;
+    color: var(--muted);
+  }
+  .logs-meta .logs-cname {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-weight: 700;
+    color: var(--normal);
+    font-size: 0.7rem;
+  }
+  .logs-meta .logs-tail { margin-left: auto; }
+  .logs-pre {
+    padding: 0.55rem 0.9rem;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 320px;
+    white-space: pre;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    font-size: 0.715rem;
+    line-height: 1.55;
+    color: #94a3b8;
+    margin: 0;
+  }
+  .logs-sep { border: none; border-top: 1px solid rgba(255,255,255,0.05); margin: 0; }
+  .logs-empty { padding: 0.55rem 0.9rem; font-size: 0.72rem; color: var(--muted); font-family: monospace; }
+  .logs-error { padding: 0.55rem 0.9rem; font-size: 0.72rem; color: var(--warn); font-family: monospace; }
+
+  /* Logs inside the describe panel */
+  .obj-logs-section {
+    margin-top: 1.5rem;
+    border: 1px solid rgba(16,185,129,0.18);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .obj-logs-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.55rem 0.9rem;
+    background: rgba(16,185,129,0.04);
+    border-bottom: 1px solid rgba(16,185,129,0.1);
+  }
+  .obj-logs-title { font-size: 0.72rem; font-weight: 700; color: var(--normal); }
 </style>
 </head>
 <body>
@@ -286,6 +603,8 @@
   <div class="ns-pills">
     {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
     {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
+    <button class="ai-agent-nav-btn" onclick="stgOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.3)">⚙ Settings</button>
+    <button class="ai-agent-nav-btn" onclick="aimOpen()">✦ AI Agent</button>
   </div>
 </header>
 
@@ -298,6 +617,12 @@
       <button class="warn-toggle" id="warn-toggle" onclick="toggleWarn(this)">⚠ only</button>
     </div>
     <div class="sidebar-scroll">
+
+      <!-- AI namespace analysis entry -->
+      <div class="sidebar-ai-entry" onclick="selectPanel('dp-ai-ns', this)">
+        <span class="kind-chip" style="background:rgba(99,102,241,0.14);color:var(--accent)">AI</span>
+        <span class="sidebar-ai-label">Analyze namespace</span>
+      </div>
 
       {{if .Families}}
       <div class="sidebar-section-title">Ownership Chains</div>
@@ -346,6 +671,23 @@
       </div>
     </div>
 
+    <!-- ── AI namespace analysis panel ── -->
+    <div class="detail-panel" id="dp-ai-ns">
+      <div class="ns-ai-panel">
+        <div class="ns-ai-header">
+          <div class="ns-ai-title">
+            <h2>AI Analysis</h2>
+            <div class="ns-ai-meta">namespace: {{.Namespace}}</div>
+          </div>
+          <button class="ai-analyze-btn" id="ns-analyze-btn"
+                  onclick="analyzeNamespace(this,'{{.Namespace}}')">✦ Analyze</button>
+        </div>
+        <div id="ns-ai-result">
+          <p class="ns-ai-placeholder">Click "Analyze" to run AI analysis on all events in this namespace.</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Family detail panels -->
     {{range $fi, $fam := .Families}}
     <div class="detail-panel" id="dp-fam-{{$fi}}">
@@ -354,21 +696,15 @@
         <div class="detail-title">
           <h2>{{$fam.Root.ObjectName}}</h2>
           <div class="detail-breadcrumb">
-            <span class="breadcrumb-step">
-              <span class="kind-chip d0">{{$fam.Root.Kind}}</span>
-            </span>
-            {{range $fam.Root.Children}}
+            <span class="kind-chip d0">{{$fam.Root.Kind}}</span>
+            {{if $fam.Root.Children}}{{with index $fam.Root.Children 0}}
             <span class="breadcrumb-arrow">→</span>
-            <span class="breadcrumb-step">
-              <span class="kind-chip d1">{{.Kind}}</span>
-              {{if .Children}}
-              {{range .Children}}
-              <span class="breadcrumb-arrow">→</span>
-              <span class="kind-chip d2">{{.Kind}}</span>
-              {{end}}
-              {{end}}
-            </span>
-            {{end}}
+            <span class="kind-chip d1">{{.Kind}}</span>
+            {{if .Children}}{{with index .Children 0}}
+            <span class="breadcrumb-arrow">→</span>
+            <span class="kind-chip d2">{{.Kind}}</span>
+            {{end}}{{end}}
+            {{end}}{{end}}
           </div>
         </div>
         <div class="detail-meta">
@@ -390,6 +726,9 @@
           <div class="member-badges">
             {{if $root.WarningCount}}<span class="badge warn">⚠ {{$root.WarningCount}}</span>{{end}}
             {{if $root.NormalCount}}<span class="badge ok">✓ {{$root.NormalCount}}</span>{{end}}
+            {{if eq $root.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$root.ObjectName}}')">Logs</button>{{end}}
+            <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">Correlate</button>
+            <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">AI</button>
           </div>
         </div>
         <div class="member-timeline">
@@ -409,6 +748,9 @@
           {{end}}
           {{else}}<div class="no-events">No events recorded</div>{{end}}
         </div>
+        <div class="member-ai-result" style="display:none"></div>
+        {{if eq $root.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
+        <div class="member-correlate-result" style="display:none"></div>
 
         <!-- Depth-1 children -->
         {{if $root.Children}}
@@ -424,6 +766,9 @@
               <div class="member-badges">
                 {{if $child.WarningCount}}<span class="badge warn">⚠ {{$child.WarningCount}}</span>{{end}}
                 {{if $child.NormalCount}}<span class="badge ok">✓ {{$child.NormalCount}}</span>{{end}}
+                {{if eq $child.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$child.ObjectName}}')">Logs</button>{{end}}
+                <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">Correlate</button>
+                <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">AI</button>
               </div>
             </div>
             <div class="member-timeline">
@@ -443,6 +788,9 @@
               {{end}}
               {{else}}<div class="no-events">No events recorded</div>{{end}}
             </div>
+            <div class="member-ai-result" style="display:none"></div>
+            {{if eq $child.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
+            <div class="member-correlate-result" style="display:none"></div>
 
             <!-- Depth-2 grandchildren -->
             {{if $child.Children}}
@@ -458,6 +806,9 @@
                   <div class="member-badges">
                     {{if $grand.WarningCount}}<span class="badge warn">⚠ {{$grand.WarningCount}}</span>{{end}}
                     {{if $grand.NormalCount}}<span class="badge ok">✓ {{$grand.NormalCount}}</span>{{end}}
+                    {{if eq $grand.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$grand.ObjectName}}')">Logs</button>{{end}}
+                    <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">Correlate</button>
+                    <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">AI</button>
                   </div>
                 </div>
                 <div class="member-timeline">
@@ -477,6 +828,9 @@
                   {{end}}
                   {{else}}<div class="no-events">No events recorded</div>{{end}}
                 </div>
+                <div class="member-ai-result" style="display:none"></div>
+                {{if eq $grand.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
+                <div class="member-correlate-result" style="display:none"></div>
               </div>
               {{end}}
             </div>
@@ -505,6 +859,10 @@
         <div class="detail-meta">
           <a href="/object/{{$.Namespace}}/{{$obj.Kind}}/{{$obj.ObjectName}}"
              style="font-size:0.75rem;color:var(--accent);text-decoration:none;">View YAML →</a>
+          {{if eq $obj.Kind "Pod"}}<button class="logs-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$obj.ObjectName}}')">Logs</button>{{end}}
+          <button class="correlate-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">Correlate</button>
+          <button class="ai-obj-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;"
+                  onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">✦ AI</button>
           {{if $obj.WarningCount}}<span class="badge warn">⚠ {{$obj.WarningCount}}</span>{{end}}
           {{if $obj.NormalCount}}<span class="badge ok">✓ {{$obj.NormalCount}}</span>{{end}}
         </div>
@@ -527,6 +885,9 @@
           {{end}}
           {{else}}<div class="no-events">No events recorded</div>{{end}}
         </div>
+        <div class="member-ai-result" style="display:none"></div>
+        {{if eq $obj.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
+        <div class="member-correlate-result" style="display:none"></div>
       </div>
     </div>
     {{end}}
@@ -545,7 +906,7 @@ var currentFromItem  = null;
 
 function selectPanel(panelId, item) {
   document.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item,.sidebar-ai-entry').forEach(function(i) { i.classList.remove('active'); });
   var panel = document.getElementById(panelId);
   if (panel) panel.classList.add('active');
   if (item)  item.classList.add('active');
@@ -577,7 +938,398 @@ function applySidebarFilters(q) {
   if (!anyActive && firstVisible) firstVisible.click();
 }
 
-// ── Inline object describe ──
+// ── AI helpers ───────────────────────────────────────────────────────────────
+
+function esc(s) {
+  if (s == null) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// Inline formatting: bold + inline code
+function fmt(text) {
+  return esc(text)
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>');
+}
+
+// Full markdown → HTML: section headers, bullet lists, paragraphs
+function renderMD(text) {
+  var lines = text.split('\n');
+  var out = '';
+  var inList = false;
+
+  for (var i = 0; i < lines.length; i++) {
+    var line = lines[i].trim();
+
+    if (!line) {
+      if (inList) { out += '</ul>'; inList = false; }
+      continue;
+    }
+
+    // **Label**: rest  →  section header + optional inline text
+    var m = line.match(/^\*\*([^*]+)\*\*:?\s*(.*)/);
+    if (m) {
+      if (inList) { out += '</ul>'; inList = false; }
+      out += '<div class="ai-section"><span class="ai-section-label">' + esc(m[1]) + '</span>';
+      if (m[2]) out += ' ' + fmt(m[2]);
+      out += '</div>';
+      continue;
+    }
+
+    // - item  →  list item
+    var b = line.match(/^[-•]\s+(.*)/);
+    if (b) {
+      if (!inList) { out += '<ul class="ai-list">'; inList = true; }
+      out += '<li>' + fmt(b[1]) + '</li>';
+      continue;
+    }
+
+    // Regular paragraph
+    if (inList) { out += '</ul>'; inList = false; }
+    out += '<p>' + fmt(line) + '</p>';
+  }
+
+  if (inList) out += '</ul>';
+  return out;
+}
+
+function aiResultHTML(d) {
+  return '<div class="ai-result-meta">' +
+         '✦ <span class="ai-model-text">' + esc(d.model) + '</span>' +
+         '<span class="ai-ts">' + esc(d.updated_at) + '</span>' +
+         '</div>' +
+         '<div class="ai-content">' + renderMD(d.content) + '</div>';
+}
+
+function pollAI(url, resultDiv, btn, btnLabel, attempts) {
+  attempts = attempts || 0;
+  fetch(url)
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.content) {
+        resultDiv.innerHTML = aiResultHTML(d);
+        if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
+      } else if (attempts < 45) {
+        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1); }, 2000);
+      } else {
+        resultDiv.innerHTML = '<span style="color:var(--warn)">Analysis timed out.</span>';
+        if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
+      }
+    })
+    .catch(function() {
+      if (attempts < 45) {
+        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1); }, 3000);
+      } else if (btn) {
+        btn.classList.remove('active'); btn.textContent = btnLabel;
+      }
+    });
+}
+
+// ── Correlate ────────────────────────────────────────────────────────────────
+
+function fetchCorrelate(evt, btn, ns, kind, name) {
+  evt.stopPropagation();
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+
+  var resultDiv = null;
+  var block = btn.closest('.member-block');
+  if (block) {
+    for (var i = 0; i < block.children.length; i++) {
+      if (block.children[i].classList.contains('member-correlate-result')) {
+        resultDiv = block.children[i]; break;
+      }
+    }
+  }
+  if (!resultDiv) {
+    var pp = btn.closest('.detail-panel');
+    if (pp) resultDiv = pp.querySelector('.member-correlate-result');
+  }
+  if (!resultDiv) { btn.classList.remove('active'); btn.textContent = 'Correlate'; return; }
+
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = '<div class="ai-loading" style="padding:0.5rem 0.9rem">' +
+    '<div class="ai-spinner"></div>Searching correlated events…</div>';
+
+  var path = [ns, kind, name].map(encodeURIComponent).join('/');
+  fetch('/api/correlate/' + path)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      resultDiv.innerHTML = renderCorrelate(data);
+      btn.classList.remove('active');
+      btn.textContent = 'Correlate';
+    })
+    .catch(function(err) {
+      resultDiv.innerHTML = '<div class="logs-error">' + esc(String(err)) + '</div>';
+      btn.classList.remove('active');
+      btn.textContent = 'Correlate';
+    });
+}
+
+function fetchCorrelateInDescribe(btn, ns, kind, name) {
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+  var section = document.getElementById('obj-correlate-section');
+  var body    = document.getElementById('obj-correlate-body');
+  section.style.display = '';
+  body.innerHTML = '<div class="ai-loading" style="padding:0.5rem 0.9rem">' +
+    '<div class="ai-spinner"></div>Searching correlated events…</div>';
+  var path = [ns, kind, name].map(encodeURIComponent).join('/');
+  fetch('/api/correlate/' + path)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      body.innerHTML = renderCorrelate(data);
+      btn.classList.remove('active');
+      btn.textContent = 'Correlate';
+    })
+    .catch(function(err) {
+      body.innerHTML = '<div class="logs-error">' + esc(String(err)) + '</div>';
+      btn.classList.remove('active');
+      btn.textContent = 'Correlate';
+    });
+}
+
+function corrToggle(header) {
+  var body  = header.nextElementSibling;
+  var arrow = header.querySelector('.corr-arrow');
+  var open  = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  if (arrow) arrow.textContent = open ? '▼' : '▶';
+}
+
+function renderCorrelate(data) {
+  var events = data.correlated || [];
+  var fmt = function(d) {
+    return d ? new Date(d).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'}) : '';
+  };
+  var from = fmt(data.window_from);
+  var to   = fmt(data.window_to);
+
+  // Header — always visible, acts as toggle
+  var h = '<div class="corr-header" onclick="corrToggle(this)" style="cursor:pointer">';
+  h += '<span class="corr-arrow" style="font-size:0.6rem;opacity:0.65">▶</span>';
+  h += '<span>±' + (data.buffer_min || 5) + ' min window</span>';
+  if (from && to) h += '<span style="font-family:monospace;opacity:0.8">' + esc(from) + ' → ' + esc(to) + '</span>';
+  h += '<span style="margin-left:auto">' + events.length + ' event' + (events.length !== 1 ? 's' : '') + '</span>';
+  h += '</div>';
+
+  // Body — collapsed by default
+  h += '<div class="corr-body" style="display:none">';
+
+  if (events.length === 0) {
+    h += '<div style="padding:0.65rem 0.9rem;font-size:0.75rem;color:var(--muted)">No other events found in this time window.</div>';
+  } else {
+    var nsOrder = [], byNS = {};
+    events.forEach(function(ev) {
+      if (!byNS[ev.namespace]) { byNS[ev.namespace] = []; nsOrder.push(ev.namespace); }
+      byNS[ev.namespace].push(ev);
+    });
+    nsOrder.forEach(function(ns) {
+      h += '<div class="corr-ns-label">' + esc(ns) +
+           ' <span style="font-weight:400;font-size:0.58rem;opacity:0.55">(' + byNS[ns].length + ')</span></div>';
+      byNS[ns].forEach(function(ev) {
+        h += '<div class="corr-row">';
+        h += '<div class="corr-dot ' + esc(ev.type) + '"></div>';
+        h += '<div>';
+        h += '<div class="corr-obj"><span class="corr-kind-chip">' + esc(ev.kind) + '</span>' +
+             esc(ev.object_name) + ' <span class="corr-reason">· ' + esc(ev.reason) + '</span></div>';
+        h += '<div class="corr-msg">' + esc(ev.message) + '</div>';
+        h += '</div>';
+        h += '<div class="corr-age">' + (ev.count > 1 ? '×' + ev.count + '<br>' : '') + esc(ev.age) + '</div>';
+        h += '</div>';
+      });
+    });
+  }
+
+  h += '</div>';
+  return h;
+}
+
+// ── Logs ─────────────────────────────────────────────────────────────────────
+
+// autoFetchLogs populates a result div without a dedicated Logs button being clicked.
+function autoFetchLogs(resultDiv, ns, pod) {
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = '<div class="ai-loading" style="padding:0.5rem 0.9rem">' +
+    '<div class="ai-spinner"></div>Fetching logs…</div>';
+  fetch('/api/logs/' + encodeURIComponent(ns) + '/' + encodeURIComponent(pod))
+    .then(function(r) { return r.json(); })
+    .then(function(data) { resultDiv.innerHTML = renderLogs(data); })
+    .catch(function(err) {
+      resultDiv.innerHTML = '<div class="logs-error">' + esc(String(err)) + '</div>';
+    });
+}
+
+function renderLogs(data) {
+  if (!data.containers || data.containers.length === 0) {
+    return '<div class="logs-empty">No containers found.</div>';
+  }
+  var h = '';
+  data.containers.forEach(function(c, idx) {
+    if (idx > 0) h += '<hr class="logs-sep">';
+    h += '<div class="logs-meta"><span class="logs-cname">' + esc(c.container) + '</span>' +
+         '<span class="logs-tail">last ' + logTailLines + ' lines</span></div>';
+    if (c.error) {
+      h += '<div class="logs-error">' + esc(c.error) + '</div>';
+    } else if (c.logs && c.logs.trim()) {
+      h += '<pre class="logs-pre">' + esc(c.logs) + '</pre>';
+    } else {
+      h += '<div class="logs-empty">No log output.</div>';
+    }
+  });
+  return h;
+}
+
+var logTailLines = 150;
+
+function fetchLogs(evt, btn, ns, pod) {
+  evt.stopPropagation();
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+
+  // Find direct-child .member-logs-result, or fall back to panel-level search
+  var resultDiv = null;
+  var block = btn.closest('.member-block');
+  if (block) {
+    for (var i = 0; i < block.children.length; i++) {
+      if (block.children[i].classList.contains('member-logs-result')) {
+        resultDiv = block.children[i]; break;
+      }
+    }
+  }
+  if (!resultDiv) {
+    var panel = btn.closest('.detail-panel');
+    if (panel) resultDiv = panel.querySelector('.member-logs-result');
+  }
+  if (!resultDiv) { btn.classList.remove('active'); btn.textContent = 'Logs'; return; }
+
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = '<div class="ai-loading" style="padding:0.5rem 0.9rem">' +
+    '<div class="ai-spinner"></div>Fetching logs…</div>';
+
+  fetch('/api/logs/' + encodeURIComponent(ns) + '/' + encodeURIComponent(pod))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      resultDiv.innerHTML = renderLogs(data);
+      btn.classList.remove('active');
+      btn.textContent = 'Logs';
+    })
+    .catch(function(err) {
+      resultDiv.innerHTML = '<div class="logs-error">' + esc(String(err)) + '</div>';
+      btn.classList.remove('active');
+      btn.textContent = 'Logs';
+    });
+}
+
+function fetchLogsInDescribe(btn, ns, pod) {
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+  var section = document.getElementById('obj-logs-section');
+  var body    = document.getElementById('obj-logs-body');
+  section.style.display = '';
+  body.innerHTML = '<div class="ai-loading" style="padding:0.5rem 0.9rem">' +
+    '<div class="ai-spinner"></div>Fetching logs…</div>';
+  fetch('/api/logs/' + encodeURIComponent(ns) + '/' + encodeURIComponent(pod))
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      body.innerHTML = renderLogs(data);
+      btn.classList.remove('active');
+      btn.textContent = 'Logs';
+    })
+    .catch(function(err) {
+      body.innerHTML = '<div class="logs-error">' + esc(String(err)) + '</div>';
+      btn.classList.remove('active');
+      btn.textContent = 'Logs';
+    });
+}
+
+// ── Namespace-level AI ────────────────────────────────────────────────────────
+
+function analyzeNamespace(btn, ns) {
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+  var resultDiv = document.getElementById('ns-ai-result');
+  resultDiv.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Analyzing namespace…</div>';
+  fetch('/api/ai/analyze/ns/' + encodeURIComponent(ns), { method: 'POST' })
+    .then(function() {
+      pollAI('/api/ai/insights/ns/' + encodeURIComponent(ns), resultDiv, btn, '✦ Analyze', 0);
+    })
+    .catch(function() {
+      resultDiv.innerHTML = '<p style="color:var(--warn)">Analysis failed.</p>';
+      btn.classList.remove('active');
+      btn.textContent = '✦ Analyze';
+    });
+}
+
+// ── Per-object AI ─────────────────────────────────────────────────────────────
+
+function analyzeObj(evt, btn, ns, kind, name) {
+  evt.stopPropagation();
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+
+  // Result div: direct-child .member-ai-result of the closest .member-block,
+  // OR the .member-ai-result inside the current .detail-panel (orphan objects).
+  var resultDiv = null;
+  var block = btn.closest('.member-block');
+  if (block) {
+    // Use :scope selector to avoid picking up nested member-ai-result divs
+    resultDiv = null;
+    var children = block.children;
+    for (var i = 0; i < children.length; i++) {
+      if (children[i].classList.contains('member-ai-result')) {
+        resultDiv = children[i];
+        break;
+      }
+    }
+  }
+  if (!resultDiv) {
+    var panel = btn.closest('.detail-panel');
+    if (panel) resultDiv = panel.querySelector('.member-ai-result');
+  }
+  if (!resultDiv) { btn.classList.remove('active'); btn.textContent = 'AI'; return; }
+
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Analyzing…</div>';
+
+  // Auto-show logs panel for pods so the user sees what the AI received
+  if (kind.toLowerCase() === 'pod') {
+    var logsDiv = null;
+    if (block) {
+      for (var ci = 0; ci < block.children.length; ci++) {
+        if (block.children[ci].classList.contains('member-logs-result')) {
+          logsDiv = block.children[ci]; break;
+        }
+      }
+    }
+    if (!logsDiv) {
+      var pp = btn.closest('.detail-panel');
+      if (pp) logsDiv = pp.querySelector('.member-logs-result');
+    }
+    if (logsDiv && logsDiv.style.display === 'none') {
+      autoFetchLogs(logsDiv, ns, name);
+    }
+  }
+
+  var path = [ns, kind, name].map(encodeURIComponent).join('/');
+  fetch('/api/ai/analyze/object/' + path, { method: 'POST' })
+    .then(function() {
+      pollAI('/api/ai/insights/object/' + path, resultDiv, btn, btn.textContent.indexOf('✦') >= 0 ? '✦ AI' : 'AI', 0);
+    })
+    .catch(function() {
+      resultDiv.innerHTML = '<p style="color:var(--warn)">Analysis failed.</p>';
+      btn.classList.remove('active');
+      btn.textContent = btn.textContent.indexOf('✦') >= 0 ? '✦ AI' : 'AI';
+    });
+}
+
+// ── Inline object describe ────────────────────────────────────────────────────
 
 function loadObject(ns, kind, name, fromPanel) {
   currentFromPanel = fromPanel;
@@ -601,7 +1353,7 @@ function backToChain() {
   if (!currentFromPanel) return;
   document.querySelectorAll('.detail-panel').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById(currentFromPanel).classList.add('active');
-  document.querySelectorAll('.sidebar-item').forEach(function(i) { i.classList.remove('active'); });
+  document.querySelectorAll('.sidebar-item,.sidebar-ai-entry').forEach(function(i) { i.classList.remove('active'); });
   if (currentFromItem) currentFromItem.classList.add('active');
 }
 
@@ -638,6 +1390,14 @@ function renderObj(info) {
   h += '<div class="detail-breadcrumb"><span class="breadcrumb-step"><span class="kind-chip d0">' + esc(info.kind) + '</span></span></div>';
   h += '</div><div class="detail-meta">';
   if (info.age) h += '<span class="badge ok">' + esc(info.age) + '</span>';
+  if (info.kind && info.kind.toLowerCase() === 'pod') {
+    h += '<button class="logs-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" ' +
+         'onclick="fetchLogsInDescribe(this,\'' + esc(info.namespace) + '\',\'' + esc(info.name) + '\')">Logs</button>';
+  }
+  h += '<button class="correlate-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" ' +
+       'onclick="fetchCorrelateInDescribe(this,\'' + esc(info.namespace) + '\',\'' + esc(info.kind) + '\',\'' + esc(info.name) + '\')">Correlate</button>';
+  h += '<button class="ai-obj-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" ' +
+       'onclick="analyzeObjInDescribe(this,\'' + esc(info.namespace) + '\',\'' + esc(info.kind) + '\',\'' + esc(info.name) + '\')">✦ AI</button>';
   h += '</div></div>';
 
   // Labels
@@ -685,17 +1445,66 @@ function renderObj(info) {
     h += '</table></div>';
   }
 
+  // AI section (empty, filled on button click)
+  h += '<div class="obj-ai-section" id="obj-ai-section" style="display:none">';
+  h += '<div class="obj-ai-section-header">';
+  h += '<span class="obj-ai-section-title">AI Analysis</span>';
+  h += '</div>';
+  h += '<div class="obj-ai-section-body" id="obj-ai-body"></div>';
+  h += '</div>';
+
+  // Logs section — only for pods
+  if (info.kind && info.kind.toLowerCase() === 'pod') {
+    h += '<div class="obj-logs-section" id="obj-logs-section" style="display:none">';
+    h += '<div class="obj-logs-header"><span class="obj-logs-title">Logs</span></div>';
+    h += '<div id="obj-logs-body" style="background:#080b10"></div>';
+    h += '</div>';
+  }
+
+  // Correlate section — renderCorrelate provides its own header/toggle
+  h += '<div id="obj-correlate-section" style="display:none;margin-top:1.5rem;' +
+       'border:1px solid rgba(139,92,246,0.18);border-radius:8px;overflow:hidden">';
+  h += '<div id="obj-correlate-body"></div>';
+  h += '</div>';
+
   h += '</div>';
   return h;
 }
 
-function esc(s) {
-  if (s == null) return '';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function analyzeObjInDescribe(btn, ns, kind, name) {
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+  var section = document.getElementById('obj-ai-section');
+  var body    = document.getElementById('obj-ai-body');
+  section.style.display = '';
+  body.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Analyzing…</div>';
+
+  // Auto-show logs section for pods
+  if (kind.toLowerCase() === 'pod') {
+    var logsSection = document.getElementById('obj-logs-section');
+    var logsBody    = document.getElementById('obj-logs-body');
+    if (logsSection && logsSection.style.display === 'none') {
+      autoFetchLogs(logsBody, ns, name);
+      logsSection.style.display = '';
+    }
+  }
+
+  var path = [ns, kind, name].map(encodeURIComponent).join('/');
+  fetch('/api/ai/analyze/object/' + path, { method: 'POST' })
+    .then(function() {
+      pollAI('/api/ai/insights/object/' + path, body, btn, '✦ AI', 0);
+    })
+    .catch(function() {
+      body.innerHTML = '<p style="color:var(--warn)">Analysis failed.</p>';
+      btn.classList.remove('active');
+      btn.textContent = '✦ AI';
+    });
 }
 
 // Auto-select first cascade failure, then first warning, then first item
 document.addEventListener('DOMContentLoaded', function() {
+
   var priority = ['.sidebar-item.si-cascade', '.sidebar-item.si-warn', '.sidebar-item'];
   for (var i = 0; i < priority.length; i++) {
     var el = document.querySelector(priority[i]);
@@ -704,5 +1513,7 @@ document.addEventListener('DOMContentLoaded', function() {
   applySidebarFilters();
 });
 </script>
+{{template "ai_modal" .}}
+{{template "settings_modal" .}}
 </body>
 </html>

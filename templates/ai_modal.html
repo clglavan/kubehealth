@@ -1,0 +1,481 @@
+{{define "ai_modal"}}
+<!-- ── AI Agent configuration modal ───────────────────────────────────────── -->
+<div id="aim-overlay" onclick="aimClose()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:900"></div>
+
+<div id="aim" style="display:none;position:fixed;top:50%;left:50%;
+     transform:translate(-50%,-50%);z-index:901;
+     width:min(1300px,96vw);height:min(78vh,820px);
+     background:var(--surface);border:1px solid var(--border);border-radius:14px;
+     box-shadow:0 32px 96px rgba(0,0,0,0.7);flex-direction:column;overflow:hidden">
+
+  <!-- header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;
+       padding:0.9rem 1.4rem;border-bottom:1px solid var(--border);flex-shrink:0">
+    <div>
+      <span style="font-size:1rem;font-weight:700">AI Agent</span>
+      <span style="font-size:0.75rem;color:var(--muted);margin-left:0.6rem">Configuration</span>
+    </div>
+    <button onclick="aimClose()" style="background:none;border:none;color:var(--muted);
+            font-size:1.4rem;cursor:pointer;line-height:1;padding:0 0.2rem">×</button>
+  </div>
+
+  <!-- two-column body -->
+  <div style="display:flex;flex:1;overflow:hidden">
+
+    <!-- ── Left: Config ── -->
+    <div style="flex:1;overflow-y:auto;padding:1.1rem 1.4rem;
+         display:flex;flex-direction:column;gap:1.25rem;border-right:1px solid var(--border)">
+
+      <!-- Model -->
+      <div>
+        <div class="aim-st">LM Studio Model</div>
+        <div style="display:flex;align-items:baseline;gap:0.7rem;flex-wrap:wrap">
+          <span id="aim-model-name"
+                style="font-family:monospace;font-size:0.88rem;font-weight:600;color:var(--accent)">…</span>
+          <span id="aim-model-arch" style="font-size:0.72rem;color:var(--muted)"></span>
+        </div>
+        <div id="aim-model-state" style="font-size:0.72rem;color:var(--muted);margin-top:0.2rem"></div>
+      </div>
+
+      <!-- Context window -->
+      <div>
+        <div class="aim-st">Context Window</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:0.45rem">
+          <span id="aim-ctx-total" style="font-size:0.82rem;color:var(--text)"></span>
+          <span id="aim-ctx-pct"   style="font-size:0.75rem;font-family:monospace;color:var(--muted)"></span>
+        </div>
+        <div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:0.8rem">
+          <div id="aim-ctx-bar" style="height:100%;border-radius:3px;background:var(--accent);
+               transition:width 0.4s,background 0.3s;width:0%"></div>
+        </div>
+        <div id="aim-ctx-breakdown" class="aim-bd"></div>
+        <div id="aim-ctx-advice"
+             style="margin-top:0.55rem;font-size:0.77rem;padding:0.32rem 0.65rem;
+                    border-radius:6px;font-weight:500;display:none"></div>
+      </div>
+
+      <!-- System prompt -->
+      <div style="flex:1;display:flex;flex-direction:column">
+        <div class="aim-st">System Prompt</div>
+        <textarea id="aim-prompt" rows="7"
+          style="flex:1;min-height:120px;width:100%;background:var(--bg);
+                 border:1px solid var(--border);border-radius:8px;color:var(--text);
+                 font-family:'SFMono-Regular',Consolas,monospace;font-size:0.79rem;
+                 line-height:1.55;padding:0.65rem 0.9rem;resize:none;
+                 outline:none;box-sizing:border-box"
+          oninput="aimUpdateCtx()"></textarea>
+      </div>
+
+    </div><!-- /left -->
+
+    <!-- ── Right: Message stack ── -->
+    <div style="flex:1;overflow-y:auto;padding:1.1rem 1.2rem;background:rgba(0,0,0,0.18)">
+      <div class="aim-st" style="margin-bottom:0.85rem">What gets sent to the model</div>
+
+      <!-- system message -->
+      <div class="msg-block">
+        <div class="msg-role msg-role-sys">system</div>
+        <div class="msg-sec">
+          <div class="msg-content" id="aim-stack-sys"
+               style="white-space:pre-wrap;color:var(--muted);font-style:italic"></div>
+        </div>
+      </div>
+
+      <!-- user message -->
+      <div class="msg-block">
+        <div class="msg-role msg-role-usr">user</div>
+
+        <!-- ① task instruction -->
+        <div class="msg-sec">
+          <div class="msg-sec-hdr">
+            <span class="msg-num">①</span>
+            <span class="msg-sec-title">Task instruction</span>
+            <span class="msg-chip chip-auto">auto-generated</span>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-obj">obj</span>
+            <pre class="msg-content">Analyze events for {Kind} "{name}" in namespace "{ns}".
+</pre>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-ns">ns</span>
+            <pre class="msg-content">Analyze all Kubernetes events in namespace "{ns}".
+</pre>
+          </div>
+        </div>
+
+        <!-- ② events -->
+        <div class="msg-sec">
+          <div class="msg-sec-hdr">
+            <span class="msg-num">②</span>
+            <span class="msg-sec-title">Events</span>
+            <span class="msg-chip chip-k8s">k8s API</span>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-obj">obj</span>
+            <pre class="msg-content">Events ({N} total):
+- [{Type}] {Reason}: {Message}  (×{Count}, {Age} ago)
+- [{Type}] {Reason}: {Message}  (×{Count}, {Age} ago)
+</pre>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-ns">ns</span>
+            <pre class="msg-content">Events ({N} total, {W} warnings):
+- [{Type}] {Kind}/{Name}  {Reason}: {Message}  (×{Count}, {Age} ago)
+- [{Type}] {Kind}/{Name}  {Reason}: {Message}  (×{Count}, {Age} ago)
+... and {N} more
+</pre>
+          </div>
+        </div>
+
+        <!-- ③ object describe (obj always) -->
+        <div class="msg-sec">
+          <div class="msg-sec-hdr">
+            <span class="msg-num">③</span>
+            <span class="msg-sec-title">Object describe</span>
+            <span class="msg-chip chip-k8s">k8s API</span>
+            <span class="msg-chip chip-auto">always</span>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-obj">obj</span>
+            <pre class="msg-content">
+Object describe:
+Age: {age}
+Labels: {key}={value} ...
+{Section title}:
+  {Key}: {Value}
+Conditions:
+  {Type}: {Status} ({Reason}: {Message})
+</pre>
+          </div>
+          <div style="font-size:0.67rem;color:var(--muted);padding-left:2.25rem;margin-top:0.15rem;line-height:1.5">
+            Sections and conditions depend on resource kind (Pod, Deployment, Job, etc.).<br>
+            If the object no longer exists: <code>Note: object no longer exists in the cluster.</code>
+          </div>
+        </div>
+
+        <!-- ④ pod logs (obj, pods only) -->
+        <div class="msg-sec">
+          <div class="msg-sec-hdr">
+            <span class="msg-num">④</span>
+            <span class="msg-sec-title">Pod logs</span>
+            <span class="msg-chip chip-k8s">k8s API</span>
+            <span class="msg-chip chip-cond">pods only</span>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-obj">obj</span>
+            <pre class="msg-content">
+Pod logs (last <span id="aim-stack-logtail">150</span> lines):
+=== container: {name} ===
+{raw log output}
+</pre>
+          </div>
+          <div style="font-size:0.67rem;color:var(--muted);padding-left:2.25rem;margin-top:0.15rem;line-height:1.5">
+            <code>=== container: {name} ===</code> header only emitted when &gt;1 container.<br>
+            On stream error: <code>=== container: {name} — error: {msg} ===</code><br>
+            Container detected via regex on event messages; falls back to all containers.
+          </div>
+        </div>
+
+        <!-- ⑤ response format -->
+        <div class="msg-sec">
+          <div class="msg-sec-hdr">
+            <span class="msg-num">⑤</span>
+            <span class="msg-sec-title">Response format</span>
+            <span class="msg-chip chip-hard">hardcoded</span>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-obj">obj</span>
+            <pre class="msg-content">
+Respond exactly:
+<strong style="color:var(--accent)">**Summary**</strong>: &lt;one sentence about this specific resource&gt;
+<strong style="color:var(--accent)">**Issues**</strong>:
+- &lt;issue or 'None'&gt;
+<strong style="color:var(--accent)">**Actions**</strong>:
+- &lt;action or 'None'&gt;
+
+Be concise and actionable.</pre>
+          </div>
+          <div class="msg-var">
+            <span class="v-chip v-ns">ns</span>
+            <pre class="msg-content">
+Respond exactly:
+<strong style="color:var(--accent)">**Summary**</strong>: &lt;one sentence about overall namespace health&gt;
+<strong style="color:var(--accent)">**Issues**</strong>:
+- &lt;issue or 'None'&gt;
+<strong style="color:var(--accent)">**Actions**</strong>:
+- &lt;action or 'None'&gt;
+
+Be concise and actionable.</pre>
+          </div>
+        </div>
+
+      </div><!-- /user block -->
+    </div><!-- /right -->
+
+  </div><!-- /two-column body -->
+
+  <!-- footer -->
+  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.75rem;
+       padding:0.8rem 1.4rem;border-top:1px solid var(--border);flex-shrink:0">
+    <button onclick="aimReset()"
+      style="background:none;border:1px solid var(--border);color:var(--muted);
+             padding:0.33rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem">
+      Reset to default
+    </button>
+    <button id="aim-save-btn" onclick="aimSave()"
+      style="background:var(--accent);color:#fff;border:none;
+             padding:0.33rem 1rem;border-radius:6px;cursor:pointer;
+             font-size:0.8rem;font-weight:600">
+      Save
+    </button>
+  </div>
+</div>
+
+<style>
+  .aim-st {
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.09em; color: var(--muted); margin-bottom: 0.5rem;
+  }
+  /* context breakdown grid */
+  .aim-bd {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.15rem 0.85rem;
+    font-size: 0.77rem;
+    line-height: 1.7;
+  }
+  .aim-bd .aib-label { color: var(--muted); }
+  .aim-bd .aib-val   { text-align: right; font-family: monospace; color: var(--text); }
+  .aim-bd .aib-sep   { grid-column: 1/-1; border: none; border-top: 1px solid var(--border); margin: 0.18rem 0; }
+  .aim-bd .aib-total .aib-label,
+  .aim-bd .aib-total .aib-val { color: var(--text); font-weight: 600; }
+  #aim-ctx-advice.ok   { background: rgba(16,185,129,0.08); color: var(--normal); display: block !important; }
+  #aim-ctx-advice.warn { background: rgba(245,158,11,0.08); color: var(--warn);   display: block !important; }
+  #aim-ctx-advice.bad  { background: rgba(239,68,68,0.08);  color: #ef4444;       display: block !important; }
+  #aim-save-btn:hover    { opacity: 0.88; }
+  #aim-save-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* message stack */
+  .msg-block {
+    background: rgba(0,0,0,0.35);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+  }
+  .msg-role {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.63rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .msg-role-sys { background: rgba(99,102,241,0.18); color: var(--accent); }
+  .msg-role-usr { background: rgba(16,185,129,0.12); color: var(--normal); }
+  .msg-sec {
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 0.55rem 0.75rem;
+  }
+  .msg-sec-hdr {
+    display: flex; align-items: center; gap: 0.38rem;
+    margin-bottom: 0.38rem; flex-wrap: wrap;
+  }
+  .msg-num { font-size: 0.65rem; color: var(--muted); }
+  .msg-sec-title { font-size: 0.75rem; font-weight: 600; color: var(--text); }
+  .msg-content {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.72rem; line-height: 1.6; color: var(--muted);
+  }
+  .msg-chip {
+    font-size: 0.58rem; font-weight: 700; padding: 0.06rem 0.38rem;
+    border-radius: 3px; letter-spacing: 0.04em;
+  }
+  .chip-auto { background: rgba(100,116,139,0.2);  color: var(--muted); }
+  .chip-k8s  { background: rgba(59,130,246,0.18);  color: #60a5fa; }
+  .chip-cond { background: rgba(16,185,129,0.14);  color: var(--normal); }
+  .chip-hard { background: rgba(239,68,68,0.12);   color: #f87171; }
+
+  /* obj / ns variant rows */
+  .msg-var { display: flex; gap: 0.45rem; align-items: flex-start; margin-top: 0.3rem; }
+  .v-chip {
+    font-size: 0.55rem; font-weight: 700; padding: 0.07rem 0.32rem;
+    border-radius: 3px; flex-shrink: 0; margin-top: 0.18rem;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .v-obj { background: rgba(99,102,241,0.22); color: var(--accent); }
+  .v-ns  { background: rgba(245,158,11,0.18); color: var(--warn); }
+  pre.msg-content, code.msg-content { white-space: pre-wrap; margin: 0; display: block; }
+
+  /* shared navbar button */
+  .ai-agent-nav-btn {
+    background: rgba(99,102,241,0.1);
+    border: 1px solid rgba(99,102,241,0.25);
+    color: var(--accent);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px; cursor: pointer;
+    font-size: 0.8rem; font-weight: 500; white-space: nowrap;
+    transition: background 0.12s;
+  }
+  .ai-agent-nav-btn:hover { background: rgba(99,102,241,0.18); }
+</style>
+
+<script>
+(function() {
+  window.aimData = null;
+
+  window.aimOpen = function() {
+    document.getElementById('aim-overlay').style.display = '';
+    document.getElementById('aim').style.display = 'flex';
+    aimLoadData();
+  };
+  window.aimClose = function() {
+    document.getElementById('aim-overlay').style.display = 'none';
+    document.getElementById('aim').style.display = 'none';
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') aimClose();
+  });
+
+  function aimLoadData() {
+    fetch('/api/ai/config')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        window.aimData = d;
+
+        // Model name + arch
+        document.getElementById('aim-model-name').textContent = d.model || 'Not configured';
+        var mi = d.model_info;
+        if (mi) {
+          var parts = [];
+          if (mi.arch)         parts.push(mi.arch);
+          if (mi.quantization) parts.push(mi.quantization);
+          document.getElementById('aim-model-arch').textContent = parts.join(' · ');
+          var stateParts = [];
+          if (mi.state) stateParts.push(mi.state);
+          if (mi.loaded_context_length) {
+            stateParts.push('loaded ctx: ' + mi.loaded_context_length.toLocaleString() + ' tokens');
+            if (mi.max_context_length && mi.max_context_length !== mi.loaded_context_length)
+              stateParts.push('(max ' + mi.max_context_length.toLocaleString() + ')');
+          } else if (mi.max_context_length) {
+            stateParts.push('max ctx: ' + mi.max_context_length.toLocaleString() + ' tokens');
+          }
+          document.getElementById('aim-model-state').textContent = stateParts.join(' · ');
+        } else {
+          document.getElementById('aim-model-arch').textContent = '';
+          document.getElementById('aim-model-state').textContent =
+            d.enabled ? 'Could not reach LM Studio /api/v0/models' : 'AI not enabled';
+        }
+
+        document.getElementById('aim-prompt').value = d.system_prompt || '';
+        aimUpdateCtx();
+      })
+      .catch(function() {
+        document.getElementById('aim-model-name').textContent = 'Cannot reach LM Studio';
+      });
+  }
+
+  window.aimUpdateCtx = function() {
+    if (!window.aimData) return;
+    var mi      = window.aimData.model_info;
+    var maxCtx  = mi ? (mi.loaded_context_length || mi.max_context_length || 0) : 0;
+    var logTail = window.aimData.log_tail_lines || 150;
+    var sysTxt  = document.getElementById('aim-prompt').value || '';
+
+    var sysTokens  = Math.ceil(sysTxt.length / 4);
+    var overhead      = 300;
+    var evtTokens     = 350;                         // ~7 events × ~50 tokens
+    var describeTokens= 200;                         // age + labels + ~10 spec/status rows + conditions ≈ 800 chars / 4
+    var logTokens     = Math.ceil(logTail * 80 / 4); // lines × ~80 chars / 4
+    var nsEvtTokens   = Math.ceil(75 * 120 / 4);     // 75 events × ~120 chars / 4 = 2,250 tk (large ns)
+
+    var podTotal = sysTokens + evtTokens + describeTokens + logTokens + overhead;
+    var nsTotal  = sysTokens + nsEvtTokens + overhead;
+    var worstCase= Math.max(podTotal, nsTotal);
+    var pct      = maxCtx > 0 ? Math.min((worstCase / maxCtx) * 100, 100) : 0;
+    var fmt      = function(n) { return n.toLocaleString(); };
+    var pctFmt   = function(n) { return maxCtx > 0 ? ' (' + ((n/maxCtx)*100).toFixed(1) + '%)' : ''; };
+
+    // Bar
+    var bar = document.getElementById('aim-ctx-bar');
+    bar.style.width = (maxCtx > 0 ? pct.toFixed(1) : 0) + '%';
+    bar.style.background = pct < 60 ? 'var(--accent)' : pct < 85 ? 'var(--warn)' : '#ef4444';
+
+    // Total label
+    var ctxLabel = (mi && mi.loaded_context_length) ? 'Loaded context' : 'Max context';
+    document.getElementById('aim-ctx-total').textContent = maxCtx > 0
+      ? ctxLabel + ': ' + fmt(maxCtx) + ' tokens'
+      : 'Context length unknown — model may not be loaded';
+    document.getElementById('aim-ctx-pct').textContent =
+      maxCtx > 0 ? pct.toFixed(1) + '% used (worst case)' : '';
+
+    // Breakdown
+    document.getElementById('aim-ctx-breakdown').innerHTML =
+      '<span class="aib-label" style="color:var(--accent);font-weight:600">Pod analysis</span><span class="aib-val"></span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">System prompt</span><span class="aib-val">~' + fmt(sysTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Events (avg ~7 per pod)</span><span class="aib-val">~' + fmt(evtTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Object describe (spec + conditions)</span><span class="aib-val">~' + fmt(describeTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Logs (' + logTail + ' lines)</span><span class="aib-val">~' + fmt(logTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Overhead</span><span class="aib-val">~' + fmt(overhead) + ' tk</span>' +
+      '<span class="aib-total aib-label" style="padding-left:0.55rem">Total</span><span class="aib-total aib-val">~' + fmt(podTotal) + ' tk' + pctFmt(podTotal) + '</span>' +
+      '<hr class="aib-sep">' +
+      '<span class="aib-label" style="color:var(--accent);font-weight:600">Namespace analysis</span><span class="aib-val" style="font-size:0.65rem;color:var(--muted)">large ns estimate</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">System prompt</span><span class="aib-val">~' + fmt(sysTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Events (~75, 25 obj × 3 avg)</span><span class="aib-val">~' + fmt(nsEvtTokens) + ' tk</span>' +
+      '<span class="aib-label" style="padding-left:0.55rem">Overhead</span><span class="aib-val">~' + fmt(overhead) + ' tk</span>' +
+      '<span class="aib-total aib-label" style="padding-left:0.55rem">Total</span><span class="aib-total aib-val">~' + fmt(nsTotal) + ' tk' + pctFmt(nsTotal) + '</span>';
+
+    // Advice
+    var adv = document.getElementById('aim-ctx-advice');
+    if (maxCtx > 0) {
+      if (pct < 50) {
+        adv.className = 'ok';
+        adv.textContent = '✓ Well within context — ' + fmt(maxCtx - worstCase) + ' tokens spare.';
+      } else if (pct < 80) {
+        adv.className = 'ok';
+        adv.textContent = '✓ Fits comfortably. Consider shortening the system prompt if you need more room.';
+      } else if (pct < 100) {
+        adv.className = 'warn';
+        adv.textContent = '⚠ Getting tight. Shorten the system prompt or reduce log lines (currently ' + logTail + ').';
+      } else {
+        adv.className = 'bad';
+        adv.textContent = '✗ Likely exceeds context. Reduce system prompt or set log lines below ' + logTail + '.';
+      }
+    } else {
+      adv.className = 'warn';
+      adv.textContent = '⚠ Could not read context length — verify the model is loaded in LM Studio.';
+    }
+
+    // Update right-column live previews
+    var preview = sysTxt.length > 220 ? sysTxt.slice(0, 220) + '…' : sysTxt;
+    document.getElementById('aim-stack-sys').textContent = preview || '(empty)';
+    document.getElementById('aim-stack-logtail').textContent = logTail;
+  };
+
+  window.aimReset = function() {
+    if (!window.aimData) return;
+    var def = window.aimData.default_system_prompt || '';
+    document.getElementById('aim-prompt').value = def;
+    window.aimData.system_prompt = def;
+    aimUpdateCtx();
+  };
+
+  window.aimSave = function() {
+    var btn = document.getElementById('aim-save-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    var prompt = document.getElementById('aim-prompt').value;
+    if (window.aimData) window.aimData.system_prompt = prompt;
+    fetch('/api/ai/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ system_prompt: prompt })
+    })
+    .then(function() {
+      btn.textContent = 'Saved ✓';
+      setTimeout(function() { btn.disabled = false; btn.textContent = 'Save'; }, 1800);
+    })
+    .catch(function() { btn.disabled = false; btn.textContent = 'Save'; });
+  };
+})();
+</script>
+{{end}}

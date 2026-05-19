@@ -1,0 +1,107 @@
+{{define "settings_modal"}}
+<!-- ── Settings modal ─────────────────────────────────────────────────────── -->
+<div id="stg-overlay" onclick="stgClose()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:900"></div>
+
+<div id="stg" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+     z-index:901;width:min(440px,94vw);
+     background:var(--surface);border:1px solid var(--border);border-radius:14px;
+     box-shadow:0 32px 96px rgba(0,0,0,0.7);flex-direction:column;overflow:hidden">
+
+  <!-- header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;
+       padding:1rem 1.4rem 0.9rem;border-bottom:1px solid var(--border)">
+    <div style="font-size:1rem;font-weight:700">Settings</div>
+    <button onclick="stgClose()" style="background:none;border:none;color:var(--muted);
+            font-size:1.4rem;cursor:pointer;line-height:1;padding:0 0.2rem">×</button>
+  </div>
+
+  <!-- body -->
+  <div style="padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1.2rem">
+
+    <div>
+      <div class="aim-section-title">Logs</div>
+
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
+        <label for="stg-log-lines"
+               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Lines per container</label>
+        <input id="stg-log-lines" type="number" min="10" max="5000" value="150"
+               style="width:90px;background:var(--bg);border:1px solid var(--border);
+                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
+                      font-size:0.82rem;outline:none;text-align:right"
+               onfocus="this.style.borderColor='var(--accent)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+        Number of log lines fetched per container — applies to the <strong style="color:var(--text)">Logs</strong> viewer
+        and to <strong style="color:var(--text)">AI pod analysis</strong>. Larger values give the AI more context
+        but consume more of the context window (see AI Agent → Context Window).
+      </div>
+    </div>
+
+  </div>
+
+  <!-- footer -->
+  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.75rem;
+       padding:0.85rem 1.4rem;border-top:1px solid var(--border)">
+    <button onclick="stgClose()"
+      style="background:none;border:1px solid var(--border);color:var(--muted);
+             padding:0.35rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem">
+      Cancel
+    </button>
+    <button id="stg-save-btn" onclick="stgSave()"
+      style="background:var(--accent);color:#fff;border:none;
+             padding:0.35rem 1rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600">
+      Save
+    </button>
+  </div>
+</div>
+
+<script>
+(function() {
+  window.stgOpen = function() {
+    fetch('/api/settings')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        document.getElementById('stg-log-lines').value = d.log_tail_lines || 150;
+      })
+      .catch(function() {});
+    document.getElementById('stg-overlay').style.display = '';
+    document.getElementById('stg').style.display = 'flex';
+  };
+
+  window.stgClose = function() {
+    document.getElementById('stg-overlay').style.display = 'none';
+    document.getElementById('stg').style.display = 'none';
+  };
+
+  window.stgSave = function() {
+    var btn = document.getElementById('stg-save-btn');
+    var raw = parseInt(document.getElementById('stg-log-lines').value, 10);
+    if (isNaN(raw) || raw < 10)   raw = 10;
+    if (raw > 5000)               raw = 5000;
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ log_tail_lines: raw })
+    })
+    .then(function() {
+      btn.textContent = 'Saved ✓';
+      // Propagate the new value to the AI Agent context estimator if it's open
+      if (window.aimData) {
+        window.aimData.log_tail_lines = raw;
+        if (window.aimUpdateCtx) window.aimUpdateCtx();
+      }
+      setTimeout(function() { btn.disabled = false; btn.textContent = 'Save'; }, 1600);
+    })
+    .catch(function() { btn.disabled = false; btn.textContent = 'Save'; });
+  };
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') stgClose();
+  });
+})();
+</script>
+{{end}}

@@ -48,12 +48,50 @@
   .ns-card:hover { border-color: var(--accent); }
   .ns-card.has-warnings { border-left: 3px solid var(--warn); }
 
-  .ns-header { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; text-decoration: none; color: var(--text); }
+  /* Namespace header row — splits link from AI button */
+  .ns-header-row { display: flex; align-items: stretch; border-bottom: 1px solid var(--border); }
+  .ns-header { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.2rem; text-decoration: none; color: var(--text); }
   .ns-name { font-weight: 600; font-size: 0.95rem; }
   .ns-badges { display: flex; gap: 0.4rem; }
   .badge { font-size: 0.7rem; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 20px; }
   .badge.warn { background: var(--warn-bg); color: var(--warn); }
   .badge.ok { background: var(--normal-bg); color: var(--normal); }
+
+  /* AI button on each namespace card */
+  .ns-ai-btn {
+    padding: 0 0.85rem;
+    background: none;
+    border: none;
+    border-left: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+  .ns-ai-btn:hover { color: var(--accent); background: rgba(99,102,241,0.06); }
+  .ns-ai-btn.active { color: var(--accent); }
+
+  /* AI result inside card */
+  .ns-ai-result {
+    border-top: 1px solid rgba(99,102,241,0.2);
+    padding: 0.7rem 1.2rem 0.8rem;
+    font-size: 0.78rem;
+    line-height: 1.65;
+    color: var(--text);
+    background: rgba(99,102,241,0.03);
+  }
+  .ns-ai-result .ai-result-meta {
+    font-size: 0.67rem;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .ns-ai-result .ai-model-text { font-family: monospace; }
+  .ns-ai-result strong { color: var(--accent); }
 
   /* ---- Object rows inside card ---- */
   .obj-list { border-top: 1px solid var(--border); }
@@ -69,54 +107,76 @@
   .obj-row:last-child { border-bottom: none; }
 
   .obj-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 5px;
-    flex-shrink: 0;
+    width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; flex-shrink: 0;
   }
   .obj-dot.warn { background: var(--warn); box-shadow: 0 0 0 2px var(--warn-bg); }
   .obj-dot.ok   { background: var(--normal); }
 
   .obj-name {
-    color: var(--accent);
-    font-weight: 500;
-    font-size: 0.82rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--accent); font-weight: 500; font-size: 0.82rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
   .obj-name .kind-chip {
-    font-size: 0.62rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    background: rgba(99,102,241,0.15);
-    color: var(--accent);
-    padding: 0.1rem 0.35rem;
-    border-radius: 3px;
-    margin-right: 0.3rem;
+    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    background: rgba(99,102,241,0.15); color: var(--accent);
+    padding: 0.1rem 0.35rem; border-radius: 3px; margin-right: 0.3rem;
   }
   .obj-reasons {
-    grid-column: 2;
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    grid-column: 2; font-size: 0.72rem; color: var(--muted); margin-top: 1px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
   }
-  .obj-age {
-    grid-column: 3;
-    grid-row: 1;
-    font-size: 0.72rem;
-    color: var(--muted);
-    white-space: nowrap;
-  }
+  .obj-age { grid-column: 3; grid-row: 1; font-size: 0.72rem; color: var(--muted); white-space: nowrap; }
 
   .more-link { display: block; text-align: center; padding: 0.5rem; font-size: 0.78rem; color: var(--accent); text-decoration: none; border-top: 1px solid var(--border); }
   .more-link:hover { background: rgba(99,102,241,0.08); }
   .empty-ns { padding: 1rem 1.2rem; font-size: 0.82rem; color: var(--muted); text-align: center; }
+
+  /* ---- AI content rendering ---- */
+  .ai-result-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.67rem;
+    color: var(--muted);
+    margin-bottom: 0.45rem;
+  }
+  .ai-result-meta .ai-model-text { font-family: 'SFMono-Regular', Consolas, monospace; }
+  .ai-result-meta .ai-ts { margin-left: auto; }
+  .ai-content p { margin: 0.2rem 0; font-size: 0.78rem; line-height: 1.55; }
+  .ai-section { margin: 0.5rem 0 0.1rem; }
+  .ai-section-label {
+    display: inline-block;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--accent);
+    margin-bottom: 0.1rem;
+  }
+  .ai-list { margin: 0.1rem 0 0.3rem; padding: 0; list-style: none; }
+  .ai-list li {
+    position: relative;
+    padding-left: 0.95rem;
+    margin-bottom: 0.22rem;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+  .ai-list li::before { content: '›'; position: absolute; left: 0.05rem; color: var(--accent); font-weight: 700; }
+  .ai-content code {
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.82em;
+    background: rgba(99,102,241,0.12);
+    padding: 0.06em 0.32em;
+    border-radius: 3px;
+    color: #a5b4fc;
+  }
+  .ns-ai-result strong { color: var(--accent); }
+
+  /* ---- AI loading ---- */
+  .ai-loading { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); padding: 0.15rem 0; }
+  .ai-spinner { width: 13px; height: 13px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
   @media (max-width: 600px) { .stats { flex-wrap: wrap; } .ns-grid { grid-template-columns: 1fr; } }
 </style>
@@ -124,8 +184,10 @@
 <body>
 <header>
   <h1>Kube<span>Health</span></h1>
-  <div style="display:flex;align-items:center;gap:1.5rem">
+  <div style="display:flex;align-items:center;gap:1rem">
     <span class="meta" id="update-label">Updated: {{.LastUpdated}}</span>
+    <button class="ai-agent-nav-btn" onclick="stgOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.3)">⚙ Settings</button>
+    <button class="ai-agent-nav-btn" onclick="aimOpen()">✦ AI Agent</button>
     <a href="/api/refresh" class="refresh-btn">↻ Refresh</a>
   </div>
 </header>
@@ -141,14 +203,18 @@
 <div class="ns-grid">
 {{range .Namespaces}}
   <div class="ns-card {{if gt .WarningCount 0}}has-warnings{{end}}">
-    <a class="ns-header" href="/namespace/{{.Namespace}}">
-      <span class="ns-name">{{.Namespace}}</span>
-      <span class="ns-badges">
-        {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
-        {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
-        {{if and (eq .WarningCount 0) (eq .NormalCount 0)}}<span class="badge ok">✓ quiet</span>{{end}}
-      </span>
-    </a>
+    <div class="ns-header-row">
+      <a class="ns-header" href="/namespace/{{.Namespace}}">
+        <span class="ns-name">{{.Namespace}}</span>
+        <span class="ns-badges">
+          {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
+          {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
+          {{if and (eq .WarningCount 0) (eq .NormalCount 0)}}<span class="badge ok">✓ quiet</span>{{end}}
+        </span>
+      </a>
+      <button class="ns-ai-btn" title="AI analysis" onclick="aiAnalyzeNS(event,this,'{{.Namespace}}')">✦ AI</button>
+    </div>
+    <div class="ns-ai-result" style="display:none"></div>
     {{if .Objects}}
     <div class="obj-list">
       {{$ns := .Namespace}}
@@ -183,6 +249,7 @@
   var lastLoaded = {{len .Namespaces}};
   var bar  = document.getElementById('progress-bar');
   var fill = document.getElementById('progress-fill');
+  var prevReady = null;
 
   function poll() {
     fetch('/api/status')
@@ -191,19 +258,122 @@
         if (!s.ready) {
           bar.classList.remove('hidden');
           fill.style.width = (s.total > 0 ? Math.round(s.loaded / s.total * 100) : 0) + '%';
-        }
-        if (s.loaded !== lastLoaded) { location.reload(); return; }
-        if (s.ready) {
-          bar.classList.add('hidden');
-          setTimeout(poll, 10000);
-        } else {
+          // Only move to false on the very first loading phase.
+          // Once prevReady is true (initial load done), don't reset it — a new namespace
+          // appearing mid-session would otherwise flip prevReady=false → trigger a reload
+          // that wipes out any in-progress AI analysis.
+          if (prevReady !== true) prevReady = false;
           setTimeout(poll, 2000);
+          return;
         }
+        bar.classList.add('hidden');
+        var needsReload = prevReady === false ||
+                          (prevReady === null && s.loaded !== lastLoaded);
+        // Lock prevReady to true NOW so a failed/delayed reload doesn't cause a reload loop
+        prevReady = true;
+        lastLoaded = s.loaded;
+        if (needsReload) {
+          // Schedule next poll as safety net in case reload is somehow blocked
+          setTimeout(poll, 2000);
+          location.reload();
+          return;
+        }
+        setTimeout(poll, 2000);
       })
-      .catch(function() { setTimeout(poll, 3000); });
+      .catch(function() { setTimeout(poll, 2000); });
   }
   poll();
+
+  // ── AI helpers ──────────────────────────────────────────────────────────────
+
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function fmt(text) {
+    return esc(text)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function renderMD(text) {
+    var lines = text.split('\n');
+    var out = '';
+    var inList = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (!line) { if (inList) { out += '</ul>'; inList = false; } continue; }
+      var m = line.match(/^\*\*([^*]+)\*\*:?\s*(.*)/);
+      if (m) {
+        if (inList) { out += '</ul>'; inList = false; }
+        out += '<div class="ai-section"><span class="ai-section-label">' + esc(m[1]) + '</span>';
+        if (m[2]) out += ' ' + fmt(m[2]);
+        out += '</div>';
+        continue;
+      }
+      var b = line.match(/^[-•]\s+(.*)/);
+      if (b) {
+        if (!inList) { out += '<ul class="ai-list">'; inList = true; }
+        out += '<li>' + fmt(b[1]) + '</li>';
+        continue;
+      }
+      if (inList) { out += '</ul>'; inList = false; }
+      out += '<p>' + fmt(line) + '</p>';
+    }
+    if (inList) out += '</ul>';
+    return out;
+  }
+
+  function pollAI(url, resultDiv, btn, attempts) {
+    attempts = attempts || 0;
+    fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (d.content) {
+          resultDiv.innerHTML =
+            '<div class="ai-result-meta">✦ <span class="ai-model-text">' + esc(d.model) + '</span>' +
+            '<span class="ai-ts">' + esc(d.updated_at) + '</span></div>' +
+            '<div class="ai-content">' + renderMD(d.content) + '</div>';
+          if (btn) { btn.classList.remove('active'); }
+        } else if (attempts < 45) {
+          setTimeout(function() { pollAI(url, resultDiv, btn, attempts + 1); }, 2000);
+        } else {
+          resultDiv.innerHTML = '<span style="color:var(--warn)">Analysis timed out.</span>';
+          if (btn) { btn.classList.remove('active'); }
+        }
+      })
+      .catch(function() {
+        if (attempts < 45) {
+          setTimeout(function() { pollAI(url, resultDiv, btn, attempts + 1); }, 3000);
+        } else if (btn) {
+          btn.classList.remove('active');
+        }
+      });
+  }
+
+  window.aiAnalyzeNS = function(evt, btn, ns) {
+    evt.preventDefault();
+    if (btn.classList.contains('active')) return;
+    btn.classList.add('active');
+
+    var card = btn.closest('.ns-card');
+    var resultDiv = card.querySelector('.ns-ai-result');
+    resultDiv.style.display = '';
+    resultDiv.innerHTML = '<div class="ai-loading"><div class="ai-spinner"></div>Analyzing…</div>';
+
+    fetch('/api/ai/analyze/ns/' + encodeURIComponent(ns), { method: 'POST' })
+      .then(function() {
+        pollAI('/api/ai/insights/ns/' + encodeURIComponent(ns), resultDiv, btn, 0);
+      })
+      .catch(function() {
+        resultDiv.innerHTML = '<span style="color:var(--warn)">Analysis failed.</span>';
+        btn.classList.remove('active');
+      });
+  };
 })();
 </script>
+{{template "ai_modal" .}}
+{{template "settings_modal" .}}
 </body>
 </html>
