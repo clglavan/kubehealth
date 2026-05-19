@@ -34,16 +34,8 @@ type CorrelateResponse struct {
 	Correlated []CorrelatedEvent `json:"correlated"`
 }
 
-func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
-	// /api/correlate/{namespace}/{kind}/{name}
-	path := strings.TrimPrefix(r.URL.Path, "/api/correlate/")
-	parts := strings.SplitN(path, "/", 3)
-	if len(parts) < 3 || parts[0] == "" || parts[1] == "" || parts[2] == "" {
-		http.Error(w, "expected /api/correlate/{namespace}/{kind}/{name}", http.StatusBadRequest)
-		return
-	}
-	ns, kind, name := parts[0], parts[1], parts[2]
-
+// buildCorrelateResponse is the core logic shared by the HTTP handler and the RCA agent.
+func buildCorrelateResponse(ns, kind, name string) CorrelateResponse {
 	resp := CorrelateResponse{
 		Namespace: ns,
 		Kind:      kind,
@@ -51,7 +43,6 @@ func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
 		BufferMin: correlateBufferMin,
 	}
 
-	// Collect the anchor object's events to establish the time window.
 	var anchorEvents []EventSummary
 	if v, ok := nsCache.Load(ns); ok {
 		e := v.(*nsEntry)
@@ -63,14 +54,10 @@ func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
 		}
 		e.RUnlock()
 	}
-
 	if len(anchorEvents) == 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(resp)
-		return
+		return resp
 	}
 
-	// Find the earliest first-time and latest last-time across all anchor events.
 	var earliest, latest time.Time
 	for _, ev := range anchorEvents {
 		if !ev.FirstTime.IsZero() && (earliest.IsZero() || ev.FirstTime.Before(earliest)) {
@@ -86,21 +73,16 @@ func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
 
 	windowStart := earliest.Add(-time.Duration(correlateBufferMin) * time.Minute)
 	windowEnd := latest.Add(time.Duration(correlateBufferMin) * time.Minute)
+	resp.TimeFrom, resp.TimeTo = earliest, latest
+	resp.WindowFrom, resp.WindowTo = windowStart, windowEnd
 
-	resp.TimeFrom = earliest
-	resp.TimeTo = latest
-	resp.WindowFrom = windowStart
-	resp.WindowTo = windowEnd
-
-	// Scan every namespace cache for events whose LastTime falls inside the window,
-	// excluding the anchor object itself.
 	nsCache.Range(func(key, val any) bool {
 		otherNS := key.(string)
 		e := val.(*nsEntry)
 		e.RLock()
 		for _, ev := range e.events {
 			if otherNS == ns && strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-				continue // skip the anchor itself
+				continue
 			}
 			if ev.LastTime.After(windowStart) && ev.LastTime.Before(windowEnd) {
 				resp.Correlated = append(resp.Correlated, CorrelatedEvent{
@@ -120,11 +102,20 @@ func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
 		return true
 	})
 
-	// Most recent events first.
 	sort.Slice(resp.Correlated, func(i, j int) bool {
 		return resp.Correlated[i].LastTime.After(resp.Correlated[j].LastTime)
 	})
+	return resp
+}
 
+func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
+	path := strings.TrimPrefix(r.URL.Path, "/api/correlate/")
+	parts := strings.SplitN(path, "/", 3)
+	if len(parts) < 3 || parts[0] == "" || parts[1] == "" || parts[2] == "" {
+		http.Error(w, "expected /api/correlate/{namespace}/{kind}/{name}", http.StatusBadRequest)
+		return
+	}
+	resp := buildCorrelateResponse(parts[0], parts[1], parts[2])
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }

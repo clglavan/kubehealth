@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -25,6 +26,8 @@ type AIInsight struct {
 	Model     string `json:"model"`
 	UpdatedAt string `json:"updated_at"`
 	Enabled   bool   `json:"enabled"`
+	Partial   bool   `json:"partial,omitempty"` // true while streaming is in progress
+	Error     string `json:"error,omitempty"`   // non-empty when the analysis failed
 }
 
 var (
@@ -232,17 +235,125 @@ func analyzeObjKey(key, ns, kind, name string) error {
 }
 
 func storeAnalysis(key, prompt string) error {
-	content, err := callLMStudio(prompt)
+	now := func() string { return time.Now().Format("2006-01-02 15:04:05 MST") }
+
+	// Immediately mark as partial so the UI shows "Processing prompt…" instead of the
+	// generic "Analyzing…" spinner while LM Studio processes the input tokens.
+	aiInsightCache.Store(key, &AIInsight{
+		Partial:   true,
+		Model:     aiConfig.model,
+		UpdatedAt: now(),
+		Enabled:   true,
+	})
+
+	content, err := streamLMStudio(prompt, func(partial string) {
+		aiInsightCache.Store(key, &AIInsight{
+			Content:   cleanLMResponse(partial),
+			Partial:   true,
+			Model:     aiConfig.model,
+			UpdatedAt: now(),
+			Enabled:   true,
+		})
+	})
+
 	if err != nil {
+		log.Printf("AI analysis [%s]: %v", key, err)
+		aiInsightCache.Store(key, &AIInsight{
+			Error:     err.Error(),
+			Model:     aiConfig.model,
+			UpdatedAt: now(),
+			Enabled:   true,
+		})
 		return err
 	}
 	aiInsightCache.Store(key, &AIInsight{
 		Content:   cleanLMResponse(content),
 		Model:     aiConfig.model,
-		UpdatedAt: time.Now().Format("2006-01-02 15:04:05 MST"),
+		UpdatedAt: now(),
 		Enabled:   true,
 	})
 	return nil
+}
+
+// streamLMStudio sends a streaming chat-completion request to LM Studio and calls
+// writeFn with the accumulated content after each ~300ms batch of tokens.
+// It enforces the global concurrent LLM call limit.
+func streamLMStudio(prompt string, writeFn func(partial string)) (string, error) {
+	if !acquireLLMSlot() {
+		return "", fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
+			getLLMActiveCalls(), getLLMMaxCalls())
+	}
+	defer releaseLLMSlot()
+
+	sp := getSystemPrompt()
+	msgs := []lmMsg{{Role: "user", Content: prompt}}
+	if sp != "" {
+		msgs = append([]lmMsg{{Role: "system", Content: sp}}, msgs...)
+	}
+	body, _ := json.Marshal(lmReq{
+		Model:    aiConfig.model,
+		Messages: msgs,
+		Stream:   true,
+	})
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, "POST", aiConfig.baseURL+"/chat/completions", bytes.NewReader(body))
+	if err != nil {
+		return "", err
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", fmt.Errorf("LM Studio: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		var buf [1024]byte
+		n, _ := resp.Body.Read(buf[:])
+		return "", fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, strings.TrimSpace(string(buf[:n])))
+	}
+
+	scanner := bufio.NewScanner(resp.Body)
+	scanner.Buffer(make([]byte, 64*1024), 64*1024)
+
+	var full strings.Builder
+	var lastWrite time.Time
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		if !strings.HasPrefix(line, "data: ") {
+			continue
+		}
+		data := strings.TrimPrefix(line, "data: ")
+		if data == "[DONE]" {
+			break
+		}
+		var chunk struct {
+			Choices []struct {
+				Delta struct {
+					Content string `json:"content"`
+				} `json:"delta"`
+			} `json:"choices"`
+		}
+		if err := json.Unmarshal([]byte(data), &chunk); err != nil {
+			continue
+		}
+		if len(chunk.Choices) > 0 {
+			if tok := chunk.Choices[0].Delta.Content; tok != "" {
+				full.WriteString(tok)
+				if writeFn != nil && time.Since(lastWrite) >= 300*time.Millisecond {
+					writeFn(full.String())
+					lastWrite = time.Now()
+				}
+			}
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return full.String(), fmt.Errorf("stream read: %w", err)
+	}
+	return full.String(), nil
 }
 
 type lmMsg struct {
@@ -262,6 +373,133 @@ type lmResp struct {
 	} `json:"choices"`
 }
 
+// ── Context-overflow sentinel ─────────────────────────────────────────────────
+
+// contextOverflowError is returned when LM Studio rejects a request because the
+// input tokens exceed the model's loaded context length.
+// Detection uses LM Studio's documented error substring (bug-tracker issue #237).
+type contextOverflowError struct{ detail string }
+
+func (e *contextOverflowError) Error() string {
+	return "context window exceeded: " + e.detail
+}
+
+func isContextOverflow(err error) bool {
+	_, ok := err.(*contextOverflowError)
+	return ok
+}
+
+// ── Tool-calling types (RCA agent only) ───────────────────────────────────────
+
+type rcaToolProp struct {
+	Type        string `json:"type"`
+	Description string `json:"description,omitempty"`
+}
+
+type rcaToolParam struct {
+	Type       string                 `json:"type"`
+	Properties map[string]rcaToolProp `json:"properties"`
+	Required   []string               `json:"required"`
+}
+
+type rcaTool struct {
+	Type     string `json:"type"` // always "function"
+	Function struct {
+		Name        string       `json:"name"`
+		Description string       `json:"description"`
+		Parameters  rcaToolParam `json:"parameters"`
+	} `json:"function"`
+}
+
+type rcaToolCallFn struct {
+	Name      string `json:"name"`
+	Arguments string `json:"arguments"` // JSON-encoded args
+}
+
+type rcaToolCall struct {
+	ID       string        `json:"id"`
+	Type     string        `json:"type"`
+	Function rcaToolCallFn `json:"function"`
+}
+
+// rcaMsg is the richer message type for the tool-calling conversation.
+// Content is interface{} so it round-trips as null when the model omits it.
+type rcaMsg struct {
+	Role       string        `json:"role"`
+	Content    interface{}   `json:"content"`
+	ToolCallID string        `json:"tool_call_id,omitempty"`
+	ToolCalls  []rcaToolCall `json:"tool_calls,omitempty"`
+}
+
+type rcaRequest struct {
+	Model    string    `json:"model"`
+	Messages []rcaMsg  `json:"messages"`
+	Tools    []rcaTool `json:"tools,omitempty"`
+	Stream   bool      `json:"stream"`
+}
+
+type rcaRespChoice struct {
+	Message      rcaMsg `json:"message"`
+	FinishReason string `json:"finish_reason"`
+}
+
+type rcaUsage struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
+}
+
+type rcaResponse struct {
+	Choices []rcaRespChoice `json:"choices"`
+	Usage   rcaUsage        `json:"usage"`
+}
+
+// callLMStudioRCA sends a tool-calling request and returns the raw response.
+// It is intentionally separate from callLMStudio to keep the RCA flow independent.
+func callLMStudioRCA(msgs []rcaMsg, tools []rcaTool) (*rcaResponse, error) {
+	if !acquireLLMSlot() {
+		return nil, fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
+			getLLMActiveCalls(), getLLMMaxCalls())
+	}
+	defer releaseLLMSlot()
+	body, _ := json.Marshal(rcaRequest{
+		Model:    aiConfig.model,
+		Messages: msgs,
+		Tools:    tools,
+		Stream:   false,
+	})
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
+	defer cancel()
+	req, err := http.NewRequestWithContext(ctx, "POST", aiConfig.baseURL+"/chat/completions", bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("LM Studio RCA: %w", err)
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		var buf [1024]byte
+		n, _ := resp.Body.Read(buf[:])
+		body := strings.TrimSpace(string(buf[:n]))
+		// LM Studio uses this specific phrase for context-window overflow (issue #237)
+		if strings.Contains(body, "Trying to keep the first") {
+			return nil, &contextOverflowError{detail: body}
+		}
+		return nil, fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, body)
+	}
+	var out rcaResponse
+	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {
+		return nil, fmt.Errorf("decode: %w", err)
+	}
+	if len(out.Choices) == 0 {
+		return nil, fmt.Errorf("empty response from LM Studio")
+	}
+	return &out, nil
+}
+
 func callLMStudio(prompt string) (string, error) {
 	msgs := []lmMsg{{Role: "user", Content: prompt}}
 	if sp := getSystemPrompt(); sp != "" {
@@ -272,7 +510,7 @@ func callLMStudio(prompt string) (string, error) {
 		Messages: msgs,
 		Stream:   false,
 	})
-	ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
 	defer cancel()
 	req, err := http.NewRequestWithContext(ctx, "POST", aiConfig.baseURL+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
@@ -285,7 +523,9 @@ func callLMStudio(prompt string) (string, error) {
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("LM Studio returned %d", resp.StatusCode)
+		var buf [1024]byte
+		n, _ := resp.Body.Read(buf[:])
+		return "", fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, strings.TrimSpace(string(buf[:n])))
 	}
 	var out lmResp
 	if err := json.NewDecoder(resp.Body).Decode(&out); err != nil {

@@ -230,24 +230,41 @@
   .ai-obj-btn.active { background: rgba(99,102,241,0.18); }
 
   /* ── AI result below a timeline ── */
+  /* ── Shared result-panel toggle header ── */
+  .result-toggle-hdr {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.28rem 0.9rem;
+    cursor: pointer; user-select: none;
+    font-size: 0.67rem; font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: filter 0.12s;
+  }
+  .result-toggle-hdr:hover { filter: brightness(1.15); }
+  .result-toggle-arrow { font-size: 0.58rem; opacity: 0.6; flex-shrink: 0; }
+  .result-toggle-title { flex: 1; }
+  .result-toggle-meta { font-size: 0.63rem; font-weight: 400; opacity: 0.7; font-family: monospace; }
+  .result-toggle-body { }
+
   .member-ai-result {
     border: 1px solid rgba(99,102,241,0.18);
     border-top: none;
     border-radius: 0 0 8px 8px;
-    padding: 0.65rem 1rem 0.75rem;
     background: rgba(99,102,241,0.03);
-    font-size: 0.77rem;
-    line-height: 1.65;
-    color: var(--text);
-    margin-bottom: 0;
+    overflow: hidden;
   }
   .member-children .member-ai-result { border-radius: 0 0 8px 0; }
-  .member-ai-result .ai-result-meta {
-    font-size: 0.67rem; color: var(--muted); margin-bottom: 0.4rem;
-    display: flex; gap: 0.45rem; align-items: center;
+  .member-ai-result .result-toggle-body {
+    padding: 0.65rem 1rem 0.75rem;
+    font-size: 0.77rem; line-height: 1.65; color: var(--text);
   }
-  .member-ai-result .ai-model-text { font-family: monospace; }
   .member-ai-result strong { color: var(--accent); }
+
+  /* ── Streaming cursor ── */
+  .ai-stream-cursor {
+    display: inline-block; margin-left: 2px; color: var(--accent);
+    animation: blink 0.6s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
   /* ── AI loading spinner ── */
   .ai-loading { display: flex; align-items: center; gap: 0.5rem; color: var(--muted); }
@@ -466,6 +483,61 @@
   #ns-ai-result .ai-content p { font-size: 0.875rem; margin: 0.4rem 0; }
 
   /* ── Logs button ── */
+  /* ── RCA button ── */
+  .rca-btn {
+    font-size: 0.63rem;
+    padding: 0.1rem 0.45rem;
+    background: rgba(217,119,6,0.08);
+    border: 1px solid rgba(217,119,6,0.25);
+    color: #d97706;
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-weight: 600;
+    transition: background 0.12s;
+  }
+  .rca-btn:hover  { background: rgba(217,119,6,0.15); }
+  .rca-btn.active { opacity: 0.6; cursor: default; }
+
+  /* ── RCA result panel ── */
+  .member-rca-result {
+    margin-top: 0.35rem;
+    border: 1px solid rgba(217,119,6,0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    background: #0a0c10;
+  }
+  .rca-progress-header {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.4rem 0.9rem;
+    background: rgba(217,119,6,0.07);
+    border-bottom: 1px solid rgba(217,119,6,0.12);
+    font-size: 0.7rem; color: #d97706;
+  }
+  .rca-steps { padding: 0.3rem 0.9rem 0.45rem; }
+  .rca-step {
+    display: flex; align-items: baseline; gap: 0.45rem;
+    font-size: 0.7rem; padding: 0.18rem 0; line-height: 1.4;
+  }
+  .rca-step-icon { flex-shrink: 0; font-size: 0.65rem; }
+  .rca-step-done .rca-step-icon { color: var(--normal); }
+  .rca-step-run  .rca-step-icon { color: #d97706; }
+  .rca-step-skip .rca-step-icon { color: var(--muted); }
+  .rca-step-skip .rca-step-label { opacity: 0.6; }
+  .rca-step-label { flex: 1; color: var(--muted); }
+  .rca-step-iter  { font-size: 0.63rem; color: rgba(100,116,139,0.6); white-space: nowrap; }
+  .rca-tool-chip  {
+    font-size: 0.58rem; font-weight: 700; padding: 0.04rem 0.3rem;
+    border-radius: 3px; background: rgba(217,119,6,0.12); color: #d97706; margin-right: 0.2rem;
+  }
+  .rca-result-body {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.78rem; line-height: 1.65; color: var(--text);
+  }
+  .rca-result-body strong { color: #d97706; }
+  .rca-result-body .ai-section-label { color: #d97706; }
+  .rca-error { padding: 0.6rem 0.9rem; font-size: 0.75rem; color: var(--warn); }
+
   /* ── Correlate button ── */
   .correlate-btn {
     font-size: 0.63rem;
@@ -603,6 +675,7 @@
   <div class="ns-pills">
     {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
     {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
+    <button class="ai-agent-nav-btn" onclick="docsOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.2)">Docs</button>
     <button class="ai-agent-nav-btn" onclick="stgOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.3)">⚙ Settings</button>
     <button class="ai-agent-nav-btn" onclick="aimOpen()">✦ AI Agent</button>
   </div>
@@ -728,6 +801,7 @@
             {{if $root.NormalCount}}<span class="badge ok">✓ {{$root.NormalCount}}</span>{{end}}
             {{if eq $root.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$root.ObjectName}}')">Logs</button>{{end}}
             <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">Correlate</button>
+            <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">RCA</button>
             <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">AI</button>
           </div>
         </div>
@@ -751,6 +825,7 @@
         <div class="member-ai-result" style="display:none"></div>
         {{if eq $root.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
         <div class="member-correlate-result" style="display:none"></div>
+        <div class="member-rca-result" style="display:none"></div>
 
         <!-- Depth-1 children -->
         {{if $root.Children}}
@@ -768,6 +843,7 @@
                 {{if $child.NormalCount}}<span class="badge ok">✓ {{$child.NormalCount}}</span>{{end}}
                 {{if eq $child.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$child.ObjectName}}')">Logs</button>{{end}}
                 <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">Correlate</button>
+                <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">RCA</button>
                 <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">AI</button>
               </div>
             </div>
@@ -791,6 +867,7 @@
             <div class="member-ai-result" style="display:none"></div>
             {{if eq $child.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
             <div class="member-correlate-result" style="display:none"></div>
+            <div class="member-rca-result" style="display:none"></div>
 
             <!-- Depth-2 grandchildren -->
             {{if $child.Children}}
@@ -808,6 +885,7 @@
                     {{if $grand.NormalCount}}<span class="badge ok">✓ {{$grand.NormalCount}}</span>{{end}}
                     {{if eq $grand.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$grand.ObjectName}}')">Logs</button>{{end}}
                     <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">Correlate</button>
+                    <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">RCA</button>
                     <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">AI</button>
                   </div>
                 </div>
@@ -831,6 +909,7 @@
                 <div class="member-ai-result" style="display:none"></div>
                 {{if eq $grand.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
                 <div class="member-correlate-result" style="display:none"></div>
+                <div class="member-rca-result" style="display:none"></div>
               </div>
               {{end}}
             </div>
@@ -861,6 +940,7 @@
              style="font-size:0.75rem;color:var(--accent);text-decoration:none;">View YAML →</a>
           {{if eq $obj.Kind "Pod"}}<button class="logs-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$obj.ObjectName}}')">Logs</button>{{end}}
           <button class="correlate-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">Correlate</button>
+          <button class="rca-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="startRCA(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">RCA</button>
           <button class="ai-obj-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;"
                   onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">✦ AI</button>
           {{if $obj.WarningCount}}<span class="badge warn">⚠ {{$obj.WarningCount}}</span>{{end}}
@@ -888,6 +968,7 @@
         <div class="member-ai-result" style="display:none"></div>
         {{if eq $obj.Kind "Pod"}}<div class="member-logs-result" style="display:none"></div>{{end}}
         <div class="member-correlate-result" style="display:none"></div>
+        <div class="member-rca-result" style="display:none"></div>
       </div>
     </div>
     {{end}}
@@ -900,6 +981,13 @@
 </div><!-- end app-body -->
 
 <script>
+// Initialise the LLM timeout from settings so pollAI uses the right value
+// even before the user opens the Settings modal.
+window.llmTimeoutMs = 10 * 60 * 1000; // default 10 min
+fetch('/api/settings').then(function(r){return r.json();}).then(function(d){
+  if (d.llm_timeout_min) window.llmTimeoutMs = d.llm_timeout_min * 60 * 1000;
+}).catch(function(){});
+
 var showWarnOnly = false;
 var currentFromPanel = null;
 var currentFromItem  = null;
@@ -993,6 +1081,7 @@ function renderMD(text) {
   return out;
 }
 
+// Plain content — used for the namespace full-panel (has its own chrome)
 function aiResultHTML(d) {
   return '<div class="ai-result-meta">' +
          '✦ <span class="ai-model-text">' + esc(d.model) + '</span>' +
@@ -1001,16 +1090,93 @@ function aiResultHTML(d) {
          '<div class="ai-content">' + renderMD(d.content) + '</div>';
 }
 
-function pollAI(url, resultDiv, btn, btnLabel, attempts) {
+// With collapsible header — used for inline member panels and describe panel.
+// Identical structure to aiStreamingFrame so there is zero visual change when streaming completes.
+function aiResultCollapsible(d) {
+  var h = '<div class="result-toggle-hdr"' +
+    ' style="background:rgba(99,102,241,0.07);color:var(--accent)"' +
+    ' onclick="toggleResultPanel(this)">';
+  h += '<span class="result-toggle-arrow">▼</span>';
+  h += '<span class="result-toggle-title">AI Analysis</span>';
+  h += '<span class="result-toggle-meta">✦ ' + esc(d.model) + ' · <span class="ai-stream-ts">' + esc(d.updated_at) + '</span></span>';
+  h += '</div>';
+  h += '<div class="result-toggle-body ai-stream-body"><div class="ai-content">' + renderMD(d.content) + '</div></div>';
+  return h;
+}
+
+// Initial frame rendered on the first streaming chunk — exact same structure as
+// aiResultCollapsible so nothing changes visually when the stream finishes.
+function aiStreamingFrame(d) {
+  var h = '<div class="result-toggle-hdr"' +
+    ' style="background:rgba(99,102,241,0.07);color:var(--accent)"' +
+    ' onclick="toggleResultPanel(this)">';
+  h += '<span class="result-toggle-arrow">▼</span>';
+  h += '<span class="result-toggle-title">AI Analysis</span>';
+  h += '<span class="result-toggle-meta">✦ ' + esc(d.model || '') + ' · <span class="ai-stream-ts">generating…</span></span>';
+  h += '</div>';
+  h += '<div class="result-toggle-body ai-stream-body">';
+  h += d.content
+    ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
+    : '<div class="ai-loading" style="padding:0.25rem 0"><div class="ai-spinner"></div>Processing prompt…</div>';
+  h += '</div>';
+  return h;
+}
+
+function toggleResultPanel(hdr) {
+  var body  = hdr.nextElementSibling;
+  var arrow = hdr.querySelector('.result-toggle-arrow');
+  var open  = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  if (arrow) arrow.textContent = open ? '▶' : '▼';
+}
+
+// collapsible=true → use aiResultCollapsible; false/omitted → use plain aiResultHTML
+// streamStart: Date.now() captured on first partial response, passed through to track elapsed time
+function pollAI(url, resultDiv, btn, btnLabel, attempts, collapsible, streamStart) {
   attempts = attempts || 0;
   fetch(url)
     .then(function(r) { return r.json(); })
     .then(function(d) {
-      if (d.content) {
-        resultDiv.innerHTML = aiResultHTML(d);
+      if (d.error) {
+        resultDiv.innerHTML = '<div style="padding:0.55rem 0.9rem;font-size:0.77rem;color:var(--warn)">Analysis failed: ' + esc(d.error) + '</div>';
+        if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
+      } else if (d.partial) {
+        // Streaming in progress — render the full frame once, then update only the body.
+        var streamBody = resultDiv.querySelector('.ai-stream-body');
+        var start = streamStart || Date.now();
+        if (!streamBody) {
+          // First chunk: render the complete frame (same structure as final result).
+          resultDiv.innerHTML = collapsible ? aiStreamingFrame(d) : aiResultHTML(d);
+        } else {
+          // Subsequent chunks: update body only — toggle state and header stay intact.
+          streamBody.innerHTML = d.content
+            ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
+            : '<div class="ai-loading" style="padding:0.25rem 0"><div class="ai-spinner"></div>Processing prompt…</div>';
+        }
+        // Use wall-clock time vs the configured backend timeout (+1 min margin).
+        var maxMs = (window.llmTimeoutMs || 10 * 60 * 1000) + 60 * 1000;
+        if (Date.now() - start < maxMs) {
+          setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1, collapsible, start); }, 500);
+        } else {
+          resultDiv.innerHTML = '<span style="color:var(--warn)">Stream timed out.</span>';
+          if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
+        }
+      } else if (d.content) {
+        // Streaming complete — update in-place if the frame is already rendered.
+        var streamBody = resultDiv.querySelector('.ai-stream-body');
+        if (streamBody) {
+          // Swap body content: final markdown (no cursor)
+          streamBody.innerHTML = '<div class="ai-content">' + renderMD(d.content) + '</div>';
+          streamBody.classList.remove('ai-stream-body');
+          // Swap "generating…" for the real timestamp — only text changes, no layout shift
+          var tsEl = resultDiv.querySelector('.ai-stream-ts');
+          if (tsEl) tsEl.textContent = d.updated_at || '';
+        } else {
+          resultDiv.innerHTML = collapsible ? aiResultCollapsible(d) : aiResultHTML(d);
+        }
         if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
       } else if (attempts < 45) {
-        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1); }, 2000);
+        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1, collapsible); }, 2000);
       } else {
         resultDiv.innerHTML = '<span style="color:var(--warn)">Analysis timed out.</span>';
         if (btn) { btn.classList.remove('active'); btn.textContent = btnLabel; }
@@ -1018,11 +1184,180 @@ function pollAI(url, resultDiv, btn, btnLabel, attempts) {
     })
     .catch(function() {
       if (attempts < 45) {
-        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1); }, 3000);
+        setTimeout(function() { pollAI(url, resultDiv, btn, btnLabel, attempts + 1, collapsible); }, 3000);
       } else if (btn) {
         btn.classList.remove('active'); btn.textContent = btnLabel;
       }
     });
+}
+
+// ── RCA ──────────────────────────────────────────────────────────────────────
+
+var rcaToolLabels = {
+  get_pod_logs:           'Pod logs',
+  get_object_describe:    'Describe',
+  get_object_events:      'Events',
+  get_correlated_events:  'Correlated events'
+};
+
+function rcaFindResultDiv(btn) {
+  var block = btn.closest('.member-block');
+  if (block) {
+    for (var i = 0; i < block.children.length; i++) {
+      if (block.children[i].classList.contains('member-rca-result')) return block.children[i];
+    }
+  }
+  var pp = btn.closest('.detail-panel');
+  return pp ? pp.querySelector('.member-rca-result') : null;
+}
+
+function startRCA(evt, btn, ns, kind, name) {
+  evt.stopPropagation();
+  if (btn.classList.contains('active')) return;
+  btn.classList.add('active');
+  btn.textContent = '…';
+
+  var resultDiv = rcaFindResultDiv(btn);
+  if (!resultDiv) { btn.classList.remove('active'); btn.textContent = 'RCA'; return; }
+  resultDiv.style.display = '';
+  resultDiv.innerHTML = '<div class="rca-progress-header"><div class="ai-spinner"></div>' +
+    '<span>Starting Root Cause Analysis…</span></div>';
+
+  var path = [ns, kind, name].map(encodeURIComponent).join('/');
+  fetch('/api/rca/' + path, { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.status === 'already_running') {
+        pollRCA('/api/rca/status/' + path, resultDiv, btn);
+        return;
+      }
+      pollRCA('/api/rca/status/' + path, resultDiv, btn);
+    })
+    .catch(function(err) {
+      resultDiv.innerHTML = '<div class="rca-error">' + esc(String(err)) + '</div>';
+      btn.classList.remove('active'); btn.textContent = 'RCA';
+    });
+}
+
+function pollRCA(statusUrl, resultDiv, btn, prevStepCount) {
+  prevStepCount = prevStepCount || 0;
+  fetch(statusUrl)
+    .then(function(r) { return r.json(); })
+    .then(function(state) {
+      if (state.status === 'running') {
+        resultDiv.innerHTML = renderRCAProgress(state);
+        setTimeout(function() { pollRCA(statusUrl, resultDiv, btn, (state.steps || []).length); }, 2000);
+      } else if (state.status === 'done') {
+        resultDiv.innerHTML = renderRCADone(state);
+        btn.classList.remove('active'); btn.textContent = 'RCA';
+      } else if (state.status === 'error') {
+        resultDiv.innerHTML = state.error_type === 'context_overflow'
+          ? renderRCAContextOverflow(state)
+          : '<div class="rca-error">RCA failed: ' + esc(state.error || 'unknown error') + '</div>';
+        btn.classList.remove('active'); btn.textContent = 'RCA';
+      } else {
+        setTimeout(function() { pollRCA(statusUrl, resultDiv, btn, 0); }, 2000);
+      }
+    })
+    .catch(function() {
+      setTimeout(function() { pollRCA(statusUrl, resultDiv, btn, prevStepCount); }, 3000);
+    });
+}
+
+function rcaStepIcon(s) {
+  if (s.status === 'done')        return '✓';
+  if (s.status === 'unavailable') return '—';
+  if (s.status === 'error')       return '✗';
+  return '⟳';
+}
+function rcaStepClass(s) {
+  if (s.status === 'done')        return 'rca-step-done';
+  if (s.status === 'unavailable') return 'rca-step-skip';
+  if (s.status === 'error')       return 'rca-step-skip';
+  return 'rca-step-run';
+}
+function rcaStepIterLabel(s) {
+  return s.initial ? 'initial ctx' : 'iter ' + s.iter;
+}
+
+function renderRCAStep(s) {
+  var h = '<div class="rca-step ' + rcaStepClass(s) + '">';
+  h += '<span class="rca-step-icon">' + rcaStepIcon(s) + '</span>';
+  h += '<span class="rca-step-label">' +
+       '<span class="rca-tool-chip">' + esc(rcaToolLabels[s.tool] || s.tool) + '</span>' +
+       esc(s.label) + '</span>';
+  h += '<span class="rca-step-iter">' + rcaStepIterLabel(s) + '</span>';
+  h += '</div>';
+  return h;
+}
+
+function renderRCAProgress(state) {
+  var h = '<div class="rca-progress-header"><div class="ai-spinner"></div>' +
+    '<span>Root Cause Analysis · iteration ' + state.iteration + ' / ' + state.max_iter + '</span>' +
+    '</div>';
+  var steps = state.steps || [];
+  if (steps.length > 0) {
+    h += '<div class="rca-steps">';
+    steps.forEach(function(s) { h += renderRCAStep(s); });
+    h += '</div>';
+  }
+  return h;
+}
+
+function renderRCADone(state) {
+  var steps = state.steps || [];
+
+  // Outer toggle — expanded by default
+  var h = '<div class="result-toggle-hdr"' +
+    ' style="background:rgba(217,119,6,0.07);color:#d97706;border-bottom:1px solid rgba(217,119,6,0.12)"' +
+    ' onclick="toggleResultPanel(this)">';
+  h += '<span class="result-toggle-arrow">▼</span>';
+  h += '<span class="result-toggle-title">Root Cause Analysis</span>';
+  h += '</div>';
+  h += '<div class="result-toggle-body" style="padding:0">';
+
+  // Inner evidence trail — collapsed by default
+  if (steps.length > 0) {
+    h += '<div class="rca-progress-header" onclick="rcaToggleTrail(this)" style="cursor:pointer">';
+    h += '<span style="font-size:0.6rem;opacity:0.65">▶</span>';
+    h += '<span>Evidence trail · ' + steps.length + ' step' + (steps.length !== 1 ? 's' : '') + '</span>';
+    h += '</div>';
+    h += '<div style="display:none"><div class="rca-steps">';
+    steps.forEach(function(s) { h += renderRCAStep(s); });
+    h += '</div></div>';
+  }
+
+  h += '<div class="rca-result-body">' + renderMD(state.result || '') + '</div>';
+  h += '</div>';
+  return h;
+}
+
+function renderRCAContextOverflow(state) {
+  var h = '<div class="result-toggle-hdr"' +
+    ' style="background:rgba(245,158,11,0.08);color:var(--warn);border-bottom:1px solid rgba(245,158,11,0.15)">';
+  h += '<span style="font-size:0.7rem">⚠</span>';
+  h += '<span style="flex:1;font-size:0.67rem;font-weight:600">Context Window Too Small for RCA</span>';
+  h += '</div>';
+  h += '<div style="padding:0.75rem 0.9rem;font-size:0.78rem;line-height:1.65">';
+  h += '<p style="color:var(--muted);margin-bottom:0.65rem">' + esc(state.error) + '</p>';
+  h += '<div class="ai-section"><span class="ai-section-label">How to fix in LM Studio</span></div>';
+  h += '<ul class="ai-list">';
+  h += '<li>Open LM Studio and find your currently loaded model</li>';
+  h += '<li>Click the <strong>⚙ gear icon</strong> next to the model name</li>';
+  h += '<li>Increase the <strong>Context Length</strong> slider (8192 or 16384 recommended)</li>';
+  h += '<li>Click <strong>Reload</strong> to apply — then retry the RCA</li>';
+  h += '</ul>';
+  h += '<p style="font-size:0.72rem;color:var(--muted);margin-top:0.5rem">The AI Agent modal (✦ AI Agent button) shows the estimated token usage for your current settings.</p>';
+  h += '</div>';
+  return h;
+}
+
+function rcaToggleTrail(header) {
+  var body  = header.nextElementSibling;
+  var arrow = header.querySelector('span');
+  var open  = body.style.display === 'none';
+  body.style.display = open ? '' : 'none';
+  if (arrow) arrow.textContent = open ? '▼' : '▶';
 }
 
 // ── Correlate ────────────────────────────────────────────────────────────────
@@ -1163,22 +1498,37 @@ function autoFetchLogs(resultDiv, ns, pod) {
 }
 
 function renderLogs(data) {
-  if (!data.containers || data.containers.length === 0) {
-    return '<div class="logs-empty">No containers found.</div>';
+  var containers = data.containers || [];
+  var n = containers.length;
+
+  // Collapsible header (expanded by default)
+  var h = '<div class="result-toggle-hdr"' +
+    ' style="background:rgba(16,185,129,0.07);color:var(--normal);border-bottom:1px solid rgba(16,185,129,0.1)"' +
+    ' onclick="toggleResultPanel(this)">';
+  h += '<span class="result-toggle-arrow">▼</span>';
+  h += '<span class="result-toggle-title">Logs</span>';
+  h += '<span class="result-toggle-meta">' + n + ' container' + (n !== 1 ? 's' : '') + ' · last ' + logTailLines + ' lines</span>';
+  h += '</div>';
+  h += '<div class="result-toggle-body" style="padding:0">';
+
+  if (n === 0) {
+    h += '<div class="logs-empty">No containers found.</div>';
+  } else {
+    containers.forEach(function(c, idx) {
+      if (idx > 0) h += '<hr class="logs-sep">';
+      h += '<div class="logs-meta"><span class="logs-cname">' + esc(c.container) + '</span>' +
+           '<span class="logs-tail">last ' + logTailLines + ' lines</span></div>';
+      if (c.error) {
+        h += '<div class="logs-error">' + esc(c.error) + '</div>';
+      } else if (c.logs && c.logs.trim()) {
+        h += '<pre class="logs-pre">' + esc(c.logs) + '</pre>';
+      } else {
+        h += '<div class="logs-empty">No log output.</div>';
+      }
+    });
   }
-  var h = '';
-  data.containers.forEach(function(c, idx) {
-    if (idx > 0) h += '<hr class="logs-sep">';
-    h += '<div class="logs-meta"><span class="logs-cname">' + esc(c.container) + '</span>' +
-         '<span class="logs-tail">last ' + logTailLines + ' lines</span></div>';
-    if (c.error) {
-      h += '<div class="logs-error">' + esc(c.error) + '</div>';
-    } else if (c.logs && c.logs.trim()) {
-      h += '<pre class="logs-pre">' + esc(c.logs) + '</pre>';
-    } else {
-      h += '<div class="logs-empty">No log output.</div>';
-    }
-  });
+
+  h += '</div>';
   return h;
 }
 
@@ -1320,7 +1670,7 @@ function analyzeObj(evt, btn, ns, kind, name) {
   var path = [ns, kind, name].map(encodeURIComponent).join('/');
   fetch('/api/ai/analyze/object/' + path, { method: 'POST' })
     .then(function() {
-      pollAI('/api/ai/insights/object/' + path, resultDiv, btn, btn.textContent.indexOf('✦') >= 0 ? '✦ AI' : 'AI', 0);
+      pollAI('/api/ai/insights/object/' + path, resultDiv, btn, btn.textContent.indexOf('✦') >= 0 ? '✦ AI' : 'AI', 0, true);
     })
     .catch(function() {
       resultDiv.innerHTML = '<p style="color:var(--warn)">Analysis failed.</p>';
@@ -1445,19 +1795,15 @@ function renderObj(info) {
     h += '</table></div>';
   }
 
-  // AI section (empty, filled on button click)
+  // AI section — header+toggle provided by aiResultCollapsible when filled
   h += '<div class="obj-ai-section" id="obj-ai-section" style="display:none">';
-  h += '<div class="obj-ai-section-header">';
-  h += '<span class="obj-ai-section-title">AI Analysis</span>';
-  h += '</div>';
-  h += '<div class="obj-ai-section-body" id="obj-ai-body"></div>';
+  h += '<div id="obj-ai-body"></div>';
   h += '</div>';
 
-  // Logs section — only for pods
+  // Logs section — header+toggle provided by renderLogs when filled
   if (info.kind && info.kind.toLowerCase() === 'pod') {
     h += '<div class="obj-logs-section" id="obj-logs-section" style="display:none">';
-    h += '<div class="obj-logs-header"><span class="obj-logs-title">Logs</span></div>';
-    h += '<div id="obj-logs-body" style="background:#080b10"></div>';
+    h += '<div id="obj-logs-body"></div>';
     h += '</div>';
   }
 
@@ -1493,7 +1839,7 @@ function analyzeObjInDescribe(btn, ns, kind, name) {
   var path = [ns, kind, name].map(encodeURIComponent).join('/');
   fetch('/api/ai/analyze/object/' + path, { method: 'POST' })
     .then(function() {
-      pollAI('/api/ai/insights/object/' + path, body, btn, '✦ AI', 0);
+      pollAI('/api/ai/insights/object/' + path, body, btn, '✦ AI', 0, true);
     })
     .catch(function() {
       body.innerHTML = '<p style="color:var(--warn)">Analysis failed.</p>';
@@ -1515,5 +1861,6 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 {{template "ai_modal" .}}
 {{template "settings_modal" .}}
+{{template "docs_modal" .}}
 </body>
 </html>

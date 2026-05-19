@@ -102,21 +102,23 @@ func handleAPILogs(w http.ResponseWriter, r *http.Request) {
 	resp := PodLogsResponse{Pod: podName, Namespace: ns}
 
 	for _, cName := range containers {
-		stream, err := client.CoreV1().Pods(ns).GetLogs(podName, &corev1.PodLogOptions{
-			Container: cName,
-			TailLines: &tail,
-		}).Stream(ctx)
-		if err != nil {
-			resp.Containers = append(resp.Containers, ContainerLogs{Container: cName, Error: err.Error()})
-			continue
+		content := streamPodLogs(ctx, ns, podName, cName, tail, false)
+		previous := false
+		if strings.TrimSpace(content) == "" {
+			content = streamPodLogs(ctx, ns, podName, cName, tail, true)
+			if strings.TrimSpace(content) != "" {
+				previous = true
+			}
 		}
-		logBytes, readErr := io.ReadAll(stream)
-		stream.Close()
-		if readErr != nil {
-			resp.Containers = append(resp.Containers, ContainerLogs{Container: cName, Error: readErr.Error()})
-			continue
+		cl := ContainerLogs{Container: cName}
+		if previous {
+			cl.Logs = "[previous container run]\n" + content
+		} else if content != "" {
+			cl.Logs = content
+		} else {
+			cl.Error = "no logs available (pod may not be scheduled or has not produced output)"
 		}
-		resp.Containers = append(resp.Containers, ContainerLogs{Container: cName, Logs: string(logBytes)})
+		resp.Containers = append(resp.Containers, cl)
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -164,23 +166,39 @@ func fetchLogsForAI(ns, pod string) (string, error) {
 	tail := getLogTailLines()
 	var sb strings.Builder
 	for _, cName := range containers {
-		stream, err := client.CoreV1().Pods(ns).GetLogs(pod, &corev1.PodLogOptions{
-			Container: cName,
-			TailLines: &tail,
-		}).Stream(ctx)
-		if err != nil {
-			sb.WriteString(fmt.Sprintf("=== container: %s — error: %v ===\n", cName, err))
+		content := streamPodLogs(ctx, ns, pod, cName, tail, false)
+		if strings.TrimSpace(content) == "" {
+			// Fallback: previous terminated container — critical for CrashLoopBackOff pods
+			prev := streamPodLogs(ctx, ns, pod, cName, tail, true)
+			if strings.TrimSpace(prev) != "" {
+				content = "[previous container run]\n" + prev
+			}
+		}
+		if content == "" {
 			continue
 		}
-		logBytes, _ := io.ReadAll(stream)
-		stream.Close()
 		if len(containers) > 1 {
-			sb.WriteString(fmt.Sprintf("=== container: %s ===\n", cName))
+			fmt.Fprintf(&sb, "=== container: %s ===\n", cName)
 		}
-		sb.Write(logBytes)
+		sb.WriteString(content)
 		if !strings.HasSuffix(sb.String(), "\n") {
 			sb.WriteByte('\n')
 		}
 	}
 	return sb.String(), nil
+}
+
+// streamPodLogs reads logs for one container; returns empty string on any error.
+func streamPodLogs(ctx context.Context, ns, pod, container string, tail int64, previous bool) string {
+	stream, err := client.CoreV1().Pods(ns).GetLogs(pod, &corev1.PodLogOptions{
+		Container: container,
+		TailLines: &tail,
+		Previous:  previous,
+	}).Stream(ctx)
+	if err != nil {
+		return ""
+	}
+	b, _ := io.ReadAll(stream)
+	stream.Close()
+	return string(b)
 }

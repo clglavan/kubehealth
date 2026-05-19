@@ -429,16 +429,18 @@ Be concise and actionable.</pre>
     if (maxCtx > 0) {
       if (pct < 50) {
         adv.className = 'ok';
-        adv.textContent = '✓ Well within context — ' + fmt(maxCtx - worstCase) + ' tokens spare.';
+        adv.textContent = '✓ Well within context — ' + fmt(maxCtx - worstCase) + ' tokens spare. RCA with tools will work.';
       } else if (pct < 80) {
         adv.className = 'ok';
-        adv.textContent = '✓ Fits comfortably. Consider shortening the system prompt if you need more room.';
+        adv.textContent = '✓ Fits comfortably. RCA will work. Shorten the system prompt if you need more headroom.';
       } else if (pct < 100) {
         adv.className = 'warn';
-        adv.textContent = '⚠ Getting tight. Shorten the system prompt or reduce log lines (currently ' + logTail + ').';
+        adv.textContent = '⚠ Getting tight. RCA on verbose objects (Elasticsearch, large StatefulSets) may hit the context limit. ' +
+          'Increase Context Length in LM Studio (⚙ gear icon → Context Length → Reload).';
       } else {
         adv.className = 'bad';
-        adv.textContent = '✗ Likely exceeds context. Reduce system prompt or set log lines below ' + logTail + '.';
+        adv.textContent = '✗ Estimated tokens exceed loaded context. RCA will fail with a context overflow error. ' +
+          'In LM Studio: ⚙ gear icon → increase Context Length to at least ' + fmt(worstCase * 2) + ' tokens → Reload.';
       }
     } else {
       adv.className = 'warn';

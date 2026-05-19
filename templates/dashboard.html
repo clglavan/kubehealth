@@ -92,6 +92,12 @@
   }
   .ns-ai-result .ai-model-text { font-family: monospace; }
   .ns-ai-result strong { color: var(--accent); }
+  .ns-ai-result .result-toggle-body { padding: 0.7rem 1.2rem 0.8rem; }
+  .ai-stream-cursor {
+    display: inline-block; margin-left: 2px; color: var(--accent);
+    animation: blink 0.6s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
   /* ---- Object rows inside card ---- */
   .obj-list { border-top: 1px solid var(--border); }
@@ -130,6 +136,18 @@
   .more-link { display: block; text-align: center; padding: 0.5rem; font-size: 0.78rem; color: var(--accent); text-decoration: none; border-top: 1px solid var(--border); }
   .more-link:hover { background: rgba(99,102,241,0.08); }
   .empty-ns { padding: 1rem 1.2rem; font-size: 0.82rem; color: var(--muted); text-align: center; }
+
+  /* ---- Result panel toggle ---- */
+  .result-toggle-hdr {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.28rem 0.9rem; cursor: pointer; user-select: none;
+    font-size: 0.67rem; font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: filter 0.12s;
+  }
+  .result-toggle-hdr:hover { filter: brightness(1.15); }
+  .result-toggle-arrow { font-size: 0.58rem; opacity: 0.6; flex-shrink: 0; }
+  .result-toggle-body { }
 
   /* ---- AI content rendering ---- */
   .ai-result-meta {
@@ -186,6 +204,7 @@
   <h1>Kube<span>Health</span></h1>
   <div style="display:flex;align-items:center;gap:1rem">
     <span class="meta" id="update-label">Updated: {{.LastUpdated}}</span>
+    <button class="ai-agent-nav-btn" onclick="docsOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.2)">Docs</button>
     <button class="ai-agent-nav-btn" onclick="stgOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.3)">⚙ Settings</button>
     <button class="ai-agent-nav-btn" onclick="aimOpen()">✦ AI Agent</button>
     <a href="/api/refresh" class="refresh-btn">↻ Refresh</a>
@@ -245,6 +264,13 @@
 </div>
 </main>
 <script>
+// Initialise the LLM timeout from settings so pollAI uses the right value
+// even before the user opens the Settings modal.
+window.llmTimeoutMs = 10 * 60 * 1000; // default 10 min
+fetch('/api/settings').then(function(r){return r.json();}).then(function(d){
+  if (d.llm_timeout_min) window.llmTimeoutMs = d.llm_timeout_min * 60 * 1000;
+}).catch(function(){});
+
 (function() {
   var lastLoaded = {{len .Namespaces}};
   var bar  = document.getElementById('progress-bar');
@@ -325,16 +351,70 @@
     return out;
   }
 
-  function pollAI(url, resultDiv, btn, attempts) {
+  function toggleResultPanel(hdr) {
+    var body  = hdr.nextElementSibling;
+    var arrow = hdr.querySelector('.result-toggle-arrow');
+    var open  = body.style.display !== 'none';
+    body.style.display = open ? 'none' : '';
+    if (arrow) arrow.textContent = open ? '▶' : '▼';
+  }
+
+  function pollAI(url, resultDiv, btn, attempts, streamStart) {
     attempts = attempts || 0;
     fetch(url)
       .then(function(r) { return r.json(); })
       .then(function(d) {
-        if (d.content) {
-          resultDiv.innerHTML =
-            '<div class="ai-result-meta">✦ <span class="ai-model-text">' + esc(d.model) + '</span>' +
-            '<span class="ai-ts">' + esc(d.updated_at) + '</span></div>' +
-            '<div class="ai-content">' + renderMD(d.content) + '</div>';
+        if (d.error) {
+          resultDiv.innerHTML = '<div style="padding:0.55rem 0.9rem;font-size:0.77rem;color:var(--warn)">Analysis failed: ' + esc(d.error) + '</div>';
+          if (btn) { btn.classList.remove('active'); }
+        } else if (d.partial) {
+          var streamBody = resultDiv.querySelector('.ai-stream-body');
+          var start = streamStart || Date.now();
+          if (!streamBody) {
+            // First chunk: render full frame with "generating…" placeholder
+            resultDiv.innerHTML =
+              '<div class="result-toggle-hdr"' +
+              ' style="background:rgba(99,102,241,0.07);color:var(--accent);border-bottom:1px solid rgba(99,102,241,0.1)"' +
+              ' onclick="toggleResultPanel(this)">' +
+              '<span class="result-toggle-arrow">▼</span>' +
+              '<span style="flex:1;font-size:0.67rem;font-weight:600">AI Analysis</span>' +
+              '<span style="font-size:0.63rem;font-weight:400;opacity:0.7;font-family:monospace">✦ ' + esc(d.model || '') +
+              ' · <span class="ai-stream-ts">generating…</span></span>' +
+              '</div>' +
+              '<div class="result-toggle-body ai-stream-body">' +
+              (d.content ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
+                         : '<div style="padding:0.25rem 0;font-size:0.75rem;color:var(--muted)">Processing prompt…</div>') +
+              '</div>';
+          } else {
+            // Subsequent chunks: body only
+            streamBody.innerHTML = d.content
+              ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
+              : '<div style="padding:0.25rem 0;font-size:0.75rem;color:var(--muted)">Processing prompt…</div>';
+          }
+          var maxMs = (window.llmTimeoutMs || 10 * 60 * 1000) + 60 * 1000;
+          if (Date.now() - start < maxMs) {
+            setTimeout(function() { pollAI(url, resultDiv, btn, attempts + 1, start); }, 500);
+          } else {
+            if (btn) { btn.classList.remove('active'); }
+          }
+        } else if (d.content) {
+          var streamBody = resultDiv.querySelector('.ai-stream-body');
+          if (streamBody) {
+            streamBody.innerHTML = '<div class="ai-content">' + renderMD(d.content) + '</div>';
+            streamBody.classList.remove('ai-stream-body');
+            var tsEl = resultDiv.querySelector('.ai-stream-ts');
+            if (tsEl) tsEl.textContent = d.updated_at || '';
+          } else {
+            resultDiv.innerHTML =
+              '<div class="result-toggle-hdr"' +
+              ' style="background:rgba(99,102,241,0.07);color:var(--accent);border-bottom:1px solid rgba(99,102,241,0.1)"' +
+              ' onclick="toggleResultPanel(this)">' +
+              '<span class="result-toggle-arrow">▼</span>' +
+              '<span style="flex:1;font-size:0.67rem;font-weight:600">AI Analysis</span>' +
+              '<span style="font-size:0.63rem;font-weight:400;opacity:0.7;font-family:monospace">✦ ' + esc(d.model) + ' · ' + esc(d.updated_at) + '</span>' +
+              '</div>' +
+              '<div class="result-toggle-body"><div class="ai-content">' + renderMD(d.content) + '</div></div>';
+          }
           if (btn) { btn.classList.remove('active'); }
         } else if (attempts < 45) {
           setTimeout(function() { pollAI(url, resultDiv, btn, attempts + 1); }, 2000);
@@ -375,5 +455,6 @@
 </script>
 {{template "ai_modal" .}}
 {{template "settings_modal" .}}
+{{template "docs_modal" .}}
 </body>
 </html>

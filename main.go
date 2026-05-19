@@ -555,6 +555,8 @@ func main() {
 	mux.HandleFunc("/api/settings", handleAPISettings)
 	mux.HandleFunc("/api/logs/", handleAPILogs)
 	mux.HandleFunc("/api/correlate/", handleAPICorrelate)
+	mux.HandleFunc("/api/rca/status/", handleAPIRCAStatus)
+	mux.HandleFunc("/api/rca/", handleAPIRCAStart)
 
 	nsInfo := "all namespaces"
 	if !cfg.AllNS {
@@ -1343,8 +1345,8 @@ func mustParseTemplate(name, file string, extras ...string) *template.Template {
 }
 
 var (
-	dashboardTmpl = mustParseTemplate("dashboard.html", "templates/dashboard.html", "templates/ai_modal.html", "templates/settings_modal.html")
-	namespaceTmpl = mustParseTemplate("namespace.html", "templates/namespace.html", "templates/ai_modal.html", "templates/settings_modal.html")
+	dashboardTmpl = mustParseTemplate("dashboard.html", "templates/dashboard.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
+	namespaceTmpl = mustParseTemplate("namespace.html", "templates/namespace.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
 	objectTmpl    = mustParseTemplate("object.html", "templates/object.html")
 	loadingTmpl   = mustParseTemplate("loading.html", "templates/loading.html")
 )

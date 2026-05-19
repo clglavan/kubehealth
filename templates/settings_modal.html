@@ -4,7 +4,7 @@
      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:900"></div>
 
 <div id="stg" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-     z-index:901;width:min(440px,94vw);
+     z-index:901;width:min(680px,94vw);
      background:var(--surface);border:1px solid var(--border);border-radius:14px;
      box-shadow:0 32px 96px rgba(0,0,0,0.7);flex-direction:column;overflow:hidden">
 
@@ -21,7 +21,6 @@
 
     <div>
       <div class="aim-section-title">Logs</div>
-
       <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
         <label for="stg-log-lines"
                style="font-size:0.82rem;color:var(--text);white-space:nowrap">Lines per container</label>
@@ -33,9 +32,63 @@
                onblur="this.style.borderColor='var(--border)'">
       </div>
       <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
-        Number of log lines fetched per container — applies to the <strong style="color:var(--text)">Logs</strong> viewer
-        and to <strong style="color:var(--text)">AI pod analysis</strong>. Larger values give the AI more context
-        but consume more of the context window (see AI Agent → Context Window).
+        Number of log lines fetched per container — applies to the <strong style="color:var(--text)">Logs</strong> viewer,
+        <strong style="color:var(--text)">AI pod analysis</strong>, and <strong style="color:var(--text)">RCA</strong>.
+      </div>
+    </div>
+
+    <div>
+      <div class="aim-section-title">AI Concurrency</div>
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
+        <label for="stg-llm-max"
+               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Max concurrent LLM calls</label>
+        <input id="stg-llm-max" type="number" min="1" max="10" value="3"
+               style="width:70px;background:var(--bg);border:1px solid var(--border);
+                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
+                      font-size:0.82rem;outline:none;text-align:right"
+               onfocus="this.style.borderColor='var(--accent)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+        Maximum simultaneous requests to LM Studio. Excess requests are rejected immediately
+        with an error — they are not queued. Range 1–10, default 3.
+      </div>
+    </div>
+
+    <div>
+      <div class="aim-section-title">AI Request Timeout</div>
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
+        <label for="stg-llm-timeout"
+               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Timeout (minutes)</label>
+        <input id="stg-llm-timeout" type="number" min="1" max="60" value="10"
+               style="width:70px;background:var(--bg);border:1px solid var(--border);
+                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
+                      font-size:0.82rem;outline:none;text-align:right"
+               onfocus="this.style.borderColor='var(--accent)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+        How long to wait for LM Studio to respond. Large objects (e.g. Elasticsearch) can take
+        several minutes just for prompt processing. Range 1–60 min, default 10.
+      </div>
+    </div>
+
+    <div>
+      <div class="aim-section-title">RCA Agent</div>
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
+        <label for="stg-rca-iter"
+               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Max iterations</label>
+        <input id="stg-rca-iter" type="number" min="1" max="20" value="5"
+               style="width:70px;background:var(--bg);border:1px solid var(--border);
+                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
+                      font-size:0.82rem;outline:none;text-align:right"
+               onfocus="this.style.borderColor='var(--accent)'"
+               onblur="this.style.borderColor='var(--border)'">
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+        Maximum tool-calling rounds the RCA agent may use before being forced to conclude.
+        The agent can stop sooner on its own if it has enough evidence.
+        Range 1–20, default 5.
       </div>
     </div>
 
@@ -64,6 +117,10 @@
       .then(function(r) { return r.json(); })
       .then(function(d) {
         document.getElementById('stg-log-lines').value = d.log_tail_lines || 150;
+        document.getElementById('stg-rca-iter').value  = d.rca_max_iter   || 5;
+        document.getElementById('stg-llm-max').value     = d.llm_max_calls   || 3;
+        document.getElementById('stg-llm-timeout').value = d.llm_timeout_min || 10;
+        window.llmTimeoutMs = (d.llm_timeout_min || 10) * 60 * 1000;
       })
       .catch(function() {});
     document.getElementById('stg-overlay').style.display = '';
@@ -80,14 +137,24 @@
     var raw = parseInt(document.getElementById('stg-log-lines').value, 10);
     if (isNaN(raw) || raw < 10)   raw = 10;
     if (raw > 5000)               raw = 5000;
+    var iter = parseInt(document.getElementById('stg-rca-iter').value, 10);
+    if (isNaN(iter) || iter < 1)  iter = 1;
+    if (iter > 20)                iter = 20;
+    var maxLLM = parseInt(document.getElementById('stg-llm-max').value, 10);
+    if (isNaN(maxLLM) || maxLLM < 1) maxLLM = 1;
+    if (maxLLM > 10)              maxLLM = 10;
+    var timeout = parseInt(document.getElementById('stg-llm-timeout').value, 10);
+    if (isNaN(timeout) || timeout < 1) timeout = 1;
+    if (timeout > 60)             timeout = 60;
     btn.disabled = true;
     btn.textContent = 'Saving…';
     fetch('/api/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ log_tail_lines: raw })
+      body: JSON.stringify({ log_tail_lines: raw, rca_max_iter: iter, llm_max_calls: maxLLM, llm_timeout_min: timeout })
     })
     .then(function() {
+      window.llmTimeoutMs = timeout * 60 * 1000; // keep frontend in sync
       btn.textContent = 'Saved ✓';
       // Propagate the new value to the AI Agent context estimator if it's open
       if (window.aimData) {

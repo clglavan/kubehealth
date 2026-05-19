@@ -1,0 +1,478 @@
+{{define "docs_modal"}}
+<div id="docs-overlay" onclick="docsClose()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.72);z-index:910"></div>
+
+<div id="docs-modal" style="display:none;position:fixed;top:50%;left:50%;
+     transform:translate(-50%,-50%);z-index:911;
+     width:min(1720px,99vw);height:96vh;
+     background:#0e1118;border:1px solid #252a38;border-radius:16px;
+     box-shadow:0 32px 120px rgba(0,0,0,0.9);
+     flex-direction:column;overflow:hidden">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;
+       padding:0.55rem 1.4rem;border-bottom:1px solid #252a38;flex-shrink:0">
+    <div>
+      <span style="font-size:0.95rem;font-weight:700;color:#e2e8f0">KubeHealth</span>
+      <span style="font-size:0.75rem;color:#64748b;margin-left:0.5rem">· System Architecture</span>
+    </div>
+    <button onclick="docsClose()" style="background:none;border:none;color:#64748b;
+            font-size:1.3rem;cursor:pointer;line-height:1">×</button>
+  </div>
+
+  <div style="flex:1;overflow:hidden;padding:0.4rem 0.5rem 0.3rem;min-height:0">
+    <svg viewBox="0 0 1100 660" xmlns="http://www.w3.org/2000/svg"
+         style="width:100%;height:100%;display:block;border-radius:10px;
+                background:#090c12;border:1px solid #1c2030">
+
+      <defs>
+        <filter id="gp" x="-150%" y="-150%" width="400%" height="400%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="gn" x="-60%" y="-60%" width="220%" height="220%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- grid -->
+      <pattern id="gr" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+        <circle cx="14" cy="14" r="0.6" fill="#111520"/>
+      </pattern>
+      <rect width="1100" height="660" fill="url(#gr)"/>
+
+      <!-- ══════════════════════════════════════════════════════
+           NODE BOXES
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- Kubernetes -->
+      <rect id="nk-g" x="14" y="38" width="172" height="348" rx="11"
+            fill="none" stroke="#3b82f6" stroke-width="10" opacity="0.14" filter="url(#gn)"/>
+      <rect id="nk-b" x="14" y="38" width="172" height="348" rx="11"
+            fill="#0c1523" stroke="#1e3a5f" stroke-width="1.8"/>
+      <rect x="14" y="38" width="172" height="34" rx="11" fill="#1e3a5f" opacity="0.8"/>
+      <rect x="14" y="58" width="172" height="14"          fill="#1e3a5f" opacity="0.8"/>
+      <text x="100" y="60" text-anchor="middle" fill="#93c5fd"
+            font-size="9.5" font-weight="700" letter-spacing="1" font-family="monospace">KUBERNETES</text>
+      <text x="30" y="95"  fill="#7dd3fc" font-size="9" font-family="monospace">⊞ Events (200/ns)</text>
+      <text x="30" y="113" fill="#7dd3fc" font-size="9" font-family="monospace">◯ Pods</text>
+      <text x="30" y="131" fill="#7dd3fc" font-size="9" font-family="monospace">⊠ Deployments/RS</text>
+      <text x="30" y="149" fill="#7dd3fc" font-size="9" font-family="monospace">≡ StatefulSets</text>
+      <text x="30" y="167" fill="#7dd3fc" font-size="9" font-family="monospace">◈ Custom Resources</text>
+      <text x="30" y="185" fill="#7dd3fc" font-size="9" font-family="monospace">📄 Container Logs</text>
+      <text x="30" y="203" fill="#7dd3fc" font-size="9" font-family="monospace">⚙ Nodes</text>
+      <rect x="28" y="344" width="144" height="32" rx="5" fill="#0a1726"/>
+      <text x="100" y="358" text-anchor="middle" fill="#2563eb" font-size="8.5" font-family="monospace">Kubernetes</text>
+      <text x="100" y="370" text-anchor="middle" fill="#2563eb" font-size="8.5" font-family="monospace">API Server</text>
+
+      <!-- Server outer -->
+      <rect id="ns-g" x="238" y="18" width="460" height="478" rx="11"
+            fill="none" stroke="#6366f1" stroke-width="10" opacity="0.10" filter="url(#gn)"/>
+      <rect id="ns-b" x="238" y="18" width="460" height="478" rx="11"
+            fill="#0b0d1c" stroke="#20224a" stroke-width="1.8"/>
+      <rect x="238" y="18" width="460" height="34" rx="11" fill="#20224a" opacity="0.85"/>
+      <rect x="238" y="38" width="460" height="14"          fill="#20224a" opacity="0.85"/>
+      <text x="468" y="40" text-anchor="middle" fill="#c7d2fe"
+            font-size="9.5" font-weight="700" letter-spacing="1" font-family="monospace">KUBEHEALTH SERVER :8080</text>
+
+      <!-- Worker sub-box -->
+      <rect id="sw" x="258" y="62" width="210" height="68" rx="7"
+            fill="#0f1128" stroke="#2a2d60" stroke-width="1.2"/>
+      <rect x="258" y="62" width="210" height="24" rx="7" fill="#2a2d60" opacity="0.7"/>
+      <rect x="258" y="74" width="210" height="12"        fill="#2a2d60" opacity="0.7"/>
+      <text x="363" y="77" text-anchor="middle" fill="#a5b4fc" font-size="9" font-weight="700" font-family="monospace">Worker goroutine</text>
+      <text x="363" y="96" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">polls stalest namespace every 2 s</text>
+      <text x="363" y="110" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">re-resolves namespace list every 5 min</text>
+
+      <!-- nsCache sub-box -->
+      <rect id="sc" x="258" y="158" width="420" height="68" rx="7"
+            fill="#0f1128" stroke="#2a2d60" stroke-width="1.2"/>
+      <rect x="258" y="158" width="420" height="24" rx="7" fill="#2a2d60" opacity="0.7"/>
+      <rect x="258" y="170" width="420" height="12"        fill="#2a2d60" opacity="0.7"/>
+      <text x="468" y="173" text-anchor="middle" fill="#a5b4fc" font-size="9" font-weight="700" font-family="monospace">nsCache  (sync.Map)</text>
+      <text x="468" y="192" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">in-memory events keyed by namespace — zero K8s API to read</text>
+      <text x="468" y="206" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">feeds: AI context · Correlate · RCA initial evidence</text>
+
+      <!-- aiInsightCache sub-box -->
+      <rect id="sa" x="258" y="254" width="192" height="68" rx="7"
+            fill="#0f1128" stroke="#2a2d60" stroke-width="1.2"/>
+      <rect x="258" y="254" width="192" height="24" rx="7" fill="#2a2d60" opacity="0.7"/>
+      <rect x="258" y="266" width="192" height="12"        fill="#2a2d60" opacity="0.7"/>
+      <text x="354" y="269" text-anchor="middle" fill="#a5b4fc" font-size="9" font-weight="700" font-family="monospace">aiInsightCache</text>
+      <text x="354" y="289" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">partial=true  (streaming)</text>
+      <text x="354" y="303" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">partial=false (done)</text>
+
+      <!-- RCA State sub-box -->
+      <rect id="sr" x="468" y="254" width="210" height="68" rx="7"
+            fill="#0f1128" stroke="#2a2d60" stroke-width="1.2"/>
+      <rect x="468" y="254" width="210" height="24" rx="7" fill="#2a2d60" opacity="0.7"/>
+      <rect x="468" y="266" width="210" height="12"        fill="#2a2d60" opacity="0.7"/>
+      <text x="573" y="269" text-anchor="middle" fill="#a5b4fc" font-size="9" font-weight="700" font-family="monospace">RCA State  (agent loop)</text>
+      <text x="573" y="289" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">iterations · steps[]</text>
+      <text x="573" y="303" text-anchor="middle" fill="#8890c0" font-size="8" font-family="monospace">running / done / error</text>
+
+      <!-- HTTP API band -->
+      <rect x="258" y="350" width="420" height="128" rx="7"
+            fill="#09091e" stroke="#1a1c40" stroke-width="1"/>
+      <text x="468" y="371" text-anchor="middle" fill="#818cf8" font-size="9" font-weight="700" font-family="monospace">HTTP API handlers</text>
+      <text x="275" y="392" fill="#4858a8" font-size="8" font-family="monospace">/api/ai/analyze    /api/ai/insights</text>
+      <text x="275" y="408" fill="#4858a8" font-size="8" font-family="monospace">/api/rca/          /api/rca/status</text>
+      <text x="275" y="424" fill="#4858a8" font-size="8" font-family="monospace">/api/logs/         /api/correlate/</text>
+      <text x="275" y="440" fill="#4858a8" font-size="8" font-family="monospace">/api/settings      /api/ai/config</text>
+      <text x="275" y="456" fill="#4858a8" font-size="8" font-family="monospace">/api/status</text>
+
+      <!-- LM Studio -->
+      <rect id="nl-g" x="762" y="38" width="204" height="298" rx="11"
+            fill="none" stroke="#f59e0b" stroke-width="10" opacity="0.13" filter="url(#gn)"/>
+      <rect id="nl-b" x="762" y="38" width="204" height="298" rx="11"
+            fill="#0d0b05" stroke="#342106" stroke-width="1.8"/>
+      <rect x="762" y="38" width="204" height="34" rx="11" fill="#342106" opacity="0.85"/>
+      <rect x="762" y="58" width="204" height="14"          fill="#342106" opacity="0.85"/>
+      <text x="864" y="60" text-anchor="middle" fill="#fcd34d"
+            font-size="9.5" font-weight="700" letter-spacing="1" font-family="monospace">LM STUDIO</text>
+      <text x="864" y="98"  text-anchor="middle" fill="#78350f" font-size="8.5" font-family="monospace">Model</text>
+      <text x="864" y="115" text-anchor="middle" fill="#fcd34d" font-size="10"  font-weight="600" font-family="monospace">qwen3-4b-2507</text>
+      <rect x="778" y="126" width="172" height="20" rx="4" fill="#1c1205"/>
+      <text x="864" y="140" text-anchor="middle" fill="#78350f" font-size="8" font-family="monospace">loaded_context_length tokens</text>
+      <text x="864" y="163" text-anchor="middle" fill="#a07020" font-size="8" font-family="monospace">stream: true  (AI, SSE)</text>
+      <text x="864" y="179" text-anchor="middle" fill="#a07020" font-size="8" font-family="monospace">stream: false (RCA tools)</text>
+      <text x="864" y="195" text-anchor="middle" fill="#a07020" font-size="8" font-family="monospace">system prompt injection</text>
+      <text x="864" y="211" text-anchor="middle" fill="#a07020" font-size="8" font-family="monospace">4 tools  (RCA agent)</text>
+      <text x="864" y="227" text-anchor="middle" fill="#a07020" font-size="8" font-family="monospace">usage.prompt_tokens reply</text>
+      <rect x="778" y="288" width="172" height="28" rx="4" fill="#1c1205"/>
+      <text x="864" y="306" text-anchor="middle" fill="#b45309" font-size="8.5" font-family="monospace">localhost:1234 /v1 /api/v0</text>
+
+      <!-- Browser -->
+      <rect id="nb-g" x="198" y="542" width="608" height="56" rx="11"
+            fill="none" stroke="#6366f1" stroke-width="6" opacity="0.09" filter="url(#gn)"/>
+      <rect id="nb-b" x="198" y="542" width="608" height="56" rx="11"
+            fill="#0b0d1c" stroke="#20224a" stroke-width="1.8"/>
+      <text x="502" y="562" text-anchor="middle" fill="#c7d2fe"
+            font-size="9" font-weight="700" letter-spacing="1" font-family="monospace">BROWSER</text>
+
+      <rect id="dc-ai"       x="215" y="568" width="66"  height="20" rx="4" style="cursor:pointer" fill="rgba(99,102,241,0.18)" stroke="#6366f1" stroke-width="1.2"/>
+      <text x="248"  y="582" text-anchor="middle" fill="#c7d2fe" font-size="9" font-weight="700" font-family="monospace" style="pointer-events:none">✦ AI</text>
+
+      <rect id="dc-logs"     x="290" y="568" width="62"  height="20" rx="4" style="cursor:pointer" fill="rgba(16,185,129,0.16)" stroke="#10b981" stroke-width="1.2"/>
+      <text x="321"  y="582" text-anchor="middle" fill="#6ee7b7" font-size="9" font-weight="700" font-family="monospace" style="pointer-events:none">Logs</text>
+
+      <rect id="dc-corr"     x="361" y="568" width="84"  height="20" rx="4" style="cursor:pointer" fill="rgba(139,92,246,0.16)" stroke="#8b5cf6" stroke-width="1.2"/>
+      <text x="403"  y="582" text-anchor="middle" fill="#c4b5fd" font-size="9" font-weight="700" font-family="monospace" style="pointer-events:none">Correlate</text>
+
+      <rect id="dc-rca"      x="454" y="568" width="60"  height="20" rx="4" style="cursor:pointer" fill="rgba(245,158,11,0.16)"  stroke="#f59e0b" stroke-width="1.2"/>
+      <text x="484"  y="582" text-anchor="middle" fill="#fde68a" font-size="9" font-weight="700" font-family="monospace" style="pointer-events:none">RCA</text>
+
+      <rect id="dc-settings" x="523" y="568" width="80"  height="20" rx="4" style="cursor:pointer" fill="rgba(100,116,139,0.14)" stroke="#64748b" stroke-width="1"/>
+      <text x="563"  y="582" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace" style="pointer-events:none">⚙ Settings</text>
+
+      <rect id="dc-aiagent"  x="612" y="568" width="94"  height="20" rx="4" style="cursor:pointer" fill="rgba(99,102,241,0.12)"  stroke="#6366f1" stroke-width="1"/>
+      <text x="659"  y="582" text-anchor="middle" fill="#a5b4fc" font-size="9" font-family="monospace" style="pointer-events:none">✦ AI Agent</text>
+
+      <rect id="dc-docs"     x="715" y="568" width="60"  height="20" rx="4" style="cursor:pointer" fill="rgba(99,102,241,0.08)"  stroke="#4f46e5" stroke-width="1"/>
+      <text x="745"  y="582" text-anchor="middle" fill="#6366f1" font-size="9" font-family="monospace" style="pointer-events:none">Docs</text>
+
+
+      <!-- ══════════════════════════════════════════════════════
+           INTERNAL SERVER CONNECTORS (arrows only, no particles)
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- Worker → nsCache (store) -->
+      <line x1="363" y1="130" x2="363" y2="158" stroke="#4f46e5" stroke-width="1.5" opacity="0.5"
+            marker-end="url(#ah-i)"/>
+      <text x="372" y="147" fill="#4f46e5" font-size="7.5" font-family="monospace" opacity="0.8">store</text>
+
+      <!-- nsCache → aiInsightCache -->
+      <line x1="354" y1="226" x2="354" y2="254" stroke="#4f46e5" stroke-width="1.2" opacity="0.35"
+            stroke-dasharray="3 3" marker-end="url(#ah-i)"/>
+      <text x="363" y="243" fill="#4f46e5" font-size="7" font-family="monospace" opacity="0.6">reads</text>
+
+      <!-- nsCache → RCA State -->
+      <line x1="573" y1="226" x2="573" y2="254" stroke="#4f46e5" stroke-width="1.2" opacity="0.35"
+            stroke-dasharray="3 3" marker-end="url(#ah-i)"/>
+      <text x="582" y="243" fill="#4f46e5" font-size="7" font-family="monospace" opacity="0.6">reads</text>
+
+      <!-- aiInsightCache → HTTP API -->
+      <line x1="354" y1="322" x2="354" y2="350" stroke="#4f46e5" stroke-width="1.2" opacity="0.3"
+            stroke-dasharray="3 3" marker-end="url(#ah-i)"/>
+
+      <!-- RCA State → HTTP API -->
+      <line x1="573" y1="322" x2="573" y2="350" stroke="#4f46e5" stroke-width="1.2" opacity="0.3"
+            stroke-dasharray="3 3" marker-end="url(#ah-i)"/>
+
+      <!-- arrowhead markers -->
+      <defs>
+        <marker id="ah-i" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5z" fill="#4f46e5" opacity="0.65"/>
+        </marker>
+        <marker id="ah-g" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5z" fill="#10b981" opacity="0.65"/>
+        </marker>
+        <marker id="ah-a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5z" fill="#f59e0b" opacity="0.65"/>
+        </marker>
+        <marker id="ah-v" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0 L0,7 L7,3.5z" fill="#8b5cf6" opacity="0.65"/>
+        </marker>
+      </defs>
+
+      <!-- ══════════════════════════════════════════════════════
+           EXTERNAL PATHS — each drawn ONCE, particles use same id
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- 1. Worker → K8s: poll events (indigo) -->
+      <path id="L1" d="M 258,93 L 186,93"
+            stroke="#6366f1" stroke-width="1.8" fill="none" opacity="0.32"
+            stroke-dasharray="6 4" marker-end="url(#ah-i)"/>
+      <text x="222" y="86" text-anchor="middle" fill="#6060c0" font-size="8" font-family="monospace">poll events</text>
+
+      <!-- 2. K8s → Worker: event list back (indigo) -->
+      <path id="L2" d="M 186,120 L 258,120"
+            stroke="#818cf8" stroke-width="1.8" fill="none" opacity="0.28"
+            stroke-dasharray="6 4" marker-end="url(#ah-i)"/>
+      <text x="222" y="134" text-anchor="middle" fill="#6060c0" font-size="8" font-family="monospace">event list</text>
+
+      <!-- 3. HTTP API → K8s: describe+logs on demand (green) -->
+      <path id="L3" d="M 238,390 C 215,390 205,360 186,330"
+            stroke="#10b981" stroke-width="1.8" fill="none" opacity="0.28"
+            stroke-dasharray="6 4" marker-end="url(#ah-g)"/>
+      <text x="196" y="348" text-anchor="middle" fill="#0a8060" font-size="7.5" font-family="monospace">describe</text>
+      <text x="196" y="359" text-anchor="middle" fill="#0a8060" font-size="7.5" font-family="monospace">+ logs</text>
+
+      <!-- 4. K8s → HTTP API: spec + bytes back (green) -->
+      <path id="L4" d="M 186,352 C 205,382 215,418 238,418"
+            stroke="#34d399" stroke-width="1.8" fill="none" opacity="0.24"
+            stroke-dasharray="6 4" marker-end="url(#ah-g)"/>
+      <text x="196" y="400" text-anchor="middle" fill="#0a8060" font-size="7.5" font-family="monospace">spec+bytes</text>
+
+      <!-- 5. aiInsightCache → LM Studio: ARCH over the entire server box top -->
+      <!-- Bezier arches from aiInsightCache top-center (354,254) up to y=6, across to LM Studio (762,100) -->
+      <path id="L5" d="M 354,254 C 354,6 762,6 762,100"
+            stroke="#f59e0b" stroke-width="1.8" fill="none" opacity="0.28"
+            stroke-dasharray="6 4" marker-end="url(#ah-a)"/>
+      <text x="465" y="4" fill="#a07010" font-size="8" font-family="monospace">AI prompt →</text>
+
+      <!-- 6. LM Studio → aiInsightCache: return arch at y=14 (just below L5, visible separation) -->
+      <path id="L6" d="M 762,120 C 762,14 354,14 354,278"
+            stroke="#fcd34d" stroke-width="1.8" fill="none" opacity="0.24"
+            stroke-dasharray="6 4" marker-end="url(#ah-a)"/>
+      <text x="638" y="14" fill="#908000" font-size="8" font-family="monospace">← SSE tokens</text>
+
+      <!-- 7. RCA State → LM Studio: right-side corridor (L7/L8 stay below y=290, fully separate from arch) -->
+      <path id="L7" d="M 678,284 L 698,284 C 730,262 762,232 762,218"
+            stroke="#f59e0b" stroke-width="1.6" fill="none" opacity="0.24"
+            stroke-dasharray="4 5" marker-end="url(#ah-a)"/>
+      <text x="764" y="213" fill="#805010" font-size="7.5" font-family="monospace">tool calls</text>
+
+      <!-- 8. LM Studio → RCA State: right-side corridor return -->
+      <path id="L8" d="M 762,238 C 730,272 698,314 678,314"
+            stroke="#f59e0b" stroke-width="1.6" fill="none" opacity="0.18"
+            stroke-dasharray="4 5" marker-end="url(#ah-a)"/>
+
+      <!-- 9. Browser → HTTP API: API calls (violet) -->
+      <path id="L9" d="M 448,542 L 448,478"
+            stroke="#8b5cf6" stroke-width="2" fill="none" opacity="0.3"
+            stroke-dasharray="6 4" marker-end="url(#ah-v)"/>
+      <text x="424" y="512" text-anchor="middle" fill="#6040a0" font-size="8" font-family="monospace">API calls</text>
+
+      <!-- 10. HTTP API → Browser: JSON (indigo) -->
+      <path id="L10" d="M 478,478 L 478,542"
+            stroke="#6366f1" stroke-width="2" fill="none" opacity="0.26"
+            stroke-dasharray="6 4" marker-end="url(#ah-i)"/>
+      <text x="510" y="512" text-anchor="middle" fill="#4040a0" font-size="8" font-family="monospace">JSON</text>
+
+      <!-- ACTION ARROWS (dim, light up on hover) -->
+      <path id="da-ai"   d="M 248,542 C 220,510 310,480 354,322"
+            stroke="#818cf8" stroke-width="2" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
+      <path id="da-logs" d="M 321,542 C 270,500 186,440 186,340"
+            stroke="#10b981" stroke-width="2" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
+      <path id="da-corr" d="M 403,542 C 403,510 468,470 468,226"
+            stroke="#a78bfa" stroke-width="2" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
+      <path id="da-rca-k8s" d="M 484,542 C 400,500 186,430 186,330"
+            stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
+      <path id="da-rca-lm"  d="M 484,542 C 600,510 762,400 762,245"
+            stroke="#f59e0b" stroke-width="2" fill="none" opacity="0.08" stroke-dasharray="4 4"/>
+      <path id="da-settings" d="M 563,542 C 563,510 468,490 468,478"
+            stroke="#64748b" stroke-width="1.5" fill="none" opacity="0.06" stroke-dasharray="3 5"/>
+      <path id="da-aiagent" d="M 659,542 C 720,510 864,420 864,336"
+            stroke="#818cf8" stroke-width="1.5" fill="none" opacity="0.06" stroke-dasharray="3 5"/>
+
+
+      <!-- ══════════════════════════════════════════════════════
+           PARTICLES — each references its own visible path
+      ══════════════════════════════════════════════════════ -->
+
+      <!-- L1: poll events (indigo, 2 particles) -->
+      <circle r="3.5" fill="#818cf8" filter="url(#gp)">
+        <animateMotion dur="14s" begin="0s" repeatCount="indefinite"><mpath href="#L1"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="14s" begin="0s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.5" fill="#818cf8" filter="url(#gp)">
+        <animateMotion dur="14s" begin="7s" repeatCount="indefinite"><mpath href="#L1"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="14s" begin="7s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L2: event list back (indigo, 1) -->
+      <circle r="3" fill="#a5b4fc" filter="url(#gp)">
+        <animateMotion dur="14s" begin="7s" repeatCount="indefinite"><mpath href="#L2"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.9;1" dur="14s" begin="7s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L5: AI streaming prompt (amber, 2) -->
+      <circle r="4" fill="#f59e0b" filter="url(#gp)">
+        <animateMotion dur="20s" begin="0s" repeatCount="indefinite"><mpath href="#L5"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.9;1" dur="20s" begin="0s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="4" fill="#f59e0b" filter="url(#gp)">
+        <animateMotion dur="20s" begin="10s" repeatCount="indefinite"><mpath href="#L5"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.06;0.9;1" dur="20s" begin="10s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L6: SSE tokens back (yellow, 3 fast) -->
+      <circle r="3.5" fill="#fcd34d" filter="url(#gp)">
+        <animateMotion dur="8s" begin="0.1s" repeatCount="indefinite"><mpath href="#L6"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.88;1" dur="8s" begin="0.1s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.5" fill="#fcd34d" filter="url(#gp)">
+        <animateMotion dur="8s" begin="2.7s" repeatCount="indefinite"><mpath href="#L6"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.88;1" dur="8s" begin="2.7s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3.5" fill="#fcd34d" filter="url(#gp)">
+        <animateMotion dur="8s" begin="5.4s" repeatCount="indefinite"><mpath href="#L6"/></animateMotion>
+        <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.88;1" dur="8s" begin="5.4s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L7: RCA tool calls (amber, 1 slow) -->
+      <circle r="3" fill="#f59e0b" filter="url(#gp)">
+        <animateMotion dur="22s" begin="11s" repeatCount="indefinite"><mpath href="#L7"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.8;0.8;0" keyTimes="0;0.1;0.88;1" dur="22s" begin="11s" repeatCount="indefinite"/>
+      </circle>
+      <!-- L8: tool response back (amber, 1 slow) -->
+      <circle r="3" fill="#fcd34d" filter="url(#gp)">
+        <animateMotion dur="22s" begin="11s" repeatCount="indefinite"><mpath href="#L8"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.1;0.88;1" dur="22s" begin="11s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L9: browser up (violet, 2) -->
+      <circle r="3" fill="#a78bfa" filter="url(#gp)">
+        <animateMotion dur="10s" begin="0s" repeatCount="indefinite"><mpath href="#L9"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.88;1" dur="10s" begin="0s" repeatCount="indefinite"/>
+      </circle>
+      <circle r="3" fill="#a78bfa" filter="url(#gp)">
+        <animateMotion dur="10s" begin="5s" repeatCount="indefinite"><mpath href="#L9"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.88;1" dur="10s" begin="5s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- L10: server down (indigo, 1) -->
+      <circle r="3" fill="#818cf8" filter="url(#gp)">
+        <animateMotion dur="10s" begin="11s" repeatCount="indefinite"><mpath href="#L10"/></animateMotion>
+        <animate attributeName="opacity" values="0;0.9;0.9;0" keyTimes="0;0.1;0.88;1" dur="10s" begin="11s" repeatCount="indefinite"/>
+      </circle>
+
+      <!-- ══════════════════════════════════════════════════════
+           HINT STRIP (below browser, outside it)
+      ══════════════════════════════════════════════════════ -->
+      <rect x="12" y="612" width="1076" height="36" rx="7" fill="#0d1020" stroke="#1a1e30" stroke-width="1"/>
+      <text id="doc-hint" x="550" y="634" text-anchor="middle" fill="#4a5680"
+            font-size="10" font-family="'Inter','Segoe UI',sans-serif">
+        Hover an action chip to trace its exact data flow
+      </text>
+    </svg>
+  </div>
+</div>
+
+<style>
+  #nk-g,#nk-b, #ns-g,#ns-b, #nl-g,#nl-b,
+  #sw, #sc, #sa, #sr {
+    transition: opacity 0.22s, stroke-width 0.22s;
+  }
+  #da-ai,#da-logs,#da-corr,#da-rca-k8s,#da-rca-lm,#da-settings,#da-aiagent {
+    transition: opacity 0.22s, stroke-width 0.22s;
+  }
+  #dc-ai:hover,#dc-logs:hover,#dc-corr:hover,#dc-rca:hover,
+  #dc-settings:hover,#dc-aiagent:hover,#dc-docs:hover { filter:brightness(1.7); }
+</style>
+
+<script>
+(function(){
+  window.docsOpen  = function(){ document.getElementById('docs-overlay').style.display=''; document.getElementById('docs-modal').style.display='flex'; };
+  window.docsClose = function(){ document.getElementById('docs-overlay').style.display='none'; document.getElementById('docs-modal').style.display='none'; };
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape' && document.getElementById('docs-modal').style.display!=='none') docsClose(); });
+
+  var cfg = {
+    'dc-ai':{
+      nodes:['ns','nl'], sub:['sa','sc'],
+      arrows:['da-ai'],
+      hint:'✦ AI  —  reads nsCache + calls K8s for describe + calls K8s for pod logs (if Pod) → streams to LM Studio → tokens stored in aiInsightCache every 300 ms → browser polls /api/ai/insights every 500 ms'
+    },
+    'dc-logs':{
+      nodes:['nk','ns'], sub:['sc'],
+      arrows:['da-logs'],
+      hint:'Logs  —  reads nsCache for container hint → calls K8s GetLogs (current, then Previous=true fallback for CrashLoopBackOff) → returns directly.  Zero LLM.'
+    },
+    'dc-corr':{
+      nodes:['ns'], sub:['sc'],
+      arrows:['da-corr'],
+      hint:'Correlate  —  scans nsCache across ALL namespaces for events in ±5 min window.  ZERO Kubernetes API calls.  ZERO LLM calls.  Instant in-memory scan.'
+    },
+    'dc-rca':{
+      nodes:['nk','ns','nl'], sub:['sr','sc'],
+      arrows:['da-rca-k8s','da-rca-lm'],
+      hint:'RCA  —  reads nsCache + calls K8s for describe + pod logs (initial context) → sends to LM Studio with 4 tools → model calls tools (some → nsCache, some → K8s) → loops up to maxIter → browser polls /api/rca/status every 2 s'
+    },
+    'dc-settings':{
+      nodes:['ns'], sub:[],
+      arrows:['da-settings'],
+      hint:'Settings  —  Log Lines (Logs + AI/RCA context size), LLM Timeout (large objects like Elasticsearch need 3–5 min prompt processing), Max Concurrent Calls, RCA Max Iterations'
+    },
+    'dc-aiagent':{
+      nodes:['nl'], sub:[],
+      arrows:['da-aiagent'],
+      hint:'AI Agent  —  system prompt (injected as "system" role on every LLM call), live model context window estimate, response format (hardcoded — cannot be broken by the system prompt)'
+    },
+    'dc-docs':{ nodes:[], sub:[], arrows:[], hint:'You\'re looking at the system architecture.  Hover each chip to trace its data flow.' },
+  };
+
+  function apply(c){
+    var allN=['nk','ns','nl'], allS=['sw','sc','sa','sr'];
+    var allA=['da-ai','da-logs','da-corr','da-rca-k8s','da-rca-lm','da-settings','da-aiagent'];
+    var has=c.nodes.length>0;
+    allN.forEach(function(n){
+      var g=document.getElementById('n'+n+'-g'), b=document.getElementById('n'+n+'-b');
+      if(!g||!b)return;
+      var on=c.nodes.indexOf(n)>=0, dim=has&&!on;
+      g.style.opacity=on?'0.55':dim?'0.02':'';
+      b.style.opacity=dim?'0.15':'1';
+      b.style.strokeWidth=on?'2.8':'1.8';
+    });
+    allS.forEach(function(id){
+      var el=document.getElementById(id); if(!el)return;
+      var on=c.sub.indexOf(id)>=0, dim=has&&!on;
+      el.style.opacity=dim?'0.18':'1';
+      el.style.strokeWidth=on?'2':'1.2';
+    });
+    allA.forEach(function(id){
+      var el=document.getElementById(id); if(!el)return;
+      var on=c.arrows.indexOf(id)>=0, dim=has&&!on;
+      el.style.opacity=on?'0.88':dim?'0.02':'0.08';
+      el.style.strokeWidth=on?'3':'2';
+    });
+    var h=document.getElementById('doc-hint');
+    if(h){ h.textContent=c.hint||'Hover an action chip to trace its exact data flow'; h.style.fill=c.hint?'#94a3b8':'#3d4870'; }
+  }
+
+  function reset(){
+    apply({nodes:[],sub:[],arrows:[],hint:''});
+    var h=document.getElementById('doc-hint');
+    if(h){ h.textContent='Hover an action chip to trace its exact data flow'; h.style.fill='#3d4870'; }
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    Object.keys(cfg).forEach(function(id){
+      var el=document.getElementById(id); if(!el)return;
+      el.addEventListener('mouseenter',function(){ apply(cfg[id]); });
+      el.addEventListener('mouseleave',reset);
+    });
+  });
+})();
+</script>
+{{end}}
