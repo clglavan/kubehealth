@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -16,20 +17,20 @@ type RCAStep struct {
 	Iter    int    `json:"iter"`
 	Tool    string `json:"tool"`
 	Label   string `json:"label"`
-	Status  string `json:"status"` // "running" | "done" | "error" | "unavailable"
+	Status  string `json:"status"`            // "running" | "done" | "error" | "unavailable"
 	Initial bool   `json:"initial,omitempty"` // true for steps baked into the initial context
 }
 
 type RCAState struct {
 	sync.RWMutex
-	Status    string `json:"status"` // "running" | "done" | "error"
-	Iteration int    `json:"iteration"`
-	MaxIter   int    `json:"max_iter"`
+	Status    string    `json:"status"` // "running" | "done" | "error"
+	Iteration int       `json:"iteration"`
+	MaxIter   int       `json:"max_iter"`
 	Steps     []RCAStep `json:"steps"`
-	Result    string `json:"result"`
-	Error     string `json:"error,omitempty"`
-	ErrorType string `json:"error_type,omitempty"` // "context_overflow" | ""
-	UpdatedAt string `json:"updated_at"`
+	Result    string    `json:"result"`
+	Error     string    `json:"error,omitempty"`
+	ErrorType string    `json:"error_type,omitempty"` // "context_overflow" | ""
+	UpdatedAt string    `json:"updated_at"`
 }
 
 var (
@@ -37,8 +38,10 @@ var (
 	rcaRunning sync.Map // rcaKey → struct{}
 )
 
-func rcaCacheKey(ns, kind, name string) string {
-	return ns + "/" + kind + "/" + name
+// rcaCacheKey is scoped to the cluster: the same namespace/kind/name can exist
+// in several clusters.
+func rcaCacheKey(cl *clusterState, ns, kind, name string) string {
+	return cl.name + "|" + ns + "/" + kind + "/" + name
 }
 
 // ── HTTP handlers ─────────────────────────────────────────────────────────────
@@ -59,7 +62,11 @@ func handleAPIRCAStart(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ns, kind, name := parts[0], parts[1], parts[2]
-	key := rcaCacheKey(ns, kind, name)
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
+	key := rcaCacheKey(cl, ns, kind, name)
 
 	if _, loaded := rcaRunning.LoadOrStore(key, struct{}{}); loaded {
 		w.Header().Set("Content-Type", "application/json")
@@ -73,7 +80,7 @@ func handleAPIRCAStart(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		defer rcaRunning.Delete(key)
-		runRCAAgent(ns, kind, name, state)
+		runRCAAgent(cl, ns, kind, name, state)
 	}()
 
 	w.Header().Set("Content-Type", "application/json")
@@ -87,7 +94,11 @@ func handleAPIRCAStatus(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid path", http.StatusBadRequest)
 		return
 	}
-	key := rcaCacheKey(parts[0], parts[1], parts[2])
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
+	key := rcaCacheKey(cl, parts[0], parts[1], parts[2])
 	w.Header().Set("Content-Type", "application/json")
 	if v, ok := rcaCache.Load(key); ok {
 		state := v.(*RCAState)
@@ -105,7 +116,7 @@ const rcaSystemPromptSuffix = `
 
 You are now performing a Root Cause Analysis (RCA).
 
-The initial context already contains the anchor object's events, describe, and — if the anchor is a Pod — its logs. You do NOT need to call get_pod_logs for the anchor pod.
+The initial context already contains the anchor object's events and describe. If the anchor is a Pod, it also contains the Pod's logs: you do NOT need to call get_pod_logs for it. If the anchor is a workload (Deployment, StatefulSet, DaemonSet, Job, CronJob), it also contains the warnings of the ReplicaSets, Jobs and Pods it owns and the logs of its newest failing Pod; read those first, they usually explain the failure.
 
 You have tools to gather additional evidence. Use them SELECTIVELY:
 - get_correlated_events: call this when you suspect cluster-wide or cross-namespace issues (node pressure, network problems, shared infrastructure failures). Do this early.
@@ -189,7 +200,7 @@ func rcaStepLabel(toolName string, args map[string]string) string {
 	return toolName
 }
 
-func executeRCATool(tc rcaToolCall, anchorNS string) string {
+func executeRCATool(cl *clusterState, tc rcaToolCall, anchorNS string) string {
 	var args map[string]string
 	if err := json.Unmarshal([]byte(tc.Function.Arguments), &args); err != nil {
 		return fmt.Sprintf("error parsing tool arguments: %v", err)
@@ -208,7 +219,7 @@ func executeRCATool(tc rcaToolCall, anchorNS string) string {
 		if ns == "" {
 			ns = anchorNS
 		}
-		logs, err := fetchLogsForAI(ns, pod)
+		logs, err := fetchLogsForAI(cl, ns, pod)
 		if err != nil {
 			return fmt.Sprintf("error fetching logs for %s/%s: %v", ns, pod, err)
 		}
@@ -219,7 +230,7 @@ func executeRCATool(tc rcaToolCall, anchorNS string) string {
 
 	case "get_object_describe":
 		ns, kind, name := get("namespace"), get("kind"), get("name")
-		info := fetchObjectInfo(ns, kind, name)
+		info := cl.fetchObjectInfo(ns, kind, name)
 		if info.NotFound {
 			return fmt.Sprintf("%s/%s/%s no longer exists in the cluster", ns, kind, name)
 		}
@@ -231,15 +242,10 @@ func executeRCATool(tc rcaToolCall, anchorNS string) string {
 	case "get_object_events":
 		ns, kind, name := get("namespace"), get("kind"), get("name")
 		var events []EventSummary
-		if v, ok := nsCache.Load(ns); ok {
-			e := v.(*nsEntry)
-			e.RLock()
-			for _, ev := range e.events {
-				if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-					events = append(events, ev)
-				}
+		for _, ev := range cl.scopeEvents(ns) {
+			if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
+				events = append(events, ev)
 			}
-			e.RUnlock()
 		}
 		if len(events) == 0 {
 			return fmt.Sprintf("no cached events for %s/%s/%s", ns, kind, name)
@@ -254,7 +260,7 @@ func executeRCATool(tc rcaToolCall, anchorNS string) string {
 
 	case "get_correlated_events":
 		ns, kind, name := get("namespace"), get("kind"), get("name")
-		cr := buildCorrelateResponse(ns, kind, name)
+		cr := buildCorrelateResponse(cl, ns, kind, name)
 		if len(cr.Correlated) == 0 {
 			return "no correlated events found in the time window"
 		}
@@ -314,25 +320,67 @@ func rcaFormatDescribe(info ObjectInfo) string {
 // rcaInitCtx carries the assembled initial prompt plus metadata about what was gathered.
 type rcaInitCtx struct {
 	text      string
+	logsPod   string // the Pod whose logs were read: the anchor itself, or a workload's newest failing Pod
 	podLogs   string // "" = not a pod or fetch returned nothing
 	podLogErr error  // non-nil = hard fetch error
 }
 
-func buildRCAInitialContext(ns, kind, name string) rcaInitCtx {
+// rcaMemberWarnings caps how many of a workload's member warnings go into the
+// first prompt, so a small model's context still has room for logs and tools.
+const rcaMemberWarnings = 12
+
+// ownedBy reports whether an owner chain (object first, root last) passes
+// through kind/name above the object itself.
+func ownedBy(chain []objRef, kind, name string) bool {
+	for _, r := range chain[1:] {
+		if strings.EqualFold(r.Kind, kind) && r.Name == name {
+			return true
+		}
+	}
+	return false
+}
+
+// memberEvidence collects the warnings of the objects a workload owns
+// (ReplicaSets, Jobs, Pods) and its failing Pods, newest first. A workload's
+// own events rarely say what is wrong ("ScalingReplicaSet"); its Pods' do.
+func memberEvidence(cl *clusterState, ns, kind, name string) (lines []string, pods []string) {
+	seen := map[string]bool{}
+	podLast := map[string]time.Time{}
+	for _, ev := range cl.scopeEvents(ns) {
+		if ev.Type != "Warning" || ev.ObjectName == "" || (strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name) {
+			continue
+		}
+		chain, _ := cl.ownerChain(ns, objRef{ev.Kind, ev.ObjectName})
+		if !ownedBy(chain, kind, name) {
+			continue
+		}
+		key := ev.Kind + "/" + ev.ObjectName + "/" + ev.Reason
+		if !seen[key] && len(lines) < rcaMemberWarnings {
+			seen[key] = true
+			lines = append(lines, fmt.Sprintf("- %s %s %s: %s  (×%d, %s ago)",
+				ev.Kind, ev.ObjectName, ev.Reason, ev.Message, ev.Count, ev.Age))
+		}
+		if ev.Kind == "Pod" && ev.LastTime.After(podLast[ev.ObjectName]) {
+			podLast[ev.ObjectName] = ev.LastTime
+		}
+	}
+	for p := range podLast {
+		pods = append(pods, p)
+	}
+	sort.Slice(pods, func(i, j int) bool { return podLast[pods[i]].After(podLast[pods[j]]) })
+	return lines, pods
+}
+
+func buildRCAInitialContext(cl *clusterState, ns, kind, name string) rcaInitCtx {
 	var sb strings.Builder
 	fmt.Fprintf(&sb, "Perform Root Cause Analysis for %s %q in namespace %q.\n\n", kind, name, ns)
 
 	// Events for the anchor object
 	var events []EventSummary
-	if v, ok := nsCache.Load(ns); ok {
-		e := v.(*nsEntry)
-		e.RLock()
-		for _, ev := range e.events {
-			if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-				events = append(events, ev)
-			}
+	for _, ev := range cl.scopeEvents(ns) {
+		if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
+			events = append(events, ev)
 		}
-		e.RUnlock()
 	}
 	if len(events) == 0 {
 		sb.WriteString("No events recorded for this object.\n")
@@ -347,19 +395,39 @@ func buildRCAInitialContext(ns, kind, name string) rcaInitCtx {
 	// Object describe — full, untruncated. If this causes context overflow, LM Studio
 	// returns a clear 400 which we surface to the user with instructions to increase
 	// their context length rather than silently hiding data.
-	info := fetchObjectInfo(ns, kind, name)
+	info := cl.fetchObjectInfo(ns, kind, name)
 	if !info.NotFound && info.Error == "" {
 		sb.WriteString("\n")
 		sb.WriteString(rcaFormatDescribe(info))
 	}
 
+	// A workload: what its Pods and Jobs reported, and the newest failing
+	// Pod's logs (a Pod that has since been deleted has none, so try the next).
+	var logsPod, podLogs string
+	var podLogErr error
+	if !strings.EqualFold(kind, "Pod") {
+		lines, pods := memberEvidence(cl, ns, kind, name)
+		if len(lines) > 0 {
+			fmt.Fprintf(&sb, "\nWarnings on objects this %s owns:\n%s\n", kind, strings.Join(lines, "\n"))
+		}
+		for i, p := range pods {
+			if i == 3 {
+				break
+			}
+			if logs, err := fetchLogsForAI(cl, ns, p); err == nil && strings.TrimSpace(logs) != "" {
+				fmt.Fprintf(&sb, "\nLogs from pod %s, its newest failing Pod (last %d lines):\n%s", p, getLogTailLines(), logs)
+				logsPod, podLogs = p, logs
+				break
+			}
+		}
+	}
+
 	// Pod logs — full output, untruncated. If the combined context is too large,
 	// LM Studio returns a specific 400 which we detect and surface as a clear
 	// "increase your context length" message instead of silently hiding data.
-	var podLogs string
-	var podLogErr error
 	if strings.EqualFold(kind, "Pod") {
-		podLogs, podLogErr = fetchLogsForAI(ns, name)
+		logsPod = name
+		podLogs, podLogErr = fetchLogsForAI(cl, ns, name)
 		switch {
 		case podLogErr != nil:
 			fmt.Fprintf(&sb, "\nPod logs: could not be retrieved — %v\n"+
@@ -374,12 +442,14 @@ func buildRCAInitialContext(ns, kind, name string) rcaInitCtx {
 	}
 
 	sb.WriteString("\nUse the available tools to gather additional evidence as needed, then provide the Root Cause Analysis.")
-	return rcaInitCtx{text: sb.String(), podLogs: podLogs, podLogErr: podLogErr}
+	return rcaInitCtx{text: sb.String(), logsPod: logsPod, podLogs: podLogs, podLogErr: podLogErr}
 }
 
 // ── Agent loop ────────────────────────────────────────────────────────────────
 
-func runRCAAgent(ns, kind, name string, state *RCAState) {
+// runRCAAgent keeps the cluster it was started for, even if KubeHealth
+// switches while it runs.
+func runRCAAgent(cl *clusterState, ns, kind, name string, state *RCAState) {
 	now := func() string { return time.Now().Format("2006-01-02 15:04:05 MST") }
 
 	upd := func(fn func()) {
@@ -401,7 +471,7 @@ func runRCAAgent(ns, kind, name string, state *RCAState) {
 	}
 	sp += rcaSystemPromptSuffix
 
-	initCtx := buildRCAInitialContext(ns, kind, name)
+	initCtx := buildRCAInitialContext(cl, ns, kind, name)
 
 	msgs := []rcaMsg{
 		{Role: "system", Content: sp},
@@ -409,11 +479,11 @@ func runRCAAgent(ns, kind, name string, state *RCAState) {
 	}
 
 	// Add a synthetic evidence-trail step for anything gathered in the initial context.
-	if strings.EqualFold(kind, "Pod") {
+	if initCtx.logsPod != "" {
 		step := RCAStep{
 			Iter:    0,
 			Tool:    "get_pod_logs",
-			Label:   ns + " / " + name,
+			Label:   ns + " / " + initCtx.logsPod,
 			Initial: true,
 		}
 		switch {
@@ -513,7 +583,7 @@ func runRCAAgent(ns, kind, name string, state *RCAState) {
 				stepIdx = len(state.Steps) - 1
 			})
 
-			result := executeRCATool(tc, ns)
+			result := executeRCATool(cl, tc, ns)
 			estimatedTokens += len(result) / 4
 
 			msgs = append(msgs, rcaMsg{

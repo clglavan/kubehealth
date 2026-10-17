@@ -19,6 +19,27 @@
   <!-- body -->
   <div style="padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1.2rem">
 
+    <div id="stg-env-section" style="display:none">
+      <div class="aim-section-title">This cluster</div>
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem;flex-wrap:wrap">
+        <label for="stg-env"
+               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Environment</label>
+        <select id="stg-env"
+                style="background:var(--bg);border:1px solid var(--border);color:var(--text);
+                       padding:0.3rem 0.55rem;border-radius:6px;font-size:0.82rem;outline:none">
+          <option value="" id="stg-env-auto">From the context name</option>
+          <option value="prod">Production</option>
+          <option value="nonprod">Non-production</option>
+          <option value="stage">Staging</option>
+          <option value="dev">Development</option>
+          <option value="local">Local</option>
+        </select>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55" id="stg-env-hint">
+        Production clusters get a red stripe across the top of every page.
+      </div>
+    </div>
+
     <div>
       <div class="aim-section-title">Logs</div>
       <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
@@ -112,7 +133,49 @@
 
 <script>
 (function() {
+  var ENV_NAMES = { prod: 'Production', nonprod: 'Non-production', stage: 'Staging', dev: 'Development', local: 'Local', unknown: 'not recognised' };
+  var envLoaded = null; // the select's value when the modal opened
+
+  // The environment of the cluster this page shows (window.KH_CTX).
+  function loadEnv() {
+    var section = document.getElementById('stg-env-section');
+    envLoaded = null;
+    if (!window.KH_CTX) { section.style.display = 'none'; return; }
+    fetch('/api/contexts')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var c = (d.contexts || []).filter(function(x) { return x.name === window.KH_CTX; })[0];
+        if (!c) { section.style.display = 'none'; return; }
+        document.getElementById('stg-env-auto').textContent = 'From the context name: ' + ENV_NAMES[c.detected_env];
+        var sel = document.getElementById('stg-env');
+        sel.value = c.env_source === 'settings' ? c.env : '';
+        envLoaded = sel.value;
+        var hint = 'Context <code style="font-family:monospace">' + window.KH_CTX.replace(/</g, '&lt;') + '</code>. ' +
+          'Production clusters get a red stripe across the top of every page.';
+        if (d.prefs_path) hint += ' Saved in <code style="font-family:monospace">' + d.prefs_path.replace(/</g, '&lt;') + '</code>.';
+        document.getElementById('stg-env-hint').innerHTML = hint;
+        section.style.display = '';
+      })
+      .catch(function() { section.style.display = 'none'; });
+  }
+
+  // saveEnv stores a changed environment and reloads, so the stripe and tags
+  // update on this page. Resolves false when nothing changed.
+  function saveEnv() {
+    var sel = document.getElementById('stg-env');
+    if (envLoaded === null || sel.value === envLoaded) return Promise.resolve(false);
+    return fetch('/api/context/env', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: window.KH_CTX, env: sel.value })
+    }).then(function(r) {
+      if (!r.ok) return r.text().then(function(t) { throw new Error(t); });
+      return true;
+    });
+  }
+
   window.stgOpen = function() {
+    loadEnv();
     fetch('/api/settings')
       .then(function(r) { return r.json(); })
       .then(function(d) {
@@ -153,7 +216,9 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ log_tail_lines: raw, rca_max_iter: iter, llm_max_calls: maxLLM, llm_timeout_min: timeout })
     })
-    .then(function() {
+    .then(saveEnv)
+    .then(function(envChanged) {
+      if (envChanged) { location.reload(); return; }
       window.llmTimeoutMs = timeout * 60 * 1000; // keep frontend in sync
       btn.textContent = 'Saved ✓';
       // Propagate the new value to the AI Agent context estimator if it's open
@@ -163,7 +228,11 @@
       }
       setTimeout(function() { btn.disabled = false; btn.textContent = 'Save'; }, 1600);
     })
-    .catch(function() { btn.disabled = false; btn.textContent = 'Save'; });
+    .catch(function(e) {
+      btn.disabled = false;
+      btn.textContent = 'Save';
+      if (e && e.message) document.getElementById('stg-env-hint').textContent = 'Could not save the environment: ' + e.message;
+    });
   };
 
   document.addEventListener('keydown', function(e) {

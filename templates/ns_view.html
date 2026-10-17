@@ -1,43 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{{.Namespace}} — KubeHealth</title>
-<style>
-  :root {
-    --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a;
-    --text: #e2e8f0; --muted: #64748b;
-    --warn: #f59e0b; --warn-bg: rgba(245,158,11,0.08);
-    --normal: #10b981; --normal-bg: rgba(16,185,129,0.08);
-    --accent: #6366f1; --accent-bg: rgba(99,102,241,0.1);
-    --cascade: #ef4444; --cascade-bg: rgba(239,68,68,0.07);
-    --tree-line: #2a2d3a;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; }
-  body {
-    background: var(--bg); color: var(--text);
-    font-family: 'Inter','Segoe UI',system-ui,sans-serif;
-    display: flex; flex-direction: column; height: 100vh; overflow: hidden;
-  }
+{{/* The namespace view: its styles, its scripts, and the fragment the shell
+     swaps in when you pick a namespace (objects pane + detail pane). */}}
 
-  /* ── Header ── */
-  header {
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    padding: 0.7rem 1.25rem; display: flex; align-items: center; gap: 0.85rem;
-    flex-shrink: 0;
-  }
-  header a.back { color: var(--accent); text-decoration: none; font-size: 0.85rem; flex-shrink: 0; }
-  header h1 { font-size: 1rem; font-weight: 700; }
-  .ns-pills { margin-left: auto; display: flex; gap: 0.4rem; align-items: center; }
-  .badge { font-size: 0.65rem; font-weight: 700; padding: 0.13rem 0.42rem; border-radius: 20px; }
+{{define "ns_css"}}
+<style>
+  /* ── Badges ── */
+  .badge { font-size: 0.6875rem; font-weight: 700; padding: 0.13rem 0.42rem; border-radius: 20px; }
   .badge.warn    { background: var(--warn-bg);    color: var(--warn);    border: 1px solid rgba(245,158,11,0.25); }
   .badge.ok      { background: var(--normal-bg);  color: var(--normal);  border: 1px solid rgba(16,185,129,0.2); }
   .badge.cascade { background: var(--cascade-bg); color: var(--cascade); border: 1px solid rgba(239,68,68,0.3); }
 
-  /* ── App body: sidebar + detail ── */
-  .app-body { display: flex; flex: 1; overflow: hidden; }
+  /* ── Namespace view: objects pane + detail (layout set by the shell) ── */
 
   /* ── Sidebar ── */
   .sidebar {
@@ -78,7 +50,7 @@
   .sidebar-ai-entry.active {
     background: var(--accent-bg); border-left-color: var(--accent);
   }
-  .sidebar-ai-label { font-size: 0.85rem; font-weight: 600; color: var(--accent); }
+  .sidebar-ai-label { font-size: 0.85rem; font-weight: 600; color: var(--accent-text); }
 
   .sidebar-section-title {
     padding: 0.75rem 1rem 0.35rem;
@@ -109,17 +81,18 @@
   .sidebar-item.active .si-name { color: var(--text); }
 
   .kind-chip {
-    font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
     padding: 0.12rem 0.42rem; border-radius: 3px; flex-shrink: 0;
   }
-  .kind-chip.d0 { background: var(--accent-bg);              color: var(--accent); }
+  .kind-chip.d0 { background: var(--accent-bg);              color: var(--accent-text); }
   .kind-chip.d1 { background: rgba(99,102,241,0.07);         color: #818cf8; }
   .kind-chip.d2 { background: rgba(99,102,241,0.04);         color: var(--muted); }
   .kind-chip.orphan { background: rgba(100,116,139,0.15);    color: var(--muted); }
 
-  .si-dot { font-size: 0.55rem; flex-shrink: 0; }
+  .si-dot { font-size: 0.6875rem; flex-shrink: 0; }
   .si-dot.cascade { color: var(--cascade); }
   .si-dot.warn    { color: var(--warn); }
+  .si-dot.idle    { color: var(--muted); }
 
   /* ── Detail panel area ── */
   .detail-area { flex: 1; overflow-y: auto; }
@@ -144,7 +117,7 @@
     display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;
   }
   .breadcrumb-step { display: flex; align-items: center; gap: 0.25rem; font-size: 0.72rem; color: var(--muted); }
-  .breadcrumb-arrow { color: var(--border); font-size: 0.65rem; }
+  .breadcrumb-arrow { color: var(--border); font-size: 0.6875rem; }
   .detail-meta { display: flex; gap: 0.4rem; flex-shrink: 0; align-items: flex-start; padding-top: 0.15rem; flex-wrap: wrap; }
 
   /* ── Family tree in detail ── */
@@ -165,7 +138,7 @@
     color: var(--text); font-weight: 600; font-size: 0.88rem; text-decoration: none;
     overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
   }
-  .obj-link:hover { color: var(--accent); }
+  .obj-link:hover { color: var(--accent-text); }
   .member-badges { display: flex; gap: 0.35rem; flex-shrink: 0; align-items: center; }
 
   /* Indented children */
@@ -208,25 +181,31 @@
   .tl-header  { display: flex; align-items: baseline; gap: 0.35rem; flex-wrap: wrap; }
   .tl-reason  { font-size: 0.8rem; font-weight: 600; color: var(--text); }
   .tl-reason.Warning { color: var(--warn); }
-  .tl-count   { font-size: 0.67rem; color: var(--muted); background: rgba(255,255,255,0.05); padding: 0.06rem 0.28rem; border-radius: 3px; }
-  .tl-age     { font-size: 0.67rem; color: var(--muted); margin-left: auto; white-space: nowrap; }
+  .tl-count   { font-size: 0.6875rem; color: var(--muted); background: rgba(255,255,255,0.05); padding: 0.06rem 0.28rem; border-radius: 3px; }
+  .tl-since   { font-size: 0.6875rem; color: var(--muted); }
+  .tl-age     { font-size: 0.6875rem; color: var(--muted); margin-left: auto; white-space: nowrap; }
   .tl-msg     { font-size: 0.74rem; color: var(--muted); margin-top: 2px; line-height: 1.5; }
 
   .no-events { font-size: 0.78rem; color: var(--muted); padding: 0.5rem 0; }
 
   /* ── AI object button (inside member-header) ── */
   .ai-obj-btn {
-    font-size: 0.63rem;
+    font-size: 0.6875rem;
     padding: 0.1rem 0.45rem;
     background: rgba(99,102,241,0.08);
     border: 1px solid rgba(99,102,241,0.2);
-    color: var(--accent);
+    color: var(--accent-text);
     border-radius: 4px;
     cursor: pointer;
     flex-shrink: 0;
     transition: background 0.12s;
   }
   .ai-obj-btn:hover { background: rgba(99,102,241,0.16); }
+  .yaml-btn {
+    font-size: 0.6875rem; padding: 0.1rem 0.45rem; border: 1px solid var(--border-2); color: var(--muted);
+    border-radius: 4px; text-decoration: none; flex-shrink: 0; white-space: nowrap;
+  }
+  .yaml-btn:hover { color: var(--text); border-color: var(--muted); }
   .ai-obj-btn.active { background: rgba(99,102,241,0.18); }
 
   /* ── AI result below a timeline ── */
@@ -235,14 +214,14 @@
     display: flex; align-items: center; gap: 0.5rem;
     padding: 0.28rem 0.9rem;
     cursor: pointer; user-select: none;
-    font-size: 0.67rem; font-weight: 600;
+    font-size: 0.6875rem; font-weight: 600;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     transition: filter 0.12s;
   }
   .result-toggle-hdr:hover { filter: brightness(1.15); }
-  .result-toggle-arrow { font-size: 0.58rem; opacity: 0.6; flex-shrink: 0; }
+  .result-toggle-arrow { font-size: 0.6875rem; opacity: 0.6; flex-shrink: 0; }
   .result-toggle-title { flex: 1; }
-  .result-toggle-meta { font-size: 0.63rem; font-weight: 400; opacity: 0.7; font-family: monospace; }
+  .result-toggle-meta { font-size: 0.6875rem; font-weight: 400; opacity: 0.7; font-family: monospace; }
   .result-toggle-body { }
 
   .member-ai-result {
@@ -257,11 +236,11 @@
     padding: 0.65rem 1rem 0.75rem;
     font-size: 0.77rem; line-height: 1.65; color: var(--text);
   }
-  .member-ai-result strong { color: var(--accent); }
+  .member-ai-result strong { color: var(--accent-text); }
 
   /* ── Streaming cursor ── */
   .ai-stream-cursor {
-    display: inline-block; margin-left: 2px; color: var(--accent);
+    display: inline-block; margin-left: 2px; color: var(--accent-text);
     animation: blink 0.6s step-end infinite;
   }
   @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -287,14 +266,14 @@
   .ns-ai-meta { font-size: 0.72rem; color: var(--muted); }
   .ns-ai-placeholder { color: var(--muted); font-size: 0.85rem; padding: 0.5rem 0; }
   .ns-ai-result-body { font-size: 0.82rem; line-height: 1.7; }
-  .ns-ai-result-body strong { color: var(--accent); }
+  .ns-ai-result-body strong { color: var(--accent-text); }
   .ns-ai-ts { font-size: 0.72rem; color: var(--muted); margin-bottom: 0.65rem; display: flex; gap: 0.5rem; align-items: center; }
   .ns-ai-ts .ai-model-text { font-family: monospace; }
   .ai-analyze-btn {
     padding: 0.32rem 0.9rem;
     background: rgba(99,102,241,0.1);
     border: 1px solid rgba(99,102,241,0.3);
-    color: var(--accent);
+    color: var(--accent-text);
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.8rem;
@@ -317,7 +296,7 @@
 
   .obj-back-link {
     background: none; border: none; padding: 0; cursor: pointer;
-    color: var(--accent); font-size: 0.85rem; flex-shrink: 0;
+    color: var(--accent-text); font-size: 0.85rem; flex-shrink: 0;
     text-decoration: none; align-self: center;
   }
   .obj-back-link:hover { text-decoration: underline; }
@@ -346,7 +325,7 @@
 
   .obj-section { margin-bottom: 1.5rem; }
   .obj-section-title {
-    font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
     letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem;
   }
   .obj-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
@@ -355,7 +334,7 @@
     vertical-align: top;
   }
   .obj-table th {
-    font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+    font-size: 0.6875rem; font-weight: 600; text-transform: uppercase;
     color: var(--muted); text-align: left;
   }
   .obj-key { color: var(--muted); width: 180px; white-space: nowrap; }
@@ -373,7 +352,7 @@
   .label-chip b { color: var(--text); }
 
   .cond-badge {
-    font-size: 0.68rem; font-weight: 700; padding: 0.1rem 0.4rem;
+    font-size: 0.6875rem; font-weight: 700; padding: 0.1rem 0.4rem;
     border-radius: 3px; display: inline-block;
   }
   .cond-true    { background: var(--normal-bg); color: var(--normal); }
@@ -393,15 +372,15 @@
     background: rgba(99,102,241,0.05);
     border-bottom: 1px solid rgba(99,102,241,0.12);
   }
-  .obj-ai-section-title { font-size: 0.72rem; font-weight: 700; color: var(--accent); }
+  .obj-ai-section-title { font-size: 0.72rem; font-weight: 700; color: var(--accent-text); }
   .obj-ai-section-body {
     padding: 0.7rem 0.9rem;
     font-size: 0.78rem;
     line-height: 1.65;
     color: var(--text);
   }
-  .obj-ai-section-body strong { color: var(--accent); }
-  .obj-ai-section-body .ai-result-meta { font-size: 0.67rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .obj-ai-section-body strong { color: var(--accent-text); }
+  .obj-ai-section-body .ai-result-meta { font-size: 0.6875rem; color: var(--muted); margin-bottom: 0.4rem; }
   .obj-ai-section-body .ai-model-text { font-family: monospace; }
 
   /* ── Shared AI content rendering ── */
@@ -409,7 +388,7 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.67rem;
+    font-size: 0.6875rem;
     color: var(--muted);
     margin-bottom: 0.55rem;
   }
@@ -420,11 +399,11 @@
   .ai-section { margin: 0.55rem 0 0.1rem; }
   .ai-section-label {
     display: inline-block;
-    font-size: 0.63rem;
+    font-size: 0.6875rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.09em;
-    color: var(--accent);
+    color: var(--accent-text);
     margin-bottom: 0.15rem;
   }
   .ai-list {
@@ -443,9 +422,25 @@
     content: '›';
     position: absolute;
     left: 0.05rem;
-    color: var(--accent);
+    color: var(--accent-text);
     font-weight: 700;
   }
+  ol.ai-list { counter-reset: ai-n; }
+  ol.ai-list li { padding-left: 1.35rem; counter-increment: ai-n; }
+  ol.ai-list li::before { content: counter(ai-n) '.'; font-weight: 600; font-variant-numeric: tabular-nums; }
+  pre.ai-code {
+    margin: 0.35rem 0 0.5rem;
+    padding: 0.55rem 0.75rem;
+    background: var(--sunk, rgba(0,0,0,0.25));
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    white-space: pre;
+  }
+  pre.ai-code code { background: none; padding: 0; font-size: inherit; color: var(--text); }
   .ai-content code {
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 0.82em;
@@ -485,7 +480,7 @@
   /* ── Logs button ── */
   /* ── RCA button ── */
   .rca-btn {
-    font-size: 0.63rem;
+    font-size: 0.6875rem;
     padding: 0.1rem 0.45rem;
     background: rgba(217,119,6,0.08);
     border: 1px solid rgba(217,119,6,0.25);
@@ -519,15 +514,15 @@
     display: flex; align-items: baseline; gap: 0.45rem;
     font-size: 0.7rem; padding: 0.18rem 0; line-height: 1.4;
   }
-  .rca-step-icon { flex-shrink: 0; font-size: 0.65rem; }
+  .rca-step-icon { flex-shrink: 0; font-size: 0.6875rem; }
   .rca-step-done .rca-step-icon { color: var(--normal); }
   .rca-step-run  .rca-step-icon { color: #d97706; }
   .rca-step-skip .rca-step-icon { color: var(--muted); }
   .rca-step-skip .rca-step-label { opacity: 0.6; }
   .rca-step-label { flex: 1; color: var(--muted); }
-  .rca-step-iter  { font-size: 0.63rem; color: rgba(100,116,139,0.6); white-space: nowrap; }
+  .rca-step-iter  { font-size: 0.6875rem; color: rgba(100,116,139,0.6); white-space: nowrap; }
   .rca-tool-chip  {
-    font-size: 0.58rem; font-weight: 700; padding: 0.04rem 0.3rem;
+    font-size: 0.6875rem; font-weight: 700; padding: 0.04rem 0.3rem;
     border-radius: 3px; background: rgba(217,119,6,0.12); color: #d97706; margin-right: 0.2rem;
   }
   .rca-result-body {
@@ -540,7 +535,7 @@
 
   /* ── Correlate button ── */
   .correlate-btn {
-    font-size: 0.63rem;
+    font-size: 0.6875rem;
     padding: 0.1rem 0.45rem;
     background: rgba(139,92,246,0.08);
     border: 1px solid rgba(139,92,246,0.2);
@@ -566,13 +561,13 @@
     padding: 0.32rem 0.9rem;
     background: rgba(139,92,246,0.07);
     border-bottom: 1px solid rgba(139,92,246,0.1);
-    font-size: 0.67rem; color: #8b5cf6;
+    font-size: 0.6875rem; color: #8b5cf6;
     user-select: none;
   }
   .corr-header:hover { background: rgba(139,92,246,0.13); }
   .corr-ns-label {
     padding: 0.28rem 0.9rem;
-    font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
     color: var(--muted); background: rgba(255,255,255,0.025);
     border-top: 1px solid rgba(255,255,255,0.05);
   }
@@ -586,16 +581,16 @@
   .corr-dot.Normal  { background: var(--normal); }
   .corr-obj { font-size: 0.72rem; font-weight: 500; color: var(--text); }
   .corr-kind-chip {
-    font-size: 0.59rem; font-weight: 700; text-transform: uppercase;
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
     background: rgba(99,102,241,0.1); color: var(--muted);
     padding: 0.04rem 0.3rem; border-radius: 3px; margin-right: 0.28rem;
   }
   .corr-reason { font-size: 0.69rem; color: var(--muted); }
-  .corr-msg { grid-column: 2; font-size: 0.67rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
-  .corr-age { font-size: 0.67rem; color: var(--muted); white-space: nowrap; }
+  .corr-msg { grid-column: 2; font-size: 0.6875rem; color: var(--muted); line-height: 1.4; margin-top: 2px; }
+  .corr-age { font-size: 0.6875rem; color: var(--muted); white-space: nowrap; }
 
   .logs-btn {
-    font-size: 0.63rem;
+    font-size: 0.6875rem;
     padding: 0.1rem 0.45rem;
     background: rgba(16,185,129,0.08);
     border: 1px solid rgba(16,185,129,0.2);
@@ -623,7 +618,7 @@
     padding: 0.3rem 0.9rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
     background: rgba(255,255,255,0.025);
-    font-size: 0.65rem;
+    font-size: 0.6875rem;
     color: var(--muted);
   }
   .logs-meta .logs-cname {
@@ -666,35 +661,25 @@
   }
   .obj-logs-title { font-size: 0.72rem; font-weight: 700; color: var(--normal); }
 </style>
-</head>
-<body>
+{{end}}
 
-<header>
-  <a class="back" href="/">← KubeHealth</a>
-  <h1>{{.Namespace}}</h1>
-  <div class="ns-pills">
-    {{if gt .WarningCount 0}}<span class="badge warn">⚠ {{.WarningCount}}</span>{{end}}
-    {{if gt .NormalCount 0}}<span class="badge ok">✓ {{.NormalCount}}</span>{{end}}
-    <button class="ai-agent-nav-btn" onclick="docsOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.2)">Docs</button>
-    <button class="ai-agent-nav-btn" onclick="stgOpen()" style="color:var(--muted);border-color:rgba(100,116,139,0.3)">⚙ Settings</button>
-    <button class="ai-agent-nav-btn" onclick="aimOpen()">✦ AI Agent</button>
-  </div>
-</header>
-
-<div class="app-body">
-
-  <!-- ── Sidebar ── -->
-  <aside class="sidebar">
+{{define "ns_fragment"}}
+<div class="nsview" id="nsview" data-ns="{{.Namespace}}" data-title="{{.Title}}">
+  <aside class="sidebar" aria-label="Objects in {{.Title}}">
+    <div class="ns-pane-head">
+      <span class="ns-pane-name" title="{{.Title}}">{{.Title}}</span>
+      <button type="button" class="ns-reload" onclick="khShell.reloadNamespace()" title="Reload this namespace’s events (loaded {{.LoadedAt}})" aria-label="Reload events">↻</button>
+    </div>
     <div class="sidebar-top">
       <input id="sidebar-search" placeholder="Filter…" oninput="filterSidebar(this.value)">
       <button class="warn-toggle" id="warn-toggle" onclick="toggleWarn(this)">⚠ only</button>
     </div>
     <div class="sidebar-scroll">
 
-      <!-- AI namespace analysis entry -->
-      <div class="sidebar-ai-entry" onclick="selectPanel('dp-ai-ns', this)">
-        <span class="kind-chip" style="background:rgba(99,102,241,0.14);color:var(--accent)">AI</span>
-        <span class="sidebar-ai-label">Analyze namespace</span>
+      <!-- Namespace status: live snapshot, problems, warnings, AI analysis -->
+      <div class="sidebar-ai-entry" data-panel="dp-status" onclick="selectPanel('dp-status', this)">
+        <span class="kind-chip status-chip">NS</span>
+        <span class="sidebar-ai-label">{{if eq .Namespace "_cluster"}}Cluster-wide status{{else}}Namespace status{{end}}</span>
       </div>
 
       {{if .Families}}
@@ -707,8 +692,9 @@
            onclick="selectPanel('dp-fam-{{$fi}}', this)">
         <span class="kind-chip d0">{{$fam.Root.Kind}}</span>
         <span class="si-name">{{$fam.Root.ObjectName}}</span>
-        {{if $fam.CascadeFailure}}<span class="si-dot cascade">●</span>
-        {{else if $fam.HasWarning}}<span class="si-dot warn">●</span>{{end}}
+        {{if $fam.CascadeFailure}}<span class="si-dot cascade" role="img" aria-label="Cascade failure">▲</span>
+        {{else if $fam.Idle}}<span class="si-dot idle" role="img" aria-label="No new warning for 15 min">○</span>
+        {{else if $fam.HasWarning}}<span class="si-dot warn" role="img" aria-label="Warnings">●</span>{{end}}
       </div>
       {{end}}
       {{end}}
@@ -724,41 +710,71 @@
            onclick="selectPanel('dp-o-{{$ki}}-{{$oi}}', this)">
         <span class="kind-chip orphan">{{$obj.Kind}}</span>
         <span class="si-name">{{$obj.ObjectName}}</span>
-        {{if $obj.HasWarning}}<span class="si-dot warn">●</span>{{end}}
+        {{if $obj.Idle}}<span class="si-dot idle" role="img" aria-label="No new warning for 15 min">○</span>
+        {{else if $obj.HasWarning}}<span class="si-dot warn" role="img" aria-label="Warnings">●</span>{{end}}
       </div>
       {{end}}
       {{end}}
       {{end}}
 
+      {{if and (not .Families) (not .OrphanKinds)}}
+      <p class="no-objects">No events in the cache for this namespace. Its status shows what is running.</p>
+      {{end}}
     </div>
   </aside>
 
   <!-- ── Detail area ── -->
   <div class="detail-area" id="detail-area">
 
-    <!-- Empty state -->
-    <div class="detail-panel active" id="dp-empty">
-      <div class="detail-placeholder">
-        <span class="icon">⎈</span>
-        <span>Select an object from the sidebar</span>
+    <!-- ── Namespace status ── -->
+    <div class="detail-panel active" id="dp-status">
+      <div class="status-head">
+        <div>
+          <h2>{{.Title}}</h2>
+          <p class="status-sub" id="status-sub">Live status</p>
+        </div>
+        <button type="button" class="status-refresh" onclick="khShell.refreshSnapshot()">↻ Refresh</button>
       </div>
-    </div>
 
-    <!-- ── AI namespace analysis panel ── -->
-    <div class="detail-panel" id="dp-ai-ns">
-      <div class="ns-ai-panel">
-        <div class="ns-ai-header">
-          <div class="ns-ai-title">
-            <h2>AI Analysis</h2>
-            <div class="ns-ai-meta">namespace: {{.Namespace}}</div>
+      <section class="status-sec" aria-label="What is running">
+        <div id="ns-snapshot"><p class="status-wait">Reading what is running…</p></div>
+      </section>
+
+      <section class="status-sec" aria-labelledby="st-problems">
+        <h3 id="st-problems">Problems</h3>
+        <div id="ns-problems"></div>
+      </section>
+
+      <section class="status-sec" aria-labelledby="st-warnings">
+        <h3 id="st-warnings">Recent warnings</h3>
+        {{if .Warnings}}
+        <div class="rw-list">
+          {{range .Warnings}}
+          <div class="rw">
+            <div class="rw-head">
+              <span class="tl-reason Warning">{{.Reason}}</span>
+              {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
+              <button type="button" class="rw-obj" onclick="focusObject('{{.Kind}}','{{.ObjectName}}')">{{.Kind}}/{{.ObjectName}}</button>
+              <span class="tl-age">{{.Age}} ago</span>
+            </div>
+            <div class="tl-msg">{{.Message}}</div>
           </div>
-          <button class="ai-analyze-btn" id="ns-analyze-btn"
-                  onclick="analyzeNamespace(this,'{{.Namespace}}')">✦ Analyze</button>
+          {{end}}
+        </div>
+        {{else}}
+        <p class="status-wait">No warnings in the cached events.</p>
+        {{end}}
+      </section>
+
+      <section class="status-sec" aria-labelledby="st-ai">
+        <div class="ns-ai-header">
+          <h3 id="st-ai">AI analysis</h3>
+          <button class="ai-analyze-btn" id="ns-analyze-btn" onclick="analyzeNamespace(this,'{{.Namespace}}')">✦ Analyze</button>
         </div>
         <div id="ns-ai-result">
-          <p class="ns-ai-placeholder">Click "Analyze" to run AI analysis on all events in this namespace.</p>
+          <p class="ns-ai-placeholder">Runs the model over all events in {{if eq .Namespace "_cluster"}}cluster-wide objects{{else}}this namespace{{end}}.</p>
         </div>
-      </div>
+      </section>
     </div>
 
     <!-- Family detail panels -->
@@ -793,7 +809,7 @@
         <div class="member-header {{if $root.HasWarning}}{{if $fam.CascadeFailure}}is-cascade{{else}}has-warn{{end}}{{end}}">
           <div class="member-title">
             <span class="kind-chip d0">{{$root.Kind}}</span>
-            <a class="obj-link" href="/object/{{$.Namespace}}/{{$root.Kind}}/{{$root.ObjectName}}"
+            <a class="obj-link" href="/object/{{$.Namespace}}/{{$root.Kind}}/{{$root.ObjectName}}?ctx={{$.Cluster.Context}}"
                onclick="loadObject('{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$root.ObjectName}}</a>
           </div>
           <div class="member-badges">
@@ -802,7 +818,8 @@
             {{if eq $root.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$root.ObjectName}}')">Logs</button>{{end}}
             <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">Correlate</button>
             <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">RCA</button>
-            <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">AI</button>
+            <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$root.Kind}}','{{$root.ObjectName}}')">✦ AI</button>
+            <a class="yaml-btn" href="/object/{{$.Namespace}}/{{$root.Kind}}/{{$root.ObjectName}}?ctx={{$.Cluster.Context}}">YAML</a>
           </div>
         </div>
         <div class="member-timeline">
@@ -813,8 +830,8 @@
             <div class="tl-content">
               <div class="tl-header">
                 <span class="tl-reason {{.Type}}">{{.Reason}}</span>
-                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
-                <span class="tl-age">{{.Age}}</span>
+                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span><span class="tl-since">since {{clock .FirstTime}}</span>{{end}}
+                <span class="tl-age">{{.Age}} ago</span>
               </div>
               <div class="tl-msg">{{.Message}}</div>
             </div>
@@ -835,7 +852,7 @@
             <div class="member-header {{if $child.HasWarning}}has-warn{{end}}">
               <div class="member-title">
                 <span class="kind-chip d1">{{$child.Kind}}</span>
-                <a class="obj-link" href="/object/{{$.Namespace}}/{{$child.Kind}}/{{$child.ObjectName}}"
+                <a class="obj-link" href="/object/{{$.Namespace}}/{{$child.Kind}}/{{$child.ObjectName}}?ctx={{$.Cluster.Context}}"
                    onclick="loadObject('{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$child.ObjectName}}</a>
               </div>
               <div class="member-badges">
@@ -844,7 +861,8 @@
                 {{if eq $child.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$child.ObjectName}}')">Logs</button>{{end}}
                 <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">Correlate</button>
                 <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">RCA</button>
-                <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">AI</button>
+                <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$child.Kind}}','{{$child.ObjectName}}')">✦ AI</button>
+            <a class="yaml-btn" href="/object/{{$.Namespace}}/{{$child.Kind}}/{{$child.ObjectName}}?ctx={{$.Cluster.Context}}">YAML</a>
               </div>
             </div>
             <div class="member-timeline">
@@ -855,8 +873,8 @@
                 <div class="tl-content">
                   <div class="tl-header">
                     <span class="tl-reason {{.Type}}">{{.Reason}}</span>
-                    {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
-                    <span class="tl-age">{{.Age}}</span>
+                    {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span><span class="tl-since">since {{clock .FirstTime}}</span>{{end}}
+                    <span class="tl-age">{{.Age}} ago</span>
                   </div>
                   <div class="tl-msg">{{.Message}}</div>
                 </div>
@@ -877,7 +895,7 @@
                 <div class="member-header {{if $grand.HasWarning}}has-warn{{end}}">
                   <div class="member-title">
                     <span class="kind-chip d2">{{$grand.Kind}}</span>
-                    <a class="obj-link" href="/object/{{$.Namespace}}/{{$grand.Kind}}/{{$grand.ObjectName}}"
+                    <a class="obj-link" href="/object/{{$.Namespace}}/{{$grand.Kind}}/{{$grand.ObjectName}}?ctx={{$.Cluster.Context}}"
                        onclick="loadObject('{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}','dp-fam-{{$fi}}');return false;">{{$grand.ObjectName}}</a>
                   </div>
                   <div class="member-badges">
@@ -886,7 +904,8 @@
                     {{if eq $grand.Kind "Pod"}}<button class="logs-btn" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$grand.ObjectName}}')">Logs</button>{{end}}
                     <button class="correlate-btn" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">Correlate</button>
                     <button class="rca-btn" onclick="startRCA(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">RCA</button>
-                    <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">AI</button>
+                    <button class="ai-obj-btn" onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$grand.Kind}}','{{$grand.ObjectName}}')">✦ AI</button>
+            <a class="yaml-btn" href="/object/{{$.Namespace}}/{{$grand.Kind}}/{{$grand.ObjectName}}?ctx={{$.Cluster.Context}}">YAML</a>
                   </div>
                 </div>
                 <div class="member-timeline">
@@ -897,8 +916,8 @@
                     <div class="tl-content">
                       <div class="tl-header">
                         <span class="tl-reason {{.Type}}">{{.Reason}}</span>
-                        {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
-                        <span class="tl-age">{{.Age}}</span>
+                        {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span><span class="tl-since">since {{clock .FirstTime}}</span>{{end}}
+                        <span class="tl-age">{{.Age}} ago</span>
                       </div>
                       <div class="tl-msg">{{.Message}}</div>
                     </div>
@@ -936,15 +955,14 @@
           </div>
         </div>
         <div class="detail-meta">
-          <a href="/object/{{$.Namespace}}/{{$obj.Kind}}/{{$obj.ObjectName}}"
-             style="font-size:0.75rem;color:var(--accent);text-decoration:none;">View YAML →</a>
+          {{if $obj.WarningCount}}<span class="badge warn">⚠ {{$obj.WarningCount}}</span>{{end}}
+          {{if $obj.NormalCount}}<span class="badge ok">✓ {{$obj.NormalCount}}</span>{{end}}
           {{if eq $obj.Kind "Pod"}}<button class="logs-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchLogs(event,this,'{{$.Namespace}}','{{$obj.ObjectName}}')">Logs</button>{{end}}
           <button class="correlate-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="fetchCorrelate(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">Correlate</button>
           <button class="rca-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" onclick="startRCA(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">RCA</button>
           <button class="ai-obj-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;"
                   onclick="analyzeObj(event,this,'{{$.Namespace}}','{{$obj.Kind}}','{{$obj.ObjectName}}')">✦ AI</button>
-          {{if $obj.WarningCount}}<span class="badge warn">⚠ {{$obj.WarningCount}}</span>{{end}}
-          {{if $obj.NormalCount}}<span class="badge ok">✓ {{$obj.NormalCount}}</span>{{end}}
+          <a class="yaml-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" href="/object/{{$.Namespace}}/{{$obj.Kind}}/{{$obj.ObjectName}}?ctx={{$.Cluster.Context}}">YAML</a>
         </div>
       </div>
       <div class="member-block">
@@ -956,8 +974,8 @@
             <div class="tl-content">
               <div class="tl-header">
                 <span class="tl-reason {{.Type}}">{{.Reason}}</span>
-                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span>{{end}}
-                <span class="tl-age">{{.Age}}</span>
+                {{if gt .Count 1}}<span class="tl-count">×{{.Count}}</span><span class="tl-since">since {{clock .FirstTime}}</span>{{end}}
+                <span class="tl-age">{{.Age}} ago</span>
               </div>
               <div class="tl-msg">{{.Message}}</div>
             </div>
@@ -978,8 +996,10 @@
     <div class="detail-panel" id="dp-object"></div>
 
   </div><!-- end detail-area -->
-</div><!-- end app-body -->
+</div>
+{{end}}
 
+{{define "ns_js"}}
 <script>
 // Initialise the LLM timeout from settings so pollAI uses the right value
 // even before the user opens the Settings modal.
@@ -998,6 +1018,9 @@ function selectPanel(panelId, item) {
   var panel = document.getElementById(panelId);
   if (panel) panel.classList.add('active');
   if (item)  item.classList.add('active');
+  var area = document.getElementById('detail-area');
+  if (area) area.scrollTop = 0;
+  if (window.khShell) khShell.panelSelected(panelId, item);
 }
 
 function toggleWarn(btn) {
@@ -1012,7 +1035,8 @@ function applySidebarFilters(q) {
   if (q === undefined) q = document.getElementById('sidebar-search').value;
   q = q.toLowerCase();
   var firstVisible = null;
-  var anyActive = false;
+  // The status entry counts as a selection, so filtering doesn't jump away from it.
+  var anyActive = !!document.querySelector('.sidebar-ai-entry.active');
 
   document.querySelectorAll('.sidebar-item').forEach(function(item) {
     var warnOk = !showWarnOnly || item.dataset.warn === '1';
@@ -1044,20 +1068,42 @@ function fmt(text) {
 function renderMD(text) {
   var lines = text.split('\n');
   var out = '';
-  var inList = false;
+  var inList = '';   // '', 'ul' or 'ol'
+  var code = null;   // lines of an open ``` block
+  function closeList() { if (inList) { out += '</' + inList + '>'; inList = ''; } }
+  function openList(tag) {
+    if (inList === tag) return;
+    closeList();
+    out += '<' + tag + ' class="ai-list">';
+    inList = tag;
+  }
+  function closeCode() {
+    // Drop blank lines at the ends; a block still streaming is shown as far as it got.
+    while (code.length && !code[code.length - 1].trim()) code.pop();
+    if (code.length) out += '<pre class="ai-code"><code>' + esc(code.join('\n')) + '</code></pre>';
+    code = null;
+  }
 
   for (var i = 0; i < lines.length; i++) {
-    var line = lines[i].trim();
+    var raw = lines[i];
+    var line = raw.trim();
+
+    // ``` fences: keep the lines as they are, no inline formatting.
+    if (/^```/.test(line)) {
+      if (code) { closeCode(); } else { closeList(); code = []; }
+      continue;
+    }
+    if (code) { code.push(raw.replace(/\s+$/, '')); continue; }
 
     if (!line) {
-      if (inList) { out += '</ul>'; inList = false; }
+      closeList();
       continue;
     }
 
     // **Label**: rest  →  section header + optional inline text
     var m = line.match(/^\*\*([^*]+)\*\*:?\s*(.*)/);
     if (m) {
-      if (inList) { out += '</ul>'; inList = false; }
+      closeList();
       out += '<div class="ai-section"><span class="ai-section-label">' + esc(m[1]) + '</span>';
       if (m[2]) out += ' ' + fmt(m[2]);
       out += '</div>';
@@ -1065,19 +1111,28 @@ function renderMD(text) {
     }
 
     // - item  →  list item
-    var b = line.match(/^[-•]\s+(.*)/);
+    var b = line.match(/^[-•*]\s+(.*)/);
     if (b) {
-      if (!inList) { out += '<ul class="ai-list">'; inList = true; }
+      openList('ul');
       out += '<li>' + fmt(b[1]) + '</li>';
       continue;
     }
 
+    // 1. item  →  numbered list item
+    var n = line.match(/^\d+[.)]\s+(.*)/);
+    if (n) {
+      openList('ol');
+      out += '<li>' + fmt(n[1]) + '</li>';
+      continue;
+    }
+
     // Regular paragraph
-    if (inList) { out += '</ul>'; inList = false; }
+    closeList();
     out += '<p>' + fmt(line) + '</p>';
   }
 
-  if (inList) out += '</ul>';
+  if (code) closeCode();
+  closeList();
   return out;
 }
 
@@ -1094,7 +1149,7 @@ function aiResultHTML(d) {
 // Identical structure to aiStreamingFrame so there is zero visual change when streaming completes.
 function aiResultCollapsible(d) {
   var h = '<div class="result-toggle-hdr"' +
-    ' style="background:rgba(99,102,241,0.07);color:var(--accent)"' +
+    ' style="background:rgba(99,102,241,0.07);color: var(--accent-text)"' +
     ' onclick="toggleResultPanel(this)">';
   h += '<span class="result-toggle-arrow">▼</span>';
   h += '<span class="result-toggle-title">AI Analysis</span>';
@@ -1108,7 +1163,7 @@ function aiResultCollapsible(d) {
 // aiResultCollapsible so nothing changes visually when the stream finishes.
 function aiStreamingFrame(d) {
   var h = '<div class="result-toggle-hdr"' +
-    ' style="background:rgba(99,102,241,0.07);color:var(--accent)"' +
+    ' style="background:rgba(99,102,241,0.07);color: var(--accent-text)"' +
     ' onclick="toggleResultPanel(this)">';
   h += '<span class="result-toggle-arrow">▼</span>';
   h += '<span class="result-toggle-title">AI Analysis</span>';
@@ -1319,7 +1374,7 @@ function renderRCADone(state) {
   // Inner evidence trail — collapsed by default
   if (steps.length > 0) {
     h += '<div class="rca-progress-header" onclick="rcaToggleTrail(this)" style="cursor:pointer">';
-    h += '<span style="font-size:0.6rem;opacity:0.65">▶</span>';
+    h += '<span style="font-size: 0.6875rem;opacity:0.65">▶</span>';
     h += '<span>Evidence trail · ' + steps.length + ' step' + (steps.length !== 1 ? 's' : '') + '</span>';
     h += '</div>';
     h += '<div style="display:none"><div class="rca-steps">';
@@ -1336,7 +1391,7 @@ function renderRCAContextOverflow(state) {
   var h = '<div class="result-toggle-hdr"' +
     ' style="background:rgba(245,158,11,0.08);color:var(--warn);border-bottom:1px solid rgba(245,158,11,0.15)">';
   h += '<span style="font-size:0.7rem">⚠</span>';
-  h += '<span style="flex:1;font-size:0.67rem;font-weight:600">Context Window Too Small for RCA</span>';
+  h += '<span style="flex:1;font-size: 0.6875rem;font-weight:600">Context Window Too Small for RCA</span>';
   h += '</div>';
   h += '<div style="padding:0.75rem 0.9rem;font-size:0.78rem;line-height:1.65">';
   h += '<p style="color:var(--muted);margin-bottom:0.65rem">' + esc(state.error) + '</p>';
@@ -1444,7 +1499,7 @@ function renderCorrelate(data) {
 
   // Header — always visible, acts as toggle
   var h = '<div class="corr-header" onclick="corrToggle(this)" style="cursor:pointer">';
-  h += '<span class="corr-arrow" style="font-size:0.6rem;opacity:0.65">▶</span>';
+  h += '<span class="corr-arrow" style="font-size: 0.6875rem;opacity:0.65">▶</span>';
   h += '<span>±' + (data.buffer_min || 5) + ' min window</span>';
   if (from && to) h += '<span style="font-family:monospace;opacity:0.8">' + esc(from) + ' → ' + esc(to) + '</span>';
   h += '<span style="margin-left:auto">' + events.length + ' event' + (events.length !== 1 ? 's' : '') + '</span>';
@@ -1463,7 +1518,7 @@ function renderCorrelate(data) {
     });
     nsOrder.forEach(function(ns) {
       h += '<div class="corr-ns-label">' + esc(ns) +
-           ' <span style="font-weight:400;font-size:0.58rem;opacity:0.55">(' + byNS[ns].length + ')</span></div>';
+           ' <span style="font-weight:400;font-size: 0.6875rem;opacity:0.55">(' + byNS[ns].length + ')</span></div>';
       byNS[ns].forEach(function(ev) {
         h += '<div class="corr-row">';
         h += '<div class="corr-dot ' + esc(ev.type) + '"></div>';
@@ -1748,6 +1803,8 @@ function renderObj(info) {
        'onclick="fetchCorrelateInDescribe(this,\'' + esc(info.namespace) + '\',\'' + esc(info.kind) + '\',\'' + esc(info.name) + '\')">Correlate</button>';
   h += '<button class="ai-obj-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" ' +
        'onclick="analyzeObjInDescribe(this,\'' + esc(info.namespace) + '\',\'' + esc(info.kind) + '\',\'' + esc(info.name) + '\')">✦ AI</button>';
+  h += '<a class="yaml-btn" style="font-size:0.72rem;padding:0.15rem 0.6rem;" href="/object/' + encodeURIComponent(info.namespace || '_cluster') + '/' +
+       encodeURIComponent(info.kind) + '/' + encodeURIComponent(info.name) + '?ctx=' + encodeURIComponent(window.KH_CTX) + '">YAML</a>';
   h += '</div></div>';
 
   // Labels
@@ -1848,19 +1905,106 @@ function analyzeObjInDescribe(btn, ns, kind, name) {
     });
 }
 
-// Auto-select first cascade failure, then first warning, then first item
-document.addEventListener('DOMContentLoaded', function() {
+// Home page rows link here with ?focus=Kind/Name. Select that object, or
+// when the owner itself has no events (a CronJob whose Jobs and Pods carry
+// the warnings), the newest failing object named after it.
+function focusFromURL(params) {
+  var focus = (params || new URLSearchParams(location.search)).get('focus');
+  if (!focus) return null;
+  var slash = focus.indexOf('/');
+  var kind = slash > 0 ? focus.slice(0, slash) : '';
+  var name = focus.slice(slash + 1);
+  var items = Array.prototype.slice.call(document.querySelectorAll('.sidebar-item'));
+  function parts(it) { return (it.dataset.text || '').split(' '); }
+  var exact = items.filter(function(it) { var p = parts(it); return p[0] === kind && p[1] === name; })[0]
+           || items.filter(function(it) { return parts(it)[1] === name; })[0];
+  if (exact) return exact;
+  var owned = items.filter(function(it) { return (parts(it)[1] || '').indexOf(name + '-') === 0; });
+  var failing = owned.filter(function(it) { return it.dataset.warn === '1'; });
+  var pool = failing.length ? failing : owned;
+  // Prefer an ownership chain (a Job with its Pods) over a lone object, then
+  // the newest: CronJob-created Jobs end in their schedule time, so the
+  // greatest name is the newest.
+  function isChain(it) { return (it.dataset.panel || '').indexOf('dp-fam-') === 0; }
+  pool.sort(function(a, b) {
+    if (isChain(a) !== isChain(b)) return isChain(a) ? -1 : 1;
+    return parts(a)[1] < parts(b)[1] ? 1 : -1;
+  });
+  return pool[0] || null;
+}
 
-  var priority = ['.sidebar-item.si-cascade', '.sidebar-item.si-warn', '.sidebar-item'];
-  for (var i = 0; i < priority.length; i++) {
-    var el = document.querySelector(priority[i]);
-    if (el) { el.click(); break; }
+// findObject locates an object on the page: a member of an ownership chain,
+// or an object with its own panel. Returns its panel and the block holding
+// its action buttons.
+function findObject(name) {
+  var links = document.querySelectorAll('.member-header .obj-link');
+  for (var i = 0; i < links.length; i++) {
+    if (links[i].textContent.trim() === name) {
+      return { panel: links[i].closest('.detail-panel'), block: links[i].closest('.member-block') };
+    }
+  }
+  var items = document.querySelectorAll('.sidebar-item');
+  for (var j = 0; j < items.length; j++) {
+    if ((items[j].dataset.text || '').split(' ')[1] === name) {
+      var panel = document.getElementById(items[j].dataset.panel);
+      return panel ? { panel: panel, block: panel } : null;
+    }
+  }
+  return null;
+}
+
+// Home page links can ask for an action: &rca=1 starts RCA, &ai=1 starts the
+// AI analysis, on &pod= when given, else on the focused chain's newest
+// failing member. The parameters are removed afterwards so a reload doesn't
+// start it again.
+function runRequestedAction(params) {
+  params = params || new URLSearchParams(location.search);
+  var sel = params.get('rca') === '1' ? '.rca-btn' : params.get('ai') === '1' ? '.ai-obj-btn' : null;
+  if (!sel) return;
+  var hit = params.get('pod') ? findObject(params.get('pod')) : null;
+  if (hit && !hit.panel.classList.contains('active')) {
+    var item = document.querySelector('.sidebar-item[data-panel="' + hit.panel.id + '"]');
+    if (item) item.click();
+  }
+  var panel = hit ? hit.panel : document.querySelector('.detail-panel.active');
+  var block = hit ? hit.block : null;
+  if (!block && panel) {
+    var failing = panel.querySelectorAll('.member-header.has-warn, .member-header.is-cascade');
+    block = failing.length ? failing[failing.length - 1].closest('.member-block') : panel;
+  }
+  var btn = block && (block.querySelector('.member-header ' + sel) || block.querySelector('.detail-meta ' + sel) || block.querySelector(sel));
+  if (btn) {
+    btn.scrollIntoView({ block: 'center' });
+    btn.click();
+  }
+  var url = new URL(location.href);
+  ['rca', 'ai', 'pod'].forEach(function(k) { url.searchParams.delete(k); });
+  history.replaceState(history.state, '', url.pathname + url.search);
+}
+
+// focusObject selects an object by kind and name, e.g. from the status
+// panel's recent warnings.
+function focusObject(kind, name) {
+  var item = focusFromURL(new URLSearchParams({ focus: kind + '/' + name }));
+  if (item) { item.click(); item.scrollIntoView({ block: 'nearest' }); }
+}
+
+// initNamespaceView runs each time the shell swaps a namespace in. It selects
+// the ?focus object (or the status panel) and runs a requested action.
+function initNamespaceView(params) {
+  showWarnOnly = false;
+  currentFromPanel = null;
+  currentFromItem = null;
+  var focused = focusFromURL(params);
+  if (focused) {
+    focused.click();
+    focused.scrollIntoView({ block: 'nearest' });
+  } else {
+    var status = document.querySelector('.sidebar-ai-entry');
+    if (status) selectPanel('dp-status', status);
   }
   applySidebarFilters();
-});
+  runRequestedAction(params);
+}
 </script>
-{{template "ai_modal" .}}
-{{template "settings_modal" .}}
-{{template "docs_modal" .}}
-</body>
-</html>
+{{end}}

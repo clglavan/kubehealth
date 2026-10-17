@@ -13,7 +13,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-
 type ContainerLogs struct {
 	Container string `json:"container"`
 	Logs      string `json:"logs"`
@@ -54,29 +53,28 @@ func handleAPILogs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ns, podName := path[:idx], path[idx+1:]
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
 
 	// Explicit container override via query string
 	containerHint := r.URL.Query().Get("container")
 
 	// Auto-detect container from cached events when no explicit hint
 	if containerHint == "" {
-		if v, ok := nsCache.Load(ns); ok {
-			e := v.(*nsEntry)
-			e.RLock()
-			for _, ev := range e.events {
-				if ev.ObjectName == podName && strings.EqualFold(ev.Kind, "Pod") {
-					if c := extractContainerFromMsg(ev.Message); c != "" {
-						containerHint = c
-						break
-					}
+		for _, ev := range cl.namespaceEvents(ns) {
+			if ev.ObjectName == podName && strings.EqualFold(ev.Kind, "Pod") {
+				if c := extractContainerFromMsg(ev.Message); c != "" {
+					containerHint = c
+					break
 				}
 			}
-			e.RUnlock()
 		}
 	}
 
 	ctx := context.Background()
-	pod, err := client.CoreV1().Pods(ns).Get(ctx, podName, metav1.GetOptions{})
+	pod, err := cl.client.CoreV1().Pods(ns).Get(ctx, podName, metav1.GetOptions{})
 	if err != nil {
 		jsonError(w, ns, podName, fmt.Sprintf("pod not found: %v", err))
 		return
@@ -102,10 +100,10 @@ func handleAPILogs(w http.ResponseWriter, r *http.Request) {
 	resp := PodLogsResponse{Pod: podName, Namespace: ns}
 
 	for _, cName := range containers {
-		content := streamPodLogs(ctx, ns, podName, cName, tail, false)
+		content := streamPodLogs(ctx, cl, ns, podName, cName, tail, false)
 		previous := false
 		if strings.TrimSpace(content) == "" {
-			content = streamPodLogs(ctx, ns, podName, cName, tail, true)
+			content = streamPodLogs(ctx, cl, ns, podName, cName, tail, true)
 			if strings.TrimSpace(content) != "" {
 				previous = true
 			}
@@ -125,25 +123,92 @@ func handleAPILogs(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-// fetchLogsForAI fetches pod logs and returns them as a plain string for inclusion in AI prompts.
-func fetchLogsForAI(ns, pod string) (string, error) {
+// containerStatePrefix starts the line fetchLogsForAI puts above the logs.
+const containerStatePrefix = "Container state: "
+
+// containerStateLine says why a Pod's containers keep stopping, which their
+// logs often don't: a container killed for using too much memory logs
+// nothing about it. Empty when every container is running without restarts.
+func containerStateLine(p *corev1.Pod) string {
+	reasonOr := func(r, dflt string) string {
+		if r == "" {
+			return dflt
+		}
+		return r
+	}
+	memLimit := map[string]string{}
+	for _, c := range p.Spec.Containers {
+		if q, ok := c.Resources.Limits[corev1.ResourceMemory]; ok {
+			memLimit[c.Name] = q.String()
+		}
+	}
+	// The exit code alone doesn't say why; the signal behind it often does.
+	// Runtimes don't always report OOMKilled (nested or cgroup v2 setups), so
+	// a SIGKILL next to a memory limit is worth spelling out.
+	ended := func(container string, t *corev1.ContainerStateTerminated) string {
+		s := fmt.Sprintf("%s (exit code %d", reasonOr(t.Reason, "Error"), t.ExitCode)
+		switch t.ExitCode {
+		case 137:
+			s += ", SIGKILL"
+			if t.Reason != "OOMKilled" {
+				s += ": usually out of memory"
+			}
+		case 143:
+			s += ", SIGTERM"
+		case 139:
+			s += ", SIGSEGV"
+		}
+		if lim := memLimit[container]; lim != "" && (t.ExitCode == 137 || t.Reason == "OOMKilled") {
+			s += ", memory limit " + lim
+		}
+		return s + ")"
+	}
+	var parts []string
+	for _, cs := range p.Status.ContainerStatuses {
+		var bits []string
+		if cs.RestartCount > 0 {
+			bits = append(bits, fmt.Sprintf("restarted %d times", cs.RestartCount))
+		}
+		if t := cs.LastTerminationState.Terminated; t != nil {
+			bits = append(bits, "last run ended "+ended(cs.Name, t))
+		}
+		switch {
+		case cs.State.Waiting != nil && cs.State.Waiting.Reason != "":
+			w := cs.State.Waiting
+			now := "now " + w.Reason
+			// CrashLoopBackOff's message only repeats the back-off; others say why.
+			if w.Message != "" && w.Reason != "CrashLoopBackOff" {
+				now += ": " + truncate(w.Message, 200)
+			}
+			bits = append(bits, now)
+		case cs.State.Terminated != nil:
+			bits = append(bits, "now stopped: "+ended(cs.Name, cs.State.Terminated))
+		}
+		if len(bits) > 0 {
+			parts = append(parts, cs.Name+" "+strings.Join(bits, ", "))
+		}
+	}
+	if len(parts) == 0 {
+		return ""
+	}
+	return containerStatePrefix + strings.Join(parts, "; ") + "."
+}
+
+// fetchLogsForAI fetches pod logs and returns them as a plain string for
+// inclusion in AI prompts, after a line with the containers' state.
+func fetchLogsForAI(cl *clusterState, ns, pod string) (string, error) {
 	containerHint := ""
-	if v, ok := nsCache.Load(ns); ok {
-		e := v.(*nsEntry)
-		e.RLock()
-		for _, ev := range e.events {
-			if ev.ObjectName == pod && strings.EqualFold(ev.Kind, "Pod") {
-				if c := extractContainerFromMsg(ev.Message); c != "" {
-					containerHint = c
-					break
-				}
+	for _, ev := range cl.namespaceEvents(ns) {
+		if ev.ObjectName == pod && strings.EqualFold(ev.Kind, "Pod") {
+			if c := extractContainerFromMsg(ev.Message); c != "" {
+				containerHint = c
+				break
 			}
 		}
-		e.RUnlock()
 	}
 
 	ctx := context.Background()
-	podObj, err := client.CoreV1().Pods(ns).Get(ctx, pod, metav1.GetOptions{})
+	podObj, err := cl.client.CoreV1().Pods(ns).Get(ctx, pod, metav1.GetOptions{})
 	if err != nil {
 		return "", err
 	}
@@ -165,11 +230,14 @@ func fetchLogsForAI(ns, pod string) (string, error) {
 
 	tail := getLogTailLines()
 	var sb strings.Builder
+	if state := containerStateLine(podObj); state != "" {
+		sb.WriteString(state + "\n")
+	}
 	for _, cName := range containers {
-		content := streamPodLogs(ctx, ns, pod, cName, tail, false)
+		content := streamPodLogs(ctx, cl, ns, pod, cName, tail, false)
 		if strings.TrimSpace(content) == "" {
 			// Fallback: previous terminated container — critical for CrashLoopBackOff pods
-			prev := streamPodLogs(ctx, ns, pod, cName, tail, true)
+			prev := streamPodLogs(ctx, cl, ns, pod, cName, tail, true)
 			if strings.TrimSpace(prev) != "" {
 				content = "[previous container run]\n" + prev
 			}
@@ -189,8 +257,8 @@ func fetchLogsForAI(ns, pod string) (string, error) {
 }
 
 // streamPodLogs reads logs for one container; returns empty string on any error.
-func streamPodLogs(ctx context.Context, ns, pod, container string, tail int64, previous bool) string {
-	stream, err := client.CoreV1().Pods(ns).GetLogs(pod, &corev1.PodLogOptions{
+func streamPodLogs(ctx context.Context, cl *clusterState, ns, pod, container string, tail int64, previous bool) string {
+	stream, err := cl.client.CoreV1().Pods(ns).GetLogs(pod, &corev1.PodLogOptions{
 		Container: container,
 		TailLines: &tail,
 		Previous:  previous,

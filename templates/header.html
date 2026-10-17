@@ -1,0 +1,356 @@
+{{define "kh_header"}}
+<!-- ── Shared header: cluster switcher, data age, model status ─────────────
+     Used by the home and namespace pages. The page feeds it with
+     khHeader.update(status) whenever it has fresh data. -->
+<style>
+  .ctx-menu[hidden], .kh-banner[hidden], .crumb[hidden], .crumb-tag[hidden] { display: none !important; }
+  .env-stripe { height: 3px; flex-shrink: 0; background: transparent; }
+  body[data-env="prod"] .env-stripe { background: var(--prod); }
+  .kh-header {
+    display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 0.9rem;
+    padding: 0.6rem 1rem; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0;
+    font-size: 14px; line-height: 1.45;
+  }
+  .kh-header button { font-family: inherit; }
+  .kh-header .brand { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; white-space: nowrap; text-decoration: none; color: var(--text); }
+  .kh-header .brand span { color: var(--accent-text); }
+  .ctx-wrap { position: relative; min-width: 0; }
+  .ctx {
+    display: flex; align-items: center; gap: 0.5rem; min-width: 0; max-width: 460px;
+    background: var(--sunk); border: 1px solid var(--border); border-radius: 7px; padding: 0.28rem 0.6rem;
+    color: var(--text); font-size: 13px; cursor: pointer;
+  }
+  .ctx:hover { border-color: var(--accent); }
+  .ctx:disabled { cursor: progress; opacity: 0.7; }
+  .ctx-glyph, .caret { color: var(--muted); }
+  .caret { font-size: 11px; }
+  .ctx-name { font-family: var(--mono); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ctx-menu {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 950; width: min(480px, 92vw); max-height: 70vh; overflow-y: auto;
+    background: var(--raised); border: 1px solid var(--border-2); border-radius: 10px;
+    box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7); padding: 0.5rem; display: flex; flex-direction: column; gap: 0.15rem;
+  }
+  .ctx-menu input {
+    width: 100%; background: var(--sunk); border: 1px solid var(--border); color: var(--text);
+    border-radius: 6px; padding: 0.38rem 0.6rem; font-family: inherit; font-size: 13px; outline: none;
+  }
+  .ctx-menu input:focus { border-color: var(--accent); }
+  .ctx-menu input::placeholder { color: var(--muted); }
+  .ctx-group { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0.55rem 0.5rem 0.15rem; }
+  .ctx-item {
+    display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left; background: none; border: 0;
+    color: var(--text); padding: 0.38rem 0.5rem; border-radius: 6px; cursor: pointer;
+  }
+  .ctx-item:hover, .ctx-item:focus-visible { background: var(--accent-bg); }
+  .ctx-item .ctx-name { flex: 1; }
+  .ctx-item .meta { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
+  .ctx-item[aria-current="true"] .meta { color: var(--accent-text); }
+  .ctx-note { font-size: 12px; color: var(--muted); padding: 0.5rem 0.5rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.3rem; line-height: 1.5; }
+  .ctx-err { color: var(--crit); font-size: 12.5px; padding: 0.35rem 0.5rem; overflow-wrap: anywhere; }
+  .env {
+    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border-2); color: var(--text); white-space: nowrap; flex-shrink: 0;
+  }
+  .env.prod { background: var(--prod); border-color: var(--prod); color: var(--on-prod); }
+  .env.local, .env.unknown { color: var(--muted); }
+  .env.unknown { border-style: dashed; }
+  .crumb { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-weight: 700; font-size: 15px; }
+  .crumb-sep { color: var(--muted); font-weight: 400; }
+  .crumb-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .crumb-tag { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+  .crumb-tag.cascade { background: var(--crit-bg); color: var(--crit); }
+  .crumb-tag.warn { background: var(--warn-bg); color: var(--warn); }
+  .crumb-tag.ok { background: var(--ok-bg); color: var(--ok); }
+  .fresh { display: flex; align-items: center; gap: 0.45rem; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+  .fresh b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .fresh.err { color: var(--warn); }
+  .ring { width: 16px; height: 16px; transform: rotate(-90deg); flex-shrink: 0; }
+  .ring circle { fill: none; stroke-width: 3; }
+  .ring .bg { stroke: var(--border-2); }
+  .ring .fg { stroke: var(--ok); transition: stroke-dasharray 0.4s; }
+  .fresh.err .ring .fg { stroke: var(--warn); }
+  .kh-header .spacer { flex: 1; }
+  .model {
+    display: flex; align-items: center; gap: 0.45rem; max-width: 340px;
+    background: none; border: 1px solid var(--border); color: var(--text); border-radius: 999px;
+    padding: 0.22rem 0.7rem; font-size: 12.5px; cursor: pointer; white-space: nowrap;
+  }
+  .model:hover { border-color: var(--accent); }
+  .model .spark { color: var(--accent-text); }
+  .model .m-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .model .where, .model .state { color: var(--muted); }
+  .model .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex-shrink: 0; }
+  .model[data-state="ready"] .dot { background: var(--ok); }
+  .model[data-state="busy"] .dot, .model[data-state="not-loaded"] .dot { background: var(--warn); }
+  .model[data-state="down"] .dot { background: var(--crit); }
+  .kicon {
+    background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 7px;
+    padding: 0.22rem 0.6rem; font-size: 12.5px; cursor: pointer;
+  }
+  .kicon:hover { color: var(--text); border-color: var(--border-2); }
+  .kh-banner {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; padding: 0.55rem 1rem; font-size: 13.5px;
+    background: var(--warn-bg); border-bottom: 1px solid rgba(245,158,11,0.3); flex-shrink: 0;
+  }
+  .kh-banner .msg { flex: 1 1 320px; }
+  .kh-banner b { font-family: var(--mono); font-weight: 600; font-size: 12.5px; overflow-wrap: anywhere; }
+  .kh-banner .kbtn {
+    background: none; border: 1px solid var(--border-2); color: var(--text); border-radius: 6px;
+    padding: 0.18rem 0.6rem; font-size: 12.5px; cursor: pointer; text-decoration: none; white-space: nowrap;
+  }
+  @media (max-width: 860px) { .ctx { max-width: 70vw; } }
+  @media (prefers-reduced-motion: reduce) { .ring .fg { transition: none; } }
+</style>
+
+<div class="env-stripe"></div>
+<header class="kh-header">
+  <a class="brand" href="/?ctx={{.Cluster.Context}}">Kube<span>Health</span></a>
+  <div class="ctx-wrap">
+    <button class="ctx" id="ctx-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="ctx-menu"
+            title="Kubernetes context: {{.Cluster.Context}}&#10;API server: {{.Cluster.Server}}&#10;Click to switch cluster">
+      <span class="env {{.Cluster.Env}}" id="ctx-env">{{envLabel .Cluster.Env}}</span>
+      <span class="ctx-glyph" aria-hidden="true">⎈</span>
+      <span class="ctx-name" id="ctx-name">{{.Cluster.Context}}</span>
+      <span class="caret" aria-hidden="true">▾</span>
+    </button>
+    <div class="ctx-menu" id="ctx-menu" hidden>
+      <input id="ctx-search" type="search" placeholder="Search contexts…" autocomplete="off" aria-label="Search contexts">
+      <div id="ctx-list"></div>
+      <p class="ctx-note">Switching changes which cluster KubeHealth watches. Your kubeconfig's current-context stays as it is. Set a cluster's environment in ⚙ Settings.</p>
+    </div>
+  </div>
+  <h1 class="crumb" id="kh-crumb"{{if not .Crumb}} hidden{{end}}><span class="crumb-sep" aria-hidden="true">›</span><span class="crumb-name" id="kh-crumb-name">{{.Crumb}}</span><span class="crumb-tag {{.CrumbTagClass}}" id="kh-crumb-tag"{{if not .CrumbTag}} hidden{{end}}>{{.CrumbTag}}</span></h1>
+  <div class="fresh" id="fresh">
+    <svg class="ring" viewBox="0 0 20 20" aria-hidden="true"><circle class="bg" cx="10" cy="10" r="7.5"/><circle class="fg" id="ring-fg" cx="10" cy="10" r="7.5" pathLength="100" stroke-dasharray="0 100"/></svg>
+    <span id="fresh-text">Loading…</span>
+  </div>
+  <div class="spacer"></div>
+  <button class="model" id="model" type="button" onclick="aimOpen()" title="AI Agent settings" data-state="unknown">
+    <span class="spark" aria-hidden="true">✦</span><span class="m-name" id="model-name">AI</span><span class="where" id="model-where"></span><span class="dot" aria-hidden="true"></span><span class="state" id="model-state">checking…</span>
+  </button>
+  <button class="kicon" type="button" onclick="stgOpen()" aria-label="Settings" title="Settings">⚙</button>
+  <button class="kicon" type="button" onclick="docsOpen()">Docs</button>
+</header>
+<div class="kh-banner" id="kh-banner" role="status" hidden></div>
+
+<script>
+// Pin this page's API calls to the cluster it shows, so they keep going to
+// that cluster even after KubeHealth switches to another one in another tab.
+window.KH_CTX = {{.Cluster.Context}};
+(function() {
+  var origFetch = window.fetch;
+  window.fetch = function(input, init) {
+    var url = typeof input === 'string' ? input : input.url;
+    if (url.charAt(0) === '/') {
+      init = init || {};
+      var h = new Headers(init.headers || {});
+      try { h.set('X-KubeHealth-Context', window.KH_CTX); } catch (e) {}
+      init.headers = h;
+    }
+    return origFetch.call(this, input, init);
+  };
+})();
+
+window.khHeader = (function() {
+  var st = { cluster: {{.Cluster}}, active_context: '', warnings: {}, sweep: { loaded: 0, total: 0 }, llm_active: 0 };
+  var conflict = '';
+  var ENV_LABEL = { prod: 'PROD', nonprod: 'NON-PROD', stage: 'STAGE', dev: 'DEV', local: 'LOCAL', unknown: '?' };
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function ageText(s) {
+    if (s < 60) return s + 's';
+    if (s < 3600) return Math.floor(s / 60) + 'm ' + (s % 60) + 's';
+    return Math.floor(s / 3600) + 'h ' + Math.floor((s % 3600) / 60) + 'm';
+  }
+
+  // ── Cluster, data age, banner ────────────────────────────────────────
+  function render() {
+    var env = st.cluster.env || 'unknown';
+    document.body.dataset.env = env;
+    var tag = $('ctx-env');
+    tag.textContent = ENV_LABEL[env] || '?';
+    tag.className = 'env ' + env;
+
+    var w = st.warnings || {}, sw = st.sweep || {};
+    var fresh = $('fresh'), text = $('fresh-text');
+    var pct = sw.total > 0 ? Math.round(Math.min(sw.loaded, sw.total) / sw.total * 100) : 0;
+    $('ring-fg').setAttribute('stroke-dasharray', (sw.ready ? 100 : pct) + ' 100');
+    fresh.classList.toggle('err', !!w.error);
+    var tip = 'Namespace sweep for normal events: ' + (sw.loaded || 0) + ' of ' + (sw.total || 0) + ' loaded, oldest ' + ageText(sw.oldest_age_s || 0) + ' old.';
+    if (st.namespace) tip += '\nThis namespace’s events were refreshed ' + ageText(st.namespace.updated_s) + ' ago.';
+    if (w.error) {
+      text.textContent = 'Warning check failed, retrying';
+      fresh.title = w.error;
+    } else if (w.mode === 'cluster' && w.checked_at) {
+      text.innerHTML = 'Warnings checked <b>' + ageText(w.age_s) + '</b> ago';
+      fresh.title = 'Warnings: one cluster-wide check every 10 s.\n' + tip + (w.truncated ? '\nOver 10,000 warnings: only the first 10,000 are shown.' : '');
+    } else if (!sw.ready) {
+      text.innerHTML = 'Sweeping <b>' + (sw.loaded || 0) + '/' + (sw.total || 0) + '</b> namespaces';
+      fresh.title = tip;
+    } else {
+      text.innerHTML = 'Oldest data <b>' + ageText(sw.oldest_age_s) + '</b>';
+      fresh.title = 'Cluster-wide event listing is not available, so warnings come from the namespace sweep.\n' + tip;
+    }
+
+    var banner = $('kh-banner'), html = '';
+    if (conflict) {
+      html = '<span class="msg">' + esc(conflict) + '</span><a class="kbtn" href="/">Reload</a>';
+    } else if (st.active_context && st.active_context !== st.cluster.context) {
+      html = '<span class="msg">KubeHealth is watching <b>' + esc(st.active_context) + '</b> now, so this page’s data for <b>' +
+        esc(st.cluster.context) + '</b> stopped updating.</span>' +
+        '<button type="button" class="kbtn" data-switch="' + esc(st.cluster.context) + '">Watch this cluster again</button>' +
+        '<a class="kbtn" href="/">Open ' + esc(st.active_context) + '</a>';
+    }
+    banner.innerHTML = html;
+    banner.hidden = !html;
+  }
+
+  // ── Model status ─────────────────────────────────────────────────────
+  var aiCfg = null;
+  function renderModel() {
+    var btn = $('model'), state = 'unknown', label = 'checking…', name = 'AI', where = '';
+    if (aiCfg) {
+      var info = aiCfg.model_info;
+      name = (info && info.id) || aiCfg.model || 'AI';
+      where = aiCfg.embedded ? 'embedded' : 'LM Studio';
+      if (!aiCfg.enabled) { state = 'off'; name = 'AI'; label = 'off'; where = ''; }
+      else if (!info) { state = 'down'; label = 'not reachable'; }
+      else if (st.llm_active > 0) { state = 'busy'; label = 'busy · ' + st.llm_active; }
+      else if (info.state && info.state !== 'loaded') { state = 'not-loaded'; label = info.state.replace('-', ' '); }
+      else { state = 'ready'; label = 'ready'; }
+    }
+    btn.dataset.state = state;
+    $('model-name').textContent = name;
+    $('model-where').textContent = where;
+    $('model-state').textContent = label;
+  }
+  function loadModel() {
+    fetch('/api/ai/config').then(function(r) { return r.json(); })
+      .then(function(d) { aiCfg = d; renderModel(); })
+      .catch(function() { aiCfg = { enabled: true, model_info: null }; renderModel(); });
+  }
+
+  // ── Cluster switcher ─────────────────────────────────────────────────
+  var ctxData = null, ctxError = '';
+  var GROUP_ORDER = ['Production', 'Non-production', 'Not classified', 'Local'];
+  function ctxGroup(env) {
+    return env === 'prod' ? 'Production' : env === 'local' ? 'Local' : env === 'unknown' ? 'Not classified' : 'Non-production';
+  }
+  function idleText(s) { return s < 60 ? 'just now' : s < 3600 ? Math.floor(s / 60) + 'm ago' : Math.floor(s / 3600) + 'h ago'; }
+  function renderCtxMenu() {
+    var list = $('ctx-list');
+    if (!ctxData) { list.innerHTML = ctxError ? '<div class="ctx-err">' + esc(ctxError) + '</div>' : '<div class="ctx-group">Loading…</div>'; return; }
+    var q = $('ctx-search').value.trim().toLowerCase(), groups = {};
+    ctxData.contexts.forEach(function(c) {
+      if (q && c.name.toLowerCase().indexOf(q) === -1) return;
+      var g = ctxGroup(c.env);
+      (groups[g] = groups[g] || []).push(c);
+    });
+    var html = '';
+    GROUP_ORDER.forEach(function(g) {
+      if (!groups[g]) return;
+      html += '<div class="ctx-group">' + g + '</div>';
+      groups[g].forEach(function(c) {
+        var meta = c.active ? 'watching' : (c.loaded ? 'cached · ' + idleText(c.idle_s) : (c.env === 'unknown' ? 'environment not set' : ''));
+        html += '<button type="button" class="ctx-item" data-ctx="' + esc(c.name) + '"' + (c.name === st.cluster.context ? ' aria-current="true"' : '') +
+          ' title="' + esc(c.server || '') + '"><span class="env ' + c.env + '">' + (ENV_LABEL[c.env] || '?') + '</span>' +
+          '<span class="ctx-name">' + esc(c.name) + '</span><span class="meta">' + meta + '</span></button>';
+      });
+    });
+    list.innerHTML = (ctxError ? '<div class="ctx-err">' + esc(ctxError) + '</div>' : '') + (html || '<div class="ctx-group">No context matches</div>');
+  }
+  function openCtxMenu(open) {
+    $('ctx-menu').hidden = !open;
+    $('ctx-btn').setAttribute('aria-expanded', String(open));
+    if (!open) return;
+    $('ctx-search').value = '';
+    renderCtxMenu();
+    $('ctx-search').focus();
+    fetch('/api/contexts')
+      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t); }); return r.json(); })
+      .then(function(d) { ctxData = d; renderCtxMenu(); })
+      .catch(function(e) { ctxError = 'Could not read the kubeconfig: ' + e.message; renderCtxMenu(); });
+  }
+  function switchTo(name, btn) {
+    openCtxMenu(false);
+    ctxError = '';
+    if (name === st.active_context) {
+      if (name !== st.cluster.context) location.href = '/';
+      return;
+    }
+    var ctxBtn = $('ctx-btn');
+    ctxBtn.disabled = true;
+    if (btn) btn.disabled = true;
+    $('ctx-name').textContent = 'Switching to ' + name + '…';
+    fetch('/api/context', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name }) })
+      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t || r.status); }); })
+      .then(function() {
+        // This page's own cluster: reload in place. Another cluster: open its home.
+        if (name === st.cluster.context) location.reload(); else location.href = '/';
+      })
+      .catch(function(e) {
+        ctxBtn.disabled = false;
+        if (btn) btn.disabled = false;
+        $('ctx-name').textContent = st.cluster.context;
+        ctxError = 'Could not switch to ' + name + ': ' + e.message;
+        openCtxMenu(true);
+      });
+  }
+  $('ctx-btn').addEventListener('click', function(e) { e.stopPropagation(); openCtxMenu($('ctx-menu').hidden); });
+  $('ctx-search').addEventListener('input', renderCtxMenu);
+  $('ctx-search').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { var first = $('ctx-list').querySelector('.ctx-item'); if (first) switchTo(first.dataset.ctx); }
+  });
+  $('ctx-menu').addEventListener('click', function(e) {
+    e.stopPropagation();
+    var item = e.target.closest('.ctx-item');
+    if (item) switchTo(item.dataset.ctx);
+  });
+  $('kh-banner').addEventListener('click', function(e) {
+    var b = e.target.closest('[data-switch]');
+    if (b) switchTo(b.dataset.switch, b);
+  });
+  document.addEventListener('click', function() { if (!$('ctx-menu').hidden) openCtxMenu(false); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !$('ctx-menu').hidden) { openCtxMenu(false); $('ctx-btn').focus(); }
+  });
+
+  loadModel();
+  setInterval(loadModel, 30000);
+
+  return {
+    // update takes the cluster, active_context, warnings, sweep and
+    // llm_active fields of /api/home or /api/status.
+    update: function(s) {
+      st.cluster = s.cluster || st.cluster;
+      st.active_context = s.active_context || '';
+      st.warnings = s.warnings || {};
+      st.sweep = s.sweep || st.sweep;
+      st.llm_active = s.llm_active || 0;
+      st.namespace = s.namespace || null;
+      conflict = '';
+      render();
+      renderModel();
+    },
+    conflict: function(msg) { conflict = msg; render(); },
+    // setCrumb shows the namespace after the cluster; an empty name hides it.
+    setCrumb: function(name, tag, tagClass) {
+      $('kh-crumb').hidden = !name;
+      $('kh-crumb-name').textContent = name || '';
+      var t = $('kh-crumb-tag');
+      t.hidden = !tag;
+      t.textContent = tag || '';
+      t.className = 'crumb-tag ' + (tagClass || '');
+    },
+    offline: function() {
+      $('fresh').classList.add('err');
+      $('fresh-text').textContent = 'KubeHealth server not responding';
+    },
+    switchTo: switchTo
+  };
+})();
+</script>
+{{end}}

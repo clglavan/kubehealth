@@ -29,7 +29,7 @@
 
       <!-- Model -->
       <div>
-        <div class="aim-st">LM Studio Model</div>
+        <div class="aim-st" id="aim-model-label">LM Studio Model</div>
         <div style="display:flex;align-items:baseline;gap:0.7rem;flex-wrap:wrap">
           <span id="aim-model-name"
                 style="font-family:monospace;font-size:0.88rem;font-weight:600;color:var(--accent)">…</span>
@@ -49,6 +49,21 @@
           <div id="aim-ctx-bar" style="height:100%;border-radius:3px;background:var(--accent);
                transition:width 0.4s,background 0.3s;width:0%"></div>
         </div>
+
+        <!-- Embedded-only: editable context size + Apply -->
+        <div id="aim-ctx-edit" style="display:none;align-items:center;gap:0.5rem;margin-bottom:0.8rem;flex-wrap:wrap">
+          <label for="aim-ctx-input" style="font-size:0.72rem;color:var(--muted)">Context size (tokens)</label>
+          <input id="aim-ctx-input" type="number" min="512" max="131072" step="512" value="8192"
+                 style="width:8rem;background:var(--bg);border:1px solid var(--border);
+                        border-radius:6px;color:var(--text);padding:0.25rem 0.45rem;
+                        font-family:monospace;font-size:0.78rem;outline:none">
+          <button id="aim-ctx-apply" onclick="aimApplyCtx()"
+                  style="background:var(--accent);color:#fff;border:none;
+                         padding:0.25rem 0.7rem;border-radius:6px;cursor:pointer;
+                         font-size:0.75rem;font-weight:600">Apply</button>
+          <span id="aim-ctx-edit-status" style="font-size:0.7rem;color:var(--muted)"></span>
+        </div>
+
         <div id="aim-ctx-breakdown" class="aim-bd"></div>
         <div id="aim-ctx-advice"
              style="margin-top:0.55rem;font-size:0.77rem;padding:0.32rem 0.65rem;
@@ -342,6 +357,11 @@ Be concise and actionable.</pre>
       .then(function(d) {
         window.aimData = d;
 
+        // Dynamic label + editable context size for embedded builds
+        document.getElementById('aim-model-label').textContent =
+          d.embedded ? 'Embedded Model' : 'LM Studio Model';
+        document.getElementById('aim-ctx-edit').style.display = d.embedded ? 'flex' : 'none';
+
         // Model name + arch
         document.getElementById('aim-model-name').textContent = d.model || 'Not configured';
         var mi = d.model_info;
@@ -360,19 +380,52 @@ Be concise and actionable.</pre>
             stateParts.push('max ctx: ' + mi.max_context_length.toLocaleString() + ' tokens');
           }
           document.getElementById('aim-model-state').textContent = stateParts.join(' · ');
+
+          if (d.embedded && mi.loaded_context_length) {
+            document.getElementById('aim-ctx-input').value = mi.loaded_context_length;
+          }
         } else {
           document.getElementById('aim-model-arch').textContent = '';
-          document.getElementById('aim-model-state').textContent =
-            d.enabled ? 'Could not reach LM Studio /api/v0/models' : 'AI not enabled';
+          document.getElementById('aim-model-state').textContent = d.enabled
+            ? (d.embedded ? 'Embedded llama-server not running' : 'Could not reach LM Studio /api/v0/models')
+            : 'AI not enabled';
         }
 
         document.getElementById('aim-prompt').value = d.system_prompt || '';
         aimUpdateCtx();
       })
       .catch(function() {
-        document.getElementById('aim-model-name').textContent = 'Cannot reach LM Studio';
+        document.getElementById('aim-model-name').textContent =
+          (window.aimData && window.aimData.embedded) ? 'Embedded server unreachable' : 'Cannot reach LM Studio';
       });
   }
+
+  window.aimApplyCtx = function() {
+    var input = document.getElementById('aim-ctx-input');
+    var btn   = document.getElementById('aim-ctx-apply');
+    var stat  = document.getElementById('aim-ctx-edit-status');
+    var n = parseInt(input.value, 10);
+    if (isNaN(n) || n < 512) { stat.textContent = 'invalid'; return; }
+    btn.disabled = true;
+    stat.textContent = 'Restarting llama-server…';
+    fetch('/api/ai/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embedded_ctx_size: n })
+    })
+    .then(function(r) {
+      if (!r.ok) return r.text().then(function(t) { throw new Error(t); });
+      stat.textContent = 'Restarted ✓';
+      setTimeout(function() {
+        stat.textContent = '';
+        aimLoadData();
+      }, 1200);
+    })
+    .catch(function(err) {
+      stat.textContent = 'Failed: ' + (err.message || err);
+    })
+    .finally(function() { btn.disabled = false; });
+  };
 
   window.aimUpdateCtx = function() {
     if (!window.aimData) return;
@@ -426,6 +479,10 @@ Be concise and actionable.</pre>
 
     // Advice
     var adv = document.getElementById('aim-ctx-advice');
+    var embedded = window.aimData && window.aimData.embedded;
+    var bumpHint = embedded
+      ? 'raise the Context size input above and click Apply.'
+      : 'increase Context Length in LM Studio (⚙ gear icon → Context Length → Reload).';
     if (maxCtx > 0) {
       if (pct < 50) {
         adv.className = 'ok';
@@ -436,15 +493,17 @@ Be concise and actionable.</pre>
       } else if (pct < 100) {
         adv.className = 'warn';
         adv.textContent = '⚠ Getting tight. RCA on verbose objects (Elasticsearch, large StatefulSets) may hit the context limit. ' +
-          'Increase Context Length in LM Studio (⚙ gear icon → Context Length → Reload).';
+          'To bump it, ' + bumpHint;
       } else {
         adv.className = 'bad';
         adv.textContent = '✗ Estimated tokens exceed loaded context. RCA will fail with a context overflow error. ' +
-          'In LM Studio: ⚙ gear icon → increase Context Length to at least ' + fmt(worstCase * 2) + ' tokens → Reload.';
+          'Bump to at least ' + fmt(worstCase * 2) + ' tokens: ' + bumpHint;
       }
     } else {
       adv.className = 'warn';
-      adv.textContent = '⚠ Could not read context length — verify the model is loaded in LM Studio.';
+      adv.textContent = embedded
+        ? '⚠ Could not read context length — embedded llama-server may not be running.'
+        : '⚠ Could not read context length — verify the model is loaded in LM Studio.';
     }
 
     // Update right-column live previews

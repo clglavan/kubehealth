@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{if .Header.Crumb}}{{.Header.Crumb}} · {{end}}{{.Home.Cluster.Context}} · KubeHealth</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --raised: #222634;
+    --sunk: #13151d;
+    --border: #2a2d3a;
+    --border-2: #3a4052;
+    --text: #e2e8f0;
+    --muted: #8a94a6;        /* 5.5:1 on --surface */
+    --faint: #566074;        /* decoration only, never text */
+    --warn: #f59e0b;
+    --warn-bg: rgba(245,158,11,0.10);
+    --normal: #10b981;
+    --normal-bg: rgba(16,185,129,0.10);
+    --ok: #34d399;
+    --crit: #f87171;
+    --crit-bg: rgba(239,68,68,0.12);
+    --ok-bg: rgba(16,185,129,0.10);
+    --accent: #6366f1;
+    --accent-text: #818cf8;  /* accent as text: 5.6:1 on --surface */
+    --accent-bg: rgba(99,102,241,0.13);
+    --prod: #dc2626;
+    --on-prod: #ffffff;
+    --mono: 'SFMono-Regular', ui-monospace, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; font-size: 14px; line-height: 1.45;
+    display: flex; flex-direction: column; height: 100vh; overflow: hidden;
+  }
+  button { font-family: inherit; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 1px; }
+  [hidden] { display: none !important; }
+
+  /* ---- Shell: namespace rail | main (the overview, or objects | detail) ---- */
+  .app { flex: 1; display: grid; grid-template-columns: clamp(220px, 17vw, 280px) minmax(0, 1fr); min-height: 0; }
+  .rail { background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+  .rail-top { padding: 0.75rem 0.8rem 0.6rem; display: flex; align-items: center; gap: 0.4rem; border-bottom: 1px solid var(--border); }
+  .rail-top input {
+    flex: 1; min-width: 0; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+    padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 13px; font-family: inherit; outline: none;
+  }
+  .rail-top input::placeholder { color: var(--muted); }
+  .rail-top input:focus { border-color: var(--accent); }
+  kbd { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--border-2); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; }
+  .rail-scroll { flex: 1; overflow-y: auto; padding-bottom: 0.75rem; }
+  .rail-scroll::-webkit-scrollbar { width: 4px; }
+  .rail-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .rail-sec {
+    display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; width: 100%;
+    padding: 0.75rem 0.9rem 0.25rem; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    background: none; border: 0; text-align: left;
+  }
+  .rail-sec .n { font-family: var(--mono); font-weight: 500; letter-spacing: 0; }
+  button.rail-sec { cursor: pointer; }
+  button.rail-sec:hover { color: var(--text); }
+  .ri {
+    display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0.8rem 0.3rem 0.75rem;
+    border-left: 3px solid transparent; font-size: 13.5px; text-decoration: none; color: var(--text);
+  }
+  .ri:hover { background: rgba(255,255,255,0.035); }
+  .ri.on { background: var(--accent-bg); border-left-color: var(--accent); }
+  .ri-overview { font-weight: 600; margin-top: 0.45rem; }
+  .g-overview { color: var(--accent-text); }
+  .ri-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ri-n { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .ri-cap { font-family: var(--mono); font-size: 10.5px; color: var(--muted); border: 1px solid var(--border); border-radius: 3px; padding: 0 3px; }
+  .ri.quiet { color: var(--muted); font-size: 13px; padding-top: 0.2rem; padding-bottom: 0.2rem; }
+  .ri .glyph { width: 12px; font-size: 11px; }
+  .rail-none { padding: 0.25rem 0.9rem; color: var(--muted); font-size: 13px; }
+  .glyph { display: inline-block; text-align: center; flex-shrink: 0; line-height: 1; }
+  .g-cascade { color: var(--crit); }
+  .g-warn { color: var(--warn); }
+  .g-idle, .g-normal { color: var(--muted); }
+  .g-quiet { color: var(--faint); }
+
+  .main { min-width: 0; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .overview { flex: 1; min-height: 0; overflow-y: auto; }
+  .overview::-webkit-scrollbar { width: 4px; }
+  .overview::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  .main-inner { padding: 1.1rem 1.4rem 2rem; display: flex; flex-direction: column; gap: 1.1rem; max-width: 1280px; }
+  .narrow-bar { display: none; }
+  .ns-host { flex: 1; min-height: 0; display: flex; }
+  .loading-view { padding: 2rem 1.5rem; color: var(--muted); }
+
+  /* Namespace view: objects | detail */
+  .nsview { flex: 1; min-width: 0; min-height: 0; display: grid; grid-template-columns: clamp(240px, 21vw, 320px) minmax(0, 1fr); }
+  .nsview .sidebar { width: auto; min-width: 0; background: var(--sunk); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+  .nsview .detail-area { min-width: 0; overflow-y: auto; }
+  .nsview #sidebar-search { min-width: 0; }
+  .ns-pane-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1rem 0.1rem; }
+  .ns-pane-name { flex: 1; min-width: 0; font-weight: 700; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ns-reload { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 0 0.45rem; cursor: pointer; font-size: 13px; line-height: 1.6; }
+  .ns-reload:hover { color: var(--text); border-color: var(--border-2); }
+  .status-chip { background: var(--accent-bg); color: var(--accent-text); }
+  .no-objects { padding: 0.75rem 1rem; color: var(--muted); font-size: 13px; }
+
+  /* Namespace status */
+  .status-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; padding-bottom: 0.9rem; border-bottom: 1px solid var(--border); }
+  .status-head h2 { font-size: 1.1rem; font-weight: 700; overflow-wrap: anywhere; }
+  .status-sub { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .status-refresh { background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px; padding: 0.18rem 0.6rem; font-size: 12.5px; cursor: pointer; white-space: nowrap; }
+  .status-refresh:hover { color: var(--text); border-color: var(--border-2); }
+  .status-sec { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.6rem; }
+  .status-sec h3 { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .status-sec .ns-ai-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .status-wait { color: var(--muted); font-size: 13.5px; }
+  #ns-snapshot { display: flex; flex-direction: column; gap: 0.75rem; }
+  #ns-snapshot.busy { opacity: 0.6; }
+  .snap-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; }
+  .snap-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.75rem; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .snap-tile .k { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .snap-tile .v { font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .snap-tile .v small { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .snap-tile .d { font-size: 12px; color: var(--muted); }
+  .snap-tile.bad { border-color: rgba(248,113,113,0.45); }
+  .snap-tile.bad .v { color: var(--crit); }
+  .snap-tile.warn { border-color: rgba(245,158,11,0.4); }
+  .snap-tile.warn .v { color: var(--warn); }
+  .snap-ok { color: var(--ok); font-size: 13.5px; }
+  .snap-err { font-size: 12.5px; color: var(--warn); overflow-wrap: anywhere; }
+  .attn { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .attn-row { display: grid; grid-template-columns: 14px minmax(0, 1fr); gap: 0.6rem; padding: 0.5rem 0.75rem; border-top: 1px solid var(--border); font-size: 13.5px; align-items: baseline; }
+  .attn-row:first-child { border-top: 0; }
+  .attn-what { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 0.5rem; min-width: 0; }
+  .attn-name { font-weight: 600; overflow-wrap: anywhere; }
+  button.attn-name { background: none; border: 0; padding: 0; color: var(--accent-text); cursor: pointer; font-size: inherit; text-align: left; }
+  button.attn-name:hover { text-decoration: underline; }
+  .attn-text { color: var(--muted); overflow-wrap: anywhere; }
+  .rw-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .rw { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 0.5rem 0.75rem; }
+  .rw-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.5rem; }
+  .rw-obj { background: none; border: 0; padding: 0; font-family: var(--mono); font-size: 12.5px; color: var(--accent-text); cursor: pointer; text-align: left; overflow-wrap: anywhere; }
+  .rw-obj:hover { text-decoration: underline; }
+  .rw .tl-age { margin-left: auto; }
+  #content { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
+
+  .sum { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.6rem 1rem; }
+  .sum-line { font-size: 15px; color: var(--muted); }
+  .sum-line b { color: var(--text); font-weight: 600; }
+  .sum-line .s-new { color: var(--crit); font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.35rem; background: none; border: 1px solid var(--border);
+    color: var(--muted); border-radius: 999px; padding: 0.15rem 0.7rem; font-size: 12.5px; cursor: pointer;
+  }
+  .chip .c { font-family: var(--mono); color: var(--text); font-variant-numeric: tabular-nums; }
+  .chip:hover { border-color: var(--border-2); color: var(--text); }
+  .chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-bg); color: var(--text); }
+
+  .queue { display: flex; flex-direction: column; gap: 1rem; }
+  .tier { display: flex; flex-direction: column; gap: 0.45rem; }
+  .tier-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.6rem; }
+  .tier-head h2 { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+  .tier-head h2 .c { font-family: var(--mono); color: var(--muted); margin-left: 0.25rem; }
+  .tier-head .hint { font-size: 12.5px; color: var(--muted); }
+  .rows { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .row {
+    display: grid; grid-template-columns: 16px minmax(0, 1fr) auto auto; gap: 0.25rem 0.9rem; align-items: start;
+    padding: 0.7rem 0.9rem; border-top: 1px solid var(--border);
+  }
+  .row:first-child { border-top: 0; }
+  .row .glyph { font-size: 12px; margin-top: 4px; }
+  .row-main { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+  .row-title { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; }
+  .kchip { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; background: var(--accent-bg); color: var(--accent-text); }
+  .kchip.pat, .kchip.cl { background: rgba(148,163,184,0.12); color: #cbd5e1; }
+  .obj { font-weight: 600; font-size: 14.5px; overflow-wrap: anywhere; }
+  .ns { font-family: var(--mono); font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: 4px; padding: 0 6px; text-decoration: none; }
+  a.ns:hover { color: var(--text); border-color: var(--border-2); }
+  .tag { font-size: 11px; font-weight: 700; letter-spacing: 0.04em; padding: 1px 7px; border-radius: 999px; }
+  .t-crit { background: var(--crit-bg); color: var(--crit); }
+  .t-cl { background: rgba(148,163,184,0.12); color: #cbd5e1; }
+  .t-inf { border: 1px dashed var(--border-2); color: var(--muted); font-weight: 500; cursor: help; }
+  .row-sub { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.1rem 0.45rem; }
+  .row-sub .r1 { color: var(--text); }
+  .row-sub b { font-family: var(--mono); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .row-sub .sep { color: var(--faint); }
+  .row-msg { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row-why { font-size: 12.5px; color: var(--accent-text); }
+  .row-time { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; font-family: var(--mono); font-size: 12px; color: var(--muted); white-space: nowrap; padding-top: 2px; }
+  .row-time b { color: var(--text); font-weight: 500; font-variant-numeric: tabular-nums; }
+  .row-time .noted { text-decoration: underline dotted var(--faint); text-underline-offset: 3px; cursor: help; }
+  .row-act { display: flex; gap: 0.35rem; align-items: center; padding-top: 1px; }
+  .kbtn {
+    background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 6px;
+    padding: 0.18rem 0.6rem; font-size: 12.5px; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block;
+  }
+  .kbtn:hover { color: var(--text); border-color: var(--border-2); }
+  .kbtn.primary { color: var(--accent-text); border-color: rgba(129,140,248,0.4); }
+  .kbtn.primary:hover { background: var(--accent-bg); }
+  .row.idle .obj, .row.idle .row-sub .r1 { color: var(--muted); }
+  .row.arrive { animation: arrive 1.8s ease-out; }
+  @keyframes arrive { from { background: rgba(248,113,113,0.2); } to { background: transparent; } }
+  .members { display: flex; flex-direction: column; margin-top: 0.35rem; border-left: 1px solid var(--border-2); padding-left: 0.65rem; }
+  .member { display: flex; flex-wrap: wrap; align-items: center; gap: 0.2rem 0.6rem; font-size: 13px; color: var(--muted); padding: 0.2rem 0; }
+  .member .mo { color: var(--text); font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; }
+  .member b { font-family: var(--mono); color: var(--text); font-weight: 500; }
+  .member .kbtn { padding: 0 0.5rem; font-size: 12px; }
+
+  /* ---- Cluster brief ---- */
+  .brief {
+    border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 1rem 0.9rem;
+    background: var(--surface);
+    display: flex; flex-direction: column; gap: 0.55rem;
+  }
+  .brief-head { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; }
+  .brief-title { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text); }
+  .ai-note .brief-title { color: var(--accent-text); }
+  .brief-meta { font-size: 12px; color: var(--muted); font-family: var(--mono); }
+  .note-acts { margin-left: auto; display: flex; gap: 0.35rem; }
+  .ai-note {
+    border-top: 1px solid rgba(99,102,241,0.22); padding-top: 0.65rem; margin-top: 0.15rem;
+    display: flex; flex-direction: column; gap: 0.4rem;
+  }
+  .note-text { font-size: 14px; line-height: 1.6; max-width: 110ch; }
+  .note-fine { font-size: 12px; color: var(--muted); }
+  .brief ul { list-style: none; display: flex; flex-direction: column; gap: 0.45rem; }
+  .brief li { font-size: 14px; line-height: 1.6; max-width: 110ch; }
+  .b-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-right: 0.4rem; }
+  .cite {
+    display: inline-block; max-width: 34ch; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom;
+    font-family: var(--mono); font-size: 12.5px; font-weight: 600; color: var(--text); cursor: pointer;
+    background: var(--accent-bg); border: 1px solid rgba(129,140,248,0.35); border-radius: 5px; padding: 0 0.4rem;
+  }
+  .cite:hover { border-color: var(--accent-text); }
+  .cite.gone { text-decoration: line-through; color: var(--muted); cursor: default; }
+  .brief-note { font-size: 12.5px; color: var(--warn); }
+  .brief-wait { font-size: 13.5px; color: var(--muted); }
+  .cursor { color: var(--accent-text); animation: blink 0.7s step-end infinite; margin-left: 1px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .row.hl { background: rgba(99,102,241,0.16); }
+
+  .empty { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem 1.4rem; display: flex; flex-direction: column; gap: 0.35rem; }
+  .empty .big { font-size: 17px; font-weight: 600; }
+  .empty .ok { color: var(--ok); }
+  .empty p { color: var(--muted); max-width: 70ch; }
+  .foot { font-size: 13px; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 0.75rem; }
+  .note { font-size: 12.5px; color: var(--warn); background: var(--warn-bg); border: 1px solid rgba(245,158,11,0.25); border-radius: 6px; padding: 0.35rem 0.6rem; overflow-wrap: anywhere; }
+  .empty.err .big { color: var(--crit); }
+  .empty code { font-family: var(--mono); font-size: 12.5px; background: var(--sunk); padding: 0 0.3rem; border-radius: 4px; overflow-wrap: anywhere; }
+
+  /* Narrower windows: the rail folds behind a button; then the objects pane stacks above the detail. */
+  @media (max-width: 1100px) {
+    .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
+    .rail { display: none; border-right: 0; border-bottom: 1px solid var(--border); max-height: 45vh; }
+    body.rail-open .rail { display: flex; }
+    .narrow-bar { display: flex; padding: 0.45rem 1rem; border-bottom: 1px solid var(--border); background: var(--surface); flex-shrink: 0; }
+  }
+  @media (max-width: 760px) {
+    body { height: auto; min-height: 100vh; overflow: auto; }
+    .app { grid-template-rows: auto auto; }
+    .main, .overview, .nsview .detail-area { overflow: visible; }
+    .nsview { grid-template-columns: minmax(0, 1fr); }
+    .nsview .sidebar { max-height: 40vh; border-right: 0; border-bottom: 1px solid var(--border); }
+    .row { grid-template-columns: 16px minmax(0, 1fr); }
+    .row-time { grid-column: 2; flex-direction: row; gap: 0.75rem; align-items: center; }
+    .row-act { grid-column: 2; }
+    .main-inner { padding: 1rem; }
+    .ctx { max-width: 70vw; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .row.arrive, .cursor { animation: none; }
+    .ring .fg { transition: none; }
+  }
+</style>
+{{template "ns_css"}}
+</head>
+<body data-env="{{.Home.Cluster.Env}}">
+{{template "kh_header" .Header}}
+
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Namespaces">
+    <div class="rail-top">
+      <input id="rail-search" type="search" placeholder="Jump to namespace…" autocomplete="off" aria-label="Jump to namespace">
+      <kbd title="Press / to search">/</kbd>
+    </div>
+    <nav class="rail-scroll" id="rail-scroll"></nav>
+  </aside>
+  <main class="main" id="main">
+    <div class="narrow-bar">
+      <button class="kbtn" id="rail-toggle" type="button" aria-expanded="false" aria-controls="rail">Namespaces</button>
+    </div>
+    <div class="overview" id="overview"{{if ne .View "overview"}} hidden{{end}}>
+      <div class="main-inner"><div id="content"></div></div>
+    </div>
+    <div class="ns-host" id="ns-host"{{if eq .View "overview"}} hidden{{end}}>{{if .NS}}{{template "ns_fragment" .NS}}{{end}}</div>
+  </main>
+</div>
+
+{{template "ns_js"}}
+
+<script>
+(function() {
+  // First payload is rendered into the page; /api/home keeps it current.
+  var home = {{.Home}};
+  // What the main area shows: "overview", or "namespace" with currentNS.
+  var view = {{.View}};
+  var currentNS = {{.CurrentNS}};
+
+  var TIERS = [
+    { key: 'new', label: 'New', hint: 'first seen in the last 2 h' },
+    { key: 'ongoing', label: 'Ongoing', hint: 'first seen 2–24 h ago' },
+    { key: 'chronic', label: 'Chronic', hint: 'first seen more than 24 h ago' }
+  ];
+  var GLYPH = { cascade: '▲', warn: '●', idle: '○', normal: '·', quiet: '·' };
+  var GLYPH_LABEL = { cascade: 'Cascade failure', warn: 'Warning', idle: 'Idle: no new occurrence for 15 min', normal: 'Normal events only', quiet: 'No events' };
+
+  var state = { filter: 'all', open: {}, quietOpen: false, seen: null };
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+  function fmtN(n) { return Number(n).toLocaleString('en-US'); }
+  // Links carry the page's cluster, so a tab left open on one cluster keeps
+  // opening that cluster's namespaces after KubeHealth switches.
+  function nsHref(ns, focus) {
+    return '/namespace/' + encodeURIComponent(ns) + '?ctx=' + encodeURIComponent(home.cluster.context) +
+      (focus ? '&focus=' + encodeURIComponent(focus) : '');
+  }
+  function problemState(p) { return p.cascade ? 'cascade' : (p.idle ? 'idle' : 'warn'); }
+  function overviewHref() { return '/?ctx=' + encodeURIComponent(home.cluster.context); }
+  function ageText(s) { return s < 60 ? s + 's' : s < 3600 ? Math.floor(s / 60) + 'm ' + (s % 60) + 's' : Math.floor(s / 3600) + 'h ' + Math.floor((s % 3600) / 60) + 'm'; }
+  function nsTitle(ns) { return ns === '_cluster' ? 'Cluster-wide objects' : ns; }
+  function inNamespace(p, ns) { return ns === '_cluster' ? p.scope === 'cluster' : p.namespaces.indexOf(ns) !== -1; }
+
+  // ── Header ──────────────────────────────────────────────────────────
+  // The breadcrumb names the open namespace and counts its problems.
+  function nsCrumb(ns) {
+    var n = 0, cascade = false;
+    home.problems.forEach(function(p) { if (inNamespace(p, ns)) { n++; cascade = cascade || p.cascade; } });
+    if (!n) return [nsTitle(ns), 'No warnings', 'ok'];
+    return [nsTitle(ns), (cascade ? '▲ ' : '● ') + n + (n === 1 ? ' problem' : ' problems'), cascade ? 'cascade' : 'warn'];
+  }
+  function renderHeader() {
+    window.khHeader.update(home);
+    var c = view === 'namespace' ? nsCrumb(currentNS) : ['', '', ''];
+    window.khHeader.setCrumb(c[0], c[1], c[2]);
+    document.title = (c[0] ? c[0] + ' · ' : '') + home.cluster.context + ' · KubeHealth';
+    $('rail-toggle').textContent = 'Namespaces · ' + (home.sweep.total || '…');
+  }
+
+  // ── Rail ───────────────────────────────────────────────────────────────
+  function riHTML(item, href, n, ns) {
+    var g = GLYPH[item.state] || '·';
+    var on = view === 'namespace' && currentNS === (ns || item.name);
+    return '<a class="ri' + (item.state === 'quiet' ? ' quiet' : '') + (on ? ' on' : '') + '" href="' + esc(href) + '"' + (on ? ' aria-current="page"' : '') + '>' +
+      '<span class="glyph g-' + item.state + '" role="img" aria-label="' + GLYPH_LABEL[item.state] + '">' + g + '</span>' +
+      '<span class="ri-name">' + esc(item.name) + '</span>' +
+      (item.truncated ? '<span class="ri-cap" title="More than 200 events. The namespace page shows part of the normal events; warnings are complete.">200+</span>' : '') +
+      (n ? '<span class="ri-n" title="' + n + ' problem' + (n > 1 ? 's' : '') + '">' + n + '</span>' : '') +
+      '</a>';
+  }
+  function renderRail() {
+    var r = home.rail, q = $('rail-search').value.trim().toLowerCase();
+    function match(name) { return !q || name.toLowerCase().indexOf(q) !== -1; }
+    var html = '<a class="ri ri-overview' + (view === 'overview' ? ' on' : '') + '" href="' + esc(overviewHref()) + '"' +
+      (view === 'overview' ? ' aria-current="page"' : '') + '><span class="glyph g-overview" aria-hidden="true">◆</span>' +
+      '<span class="ri-name">Overview</span>' + (home.summary.problems ? '<span class="ri-n">' + home.summary.problems + '</span>' : '') + '</a>';
+    if (r.cluster && match('cluster-wide ' + r.cluster.name)) {
+      html += '<div class="rail-sec">Cluster-wide</div>' + riHTML(r.cluster, nsHref('_cluster'), r.cluster.problems, '_cluster');
+    }
+    var act = r.active.filter(function(a) { return match(a.name); });
+    html += '<div class="rail-sec">Active <span class="n">' + r.active.length + '</span></div>';
+    html += act.length ? act.map(function(a) { return riHTML(a, nsHref(a.name), a.problems); }).join('')
+      : '<div class="rail-none">' + (r.active.length ? 'No match' : 'None') + '</div>';
+    var norm = r.normal.filter(function(a) { return match(a.name); });
+    html += '<div class="rail-sec">Normal activity only <span class="n">' + r.normal.length + '</span></div>';
+    html += norm.length ? norm.map(function(a) { return riHTML(a, nsHref(a.name)); }).join('')
+      : '<div class="rail-none">' + (r.normal.length ? 'No match' : 'None') + '</div>';
+    var quiet = r.quiet.filter(function(a) { return match(a.name); });
+    var showQuiet = state.quietOpen || (q && quiet.length);
+    html += '<button type="button" class="rail-sec" id="quiet-btn" aria-expanded="' + (showQuiet ? 'true' : 'false') + '">' +
+      '<span>Quiet <span class="n">' + r.quiet.length + '</span></span><span aria-hidden="true">' + (showQuiet ? '▾' : '▸') + '</span></button>';
+    if (showQuiet) {
+      html += quiet.length ? quiet.map(function(a) { return riHTML(a, nsHref(a.name)); }).join('') : '<div class="rail-none">No match</div>';
+    }
+    $('rail-scroll').innerHTML = html;
+  }
+
+  // ── Main ───────────────────────────────────────────────────────────────
+  function summaryHTML() {
+    var s = home.summary;
+    var counts = { all: s.problems, 'new': s['new'], ongoing: s.ongoing, chronic: s.chronic };
+    var where = s.namespaces + ' namespace' + (s.namespaces === 1 ? '' : 's') + (s.cluster ? ' and the cluster' : '');
+    if (!s.namespaces && s.cluster) where = 'the cluster';
+    var chips = [['all', 'All']].concat(TIERS.map(function(t) { return [t.key, t.label]; })).map(function(c) {
+      return '<button type="button" class="chip" data-filter="' + c[0] + '" aria-pressed="' + (state.filter === c[0]) + '">' +
+        c[1] + ' <span class="c">' + counts[c[0]] + '</span></button>';
+    }).join('');
+    return '<div class="sum"><p class="sum-line"><b>' + s.problems + ' problem' + (s.problems === 1 ? '' : 's') + '</b> in ' + where + '. ' +
+      (s['new'] ? '<span class="s-new">' + s['new'] + ' started in the last 2 h.</span>' : 'Nothing new in the last 2 h.') + '</p>' +
+      '<div class="chips" role="group" aria-label="Filter by tier">' + chips + '</div></div>';
+  }
+
+  function reasonsHTML(p) {
+    var parts = p.reasons.slice(0, 3).map(function(r, i) {
+      return i === 0 ? '<span class="r1">' + esc(r.reason) + ' <b>×' + fmtN(r.count) + '</b></span>'
+                     : '<span>' + esc(r.reason) + ' ×' + fmtN(r.count) + '</span>';
+    });
+    if (p.reasons.length > 3) parts.push('<span>+' + (p.reasons.length - 3) + ' more</span>');
+    if (p.members) parts.push('<span>' + esc(p.members) + '</span>');
+    return parts.join('<span class="sep" aria-hidden="true">·</span>');
+  }
+
+  function rowHTML(p) {
+    var st = problemState(p);
+    var isPat = p.scope === 'pattern';
+    var open = !!state.open[p.key];
+    var tags = [];
+    if (p.cascade) tags.push('<span class="tag t-crit" title="Warnings at two or more levels of the chain, and every member at the lowest level failing">cascade</span>');
+    if (p.scope === 'cluster') tags.push('<span class="tag t-cl" title="Cluster-scoped objects; their events are recorded in ' + esc(p.open_ns) + '">cluster-wide</span>');
+    if (p.inferred) tags.push('<span class="tag t-inf" title="Owner guessed from object names. KubeHealth confirms it through ownerReferences in the background.">owner inferred</span>');
+    var kchip = isPat ? '<span class="kchip pat">Pattern</span>' : '<span class="kchip' + (p.scope === 'cluster' ? ' cl' : '') + '">' + esc(p.kind) + '</span>';
+    var ns = p.namespaces.map(function(n) { return '<a class="ns" href="' + esc(nsHref(n)) + '">' + esc(n) + '</a>'; }).join('');
+    var members = '';
+    if (isPat && open) {
+      members = '<div class="members" id="m-' + esc(p.key) + '">' + p.items.map(function(it) {
+        return '<div class="member"><span class="ns">' + esc(it.namespace) + '</span><span class="mo">' + esc(it.kind) + '/' + esc(it.name) + '</span>' +
+          '<span>' + esc(it.reason) + ' <b>×' + fmtN(it.occurrences) + '</b></span><span>' + (it.idle ? 'quiet ' : 'last ') + esc(it.last) + '</span>' +
+          '<a class="kbtn" href="' + esc(nsHref(it.namespace, it.focus)) + '">Open →</a></div>';
+      }).join('') + '</div>';
+    }
+    var since = p.since_note
+      ? '<span class="noted" title="' + esc(p.since_note) + '">since <b>' + esc(p.since) + '</b></span>'
+      : '<span>since <b>' + esc(p.since) + '</b></span>';
+    var time = since + '<span>' + (p.idle ? 'quiet' : 'last') + ' <b>' + esc(p.last) + '</b></span>';
+    var acts = isPat
+      ? '<button type="button" class="kbtn primary" data-act="toggle" data-key="' + esc(p.key) + '" aria-expanded="' + open + '" aria-controls="m-' + esc(p.key) + '">' + (open ? 'Hide' : 'Show') + ' ' + p.items.length + '</button>'
+      : '<a class="kbtn" href="' + esc(nsHref(p.open_ns, p.focus)) + '&rca=1' + (p.pod ? '&pod=' + encodeURIComponent(p.pod) : '') +
+          '" title="Open and start a root cause analysis' + (p.pod ? ' on ' + esc(p.pod) : '') + '">RCA</a>' +
+        '<a class="kbtn primary" href="' + esc(nsHref(p.open_ns, p.focus)) + '">Open →</a>';
+    var isNew = state.seen && !state.seen[p.key];
+    return '<article class="row' + (p.idle ? ' idle' : '') + (isNew ? ' arrive' : '') + '" data-key="' + esc(p.key) + '">' +
+      '<span class="glyph g-' + st + '" role="img" aria-label="' + GLYPH_LABEL[st] + '">' + GLYPH[st] + '</span>' +
+      '<div class="row-main">' +
+        '<div class="row-title">' + kchip + '<span class="obj">' + esc(p.title) + '</span>' + ns + tags.join('') + '</div>' +
+        '<div class="row-sub">' + reasonsHTML(p) + '</div>' +
+        (isPat ? '<div class="row-why">' + esc(p.pattern) + '</div>' : (p.message ? '<div class="row-msg" title="' + esc(p.message) + '">' + esc(p.message) + '</div>' : '')) +
+        members +
+      '</div>' +
+      '<div class="row-time">' + time + '</div>' +
+      '<div class="row-act">' + acts + '</div>' +
+    '</article>';
+  }
+
+  function queueHTML() {
+    var tiers = TIERS.filter(function(t) { return state.filter === 'all' || state.filter === t.key; });
+    return '<div class="queue">' + tiers.map(function(t) {
+      var ps = home.problems.filter(function(p) { return p.tier === t.key; });
+      if (!ps.length) {
+        return state.filter === t.key
+          ? '<section class="tier"><div class="tier-head"><h2>' + t.label + '<span class="c">0</span></h2><span class="hint">Nothing in this tier.</span></div></section>'
+          : '';
+      }
+      return '<section class="tier" aria-label="' + t.label + ' problems"><div class="tier-head"><h2>' + t.label + '<span class="c">' + ps.length + '</span></h2>' +
+        '<span class="hint">' + t.hint + '</span></div><div class="rows">' + ps.map(rowHTML).join('') + '</div></section>';
+    }).join('') + '</div>';
+  }
+
+  // ── Cluster brief ──────────────────────────────────────────────────────
+  function fmtK(n) { return n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n); }
+  function bulletHTML(bl, live, withCursor) {
+    var html = '';
+    bl.parts.forEach(function(p, i) {
+      if (i > 0 && !(p.text && /^[.,;:!?)]/.test(p.text))) html += ' ';
+      if (p.ref) {
+        var ok = !!live[p.ref];
+        html += '<button type="button" class="cite' + (ok ? '' : ' gone') + '" data-ref="' + esc(p.ref) + '"' + (ok ? '' : ' disabled') +
+          ' title="' + esc(p.label) + (ok ? ': show this problem' : ' (no longer a problem)') + '">' + esc(p.label) + '</button>';
+      } else {
+        html += esc(p.text);
+      }
+    });
+    return '<li>' + (bl.label ? '<span class="b-label">' + esc(bl.label) + '</span>' : '') + html +
+      (withCursor ? '<span class="cursor" aria-hidden="true">▋</span>' : '') + '</li>';
+  }
+  function briefHTML() {
+    var b = home.brief;
+    if (!b || !b.facts || !b.facts.length) return '';
+    var live = {};
+    home.problems.forEach(function(p) { live[p.key] = true; });
+    var facts = '<ul>' + b.facts.map(function(f) { return bulletHTML(f, live, false); }).join('') + '</ul>';
+    return '<section class="brief" aria-label="Cluster brief">' +
+      '<div class="brief-head"><span class="brief-title">Brief</span><span class="brief-meta">from the ' + home.problems.length +
+      ' problems below</span></div>' + facts + noteHTML(b.note, live) + '</section>';
+  }
+
+  // The model's note on the most urgent problem.
+  function noteHTML(n, live) {
+    if (!n) return '';
+    var running = n.status === 'running';
+    var target = n.ref
+      ? '<button type="button" class="cite' + (live[n.ref] ? '' : ' gone') + '" data-ref="' + esc(n.ref) + '"' + (live[n.ref] ? '' : ' disabled') + '>' + esc(n.label) + '</button>'
+      : '';
+    var meta = [];
+    if (running) meta.push('writing…'); else if (n.age) meta.push(esc(n.age) + ' ago');
+    if (n.evidence) meta.push('read ' + esc(n.evidence));
+
+    var status = '';
+    if (n.stale && !running) {
+      status = 'The most urgent problem changed since this note. ' +
+        (n.status === 'waiting' ? esc(n.reason) : n.status === 'error' ? 'The last update failed: ' + esc(n.reason)
+          : (n.next_in_s ? 'Updating in ' + n.next_in_s + ' s.' : 'Updating…'));
+    } else if (n.status === 'waiting') {
+      status = esc(n.reason);
+    } else if (n.status === 'error') {
+      status = 'The note failed: ' + esc(n.reason) + (n.text ? '' : ' Retrying in a minute.');
+    }
+
+    var body;
+    if (n.text) {
+      body = '<p class="note-text">' + esc(n.text) + (running ? '<span class="cursor" aria-hidden="true">▋</span>' : '') + '</p>';
+    } else if (running) {
+      body = '<p class="brief-wait">Reading ' + (n.evidence ? esc(n.evidence) : 'its events and logs') + '…<span class="cursor" aria-hidden="true">▋</span></p>';
+    } else if (n.status === 'idle') {
+      body = '<p class="brief-wait">No note yet. It is written while KubeHealth watches this cluster.</p>';
+    } else {
+      body = '';
+    }
+    var open = n.open_ns ? '<a class="kbtn" href="' + esc(nsHref(n.open_ns, n.focus) + '&ai=1' + (n.pod ? '&pod=' + encodeURIComponent(n.pod) : '')) + '">Full AI analysis →</a>' : '';
+    return '<div class="ai-note" aria-busy="' + running + '">' +
+      '<div class="brief-head"><span class="brief-title">✦ ' + esc(n.model || 'AI') + ' on</span>' + target +
+      '<span class="brief-meta">' + meta.join(' · ') + '</span>' +
+      '<span class="note-acts">' + open +
+      '<button type="button" class="kbtn" data-act="brief-regen"' + (running ? ' disabled' : '') + '>↻ Regenerate</button></span></div>' +
+      (status ? '<p class="brief-note">' + status + '</p>' : '') + body +
+      '<p class="note-fine">A suggestion from the model, based only on the evidence named above. Check it before acting.</p></div>';
+  }
+
+  function focusRow(key) {
+    var sel = '.row[data-key="' + CSS.escape(key) + '"]';
+    var row = document.querySelector(sel);
+    if (!row && state.filter !== 'all') { state.filter = 'all'; renderMain(); row = document.querySelector(sel); }
+    if (!row) return;
+    row.scrollIntoView({ block: 'nearest', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    row.classList.add('hl');
+    setTimeout(function() { row.classList.remove('hl'); }, 1600);
+  }
+
+  function footHTML() {
+    var r = home.rail;
+    return '<p class="foot">' + r.normal.length + ' namespace' + (r.normal.length === 1 ? '' : 's') + ' with normal activity only · ' +
+      r.quiet.length + ' quiet. Nothing to triage there.</p>';
+  }
+
+  function connectingHTML() {
+    var cl = home.cluster;
+    if (home.problems.length || home.warnings.checked_at || home.sweep.loaded) return '';
+    if (cl.error) {
+      return '<div class="empty err"><span class="big">Can\u2019t read from ' + esc(cl.context) + '</span>' +
+        '<p>' + esc(cl.error) + '</p>' +
+        '<p>Check your VPN and credentials, for example with <code>kubectl --context ' + esc(cl.context) + ' get namespaces</code>, or switch to another cluster.</p></div>';
+    }
+    return '<div class="empty"><span class="big">Connecting to ' + esc(cl.context) + '…</span>' +
+      '<p>Listing namespaces and warning events. Problems show up as soon as the first warning check returns.</p></div>';
+  }
+
+  function renderMain() {
+    var html;
+    var notes = '';
+    if (home.warnings.truncated) notes += '<p class="note">More than 10,000 warning events in the cluster. Only the first 10,000 are counted.</p>';
+    if (home.cluster.error && !connectingHTML()) notes += '<p class="note">Can\u2019t refresh from this cluster right now: ' + esc(home.cluster.error) + '</p>';
+    var waiting = connectingHTML();
+    if (waiting) {
+      html = waiting;
+    } else if (!home.problems.length) {
+      var sw = home.sweep;
+      html = notes + '<div class="empty"><span class="big"><span class="ok">✓</span> Nothing needs attention on ' + esc(home.cluster.context) + '</span>' +
+        '<p>' + (sw.ready || home.warnings.mode === 'cluster'
+          ? 'No warning events across ' + sw.total + ' namespaces.'
+          : 'No warnings so far. Still sweeping: ' + sw.loaded + ' of ' + sw.total + ' namespaces loaded.') + '</p></div>' + footHTML();
+      html = html;
+    } else {
+      html = summaryHTML() + briefHTML() + notes + queueHTML() + footHTML();
+    }
+
+    // Keep keyboard focus on the same control across re-renders.
+    var active = document.activeElement, focusKey = null, focusSel = null;
+    if (active && $('content').contains(active)) {
+      var row = active.closest('.row');
+      focusKey = row && row.dataset.key;
+      focusSel = active.dataset.filter ? '[data-filter="' + active.dataset.filter + '"]'
+        : active.dataset.act ? '[data-act="' + active.dataset.act + '"]'
+        : active.dataset.ref ? '[data-ref="' + CSS.escape(active.dataset.ref) + '"]'
+        : active.getAttribute('href') ? 'a[href="' + CSS.escape(active.getAttribute('href')) + '"]' : null;
+    }
+    $('content').innerHTML = html;
+    if (focusSel) {
+      var scope = focusKey ? document.querySelector('.row[data-key="' + CSS.escape(focusKey) + '"]') : $('content');
+      var el = scope && scope.querySelector(focusSel);
+      if (el) el.focus();
+    }
+    var seen = {};
+    home.problems.forEach(function(p) { seen[p.key] = true; });
+    state.seen = seen;
+  }
+
+  function renderAll() {
+    renderHeader();
+    renderRail();
+    if (view === 'overview') renderMain(); else renderStatus();
+  }
+
+  // ── Namespace view ─────────────────────────────────────────────────────
+  // The fragment (objects pane + detail pane) comes from the server; the
+  // status panel's problems come from /api/home and its snapshot from
+  // /api/snapshot.
+  function renderStatus() {
+    var box = $('ns-problems');
+    if (!box) return;
+    var ps = home.problems.filter(function(p) { return inNamespace(p, currentNS); });
+    box.innerHTML = ps.length
+      ? '<div class="rows">' + ps.map(rowHTML).join('') + '</div>'
+      : '<p class="snap-ok">✓ No problems from events.</p>';
+  }
+
+  function tile(label, value, total, detail, cls) {
+    return '<div class="snap-tile ' + (cls || '') + '"><span class="k">' + label + '</span>' +
+      '<span class="v">' + value + (total != null ? '<small> / ' + total + '</small>' : '') + '</span>' +
+      (detail ? '<span class="d">' + detail + '</span>' : '') + '</div>';
+  }
+  function snapshotHTML(s) {
+    var tiles = [];
+    function rc(label, c, what) {
+      if (!c.total) return;
+      tiles.push(tile(label, c.ready, c.total, what, c.ready < c.total ? (c.ready === 0 ? 'bad' : 'warn') : ''));
+    }
+    if (s.nodes) {
+      rc('Nodes', s.nodes, 'ready');
+      if (s.pvs && s.pvs.total) tiles.push(tile('Volumes', s.pvs.bound, s.pvs.total, s.pvs.failed ? s.pvs.failed + ' failed' : 'bound', s.pvs.failed ? 'bad' : ''));
+    } else {
+      rc('Deployments', s.deployments, 'ready');
+      rc('StatefulSets', s.statefulsets, 'ready');
+      rc('DaemonSets', s.daemonsets, 'ready');
+      if (s.cronjobs.total) {
+        var cj = [];
+        if (s.cronjobs.failing) cj.push(s.cronjobs.failing + ' failing');
+        if (s.cronjobs.suspended) cj.push(s.cronjobs.suspended + ' suspended');
+        tiles.push(tile('CronJobs', s.cronjobs.total, null, cj.join(' · ') || 'last runs succeeded', s.cronjobs.failing ? 'bad' : ''));
+      }
+      var p = s.pods, live = p.total - p.succeeded;
+      if (p.total) {
+        var pd = [];
+        if (p.not_ready) pd.push(p.not_ready + ' not ready');
+        if (p.pending) pd.push(p.pending + ' pending');
+        if (p.failed) pd.push(p.failed + ' failed');
+        if (p.restarts) pd.push(fmtN(p.restarts) + ' restarts');
+        tiles.push(tile('Pods running', p.running, live, pd.join(' · ') || 'all ready', p.not_ready || p.failed ? 'warn' : ''));
+      }
+      if (s.pvcs.total) tiles.push(tile('Volume claims', s.pvcs.bound, s.pvcs.total, s.pvcs.pending ? s.pvcs.pending + ' pending' : 'bound', s.pvcs.pending ? 'warn' : ''));
+    }
+    var html = tiles.length ? '<div class="snap-tiles">' + tiles.join('') + '</div>'
+      : '<p class="status-wait">Nothing is running here.</p>';
+    if (s.attention.length) {
+      html += '<div class="attn">' + s.attention.map(function(a) {
+        // Link the name when the object is on the page.
+        var onPage = a.name.indexOf(' pods') === -1 && focusFromURL(new URLSearchParams({ focus: a.kind + '/' + a.name }));
+        var name = onPage
+          ? '<button type="button" class="attn-name" data-kind="' + esc(a.kind) + '" data-name="' + esc(a.name) + '">' + esc(a.name) + '</button>'
+          : '<span class="attn-name">' + esc(a.name) + '</span>';
+        return '<div class="attn-row"><span class="glyph g-' + (a.severity === 'crit' ? 'cascade' : 'warn') + '" aria-hidden="true">' +
+          (a.severity === 'crit' ? '▲' : '●') + '</span><div class="attn-what"><span class="kind-chip orphan">' + esc(a.kind) + '</span>' +
+          name + '<span class="attn-text">' + esc(a.text) + '</span></div></div>';
+      }).join('') + (s.more ? '<div class="attn-row"><span></span><span class="attn-text">and ' + s.more + ' more</span></div>' : '') + '</div>';
+    } else if (tiles.length && !(s.errors || []).length) {
+      html += '<p class="snap-ok">✓ Everything listed is running and ready.</p>';
+    }
+    if (s.errors && s.errors.length) {
+      html += '<p class="snap-err">Some of it could not be read: ' + esc(s.errors.join('; ')) + '</p>';
+    }
+    return html;
+  }
+  function loadSnapshot(refresh) {
+    var box = $('ns-snapshot'), ns = currentNS;
+    if (!box) return;
+    box.classList.add('busy');
+    fetch('/api/snapshot/' + encodeURIComponent(ns) + (refresh ? '?refresh=1' : ''), { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t || r.status); }); return r.json(); })
+      .then(function(s) {
+        if (ns !== currentNS || !$('ns-snapshot')) return;
+        $('ns-snapshot').innerHTML = snapshotHTML(s);
+        $('status-sub').textContent = 'Live status, read ' + (s.age_s ? ageText(s.age_s) + ' ago' : 'just now') + ' · refreshes when you open it';
+      })
+      .catch(function(e) {
+        if ($('ns-snapshot')) $('ns-snapshot').innerHTML = '<p class="snap-err">Could not read the live status: ' + esc(e.message) + '</p>';
+      })
+      .then(function() { if ($('ns-snapshot')) $('ns-snapshot').classList.remove('busy'); });
+  }
+
+  // ── Navigation ─────────────────────────────────────────────────────────
+  // Links to / and /namespace/… are handled in the page, so the rail stays
+  // put; modifier clicks still open new tabs.
+  function showOverview() {
+    view = 'overview';
+    $('overview').hidden = false;
+    $('ns-host').hidden = true;
+    renderAll();
+  }
+  var loadSeq = 0;
+  function openNamespace(ns, params, reload) {
+    view = 'namespace';
+    $('overview').hidden = true;
+    $('ns-host').hidden = false;
+    var loaded = $('nsview');
+    if (!reload && loaded && loaded.dataset.ns === ns) {
+      initNamespaceView(params);
+      renderAll();
+      return;
+    }
+    currentNS = ns;
+    renderAll();
+    var on = $('rail-scroll').querySelector('.ri.on');
+    if (on) on.scrollIntoView({ block: 'nearest' });
+    var seq = ++loadSeq, host = $('ns-host');
+    if (!reload) host.innerHTML = '<p class="loading-view">Loading ' + esc(nsTitle(ns)) + '…</p>';
+    fetch('/fragment/namespace/' + encodeURIComponent(ns), { cache: 'no-store' })
+      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t || r.status); }); return r.text(); })
+      .then(function(html) {
+        if (seq !== loadSeq) return; // a later click won
+        host.innerHTML = html;
+        initNamespaceView(params);
+        renderStatus();
+        loadSnapshot(false);
+      })
+      .catch(function(e) {
+        if (seq === loadSeq) host.innerHTML = '<p class="loading-view">Could not load ' + esc(nsTitle(ns)) + ': ' + esc(e.message) + '</p>';
+      });
+  }
+  function go(url, push) {
+    if (push) history.pushState(null, '', url.pathname + url.search);
+    document.body.classList.remove('rail-open');
+    if (url.pathname === '/') { showOverview(); return; }
+    openNamespace(decodeURIComponent(url.pathname.slice('/namespace/'.length).replace(/\/+$/, '')), url.searchParams);
+  }
+  document.addEventListener('click', function(e) {
+    if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var a = e.target.closest('a[href]');
+    if (!a || a.target) return;
+    var url = new URL(a.getAttribute('href'), location.href);
+    if (url.origin !== location.origin || (url.pathname !== '/' && url.pathname.indexOf('/namespace/') !== 0)) return;
+    if (url.searchParams.get('ctx') && url.searchParams.get('ctx') !== home.cluster.context) return; // another cluster: full load
+    e.preventDefault();
+    go(url, true);
+  });
+  window.addEventListener('popstate', function() { go(new URL(location.href), false); });
+
+  window.khShell = {
+    // A selected object goes into the URL, so a reload or a shared link opens it.
+    panelSelected: function(panelId, item) {
+      if (view !== 'namespace') return;
+      var url = new URL(location.href), t = item && item.dataset && item.dataset.text;
+      if (panelId === 'dp-status' || !t) url.searchParams.delete('focus');
+      else { var parts = t.split(' '); url.searchParams.set('focus', parts[0] + '/' + parts[1]); }
+      history.replaceState(history.state, '', url.pathname + url.search);
+    },
+    refreshSnapshot: function() { loadSnapshot(true); },
+    reloadNamespace: function() { openNamespace(currentNS, new URL(location.href).searchParams, true); }
+  };
+  $('ns-host').addEventListener('click', function(e) {
+    var n = e.target.closest('button.attn-name');
+    if (n) { focusObject(n.dataset.kind, n.dataset.name); return; }
+    var t = e.target.closest('#ns-problems [data-act="toggle"]');
+    if (t) { state.open[t.dataset.key] = !state.open[t.dataset.key]; renderStatus(); }
+  });
+
+  // ── Interactions ───────────────────────────────────────────────────────
+  $('content').addEventListener('click', function(e) {
+    var cite = e.target.closest('.cite');
+    if (cite) { focusRow(cite.dataset.ref); return; }
+    if (e.target.closest('[data-act="brief-regen"]')) {
+      if (home.brief && home.brief.note) { home.brief.note.status = 'running'; home.brief.note.text = ''; }
+      renderMain();
+      fetch('/api/ai/brief', { method: 'POST' })
+        .then(function(r) { return r.ok ? r.json() : null; })
+        .then(function(b) { if (b) { home.brief = b; renderMain(); } })
+        .catch(function() {});
+      return;
+    }
+    var chip = e.target.closest('.chip');
+    if (chip) { state.filter = chip.dataset.filter; renderMain(); return; }
+    var t = e.target.closest('[data-act="toggle"]');
+    if (t) { state.open[t.dataset.key] = !state.open[t.dataset.key]; renderMain(); }
+  });
+  $('rail-scroll').addEventListener('click', function(e) {
+    if (e.target.closest('#quiet-btn')) { state.quietOpen = !state.quietOpen; renderRail(); }
+  });
+  $('rail-search').addEventListener('input', renderRail);
+  $('rail-search').addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { e.target.value = ''; renderRail(); e.target.blur(); }
+    if (e.key === 'Enter') { var first = $('rail-scroll').querySelector('a.ri:not(.ri-overview)'); if (first) go(new URL(first.getAttribute('href'), location.href), true); }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+    var tag = (document.activeElement && document.activeElement.tagName) || '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || (document.activeElement && document.activeElement.isContentEditable)) return;
+    e.preventDefault();
+    document.body.classList.add('rail-open');
+    $('rail-search').focus();
+  });
+  $('rail-toggle').addEventListener('click', function() {
+    var open = !document.body.classList.contains('rail-open');
+    document.body.classList.toggle('rail-open', open);
+    $('rail-toggle').setAttribute('aria-expanded', String(open));
+  });
+
+  // ── Polling ────────────────────────────────────────────────────────────
+  function poll() {
+    if (document.hidden) { setTimeout(poll, 3000); return; }
+    fetch('/api/home', { cache: 'no-store' })
+      .then(function(r) {
+        if (r.status === 409) return r.json().then(function(d) { window.khHeader.conflict(d.error); });
+        if (!r.ok) throw new Error(r.status);
+        return r.json().then(function(d) { home = d; renderAll(); });
+      })
+      .catch(function() { window.khHeader.offline(); })
+      // Poll faster while the brief is being written, so it reads as it streams.
+      .then(function() { setTimeout(poll, home.brief && home.brief.note && home.brief.note.status === 'running' ? 1000 : 3000); });
+  }
+
+  renderAll();
+  if (view === 'namespace') {
+    initNamespaceView(new URLSearchParams(location.search));
+    loadSnapshot(false);
+    var on = $('rail-scroll').querySelector('.ri.on');
+    if (on) on.scrollIntoView({ block: 'nearest' });
+  }
+  setTimeout(poll, 3000);
+})();
+</script>
+{{template "ai_modal" .}}
+{{template "settings_modal" .}}
+{{template "docs_modal" .}}
+</body>
+</html>

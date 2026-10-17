@@ -20,9 +20,6 @@ import (
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/client-go/dynamic"
-	"k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/client-go/util/homedir"
 	"sigs.k8s.io/yaml"
 )
@@ -46,9 +43,12 @@ type EventSummary struct {
 	Count      int32
 	Kind       string
 	ObjectName string
-	FirstTime  time.Time
-	LastTime   time.Time
-	Age        string
+	// ObjectNamespace is the involved object's namespace; empty for
+	// cluster-scoped objects such as Nodes, whose events land in "default".
+	ObjectNamespace string
+	FirstTime       time.Time
+	LastTime        time.Time
+	Age             string
 }
 
 // ObjectEvents groups all events that reference the same k8s object.
@@ -60,6 +60,8 @@ type ObjectEvents struct {
 	NormalCount  int
 	HasWarning   bool
 	LastTime     time.Time
+	LastWarning  time.Time // newest warning, zero when there is none
+	Idle         bool      // has warnings, but none for idleAfter
 }
 
 // KindGroup collects all ObjectEvents of the same Kubernetes Kind.
@@ -116,7 +118,8 @@ type InfoCondition struct {
 type ObjectFamily struct {
 	Root           *FamilyMember
 	HasWarning     bool
-	CascadeFailure bool   // root AND all leaves have warnings
+	Idle           bool // has warnings, but no member had a new one for idleAfter
+	CascadeFailure bool // root AND all leaves have warnings
 	WarningCount   int
 	NormalCount    int
 	Kinds          []string // distinct kinds present — used for filter data attribute
@@ -321,12 +324,14 @@ func buildFamilies(objects []ObjectEvents) ([]ObjectFamily, []KindGroup) {
 
 		// Collect stats and distinct kinds
 		kindSet := map[string]bool{}
+		activeWarning := false
 		var walk func(m *FamilyMember)
 		walk = func(m *FamilyMember) {
 			fam.WarningCount += m.WarningCount
 			fam.NormalCount += m.NormalCount
 			if m.HasWarning {
 				fam.HasWarning = true
+				activeWarning = activeWarning || !m.Idle
 			}
 			kindSet[m.Kind] = true
 			for _, c := range m.Children {
@@ -334,6 +339,7 @@ func buildFamilies(objects []ObjectEvents) ([]ObjectFamily, []KindGroup) {
 			}
 		}
 		walk(rootMember)
+		fam.Idle = fam.HasWarning && !activeWarning
 
 		for k := range kindSet {
 			fam.Kinds = append(fam.Kinds, k)
@@ -438,6 +444,9 @@ func groupByObject(events []EventSummary) []ObjectEvents {
 		if e.Type == "Warning" {
 			obj.WarningCount++
 			obj.HasWarning = true
+			if e.LastTime.After(obj.LastWarning) {
+				obj.LastWarning = e.LastTime
+			}
 		} else {
 			obj.NormalCount++
 		}
@@ -448,7 +457,9 @@ func groupByObject(events []EventSummary) []ObjectEvents {
 
 	out := make([]ObjectEvents, 0, len(order))
 	for _, k := range order {
-		out = append(out, *index[k])
+		o := *index[k]
+		o.Idle = o.HasWarning && time.Since(o.LastWarning) >= idleAfter
+		out = append(out, o)
 	}
 
 	// Warnings-first, then most recent activity
@@ -473,38 +484,35 @@ type nsEntry struct {
 	sync.RWMutex
 	events    []EventSummary
 	updatedAt time.Time
+	truncated bool // the namespace has more events than fetchEvents loads
 }
 
-var (
-	client        *kubernetes.Clientset
-	dynamicClient dynamic.Interface
-	cfg           Config
+// cfg holds the command-line flags. Everything that belongs to a cluster
+// (clients, caches, the worker) lives in clusterState, see cluster.go.
+var cfg Config
 
-	// nsCache is the per-namespace event store. Never re-fetched all at once.
-	nsCache sync.Map // map[string]*nsEntry
-
-	// dashboard is the assembled view served to the browser — rebuilt after
-	// each individual namespace refresh.
-	dashboard struct {
-		sync.RWMutex
-		data *DashboardData
-	}
-
-	// workerState tracks how many namespaces are known vs. already cached,
-	// so the browser can show accurate loading progress.
-	workerState struct {
-		sync.RWMutex
-		total int
-		ready bool // true once every known namespace has been fetched at least once
-	}
-)
+// version is set at release time: go build -ldflags "-X main.version=v0.2.0".
+var version = "dev"
 
 func main() {
 	var namespaceList string
+	var showVersion bool
 	flag.StringVar(&namespaceList, "namespaces", "", "Comma-separated list of namespaces (empty = all)")
 	flag.StringVar(&cfg.Port, "port", "8080", "HTTP server port")
 	flag.StringVar(&cfg.Kubeconfig, "kubeconfig", defaultKubeconfig(), "Path to kubeconfig")
+	flag.BoolVar(&showVersion, "version", false, "Print the version and exit")
 	flag.Parse()
+	if showVersion {
+		fmt.Println("kubehealth", version)
+		return
+	}
+
+	// Embedded build only: extract the bundled llama-server + model and start
+	// it locally. Does nothing in the normal (non-embed) build, and is skipped
+	// even in embedded builds when the user explicitly sets LMSTUDIO_URL.
+	if _, err := startEmbeddedLLM(); err != nil {
+		log.Fatalf("Embedded LLM failed to start: %v", err)
+	}
 
 	initAI()
 	initSystemPrompt()
@@ -519,39 +527,31 @@ func main() {
 	}
 	cfg.AllNS = len(cfg.Namespaces) == 0
 
-	restConfig, err := clientcmd.BuildConfigFromFlags("", cfg.Kubeconfig)
-	if err != nil {
-		log.Fatalf("Failed to build kubeconfig: %v", err)
+	// Start watching the kubeconfig's current context. Its worker refreshes one
+	// namespace at a time; its owner resolver confirms workload owners.
+	loadPrefs()
+	if err := initClusters(); err != nil {
+		log.Fatalf("Failed to start: %v", err)
 	}
-	// Conservative rate limit — the worker fetches one namespace at a time anyway,
-	// but this caps any incidental bursts (e.g. YAML drill-down requests).
-	restConfig.QPS = 5
-	restConfig.Burst = 10
-
-	client, err = kubernetes.NewForConfig(restConfig)
-	if err != nil {
-		log.Fatalf("Failed to create k8s client: %v", err)
-	}
-
-	dynamicClient, err = dynamic.NewForConfig(restConfig)
-	if err != nil {
-		log.Fatalf("Failed to create dynamic client: %v", err)
-	}
-
-	// Start the single background worker that refreshes one namespace at a time.
-	go runWorker()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", handleDashboard)
 	mux.HandleFunc("/namespace/", handleNamespace)
 	mux.HandleFunc("/object/", handleObject)
 	mux.HandleFunc("/api/events", handleAPIEvents)
+	mux.HandleFunc("/api/home", handleAPIHome)
+	mux.HandleFunc("/api/snapshot/", handleAPISnapshot)
+	mux.HandleFunc("/fragment/namespace/", handleNamespaceFragment)
+	mux.HandleFunc("/api/contexts", handleAPIContexts)
+	mux.HandleFunc("/api/context", handleAPIContext)
+	mux.HandleFunc("/api/context/env", handleAPIContextEnv)
 	mux.HandleFunc("/api/object/", handleAPIObject)
 	mux.HandleFunc("/api/status", handleAPIStatus)
 	mux.HandleFunc("/api/refresh", handleRefresh)
 	mux.HandleFunc("/api/ai/insights/", handleAPIAIInsights)
 	mux.HandleFunc("/api/ai/analyze/", handleAPIAIAnalyze)
 	mux.HandleFunc("/api/ai/config", handleAPIAIConfig)
+	mux.HandleFunc("/api/ai/brief", handleAPIBrief)
 	mux.HandleFunc("/api/settings", handleAPISettings)
 	mux.HandleFunc("/api/logs/", handleAPILogs)
 	mux.HandleFunc("/api/correlate/", handleAPICorrelate)
@@ -562,7 +562,7 @@ func main() {
 	if !cfg.AllNS {
 		nsInfo = strings.Join(cfg.Namespaces, ", ")
 	}
-	log.Printf("KubeHealth starting on :%s — watching %s", cfg.Port, nsInfo)
+	log.Printf("KubeHealth %s starting on :%s — watching %s", version, cfg.Port, nsInfo)
 	log.Fatal(http.ListenAndServe(":"+cfg.Port, mux))
 }
 
@@ -577,11 +577,11 @@ func defaultKubeconfig() string {
 }
 
 // resolveNamespaces returns the current namespace list from the API or config.
-func resolveNamespaces() ([]string, error) {
+func (c *clusterState) resolveNamespaces(ctx context.Context) ([]string, error) {
 	if !cfg.AllNS {
 		return cfg.Namespaces, nil
 	}
-	nsList, err := client.CoreV1().Namespaces().List(context.Background(), metav1.ListOptions{})
+	nsList, err := c.client.CoreV1().Namespaces().List(ctx, metav1.ListOptions{})
 	if err != nil {
 		return nil, fmt.Errorf("list namespaces: %w", err)
 	}
@@ -594,36 +594,35 @@ func resolveNamespaces() ([]string, error) {
 }
 
 // refreshNamespace fetches events for one namespace and stores them in nsCache.
-func refreshNamespace(ns string) {
-	events, err := fetchEvents(ns)
+func (c *clusterState) refreshNamespace(ctx context.Context, ns string) {
+	events, truncated, err := c.fetchEvents(ctx, ns)
 	if err != nil {
-		log.Printf("Error fetching events for %s: %v", ns, err)
+		if ctx.Err() == nil {
+			log.Printf("Error fetching events for %s/%s: %v", c.name, ns, err)
+		}
 		return
 	}
-	v, _ := nsCache.LoadOrStore(ns, &nsEntry{})
+	v, _ := c.nsCache.LoadOrStore(ns, &nsEntry{})
 	entry := v.(*nsEntry)
 	entry.Lock()
 	entry.events = events
 	entry.updatedAt = time.Now()
+	entry.truncated = truncated
 	entry.Unlock()
-	assembleDashboard()
+	c.assembleDashboard()
 }
 
-// assembleDashboard rebuilds the global dashboard from all cached ns entries.
-func assembleDashboard() {
+// assembleDashboard rebuilds the cluster's dashboard data from its caches.
+func (c *clusterState) assembleDashboard() {
 	var (
 		results []NamespaceEvents
 		totalW  int
 		totalN  int
 	)
-	nsCache.Range(func(key, val any) bool {
-		entry := val.(*nsEntry)
-		entry.RLock()
-		events := entry.events
-		entry.RUnlock()
+	for ns, events := range c.allNamespaceEvents() {
 		objects := groupByObject(events)
 		ne := NamespaceEvents{
-			Namespace:  key.(string),
+			Namespace:  ns,
 			Events:     events,
 			Objects:    objects,
 			KindGroups: groupByKind(objects),
@@ -638,8 +637,7 @@ func assembleDashboard() {
 		results = append(results, ne)
 		totalW += ne.WarningCount
 		totalN += ne.NormalCount
-		return true
-	})
+	}
 	sort.Slice(results, func(i, j int) bool {
 		if results[i].WarningCount != results[j].WarningCount {
 			return results[i].WarningCount > results[j].WarningCount
@@ -652,95 +650,146 @@ func assembleDashboard() {
 		TotalWarn:   totalW,
 		TotalNormal: totalN,
 	}
-	dashboard.Lock()
-	dashboard.data = data
-	dashboard.Unlock()
+	c.dashboard.Lock()
+	c.dashboard.data = data
+	c.dashboard.Unlock()
 }
 
 // runWorker cycles through namespaces one at a time, refreshing the stalest
-// entry every 2 seconds. This is the only place that calls the events API,
-// so the kube-apiserver never sees a burst regardless of namespace count.
-func runWorker() {
+// entry every 2 seconds. Every warnFeedInterval one tick goes to the
+// cluster-wide warning list instead. This is the only place that calls the
+// events API, so the kube-apiserver sees at most one list call per tick.
+func (c *clusterState) runWorker(ctx context.Context) {
 	// Re-resolve the namespace list every 5 minutes to pick up new namespaces.
 	var (
 		namespaces  []string
 		nextNSFetch time.Time
 	)
-	// Run immediately on startup, then tick every 2s.
+	// Run immediately, then tick every 2s until the cluster stops being active.
 	ticker := time.NewTicker(2 * time.Second)
-	for ; ; <-ticker.C {
+	defer ticker.Stop()
+	for {
+		if ctx.Err() != nil {
+			return
+		}
 		if time.Now().After(nextNSFetch) {
-			ns, err := resolveNamespaces()
+			ns, err := c.resolveNamespaces(ctx)
 			if err != nil {
-				log.Printf("Worker: could not list namespaces: %v", err)
+				if ctx.Err() != nil {
+					return
+				}
+				log.Printf("Worker [%s]: could not list namespaces: %v", c.name, err)
+				c.worker.Lock()
+				c.worker.lastErr = err.Error()
+				c.worker.Unlock()
 			} else {
 				namespaces = ns
 				nextNSFetch = time.Now().Add(5 * time.Minute)
-				workerState.Lock()
-				workerState.total = len(namespaces)
-				workerState.Unlock()
+				c.worker.Lock()
+				c.worker.total = len(namespaces)
+				c.worker.namespaces = namespaces
+				c.worker.lastErr = ""
+				c.worker.Unlock()
 			}
 		}
-		if len(namespaces) == 0 {
-			continue
+		c.workerTick(ctx, namespaces)
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
 		}
-		// Pick the namespace whose cache is oldest (or missing).
-		var stalest string
-		var stalestTime time.Time
-		for _, ns := range namespaces {
-			v, ok := nsCache.Load(ns)
-			if !ok {
-				stalest = ns
-				break
-			}
-			t := v.(*nsEntry).updatedAt
-			if stalest == "" || t.Before(stalestTime) {
-				stalest = ns
-				stalestTime = t
-			}
-		}
-		if stalest != "" {
-			refreshNamespace(stalest)
-		}
-		// Update ready flag: all namespaces have at least one cache entry.
-		loaded := 0
-		nsCache.Range(func(_, _ any) bool { loaded++; return true })
-		workerState.Lock()
-		workerState.ready = loaded >= len(namespaces) && len(namespaces) > 0
-		workerState.Unlock()
 	}
 }
 
-func fetchEvents(namespace string) ([]EventSummary, error) {
-	// Field selector: only last 1h events to reduce load
-	eventList, err := client.CoreV1().Events(namespace).List(context.Background(), metav1.ListOptions{
-		Limit: 200,
+// workerTick makes this tick's single list call: the warning feed when it
+// is due, otherwise the stalest namespace.
+func (c *clusterState) workerTick(ctx context.Context, namespaces []string) {
+	if c.warnFeedDue() {
+		c.refreshWarnings(ctx)
+		return
+	}
+	if len(namespaces) == 0 {
+		return
+	}
+	// Pick the namespace whose cache is oldest (or missing).
+	var stalest string
+	var stalestTime time.Time
+	for _, ns := range namespaces {
+		v, ok := c.nsCache.Load(ns)
+		if !ok {
+			stalest = ns
+			break
+		}
+		// Locked read: after a quick switch away and back, the previous
+		// worker may still be finishing its last refresh.
+		entry := v.(*nsEntry)
+		entry.RLock()
+		t := entry.updatedAt
+		entry.RUnlock()
+		if stalest == "" || t.Before(stalestTime) {
+			stalest = ns
+			stalestTime = t
+		}
+	}
+	if stalest != "" {
+		c.refreshNamespace(ctx, stalest)
+	}
+	// Update ready flag: all namespaces have at least one cache entry.
+	loaded := 0
+	c.nsCache.Range(func(_, _ any) bool { loaded++; return true })
+	c.worker.Lock()
+	c.worker.ready = loaded >= len(namespaces) && len(namespaces) > 0
+	c.worker.Unlock()
+}
+
+// fetchEvents lists up to nsEventLimit events in one namespace. truncated is
+// true when the namespace has more; the API returns them in name order, so
+// the missing ones are not necessarily the oldest. Warnings are covered by
+// the cluster-wide feed regardless.
+func (c *clusterState) fetchEvents(ctx context.Context, namespace string) (summaries []EventSummary, truncated bool, err error) {
+	eventList, err := c.client.CoreV1().Events(namespace).List(ctx, metav1.ListOptions{
+		Limit: nsEventLimit,
 	})
 	if err != nil {
-		return nil, err
+		return nil, false, err
 	}
 
-	// Sort by last timestamp desc
-	events := eventList.Items
-	sort.Slice(events, func(i, j int) bool {
-		ti := events[i].LastTimestamp.Time
-		tj := events[j].LastTimestamp.Time
-		return ti.After(tj)
-	})
-
-	var summaries []EventSummary
-	for _, e := range events {
+	for _, e := range eventList.Items {
 		summaries = append(summaries, toSummary(e))
 	}
-	return summaries, nil
+	// Sort by last timestamp desc
+	sort.Slice(summaries, func(i, j int) bool {
+		return summaries[i].LastTime.After(summaries[j].LastTime)
+	})
+	return summaries, eventList.Continue != "", nil
 }
+
+// nsEventLimit caps the per-namespace list call made by the sweep.
+const nsEventLimit = 200
 
 func toSummary(e corev1.Event) EventSummary {
 	last := e.LastTimestamp.Time
+	if e.Series != nil && e.Series.LastObservedTime.After(last) {
+		last = e.Series.LastObservedTime.Time
+	}
 	if last.IsZero() {
 		last = e.EventTime.Time
 	}
 	first := e.FirstTimestamp.Time
+	if first.IsZero() {
+		first = e.EventTime.Time
+	}
+	if first.IsZero() {
+		first = last
+	}
+	// Events written through the events.k8s.io API keep their count in Series.
+	count := e.Count
+	if count == 0 && e.Series != nil {
+		count = e.Series.Count
+	}
+	if count == 0 {
+		count = 1
+	}
 
 	age := "unknown"
 	if !last.IsZero() {
@@ -754,12 +803,14 @@ func toSummary(e corev1.Event) EventSummary {
 		Reason:     e.Reason,
 		Message:    e.Message,
 		Type:       e.Type,
-		Count:      e.Count,
+		Count:      count,
 		Kind:       e.InvolvedObject.Kind,
 		ObjectName: e.InvolvedObject.Name,
-		FirstTime:  first,
-		LastTime:   last,
-		Age:        age,
+
+		ObjectNamespace: e.InvolvedObject.Namespace,
+		FirstTime:       first,
+		LastTime:        last,
+		Age:             age,
 	}
 }
 
@@ -779,58 +830,141 @@ func formatDuration(d time.Duration) string {
 
 // ---- HTTP Handlers ----
 
+// appPage is the one page KubeHealth serves: the shared header, the
+// namespace rail, and a main area showing the overview or a namespace. After
+// the first load the page swaps namespaces in itself (/fragment/namespace/).
+type appPage struct {
+	Home      HomePayload
+	Header    headerData
+	View      string      // "overview" or "namespace"
+	CurrentNS string      // the open namespace, "" on the overview
+	NS        *nsPageData // nil on the overview
+}
+
+// nsPageData feeds the namespace fragment: its objects, panels and status.
+type nsPageData struct {
+	NamespaceEvents
+	Cluster  clusterInfo
+	Title    string         // the namespace, or "Cluster-wide objects"
+	Warnings []EventSummary // newest warnings, for the status panel
+	LoadedAt string         // when this view's events were read
+}
+
+const statusWarnings = 8
+
 func handleDashboard(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-	dashboard.RLock()
-	data := dashboard.data
-	dashboard.RUnlock()
-	if data == nil {
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		w.WriteHeader(http.StatusServiceUnavailable)
-		loadingTmpl.Execute(w, nil)
-		return
-	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := dashboardTmpl.Execute(w, data); err != nil {
-		log.Printf("template error: %v", err)
-	}
+	// Rendered straight away, even before the first fetch: the page shows its
+	// own connecting state, with the header and cluster switcher available.
+	c := pageCluster(r)
+	home := c.buildHome(time.Now())
+	renderApp(w, appPage{Home: home, Header: headerData{Cluster: home.Cluster}, View: "overview"})
 }
 
 func handleNamespace(w http.ResponseWriter, r *http.Request) {
-	ns := strings.TrimPrefix(r.URL.Path, "/namespace/")
-	ns = strings.Trim(ns, "/")
+	ns := strings.Trim(strings.TrimPrefix(r.URL.Path, "/namespace/"), "/")
 	if ns == "" {
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
+	c := pageCluster(r)
+	home := c.buildHome(time.Now())
+	data := c.namespacePage(ns)
+	renderApp(w, appPage{
+		Home:      home,
+		Header:    namespaceHeader(home, ns, data.Title),
+		View:      "namespace",
+		CurrentNS: ns,
+		NS:        &data,
+	})
+}
 
-	// Serve from cache — no live API call.
-	var events []EventSummary
-	if v, ok := nsCache.Load(ns); ok {
-		entry := v.(*nsEntry)
-		entry.RLock()
-		events = entry.events
-		entry.RUnlock()
+// handleNamespaceFragment serves the namespace view alone, for the page to
+// swap in: GET /fragment/namespace/<ns>.
+func handleNamespaceFragment(w http.ResponseWriter, r *http.Request) {
+	ns := strings.Trim(strings.TrimPrefix(r.URL.Path, "/fragment/namespace/"), "/")
+	if ns == "" {
+		http.Error(w, "expected /fragment/namespace/<namespace>", http.StatusBadRequest)
+		return
 	}
-
-	objects := groupByObject(events)
-	families, orphans := buildFamilies(objects)
-	data := NamespaceEvents{
-		Namespace:   ns,
-		Events:      events,
-		Objects:     objects,
-		KindGroups:  groupByKind(objects),
-		Families:    families,
-		OrphanKinds: orphans,
+	c := apiCluster(w, r)
+	if c == nil {
+		return
 	}
-
+	data := c.namespacePage(ns)
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	if err := namespaceTmpl.Execute(w, data); err != nil {
+	w.Header().Set("Cache-Control", "no-store")
+	if err := appTmpl.ExecuteTemplate(w, "ns_fragment", data); err != nil {
 		log.Printf("template error: %v", err)
 	}
+}
+
+func renderApp(w http.ResponseWriter, page appPage) {
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	if err := appTmpl.Execute(w, page); err != nil {
+		log.Printf("template error: %v", err)
+	}
+}
+
+// namespacePage reads a namespace's cached events into its objects, ownership
+// chains and recent warnings. No API call: the live snapshot comes separately.
+func (c *clusterState) namespacePage(ns string) nsPageData {
+	events := c.scopeEvents(ns)
+	objects := groupByObject(events)
+	families, orphans := buildFamilies(objects)
+	d := nsPageData{
+		NamespaceEvents: NamespaceEvents{
+			Namespace:   ns,
+			Events:      events,
+			Objects:     objects,
+			KindGroups:  groupByKind(objects),
+			Families:    families,
+			OrphanKinds: orphans,
+		},
+		Cluster:  c.identity(),
+		Title:    ns,
+		LoadedAt: time.Now().Format("15:04:05"),
+	}
+	if ns == clusterScopeNS {
+		d.Title = "Cluster-wide objects"
+	}
+	for _, e := range events {
+		if e.Type == "Warning" && len(d.Warnings) < statusWarnings {
+			d.Warnings = append(d.Warnings, e)
+		}
+	}
+	return d
+}
+
+// namespaceHeader is the breadcrumb for a namespace: its name and how many
+// problems the home page counts in it (one per failing workload).
+func namespaceHeader(home HomePayload, ns, title string) headerData {
+	failing, cascade := 0, false
+	for _, p := range home.Problems {
+		mine := p.Scope == "cluster" && ns == clusterScopeNS
+		for _, pns := range p.Namespaces {
+			mine = mine || (pns == ns && ns != clusterScopeNS)
+		}
+		if mine {
+			failing++
+			cascade = cascade || p.Cascade
+		}
+	}
+	hdr := headerData{Cluster: home.Cluster, Crumb: title, CrumbTag: "No warnings", CrumbTagClass: "ok"}
+	if failing > 0 {
+		word := "problems"
+		if failing == 1 {
+			word = "problem"
+		}
+		hdr.CrumbTag, hdr.CrumbTagClass = fmt.Sprintf("● %d %s", failing, word), "warn"
+		if cascade {
+			hdr.CrumbTag, hdr.CrumbTagClass = fmt.Sprintf("▲ %d %s", failing, word), "cascade"
+		}
+	}
+	return hdr
 }
 
 func handleObject(w http.ResponseWriter, r *http.Request) {
@@ -842,9 +976,10 @@ func handleObject(w http.ResponseWriter, r *http.Request) {
 	}
 	ns, kind, name := parts[0], parts[1], parts[2]
 
-	yamlStr, err := fetchObjectYAML(ns, kind, name)
+	c := pageCluster(r)
+	yamlStr, err := c.fetchObjectYAML(ns, kind, name)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Error fetching object: %v", err), http.StatusInternalServerError)
+		http.Error(w, fmt.Sprintf("Error fetching object from %s: %v", c.name, err), http.StatusInternalServerError)
 		return
 	}
 
@@ -853,7 +988,8 @@ func handleObject(w http.ResponseWriter, r *http.Request) {
 		Kind      string
 		Name      string
 		YAML      string
-	}{ns, kind, name, yamlStr}
+		Cluster   clusterInfo
+	}{ns, kind, name, yamlStr, c.identity()}
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	if err := objectTmpl.Execute(w, data); err != nil {
@@ -861,21 +997,22 @@ func handleObject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func fetchObjectYAML(namespace, kind, name string) (string, error) {
-	gvr, err := kindToGVR(kind)
+func (c *clusterState) fetchObjectYAML(namespace, kind, name string) (string, error) {
+	namespace = apiNamespace(namespace)
+	gvr, err := c.kindToGVR(kind)
 	if err != nil {
 		return "", err
 	}
 
 	var obj interface{}
 	if namespace == "" || namespace == "_" {
-		o, err := dynamicClient.Resource(gvr).Get(context.Background(), name, metav1.GetOptions{})
+		o, err := c.dynamic.Resource(gvr).Get(context.Background(), name, metav1.GetOptions{})
 		if err != nil {
 			return "", err
 		}
 		obj = o.Object
 	} else {
-		o, err := dynamicClient.Resource(gvr).Namespace(namespace).Get(context.Background(), name, metav1.GetOptions{})
+		o, err := c.dynamic.Resource(gvr).Namespace(namespace).Get(context.Background(), name, metav1.GetOptions{})
 		if err != nil {
 			return "", err
 		}
@@ -918,38 +1055,33 @@ var staticGVR = map[string]schema.GroupVersionResource{
 	"nodes":                 {Group: "", Version: "v1", Resource: "nodes"},
 }
 
-// gvrCache holds dynamically discovered GVRs for CRDs and other non-built-in kinds.
-var (
-	gvrCache   sync.Map // map[string]schema.GroupVersionResource
-	gvrDiscoMu sync.Mutex
-)
-
 // kindToGVR resolves a Kubernetes kind to its GroupVersionResource.
 // It first checks the static built-in map, then falls back to live API discovery
 // so that CRDs (e.g. Elasticsearch, Certificate, VirtualService) work automatically.
-func kindToGVR(kind string) (schema.GroupVersionResource, error) {
+// Discovered GVRs are cached per cluster, since CRDs differ between clusters.
+func (c *clusterState) kindToGVR(kind string) (schema.GroupVersionResource, error) {
 	lower := strings.ToLower(kind)
 	if gvr, ok := staticGVR[lower]; ok {
 		return gvr, nil
 	}
-	if v, ok := gvrCache.Load(lower); ok {
+	if v, ok := c.gvrCache.Load(lower); ok {
 		return v.(schema.GroupVersionResource), nil
 	}
-	return discoverGVR(lower)
+	return c.discoverGVR(lower)
 }
 
 // discoverGVR queries the API server's discovery endpoint to find the GVR for
 // any kind not in the static map, then caches all results for future lookups.
-func discoverGVR(kindLower string) (schema.GroupVersionResource, error) {
-	gvrDiscoMu.Lock()
-	defer gvrDiscoMu.Unlock()
+func (c *clusterState) discoverGVR(kindLower string) (schema.GroupVersionResource, error) {
+	c.gvrDiscoMu.Lock()
+	defer c.gvrDiscoMu.Unlock()
 
 	// Re-check after acquiring the lock — another goroutine may have just populated it.
-	if v, ok := gvrCache.Load(kindLower); ok {
+	if v, ok := c.gvrCache.Load(kindLower); ok {
 		return v.(schema.GroupVersionResource), nil
 	}
 
-	_, lists, err := client.Discovery().ServerGroupsAndResources()
+	_, lists, err := c.client.Discovery().ServerGroupsAndResources()
 	if err != nil && lists == nil {
 		return schema.GroupVersionResource{}, fmt.Errorf("API discovery: %w", err)
 	}
@@ -969,7 +1101,7 @@ func discoverGVR(kindLower string) (schema.GroupVersionResource, error) {
 			}
 			key := strings.ToLower(r.Kind)
 			gvr := schema.GroupVersionResource{Group: gv.Group, Version: gv.Version, Resource: r.Name}
-			gvrCache.Store(key, gvr)
+			c.gvrCache.Store(key, gvr)
 			if key == kindLower {
 				found = gvr
 				foundOK = true
@@ -1063,9 +1195,10 @@ func extractConditions(status map[string]interface{}) []InfoCondition {
 	return out
 }
 
-func fetchObjectInfo(namespace, kind, name string) ObjectInfo {
+func (c *clusterState) fetchObjectInfo(namespace, kind, name string) ObjectInfo {
 	info := ObjectInfo{Kind: kind, Name: name, Namespace: namespace}
-	gvr, err := kindToGVR(kind)
+	namespace = apiNamespace(namespace)
+	gvr, err := c.kindToGVR(kind)
 	if err != nil {
 		info.Error = err.Error()
 		return info
@@ -1073,7 +1206,7 @@ func fetchObjectInfo(namespace, kind, name string) ObjectInfo {
 	ctx := context.Background()
 	var raw map[string]interface{}
 	if namespace == "" {
-		o, err := dynamicClient.Resource(gvr).Get(ctx, name, metav1.GetOptions{})
+		o, err := c.dynamic.Resource(gvr).Get(ctx, name, metav1.GetOptions{})
 		if k8serrors.IsNotFound(err) {
 			info.NotFound = true
 			return info
@@ -1084,7 +1217,7 @@ func fetchObjectInfo(namespace, kind, name string) ObjectInfo {
 		}
 		raw = o.Object
 	} else {
-		o, err := dynamicClient.Resource(gvr).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
+		o, err := c.dynamic.Resource(gvr).Namespace(namespace).Get(ctx, name, metav1.GetOptions{})
 		if k8serrors.IsNotFound(err) {
 			info.NotFound = true
 			return info
@@ -1286,32 +1419,23 @@ func handleAPIObject(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ns, kind, name := parts[0], parts[1], parts[2]
-	info := fetchObjectInfo(ns, kind, name)
+	c := apiCluster(w, r)
+	if c == nil {
+		return
+	}
+	info := c.fetchObjectInfo(ns, kind, name)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(info)
 }
 
-func handleAPIStatus(w http.ResponseWriter, r *http.Request) {
-	workerState.RLock()
-	total := workerState.total
-	ready := workerState.ready
-	workerState.RUnlock()
-
-	loaded := 0
-	nsCache.Range(func(_, _ any) bool { loaded++; return true })
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]any{
-		"loaded": loaded,
-		"total":  total,
-		"ready":  ready,
-	})
-}
-
 func handleAPIEvents(w http.ResponseWriter, r *http.Request) {
-	dashboard.RLock()
-	data := dashboard.data
-	dashboard.RUnlock()
+	c := apiCluster(w, r)
+	if c == nil {
+		return
+	}
+	c.dashboard.RLock()
+	data := c.dashboard.data
+	c.dashboard.RUnlock()
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(data)
 }
@@ -1324,6 +1448,14 @@ func handleRefresh(w http.ResponseWriter, r *http.Request) {
 
 // ---- Templates ----
 
+// headerData feeds the shared page header (templates/header.html).
+type headerData struct {
+	Cluster       clusterInfo
+	Crumb         string // namespace shown after the cluster, if any
+	CrumbTag      string // e.g. "▲ 1 failing"
+	CrumbTagClass string // cascade, warn or ok
+}
+
 var tmplFuncs = template.FuncMap{
 	"lower": strings.ToLower,
 	// firstAge returns the Age of the first (most recent) event in a slice.
@@ -1335,6 +1467,33 @@ var tmplFuncs = template.FuncMap{
 	},
 	// joinStrings joins a string slice with a separator.
 	"joinStrings": strings.Join,
+	// clock shows a time of day, with the date when it isn't today.
+	"clock": func(t time.Time) string {
+		if t.IsZero() {
+			return ""
+		}
+		t, now := t.Local(), time.Now()
+		if t.YearDay() == now.YearDay() && t.Year() == now.Year() {
+			return t.Format("15:04")
+		}
+		return t.Format("2 Jan 15:04")
+	},
+	// envLabel is the tag shown for a cluster's environment.
+	"envLabel": func(env string) string {
+		switch env {
+		case "prod":
+			return "PROD"
+		case "nonprod":
+			return "NON-PROD"
+		case "stage":
+			return "STAGE"
+		case "dev":
+			return "DEV"
+		case "local":
+			return "LOCAL"
+		}
+		return "?"
+	},
 }
 
 func mustParseTemplate(name, file string, extras ...string) *template.Template {
@@ -1345,8 +1504,6 @@ func mustParseTemplate(name, file string, extras ...string) *template.Template {
 }
 
 var (
-	dashboardTmpl = mustParseTemplate("dashboard.html", "templates/dashboard.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
-	namespaceTmpl = mustParseTemplate("namespace.html", "templates/namespace.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
-	objectTmpl    = mustParseTemplate("object.html", "templates/object.html")
-	loadingTmpl   = mustParseTemplate("loading.html", "templates/loading.html")
+	appTmpl    = mustParseTemplate("app.html", "templates/app.html", "templates/ns_view.html", "templates/header.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
+	objectTmpl = mustParseTemplate("object.html", "templates/object.html")
 )

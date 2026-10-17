@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
+	"time"
 )
 
 // ── Log tail lines ────────────────────────────────────────────────────────────
@@ -107,10 +108,55 @@ func releaseLLMSlot() {
 	llmActiveCallsMu.Unlock()
 }
 
+// acquireLLMSlotForUser reserves a slot for an AI analysis or RCA you
+// started. When all slots are taken and one of them is the brief's, the brief
+// is stopped and its slot handed over.
+func acquireLLMSlotForUser() bool {
+	if acquireLLMSlot() {
+		return true
+	}
+	if !preemptBrief() {
+		return false
+	}
+	for deadline := time.Now().Add(3 * time.Second); time.Now().Before(deadline); time.Sleep(50 * time.Millisecond) {
+		if acquireLLMSlot() {
+			return true
+		}
+	}
+	return false
+}
+
 func getLLMActiveCalls() int {
 	llmActiveCallsMu.Lock()
 	defer llmActiveCallsMu.Unlock()
 	return llmActiveCalls
+}
+
+// ── Embedded llama-server context size ────────────────────────────────────────
+// Only meaningful in embedded builds. Stored regardless so the setting persists
+// across `kubehealth` ↔ `kubehealth-embed` swaps.
+
+var (
+	embCtxSizeMu  sync.RWMutex
+	embCtxSizeVal = 8192
+)
+
+func getEmbeddedCtxSize() int {
+	embCtxSizeMu.RLock()
+	defer embCtxSizeMu.RUnlock()
+	return embCtxSizeVal
+}
+
+func setEmbeddedCtxSize(n int) {
+	if n < 512 {
+		n = 512
+	}
+	if n > 131072 {
+		n = 131072
+	}
+	embCtxSizeMu.Lock()
+	embCtxSizeVal = n
+	embCtxSizeMu.Unlock()
 }
 
 // ── LLM request timeout ───────────────────────────────────────────────────────

@@ -22,8 +22,9 @@
 <body>
 <header>
   <div class="breadcrumb">
-    <a href="/">KubeHealth</a> /
-    <a href="/namespace/{{.Namespace}}">{{.Namespace}}</a> /
+    <a href="/?ctx={{.Cluster.Context}}">KubeHealth</a> /
+    <span title="API server: {{.Cluster.Server}}">⎈ {{.Cluster.Context}}</span> /
+    <a href="/namespace/{{.Namespace}}?ctx={{.Cluster.Context}}">{{.Namespace}}</a> /
     <span>{{.Kind}}/{{.Name}}</span>
   </div>
 </header>

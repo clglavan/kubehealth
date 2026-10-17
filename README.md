@@ -2,19 +2,53 @@
 
 A Kubernetes event dashboard with AI-powered Root Cause Analysis. Fetches events from your cluster, visualises ownership chains, correlates cross-namespace events by timestamp, and lets you analyse any object with a local LLM running in LM Studio — all from a clean dark-themed web UI.
 
+[![A walkthrough: the overview, a namespace's status, an object's logs, a root cause analysis, switching to a production cluster](docs/demo.gif)](docs/demo.mp4)
+
+[Walkthrough in full quality (MP4, 2 min)](docs/demo.mp4) · [Try it on local kind clusters](demo/README.md) · [Download a release](https://github.com/clglavan/kubehealth/releases)
+
+The screenshots and the video come from the [demo clusters](demo/README.md): two local kind clusters with a handful of realistic failures. The AI text in them is real output from the bundled 0.6B model.
+
+## Screenshots
+
+![The overview: a brief, the AI note on the most urgent problem, and problems ranked by how new they are](docs/images/01-overview.png)
+
+**The overview.** One row per broken workload, ranked into new, ongoing and chronic. The brief says where to start; the bundled model adds a note on the top problem.
+
+| | |
+|---|---|
+| ![Namespace status: live counts, what needs attention, its problems](docs/images/02-namespace-status.png) | ![An object's ownership chain and event timeline](docs/images/03-object.png) |
+| **Namespace status.** Live counts of workloads, pods and volume claims, what needs attention, and the namespace's problems. | **An object.** Its ownership chain, every event, and actions: logs, correlate, RCA, AI, YAML. |
+| ![Pod logs inline](docs/images/04-logs.png) | ![Root cause analysis](docs/images/05-rca.png) |
+| **Logs inline**, with the previous run's logs for a crash-looping container. | **Root cause analysis.** The model reads the evidence and calls tools for more. |
+| ![Cluster switcher](docs/images/07-switcher.png) | ![A production cluster](docs/images/08-prod.png) |
+| **Every kubeconfig context**, grouped by environment, switched in place. | **Production** gets a red stripe and a PROD tag. |
+| ![Cluster-wide objects](docs/images/06-cluster-wide.png) | ![Docs: how a feature works](docs/images/09-docs.png) |
+| **Cluster-wide objects**: Nodes and PersistentVolumes. | **Docs**: every feature traced through the system. |
+
 ## Features
 
 ### Cluster visibility
-- **Namespace grid dashboard** — cards per namespace showing warning/normal counts and top objects, with per-namespace AI analysis
+- **Three panes** — the namespace rail on the left is always there. Its first item, **Overview**, shows the brief and the ranked problems. Pick a namespace and the middle pane lists its objects while the right pane shows the namespace's status; pick an object and the right pane shows that object. Moving between namespaces and objects swaps the panes in place without reloading the page, and the URL follows along (`/namespace/<ns>?focus=Kind/name`), so links, Back and Forward work. Below 1100 px wide the rail folds behind a button; below 760 px the panes stack.
+- **Triage overview** — one row per failing workload rather than per event, ranked into **New** (first seen < 2 h ago), **Ongoing** (2–24 h) and **Chronic** (> 24 h). Rows show occurrences (the sum of each event's `count`), when the problem started and when it last fired. A row turns idle after 15 min without a new occurrence. The page updates in place every 3 s.
+- **Namespace status** — the first entry in a namespace's object list. It shows a live snapshot (Deployments, StatefulSets and DaemonSets ready, CronJobs with failing or suspended ones, Jobs, Pods by phase and restarts, volume claims) and lists what needs attention: workloads not fully ready, CronJobs whose last run failed, pods grouped by why they are unhealthy. Below that are the namespace's problems from the overview, its most recent warnings, and the AI analysis button. The snapshot costs seven list calls when you open the namespace and is cached for 30 s (↻ Refresh fetches it again). The cluster-wide entry shows Nodes ready and PersistentVolumes by phase instead.
+- **Owner grouping** — failing Pods, Jobs and ReplicaSets are grouped under their workload (CronJob, Deployment, DaemonSet, StatefulSet or an operator's CR). Names give a first guess for free, then a background resolver confirms one member per problem through `ownerReferences`, walking up to the top of the chain (at most two GETs per second, only while there is something to confirm; answers cached 30 min). For CronJobs it also reads `status.lastSuccessfulTime`, because each run's events expire after about an hour and would otherwise make a long-failing CronJob look new.
+- **Patterns** — problems in different namespaces are merged into one row when they started within 10 s of each other, share a workload name and reason, or share an infrastructure reason (pull secrets, scheduling, mounts, …) in 3+ namespaces. Problems in different tiers are never merged.
+- **Brief** — a few sentences above the problem list: where to start, what started in the last 2 h, which problems look linked, what is cluster-wide and what is old. They are computed from the problem list, not written by a model, so they are always accurate, appear instantly and work with AI turned off. Every problem they mention is a chip that jumps to its row.
+- **AI note on the top problem** — the model reads the most urgent problem's events plus up to 30 log lines from its newest failing pod (stack frames dropped, error lines kept first, trimmed to a quarter of the loaded context) and suggests what to check first. The note names the model and the evidence it read, links to the full AI analysis, and is rewritten only when the top problem changes (after 30 s, so a flapping ranking doesn't keep the model busy). It never takes a model slot you need: if you start an AI analysis or RCA while it runs, it stops and retries later. Tested on the bundled 0.6B model, asking for a summary of several problems at once produced invented links between them every time, so the model is only ever given one problem and its own evidence.
+- **Cluster-wide scope** — events about cluster-scoped objects (Nodes, PersistentVolumes) get their own row and their own page (`/namespace/_cluster`) instead of counting against `default`, where Kubernetes records them
+- **Namespace rail** — searchable list (press `/`, Enter opens the first match) with active namespaces first, normal-only next, and quiet namespaces folded away. Each namespace shows its problem count and is highlighted while open.
+- **Cluster switching** — the context button in the header lists every kubeconfig context, grouped by environment, and switches the watched cluster in place. Only the active cluster is polled, so API load doesn't grow with the number of clusters. Clusters you switch away from stay in memory: switching back is instant, and tabs still open on them keep working against that cluster (they show a banner saying their data stopped updating). KubeHealth never changes your kubeconfig's current-context.
+- **Cluster identity** — every page shows the context and an environment tag read from its name (`prod`, `nprd`, `stg`, `dev`, `kind-…`; non-production words are checked first, so `nprd` isn't mistaken for `prd`). Production gets a red stripe across the top of every page. Names that don't say show `?`; pick the environment in ⚙ Settings and it's saved in `prefs.json` under your user config directory (`~/Library/Application Support/kubehealth/` on macOS). The header also shows how old the warning data is and the AI model's status.
 - **Ownership chain detection** — links related objects (Deployment → ReplicaSet → Pod, CronJob → Job → Pod, StatefulSet → Pod, DaemonSet → Pod) using naming conventions; zero extra API calls
 - **Cascade failure detection** — flags a chain red when the root and all leaf members have warnings
-- **Sidebar + detail panel** — sticky sidebar with search and warnings-only filter; detail panel shows full event timeline for the selected object
+- **Object list + detail** — the object list has search and a warnings-only filter; the detail pane shows the full event timeline for the selected object. Repeated events show when they started (`×23 · since 11:01`) as well as when they last fired. The list uses the overview's marks: ▲ cascade, ● warning, ○ idle.
+- **Deep links** — overview rows open `/namespace/<ns>?focus=Kind/name`, selecting that object (or, for a CronJob without events of its own, its newest failing Job). The row's RCA button adds `&rca=1&pod=<newest failing pod>` and starts the analysis on arrival; the AI note's link does the same with `&ai=1`.
 - **Object describe** — click any object name to see live spec, status, conditions, and labels; supports built-in types and all CRDs via dynamic API discovery
-- **Rate-limit-safe fetching** — single background worker refreshes one namespace every 2 s, stalest-first; `QPS=5 / Burst=10` cap on the k8s REST client
+- **Rate-limit-safe fetching** — single background worker makes at most one list call every 2 s. Every 10 s that call is one cluster-wide list of Warning events (`fieldSelector=type=Warning`, filtered by the API server); the other ticks refresh the stalest namespace's full event list. `QPS=5 / Burst=10` cap on the k8s REST client. When cluster-wide listing is forbidden, or `-namespaces` is set, warnings come from the namespace sweep alone.
 
 ### Per-object action buttons
 
-Every object in the namespace view shows up to four action buttons:
+Every object in the namespace view shows its counts, then the same buttons in the same order: Logs (Pods only) · Correlate · RCA · ✦ AI · YAML.
 
 | Button | What it does | K8s API? | LLM? |
 |--------|-------------|----------|------|
@@ -30,10 +64,14 @@ Results are collapsible panels (expanded by default, except Correlate which is c
 - **Streaming responses** — regular AI uses `stream: true`; tokens update the UI every 300 ms via server-side cache polling
 - **Streaming cursor** — a blinking `▋` appears while tokens are arriving; the panel style is identical before and after completion (no visual jump)
 - **RCA agent loop** — up to N iterations (configurable); the model can call `get_pod_logs`, `get_object_describe`, `get_object_events`, and `get_correlated_events` as tools
-- **Initial context** always includes events + object describe + pod logs (including previous-run logs for crashed pods)
+- **Initial context** always includes events + object describe + pod logs (including previous-run logs for crashed pods). For a workload (Deployment, StatefulSet, DaemonSet, Job, CronJob), whose own events rarely say what is wrong, it also includes the warnings of the ReplicaSets, Jobs and Pods it owns (at most 12) and the logs of its newest failing Pod.
+- **Container state** — above the logs, one line per container says how often it restarted, how its last run ended and what it is waiting on (`exit code 137, SIGKILL: usually out of memory, memory limit 48Mi`). An OOMKilled container rarely logs anything about it, so without this line the model can't tell. The overview's AI note gets the same line.
+- **Low temperature** — analysis runs at 0.3 and RCA at 0.2 (servers default to about 0.8): both read evidence, and a small model wanders off it at higher temperatures.
+- **Formatting** — results render `**Label**:` sections, bullet and numbered lists, inline code and fenced code blocks
 - **Context overflow detection** — if LM Studio returns a 400 with the "Trying to keep the first N tokens" message, the UI shows a clear "increase your context length" guide instead of hanging
-- **Concurrent call limit** — configurable max simultaneous requests to LM Studio; excess requests are rejected immediately
+- **Concurrent call limit** — configurable max simultaneous requests to LM Studio; excess requests are rejected immediately. The overview's AI note only uses a free slot and hands it over when you start an analysis.
 - **Page-refresh safe** — all analysis goroutines run against `context.Background()` and survive browser navigation
+- **Cluster-safe** — an analysis keeps the cluster it was started on, even if you switch while it runs, and results are cached per cluster, so `default` on one cluster never shows another cluster's analysis
 
 ### Settings (⚙ Settings modal)
 | Setting | Effect |
@@ -44,7 +82,7 @@ Results are collapsible panels (expanded by default, except Correlate which is c
 | RCA Max Iterations | Tool-calling rounds before the agent is forced to conclude |
 
 ### AI Agent (✦ AI Agent modal)
-- Edit the **system prompt** that is injected as the `system` role message on every LLM call
+- Edit the **system prompt** that is injected as the `system` role message on every AI analysis and RCA call. The overview's AI note uses its own stricter prompt (use only the given facts and log lines, don't guess causes), because the analysis prompt asks for root causes and tempts a small model to invent one.
 - Live **context window estimate** — shows system prompt + events + logs + tool definitions as % of `loaded_context_length` (fetched from LM Studio's `/api/v0/models`)
 - **Response format** is hardcoded in the user message (Summary / Issues / Actions) and cannot be broken by the system prompt
 - **Reset to default** restores the initial system prompt
@@ -59,8 +97,9 @@ Interactive system architecture diagram showing all data flows:
 ## Requirements
 
 - Go 1.21+
-- A valid `kubeconfig` (defaults to `~/.kube/config`)
-- Read access to `events` in the target namespaces
+- A valid `kubeconfig` (defaults to `~/.kube/config`). KubeHealth starts on its current-context; switch to any other context from the header.
+- Read access to `events` in the target namespaces (cluster-wide `list events` for the 10 s warning feed when watching all namespaces)
+- `get` on Pods, ReplicaSets, Jobs, CronJobs and other workload kinds, used to confirm owners of failing objects
 - [LM Studio](https://lmstudio.ai) running locally with a model loaded (for AI / RCA features)
 
 ### LM Studio setup
@@ -82,17 +121,45 @@ All AI settings can be overridden at startup:
 | `LMSTUDIO_MODEL` | `qwen/qwen3-4b-2507` | Model identifier |
 | `AI_ENABLED` | `true` | Set to `false` or `0` to disable AI features |
 | `AI_SYSTEM_PROMPT` | *(built-in SRE prompt)* | Default system prompt |
-| `KUBECONFIG` | `~/.kube/config` | Path to kubeconfig |
+| `KUBECONFIG` | `~/.kube/config` | Path to kubeconfig; a colon-separated list of files is merged as kubectl does |
 
 Runtime settings (log lines, timeout, max calls, RCA iterations) are configured in the UI under ⚙ Settings and take effect immediately without restart.
 
 ---
 
-## Build
+## Install
+
+Download a binary from the [releases page](https://github.com/clglavan/kubehealth/releases):
+
+- `kubehealth_<version>_<os>_<arch>`: the regular build, for macOS, Linux and Windows. Uses LM Studio or Ollama for the AI features, or runs without them.
+- `kubehealth-embed_<version>_darwin_arm64`: the embedded build for Apple Silicon, with the magos-k8s-0.6b model and `llama-server` inside (~700 MB). No other setup needed for AI.
 
 ```bash
-go build -o kubehealth .
+tar -xzf kubehealth_<version>_darwin_arm64.tar.gz
+cd kubehealth_<version>_darwin_arm64
+xattr -d com.apple.quarantine kubehealth 2>/dev/null   # macOS: the binaries aren't notarized
+./kubehealth
 ```
+
+Or build from source, below.
+
+## Build
+
+Two flavors. The regular build talks to an external LM Studio / Ollama instance; the embedded build bundles a model and `llama-server` so the binary is self-contained.
+
+```bash
+# Regular (~50 MB) — needs LM Studio or Ollama running locally
+make build         # → ./kubehealth
+
+# Embedded (~700 MB) — bundles magos-k8s-0.6b + llama.cpp server
+make embed         # → ./kubehealth-embed
+```
+
+`make release` cross-compiles the regular build for macOS, Linux and Windows into `dist/`, and `make release-embed` packages the embedded build for the machine you run it on. Both stamp the version from `git describe` (see `kubehealth -version`).
+
+`make embed` is shorthand for `make fetch-assets && make build-embed`. The fetch step pulls the GGUF from [HuggingFace](https://huggingface.co/clglavan/magos-k8s-0.6b) (override with `MODEL_URL=...` for a different quantization, or `MODEL_SRC=/path/to.gguf` to use a local file) and downloads a matching `llama-server` from [llama.cpp releases](https://github.com/ggerganov/llama.cpp/releases). Both go into `embedded/` (gitignored) and get pulled in via `//go:embed`.
+
+The embedded binary extracts its bundled assets to `~/Library/Caches/kubehealth/embedded/` on first run, spawns `llama-server` on a free local port, and points the rest of the app at it. Setting `LMSTUDIO_URL` skips the embedded server and falls back to the regular flow.
 
 ## Usage
 
@@ -114,6 +181,7 @@ go build -o kubehealth .
 | `-port` | `8080` | HTTP listen port |
 | `-kubeconfig` | `~/.kube/config` | Path to kubeconfig |
 | `-namespaces` | *(all)* | Comma-separated namespace list |
+| `-version` | | Print the version and exit |
 
 Open `http://localhost:8080` in your browser.
 
@@ -124,14 +192,28 @@ Open `http://localhost:8080` in your browser.
 ### Data
 | Endpoint | Description |
 |----------|-------------|
+| `GET /api/home` | Overview data: ranked problems, patterns, brief, rail counts, data age, model status |
+| `GET /api/snapshot/{ns}[?refresh=1]` | Live namespace snapshot (`_cluster` for Nodes and PVs), cached 30 s |
+| `GET /fragment/namespace/{ns}` | The namespace's object list and detail panes as HTML, swapped in by the page |
 | `GET /api/status` | `{"loaded": N, "total": M, "ready": bool}` — namespace loading progress |
 | `GET /api/events` | Full dashboard data JSON |
+| `GET /api/object/{ns}/{kind}/{name}` | Live object describe (built-in types and CRDs) |
+
+### Clusters
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/contexts` | Kubeconfig contexts with environment tags; re-read on every call |
+| `POST /api/context` | Switch the watched cluster: `{"name": "..."}` |
+| `POST /api/context/env` | Set a context's environment: `{"name": "...", "env": "prod"}` (`""` reads it from the name) |
+
+Every page sends `X-KubeHealth-Context` with its API calls, so a tab keeps talking to the cluster it was opened on after you switch elsewhere.
 
 ### AI
 | Endpoint | Description |
 |----------|-------------|
 | `POST /api/ai/analyze/{ns\|object}/{…}` | Trigger AI analysis for a namespace or object |
 | `GET /api/ai/insights/{ns\|object}/{…}` | Poll AI result (`partial`, `content`, `error`) |
+| `POST /api/ai/brief` | Rewrite the overview's AI note now |
 | `GET /api/ai/config` | Read system prompt + LM Studio model info |
 | `POST /api/ai/config` | Update system prompt |
 
@@ -158,51 +240,68 @@ Open `http://localhost:8080` in your browser.
 ## Architecture
 
 ```
-main.go          — HTTP server, routing, template rendering
+main.go          — HTTP server, routing, template rendering, per-cluster worker
+cluster.go       — Per-context cluster state, switching, environment tags, saved preferences
 ai.go            — AI streaming (callLMStudio, streamLMStudio), insight cache
 ai_config.go     — System prompt store, LM Studio model-info fetch (/api/v0/models)
 rca.go           — RCA agent loop, tool dispatcher, RCA state store
-correlate.go     — Cross-namespace event correlation (pure nsCache read)
+problems.go      — Overview problem model: owner groups, tiers, cascades, patterns, /api/home, /api/status
+brief.go         — The brief: computed facts plus the AI note on the top problem, /api/ai/brief
+owners.go        — Owner inference from names + background ownerReferences resolver
+warnings.go      — Cluster-wide Warning event feed, merged into every namespace's events
+snapshot.go      — Live namespace snapshot (workloads, pods, volume claims), cached 30 s, /api/snapshot
+correlate.go     — Cross-namespace event correlation (pure cache read)
 logs.go          — Pod log fetching with Previous-run fallback
 settings.go      — Runtime settings (log lines, timeout, max calls, RCA iterations)
 
+rca_test.go, problems_test.go, brief_test.go, logs_test.go — unit tests (go test ./...)
+demo/            — kind clusters with realistic failures, for trying KubeHealth locally
+
 templates/
-├─ dashboard.html      — Namespace grid, per-namespace AI button, streaming pollAI
-├─ namespace.html      — Sidebar + detail panels, all action buttons, JS agent functions
+├─ header.html         — Shared header: cluster switcher, data age, model status, stale-tab banner
+├─ app.html            — The page shell: namespace rail, overview (brief, ranked problems), in-place navigation, live updates from /api/home
+├─ ns_view.html        — Namespace panes: object list, status panel, detail panels, all action buttons, JS agent functions
 ├─ ai_modal.html       — AI Agent config modal (system prompt, context window estimate)
 ├─ settings_modal.html — Settings modal (log lines, timeouts, concurrency, RCA iterations)
 ├─ docs_modal.html     — Interactive architecture diagram with animated data flows
-├─ loading.html        — Animated loading screen
 └─ object.html         — YAML viewer
 ```
 
 ### Data flow summary
 
 ```
-Kubernetes API
-    │  events poll (Worker, every 2 s)
+Kubernetes API (the active context; each context has its own caches below)
+    │  Worker, one list call every 2 s:
+    │    every 10 s → cluster-wide Warning events  ──► warnFeed
+    │    otherwise  → stalest namespace, all events ──► nsCache
     ▼
-nsCache (sync.Map)  ◄──── feeds everything below
+namespaceEvents() = nsCache merged with warnFeed  ◄──── feeds everything below
     │
-    ├── Dashboard / Namespace UI  (HTTP handlers, read-only)
+    ├── Home (/api/home)  ──► problems.go groups warnings by owner
+    │                           ├──► owners.go confirms owners (≤ 2 GET/s, cached)
+    │                           └──► brief.go: facts + AI note on the top problem
+    │                                (events + pod log lines → LM Studio, free slot only)
     │
-    ├── Correlate  ──► scans nsCache, zero K8s API call, zero LLM
+    ├── Namespace view  (object list from the merged cache, read-only)
+    │       └──► snapshot.go: 7 list calls on open, cached 30 s
+    │
+    ├── Correlate  ──► scans the merged cache, zero K8s API call, zero LLM
     │
     ├── Logs  ──► K8s GetLogs (current + Previous fallback)
     │
-    ├── AI Analysis  ──► nsCache + K8s describe + K8s logs
+    ├── AI Analysis  ──► merged cache + K8s describe + K8s logs
     │                        │
     │                        └──► LM Studio (stream=true, SSE)
     │                                 │ tokens every 300 ms
     │                                 ▼
     │                          aiInsightCache  ◄── browser polls 500 ms
     │
-    └── RCA Agent  ──► nsCache + K8s describe + K8s logs (initial context)
+    └── RCA Agent  ──► merged cache + K8s describe + K8s logs (initial context)
                             │
                             └──► LM Studio (stream=false, with tools)
                                       │ tool_calls response
-                                      ├─ get_object_events      → nsCache
-                                      ├─ get_correlated_events  → nsCache
+                                      ├─ get_object_events      → merged cache
+                                      ├─ get_correlated_events  → merged cache
                                       ├─ get_object_describe    → K8s API
                                       └─ get_pod_logs           → K8s API
                                       │ (loops up to maxIter)

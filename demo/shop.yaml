@@ -1,0 +1,289 @@
+# Demo cluster "shop-staging": a small web shop with a handful of realistic failures.
+#   checkout   — a rollout with a typo in the image tag (ImagePullBackOff), old pods keep serving
+#   orders     — postgres can't get a volume (missing StorageClass), so the worker crash-loops
+#   catalog    — a CronJob whose supplier token expired (fails every run)
+#   search     — an indexer that runs out of memory (OOMKilled)
+#   frontend   — a readiness probe pointing at the wrong path, plus a healthy web tier
+#   monitoring — healthy DaemonSet and CronJob, for contrast
+# setup.sh then deploys log-shipper to three namespaces at once from an unreachable
+# registry (a pattern), breaks the checkout rollout and releases the legacy volume.
+apiVersion: v1
+kind: Namespace
+metadata: { name: checkout }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: orders }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: catalog }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: search }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: frontend }
+---
+apiVersion: v1
+kind: Namespace
+metadata: { name: monitoring }
+---
+# ── checkout ────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: checkout-api, namespace: checkout, labels: { app: checkout-api } }
+spec:
+  replicas: 3
+  selector: { matchLabels: { app: checkout-api } }
+  template:
+    metadata: { labels: { app: checkout-api } }
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.27-alpine
+          ports: [{ containerPort: 80 }]
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+apiVersion: v1
+kind: Service
+metadata: { name: checkout-api, namespace: checkout }
+spec: { selector: { app: checkout-api }, ports: [{ port: 80 }] }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: payment-gateway, namespace: checkout, labels: { app: payment-gateway } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: payment-gateway } }
+  template:
+    metadata: { labels: { app: payment-gateway } }
+    spec:
+      containers:
+        - name: gw
+          image: nginx:1.27-alpine
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+# ── orders ──────────────────────────────────────────────────────────────────
+apiVersion: v1
+kind: Service
+metadata: { name: orders-db, namespace: orders }
+spec: { clusterIP: None, selector: { app: orders-db }, ports: [{ port: 5432 }] }
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: { name: orders-db, namespace: orders }
+spec:
+  serviceName: orders-db
+  replicas: 1
+  selector: { matchLabels: { app: orders-db } }
+  template:
+    metadata: { labels: { app: orders-db } }
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine   # never starts: its volume can't be provisioned
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
+  volumeClaimTemplates:
+    - metadata: { name: data }
+      spec:
+        storageClassName: fast-ssd
+        accessModes: [ReadWriteOnce]
+        resources: { requests: { storage: 5Gi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: orders-worker, namespace: orders, labels: { app: orders-worker } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: orders-worker } }
+  template:
+    metadata: { labels: { app: orders-worker } }
+    spec:
+      containers:
+        - name: worker
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "$(date -u +%FT%TZ) INFO  orders-worker v1.8.2 starting"
+              echo "$(date -u +%FT%TZ) INFO  loading config from /etc/orders/config.yaml"
+              echo "$(date -u +%FT%TZ) INFO  connecting to postgres at orders-db.orders.svc:5432 (db=orders)"
+              sleep 2
+              echo "$(date -u +%FT%TZ) WARN  attempt 1/3: dial tcp: lookup orders-db.orders.svc: no such host"
+              sleep 1
+              echo "$(date -u +%FT%TZ) WARN  attempt 2/3: dial tcp: lookup orders-db.orders.svc: no such host"
+              sleep 1
+              echo "$(date -u +%FT%TZ) ERROR attempt 3/3: dial tcp: lookup orders-db.orders.svc: no such host"
+              echo "$(date -u +%FT%TZ) FATAL could not connect to database: giving up after 3 attempts"
+              exit 1
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: orders-api, namespace: orders, labels: { app: orders-api } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: orders-api } }
+  template:
+    metadata: { labels: { app: orders-api } }
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.27-alpine
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+# ── catalog ─────────────────────────────────────────────────────────────────
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: catalog-sync, namespace: catalog }
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: sync
+              image: busybox:1.36
+              command:
+                - sh
+                - -c
+                - |
+                  echo "$(date -u +%FT%TZ) INFO  catalog-sync 3.2.0: fetching supplier feed"
+                  echo "$(date -u +%FT%TZ) INFO  GET https://api.supplier.example/v2/feed?since=last_run"
+                  sleep 1
+                  echo "$(date -u +%FT%TZ) ERROR supplier API returned 401 Unauthorized: token expired at 2026-10-14T00:00:00Z"
+                  echo "$(date -u +%FT%TZ) ERROR sync aborted, 0 of 18,240 products updated"
+                  exit 1
+              resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: catalog-api, namespace: catalog, labels: { app: catalog-api } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: catalog-api } }
+  template:
+    metadata: { labels: { app: catalog-api } }
+    spec:
+      containers:
+        - name: api
+          image: nginx:1.27-alpine
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+# ── search ──────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: search-indexer, namespace: search, labels: { app: search-indexer } }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: search-indexer } }
+  template:
+    metadata: { labels: { app: search-indexer } }
+    spec:
+      containers:
+        - name: indexer
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              echo "$(date -u +%FT%TZ) INFO  search-indexer: loading 4 index shards into memory"
+              x=0123456789abcdef; while true; do x="$x$x"; done
+          resources:
+            requests: { cpu: 10m, memory: 24Mi }
+            limits: { memory: 48Mi }
+---
+# ── frontend ────────────────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: storefront, namespace: frontend, labels: { app: storefront } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: storefront } }
+  template:
+    metadata: { labels: { app: storefront } }
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          readinessProbe:
+            httpGet: { path: /healthz, port: 80 }
+            periodSeconds: 10
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: cdn-proxy, namespace: frontend, labels: { app: cdn-proxy } }
+spec:
+  replicas: 2
+  selector: { matchLabels: { app: cdn-proxy } }
+  template:
+    metadata: { labels: { app: cdn-proxy } }
+    spec:
+      containers:
+        - name: proxy
+          image: nginx:1.27-alpine
+          resources: { requests: { cpu: 10m, memory: 16Mi } }
+---
+# ── monitoring (healthy) ────────────────────────────────────────────────────
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: { name: node-agent, namespace: monitoring }
+spec:
+  selector: { matchLabels: { app: node-agent } }
+  template:
+    metadata: { labels: { app: node-agent } }
+    spec:
+      tolerations: [{ operator: Exists }]
+      containers:
+        - name: agent
+          image: busybox:1.36
+          command: [sh, -c, "while true; do sleep 3600; done"]
+          resources: { requests: { cpu: 5m, memory: 8Mi } }
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata: { name: metrics-rollup, namespace: monitoring }
+spec:
+  schedule: "*/2 * * * *"
+  successfulJobsHistoryLimit: 2
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: rollup
+              image: busybox:1.36
+              command: [sh, -c, "echo rolled up 1440 samples"]
+              resources: { requests: { cpu: 5m, memory: 8Mi } }
+---
+# ── cluster-scoped: a legacy volume whose reclaim can't run ─────────────────
+apiVersion: v1
+kind: PersistentVolume
+metadata: { name: legacy-reports-nfs }
+spec:
+  capacity: { storage: 20Gi }
+  accessModes: [ReadWriteMany]
+  persistentVolumeReclaimPolicy: Delete
+  storageClassName: legacy-nfs
+  nfs: { server: nfs.legacy.example, path: /exports/reports }
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: { name: reports-archive, namespace: monitoring }
+spec:
+  storageClassName: legacy-nfs
+  volumeName: legacy-reports-nfs
+  accessModes: [ReadWriteMany]
+  resources: { requests: { storage: 20Gi } }

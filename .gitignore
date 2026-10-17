@@ -1,1 +1,28 @@
-./claude
+# Build output
+/kubehealth
+/kubehealth-embed
+/dist/
+
+# Model and llama.cpp runtime for the embedded build (see embedded/README.md)
+*.gguf
+
+# Local tool settings
+/.claude/
+.idea/
+.vscode/
+
+# Kubeconfigs and env files that might be dropped here while testing
+*.kubeconfig
+kubeconfig
+.env
+.env.*
+
+# OS and editor droppings
+.DS_Store
+*.swp
+*~
+
+# Test and profiling output
+*.out
+*.test
+*.prof

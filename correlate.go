@@ -35,7 +35,7 @@ type CorrelateResponse struct {
 }
 
 // buildCorrelateResponse is the core logic shared by the HTTP handler and the RCA agent.
-func buildCorrelateResponse(ns, kind, name string) CorrelateResponse {
+func buildCorrelateResponse(cl *clusterState, ns, kind, name string) CorrelateResponse {
 	resp := CorrelateResponse{
 		Namespace: ns,
 		Kind:      kind,
@@ -44,15 +44,10 @@ func buildCorrelateResponse(ns, kind, name string) CorrelateResponse {
 	}
 
 	var anchorEvents []EventSummary
-	if v, ok := nsCache.Load(ns); ok {
-		e := v.(*nsEntry)
-		e.RLock()
-		for _, ev := range e.events {
-			if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-				anchorEvents = append(anchorEvents, ev)
-			}
+	for _, ev := range cl.scopeEvents(ns) {
+		if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
+			anchorEvents = append(anchorEvents, ev)
 		}
-		e.RUnlock()
 	}
 	if len(anchorEvents) == 0 {
 		return resp
@@ -76,12 +71,12 @@ func buildCorrelateResponse(ns, kind, name string) CorrelateResponse {
 	resp.TimeFrom, resp.TimeTo = earliest, latest
 	resp.WindowFrom, resp.WindowTo = windowStart, windowEnd
 
-	nsCache.Range(func(key, val any) bool {
-		otherNS := key.(string)
-		e := val.(*nsEntry)
-		e.RLock()
-		for _, ev := range e.events {
-			if otherNS == ns && strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
+	for otherNS, events := range cl.allNamespaceEvents() {
+		for _, ev := range events {
+			// Skip the anchor's own events. Cluster-scoped objects are recorded
+			// in "default", not in the page's _cluster pseudo-namespace.
+			sameScope := otherNS == ns || (ns == clusterScopeNS && ev.ObjectNamespace == "")
+			if sameScope && strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
 				continue
 			}
 			if ev.LastTime.After(windowStart) && ev.LastTime.Before(windowEnd) {
@@ -98,9 +93,7 @@ func buildCorrelateResponse(ns, kind, name string) CorrelateResponse {
 				})
 			}
 		}
-		e.RUnlock()
-		return true
-	})
+	}
 
 	sort.Slice(resp.Correlated, func(i, j int) bool {
 		return resp.Correlated[i].LastTime.After(resp.Correlated[j].LastTime)
@@ -115,7 +108,11 @@ func handleAPICorrelate(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "expected /api/correlate/{namespace}/{kind}/{name}", http.StatusBadRequest)
 		return
 	}
-	resp := buildCorrelateResponse(parts[0], parts[1], parts[2])
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
+	resp := buildCorrelateResponse(cl, parts[0], parts[1], parts[2])
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(resp)
 }

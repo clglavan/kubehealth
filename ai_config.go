@@ -52,6 +52,8 @@ type AIConfigPayload struct {
 	DefaultSystemPrompt string       `json:"default_system_prompt"`
 	ModelInfo           *LMModelInfo `json:"model_info,omitempty"`
 	LogTailLines        int64        `json:"log_tail_lines"`
+	// Embedded mode (only set in the kubehealth-embed build flavor).
+	Embedded bool `json:"embedded"`
 }
 
 func initSystemPrompt() {
@@ -77,11 +79,27 @@ func setSystemPrompt(s string) {
 	aiSysPromptMu.Unlock()
 }
 
-// fetchLMModelInfo calls LM Studio's /api/v0/models (the native API, not the OpenAI-compat
-// /v1/models which omits context length) and returns info for the configured model.
+// fetchLMModelInfo returns info about the active model. In embedded builds it
+// reports the bundled model directly. Otherwise it queries LM Studio's native
+// /api/v0/models endpoint (the OpenAI-compat /v1/models omits context length).
 func fetchLMModelInfo() *LMModelInfo {
 	if !aiConfig.enabled {
 		return nil
+	}
+	if isEmbedded() {
+		ctx, running := embeddedRuntime()
+		state := "loaded"
+		if !running {
+			state = "stopped"
+		}
+		return &LMModelInfo{
+			ID:                  aiConfig.model,
+			State:               state,
+			Arch:                embeddedModelArch(),
+			Quantization:        embeddedModelQuantization(),
+			MaxContextLength:    ctx,
+			LoadedContextLength: ctx,
+		}
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
 	defer cancel()
@@ -122,19 +140,33 @@ func handleAPIAIConfig(w http.ResponseWriter, r *http.Request) {
 			DefaultSystemPrompt: aiDefaultPrompt,
 			ModelInfo:           fetchLMModelInfo(),
 			LogTailLines:        getLogTailLines(),
+			Embedded:            isEmbedded(),
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(payload)
 
 	case http.MethodPost:
 		var body struct {
-			SystemPrompt string `json:"system_prompt"`
+			SystemPrompt    *string `json:"system_prompt,omitempty"`
+			EmbeddedCtxSize *int    `json:"embedded_ctx_size,omitempty"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "invalid json", http.StatusBadRequest)
 			return
 		}
-		setSystemPrompt(body.SystemPrompt)
+		if body.SystemPrompt != nil {
+			setSystemPrompt(*body.SystemPrompt)
+		}
+		if body.EmbeddedCtxSize != nil {
+			if !isEmbedded() {
+				http.Error(w, "context size is only configurable in the embedded build", http.StatusBadRequest)
+				return
+			}
+			if err := restartEmbedded(*body.EmbeddedCtxSize); err != nil {
+				http.Error(w, "restart failed: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 

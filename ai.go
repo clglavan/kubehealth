@@ -32,9 +32,13 @@ type AIInsight struct {
 
 var (
 	aiConfig       aiCfgT
-	aiInsightCache sync.Map // cacheKey → *AIInsight
-	aiRunning      sync.Map // cacheKey → struct{} (dedup guard)
+	aiInsightCache sync.Map // aiStoreKey → *AIInsight
+	aiRunning      sync.Map // aiStoreKey → struct{} (dedup guard)
 )
+
+// aiStoreKey scopes a cache key to a cluster: "default" on one cluster and
+// "default" on another are different namespaces.
+func aiStoreKey(cl *clusterState, key string) string { return cl.name + "|" + key }
 
 func initAI() {
 	url := os.Getenv("LMSTUDIO_URL")
@@ -72,12 +76,16 @@ func parseCacheKey(suffix string) (string, bool) {
 func handleAPIAIInsights(w http.ResponseWriter, r *http.Request) {
 	suffix := strings.TrimPrefix(r.URL.Path, "/api/ai/insights/")
 	key, ok := parseCacheKey(suffix)
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
 	w.Header().Set("Content-Type", "application/json")
 	if !ok {
 		json.NewEncoder(w).Encode(AIInsight{Enabled: aiConfig.enabled, Model: aiConfig.model})
 		return
 	}
-	if v, hit := aiInsightCache.Load(key); hit {
+	if v, hit := aiInsightCache.Load(aiStoreKey(cl, key)); hit {
 		json.NewEncoder(w).Encode(v.(*AIInsight))
 		return
 	}
@@ -99,43 +107,48 @@ func handleAPIAIAnalyze(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "invalid path", http.StatusBadRequest)
 		return
 	}
-	triggerScopedAnalysis(key)
+	cl := apiCluster(w, r)
+	if cl == nil {
+		return
+	}
+	triggerScopedAnalysis(cl, key)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{"status": "triggered"})
 }
 
-func triggerScopedAnalysis(key string) {
-	if _, loaded := aiRunning.LoadOrStore(key, struct{}{}); loaded {
+// triggerScopedAnalysis starts an analysis in the background. It keeps the
+// cluster it was started for, even if KubeHealth switches meanwhile.
+func triggerScopedAnalysis(cl *clusterState, key string) {
+	storeKey := aiStoreKey(cl, key)
+	if _, loaded := aiRunning.LoadOrStore(storeKey, struct{}{}); loaded {
 		return
 	}
 	go func() {
-		defer aiRunning.Delete(key)
+		defer aiRunning.Delete(storeKey)
 		var err error
 		if ns, ok := strings.CutPrefix(key, "ns:"); ok {
-			err = analyzeNSKey(key, ns)
+			err = analyzeNSKey(cl, storeKey, ns)
 		} else if obj, ok := strings.CutPrefix(key, "obj:"); ok {
 			parts := strings.SplitN(obj, "/", 3)
 			if len(parts) == 3 {
-				err = analyzeObjKey(key, parts[0], parts[1], parts[2])
+				err = analyzeObjKey(cl, storeKey, parts[0], parts[1], parts[2])
 			}
 		}
 		if err != nil {
-			log.Printf("AI [%s]: %v", key, err)
+			log.Printf("AI [%s]: %v", storeKey, err)
 		}
 	}()
 }
 
-func analyzeNSKey(key, ns string) error {
-	var events []EventSummary
-	if v, ok := nsCache.Load(ns); ok {
-		e := v.(*nsEntry)
-		e.RLock()
-		events = append(events, e.events...)
-		e.RUnlock()
-	}
+func analyzeNSKey(cl *clusterState, key, ns string) error {
+	events := cl.scopeEvents(ns)
 
 	var sb strings.Builder
-	fmt.Fprintf(&sb, "Analyze all Kubernetes events in namespace %q.\n\n", ns)
+	if ns == clusterScopeNS {
+		sb.WriteString("Analyze all Kubernetes events about cluster-scoped objects (nodes, persistent volumes and similar).\n\n")
+	} else {
+		fmt.Fprintf(&sb, "Analyze all Kubernetes events in namespace %q.\n\n", ns)
+	}
 	if len(events) == 0 {
 		sb.WriteString("No events recorded in this namespace.\n")
 	} else {
@@ -159,17 +172,12 @@ func analyzeNSKey(key, ns string) error {
 	return storeAnalysis(key, sb.String())
 }
 
-func analyzeObjKey(key, ns, kind, name string) error {
+func analyzeObjKey(cl *clusterState, key, ns, kind, name string) error {
 	var events []EventSummary
-	if v, ok := nsCache.Load(ns); ok {
-		e := v.(*nsEntry)
-		e.RLock()
-		for _, ev := range e.events {
-			if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-				events = append(events, ev)
-			}
+	for _, ev := range cl.scopeEvents(ns) {
+		if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
+			events = append(events, ev)
 		}
-		e.RUnlock()
 	}
 
 	var sb strings.Builder
@@ -185,7 +193,7 @@ func analyzeObjKey(key, ns, kind, name string) error {
 	}
 
 	// Object describe — always included; gives the AI current spec/status/conditions
-	info := fetchObjectInfo(ns, kind, name)
+	info := cl.fetchObjectInfo(ns, kind, name)
 	switch {
 	case info.NotFound:
 		sb.WriteString("\nNote: object no longer exists in the cluster.\n")
@@ -221,7 +229,7 @@ func analyzeObjKey(key, ns, kind, name string) error {
 
 	// Pod logs — actual container output, most useful for crash diagnosis
 	if strings.EqualFold(kind, "Pod") {
-		logs, err := fetchLogsForAI(ns, name)
+		logs, err := fetchLogsForAI(cl, ns, name)
 		if err == nil && strings.TrimSpace(logs) != "" {
 			fmt.Fprintf(&sb, "\nPod logs (last %d lines):\n", getLogTailLines())
 			sb.WriteString(logs)
@@ -279,25 +287,37 @@ func storeAnalysis(key, prompt string) error {
 // writeFn with the accumulated content after each ~300ms batch of tokens.
 // It enforces the global concurrent LLM call limit.
 func streamLMStudio(prompt string, writeFn func(partial string)) (string, error) {
-	if !acquireLLMSlot() {
+	if !acquireLLMSlotForUser() {
 		return "", fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
 			getLLMActiveCalls(), getLLMMaxCalls())
 	}
 	defer releaseLLMSlot()
 
-	sp := getSystemPrompt()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
+	defer cancel()
+	temp := analysisTemperature
+	return streamChat(ctx, prompt, chatOpts{Temperature: &temp}, writeFn)
+}
+
+// streamChat sends one streaming chat request and returns the full answer.
+// The caller holds an LLM slot; cancelling ctx stops the request.
+func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(partial string)) (string, error) {
+	sp := opts.System
+	if sp == "" {
+		sp = getSystemPrompt()
+	}
 	msgs := []lmMsg{{Role: "user", Content: prompt}}
 	if sp != "" {
 		msgs = append([]lmMsg{{Role: "system", Content: sp}}, msgs...)
 	}
 	body, _ := json.Marshal(lmReq{
-		Model:    aiConfig.model,
-		Messages: msgs,
-		Stream:   true,
+		Model:       aiConfig.model,
+		Messages:    msgs,
+		Stream:      true,
+		Temperature: opts.Temperature,
+		MaxTokens:   opts.MaxTokens,
 	})
 
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
-	defer cancel()
 	req, err := http.NewRequestWithContext(ctx, "POST", aiConfig.baseURL+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
 		return "", err
@@ -333,7 +353,8 @@ func streamLMStudio(prompt string, writeFn func(partial string)) (string, error)
 		var chunk struct {
 			Choices []struct {
 				Delta struct {
-					Content string `json:"content"`
+					Content          string `json:"content"`
+					ReasoningContent string `json:"reasoning_content"`
 				} `json:"delta"`
 			} `json:"choices"`
 		}
@@ -341,7 +362,14 @@ func streamLMStudio(prompt string, writeFn func(partial string)) (string, error)
 			continue
 		}
 		if len(chunk.Choices) > 0 {
-			if tok := chunk.Choices[0].Delta.Content; tok != "" {
+			// Some LM Studio fine-tunes (e.g. qwen3 derivatives) route the entire
+			// answer into reasoning_content instead of content. Fall back to that
+			// so the UI sees tokens.
+			tok := chunk.Choices[0].Delta.Content
+			if tok == "" {
+				tok = chunk.Choices[0].Delta.ReasoningContent
+			}
+			if tok != "" {
 				full.WriteString(tok)
 				if writeFn != nil && time.Since(lastWrite) >= 300*time.Millisecond {
 					writeFn(full.String())
@@ -362,9 +390,19 @@ type lmMsg struct {
 }
 
 type lmReq struct {
-	Model    string  `json:"model"`
-	Messages []lmMsg `json:"messages"`
-	Stream   bool    `json:"stream"`
+	Model       string   `json:"model"`
+	Messages    []lmMsg  `json:"messages"`
+	Stream      bool     `json:"stream"`
+	Temperature *float64 `json:"temperature,omitempty"`
+	MaxTokens   int      `json:"max_tokens,omitempty"`
+}
+
+// chatOpts tunes one request. The zero value uses the AI Agent's system
+// prompt and the server's defaults.
+type chatOpts struct {
+	System      string // replaces the AI Agent system prompt when set
+	Temperature *float64
+	MaxTokens   int
 }
 
 type lmResp struct {
@@ -432,11 +470,19 @@ type rcaMsg struct {
 }
 
 type rcaRequest struct {
-	Model    string    `json:"model"`
-	Messages []rcaMsg  `json:"messages"`
-	Tools    []rcaTool `json:"tools,omitempty"`
-	Stream   bool      `json:"stream"`
+	Model       string    `json:"model"`
+	Messages    []rcaMsg  `json:"messages"`
+	Tools       []rcaTool `json:"tools,omitempty"`
+	Stream      bool      `json:"stream"`
+	Temperature float64   `json:"temperature"`
 }
+
+// Analysis and RCA read evidence; a low temperature keeps a small model from
+// wandering off it. Servers default to about 0.8.
+const (
+	rcaTemperature      = 0.2
+	analysisTemperature = 0.3
+)
 
 type rcaRespChoice struct {
 	Message      rcaMsg `json:"message"`
@@ -457,16 +503,17 @@ type rcaResponse struct {
 // callLMStudioRCA sends a tool-calling request and returns the raw response.
 // It is intentionally separate from callLMStudio to keep the RCA flow independent.
 func callLMStudioRCA(msgs []rcaMsg, tools []rcaTool) (*rcaResponse, error) {
-	if !acquireLLMSlot() {
+	if !acquireLLMSlotForUser() {
 		return nil, fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
 			getLLMActiveCalls(), getLLMMaxCalls())
 	}
 	defer releaseLLMSlot()
 	body, _ := json.Marshal(rcaRequest{
-		Model:    aiConfig.model,
-		Messages: msgs,
-		Tools:    tools,
-		Stream:   false,
+		Model:       aiConfig.model,
+		Messages:    msgs,
+		Tools:       tools,
+		Stream:      false,
+		Temperature: rcaTemperature,
 	})
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
 	defer cancel()
