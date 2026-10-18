@@ -16,7 +16,7 @@ The scripts write their own `demo/kubeconfig`; your `~/.kube/config` is not touc
 
 | Namespace | What happens | What KubeHealth shows |
 |---|---|---|
-| `orders` | `orders-db` asks for the StorageClass `fast-ssd`, which doesn't exist, so its volume is never created and the database never starts. `orders-worker` can't resolve the database and crash-loops. | Ongoing problems for the worker and the database, a new one for the volume claim; the worker's logs say why |
+| `orders` | `orders-db` asks for the StorageClass `fast-ssd`, which doesn't exist, so its volume is never created and the database never starts. `orders-worker` can't resolve the database and crash-loops. | Ongoing problems for the worker and the database, a new one for the volume claim; the worker's logs say why. In the YAML panel, Pod `orders-db-0` → its claim → the StorageClass shows the cause in two clicks. The worker reads a password from the Secret `orders-db-credentials` (fake values), which the panel keeps masked |
 | `catalog` | The `catalog-sync` CronJob fails every minute (its supplier token expired) | A chronic CronJob problem: last success 3 days ago |
 | `search` | `search-indexer` runs out of its 48 Mi memory limit | Exit code 137 in the container state; the AI note suggests raising the limit |
 | `checkout` | A release of `checkout-api` with a typo in the image tag; the old pods keep serving | ImagePullBackOff on the new ReplicaSet only |

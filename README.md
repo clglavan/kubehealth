@@ -23,6 +23,15 @@ Local, read-only k8s triage. One binary on your laptop, pointed at your kubeconf
 | ![Cluster-wide](docs/images/06-cluster-wide.png) | ![Docs](docs/images/09-docs.png) |
 | **Cluster-wide**: Nodes and PVs. | **Docs**: every feature traced through the system. |
 
+![YAML panel: the line that explains the failure](docs/images/10-yaml-why.png)
+
+**YAML that points at the problem.** The fields the object's warnings and container state blame are highlighted with the reason, listed on top, and scrolled to. `status`, `managedFields` and other noise are hidden until you ask.
+
+| | |
+|---|---|
+| ![References open to the right](docs/images/11-yaml-references.png) | ![Secrets stay masked](docs/images/12-yaml-secrets.png) |
+| **Follow references** column by column: Pod → PVC → a StorageClass that doesn't exist. | **Secrets** stay masked until you reveal one key. |
+
 ## How it handles events
 
 ```
@@ -54,6 +63,8 @@ event cache (per cluster)
     ├── Namespace view ──► live snapshot, 7 list calls, cached 30 s
     ├── Logs ────────────► GetLogs, current run + previous run
     ├── Correlate ───────► cache only, events ±5 min across namespaces
+    ├── YAML ────────────► live object; highlights the fields its warnings blame,
+    │                        references open to the right, Secrets stay masked
     ├── Link-follow ─────► objects the evidence names: claim → StorageClass,
     │                        unreachable Service → its Pods, missing keys, nodes
     ├── ✦ AI ────────────► events + describe + container state + logs + linked → model

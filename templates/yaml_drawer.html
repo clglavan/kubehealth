@@ -1,0 +1,774 @@
+{{define "yaml_drawer"}}
+<style>
+  .yd-scrim { position: fixed; inset: 0; z-index: 960; background: rgba(5,7,12,0.55); opacity: 0; transition: opacity .18s ease; }
+  .yd-scrim.open { opacity: 1; }
+  /* Columns open to the right; past the screen they scroll sideways (drag or
+     trackpad). A strip on the right always stays free for closing. */
+  .yd-stack {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 961;
+    max-width: calc(100vw - 56px); display: flex; overflow-x: auto; overflow-y: hidden;
+    overscroll-behavior-x: contain; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    box-shadow: 24px 0 60px rgba(0,0,0,0.5);
+    transform: translateX(-102%); transition: transform .22s cubic-bezier(.2,.8,.2,1);
+  }
+  .yd-stack.open { transform: none; }
+  .yd-stack.can-pan { cursor: grab; }
+  .yd-stack.panning, .yd-stack.panning * { cursor: grabbing !important; user-select: none !important; }
+  .yd-stack[hidden], .yd-scrim[hidden] { display: none; }
+  .yd-col {
+    flex: none; width: min(760px, calc(100vw - 56px)); height: 100%; display: flex; flex-direction: column;
+    background: var(--surface); border-right: 1px solid var(--border); cursor: auto;
+  }
+  .yd-col + .yd-col { border-left: 1px solid var(--border2, #323849); }
+  .yd-col.enter { animation: yd-in .22s cubic-bezier(.2,.8,.2,1); }
+  @keyframes yd-in { from { opacity: 0; transform: translateX(-28px); } }
+  @media (prefers-reduced-motion: reduce) { .yd-stack, .yd-scrim { transition: none; } .yd-col.enter { animation: none; } }
+
+  .yd-head { padding: 13px 16px 10px; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; gap: 9px; }
+  .yd-title-row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .yd-kind {
+    flex: none; font: 700 10.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase;
+    color: var(--accent-text); background: var(--accent-bg); border-radius: 4px; padding: 5px 7px;
+  }
+  .yd-title { margin: 0; font: 600 15px/1.3 var(--mono); color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .yd-ns { flex: none; font-size: 12.5px; color: var(--muted); }
+  .yd-from { font-size: 12px; color: var(--muted); margin-top: -3px; }
+  .yd-from b { font: 500 12px var(--mono); color: var(--text); }
+  .yd-x {
+    margin-left: auto; flex: none; width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+    background: transparent; color: var(--muted); font-size: 18px; line-height: 1; cursor: pointer;
+  }
+  .yd-x:hover, .yd-x:focus-visible { color: var(--text); border-color: var(--muted); }
+
+  .yd-tools { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+  .yd-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .yd-chip {
+    font: 500 12px/1 var(--mono); padding: 6px 9px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: transparent; color: var(--muted);
+  }
+  .yd-chip[aria-pressed="true"] { color: var(--accent-text); background: var(--accent-bg); border-color: rgba(129,140,248,0.45); }
+  .yd-chip[aria-pressed="true"]::before { content: '✓ '; }
+  .yd-chip:hover { color: var(--text); }
+  .yd-summary { font-size: 12px; color: var(--muted); }
+  .yd-actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+  .yd-btn {
+    font: 500 12.5px/1 inherit; padding: 7px 10px; border-radius: 6px; cursor: pointer; text-decoration: none;
+    border: 1px solid var(--border); background: var(--raised); color: var(--text); white-space: nowrap;
+  }
+  .yd-btn:hover, .yd-btn:focus-visible { border-color: var(--muted); }
+  .yd-btn.done { color: var(--ok); border-color: rgba(52,211,153,0.45); }
+  .yd-btn:disabled { opacity: .45; cursor: default; border-color: var(--border); }
+
+  .yd-issues { display: flex; flex-direction: column; gap: 4px; }
+  .yd-issue {
+    display: flex; gap: 8px; align-items: baseline; text-align: left; font: 12.5px/1.45 inherit;
+    padding: 6px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--sunk); color: var(--text);
+  }
+  button.yd-issue { cursor: pointer; }
+  button.yd-issue:hover { border-color: var(--muted); }
+  .yd-issue::before { content: '●'; font-size: 9px; flex: none; transform: translateY(-1px); }
+  .yd-issue.crit::before { color: var(--crit); }
+  .yd-issue.warn::before { color: var(--warn); }
+  .yd-issue .where { flex: none; font: 11.5px var(--mono); color: var(--muted); margin-left: auto; padding-left: 8px; }
+
+  .yd-body { flex: 1; overflow: auto; background: var(--sunk); overscroll-behavior: contain; }
+  .yd-state { padding: 28px 20px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
+  .yd-state.err { color: var(--crit); }
+  .yd-code { display: inline-block; min-width: 100%; padding: 8px 0 24px; font: 12.5px/1.6 var(--mono); color: var(--text); }
+  .yr { display: flex; white-space: pre; }
+  .yr:hover { background: rgba(255,255,255,0.025); }
+  .yr.iss { background: rgba(245,158,11,0.07); box-shadow: inset 3px 0 0 var(--warn); }
+  .yr.iss.crit { background: rgba(248,113,113,0.09); box-shadow: inset 3px 0 0 var(--crit); }
+  .yr.flash { animation: yd-flash 1.4s ease-out; }
+  @keyframes yd-flash { from { background: rgba(129,140,248,0.35); } }
+  .yg {
+    position: sticky; left: 0; z-index: 1; flex: none; display: flex; align-items: center; width: 64px;
+    background: var(--sunk); border-right: 1px solid var(--border); user-select: none;
+  }
+  .yn { flex: 1; text-align: right; color: var(--faint); padding-right: 4px; font-variant-numeric: tabular-nums; }
+  .yc {
+    flex: none; width: 18px; height: 18px; padding: 0; border: 0; background: none; cursor: pointer;
+    color: var(--faint); font-size: 10px; line-height: 18px; border-radius: 3px;
+  }
+  .yc:hover, .yc:focus-visible { color: var(--text); background: var(--raised); }
+  .yc.blank { cursor: default; visibility: hidden; }
+  .yt { padding: 0 16px 0 12px; }
+
+  .yk { color: #7cc4fa; }
+  .yp { color: var(--muted); }
+  .ys { color: #b5e3a0; }
+  .yb { color: #c9d1dc; }
+  .yv { color: #f7b267; }
+  .yo { color: #c4a1ff; }
+  .yi { color: #c4a1ff; font-weight: 600; }
+  .yref {
+    font: inherit; color: #b5e3a0; background: none; border: 0; padding: 0; cursor: pointer;
+    text-decoration: underline; text-decoration-style: dotted; text-decoration-color: rgba(181,227,160,0.6); text-underline-offset: 3px;
+  }
+  .yref:hover, .yref:focus-visible { color: #d6f5c8; text-decoration-style: solid; }
+  .yref::after { content: ' →'; color: var(--muted); display: inline-block; }
+  .yref.off { cursor: not-allowed; text-decoration: none; opacity: .75; }
+  .yref.off::after { content: ' ←'; }
+  .yiss {
+    display: inline-block; max-width: 62ch; overflow: hidden; text-overflow: ellipsis; vertical-align: bottom;
+    margin-left: 12px; font: 11.5px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--warn);
+  }
+  .yiss.crit { color: var(--crit); }
+  .ysec {
+    font: 11.5px/1.5 var(--mono); padding: 0 8px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--raised); color: var(--muted);
+  }
+  .ysec:hover, .ysec:focus-visible { color: var(--text); border-color: var(--muted); }
+  .ysec-val { color: var(--warn); }
+  .ysec-block .yt { color: var(--warn); white-space: pre-wrap; word-break: break-all; }
+  .ypill {
+    margin-left: 8px; padding: 1px 8px; border-radius: 999px; cursor: pointer; font: 11.5px/1.5 var(--mono);
+    border: 1px dashed var(--border); background: transparent; color: var(--muted);
+  }
+  .ypill:hover, .ypill:focus-visible { color: var(--text); border-color: var(--muted); }
+  .ypill.hid { border-style: solid; color: var(--faint); }
+  .ypill.hid:hover { color: var(--text); }
+</style>
+
+<div class="yd-scrim" id="yd-scrim" hidden></div>
+<div class="yd-stack" id="yd-stack" role="dialog" aria-modal="true" aria-label="Object YAML" hidden></div>
+
+<script>
+(function() {
+  // ── Reading the YAML ────────────────────────────────────────────────────────
+  // The server emits block-style YAML (sigs.k8s.io/yaml, as kubectl does), so a
+  // line-based reader is enough: every key gets its path, and a key's block is
+  // the lines after it that are indented deeper (plus "- " items at its column).
+
+  // Noisy fields, hidden by default. Each matches a path of keys ("[]" = list item).
+  var RULES = [
+    { id: 'status', label: 'status', match: function(p) { return p.length === 1 && p[0] === 'status'; } },
+    { id: 'managed', label: 'managedFields', match: function(p) { return p.length === 2 && p[0] === 'metadata' && p[1] === 'managedFields'; } },
+    { id: 'applied', label: 'last-applied', match: function(p) {
+      return p.length === 3 && p[0] === 'metadata' && p[1] === 'annotations' && p[2] === 'kubectl.kubernetes.io/last-applied-configuration';
+    } },
+    { id: 'ids', label: 'ids & timestamps', match: function(p) {
+      if (p.length === 2 && p[0] === 'metadata') return ['uid', 'resourceVersion', 'generation', 'creationTimestamp', 'selfLink'].indexOf(p[1]) >= 0;
+      return p.length > 2 && p[p.length - 2] === 'metadata' && p[p.length - 1] === 'creationTimestamp';
+    } }
+  ];
+
+  // Fields that name another object. kindFrom/nsFrom read a sibling key
+  // (ownerReferences: kind + name); exact: the whole path, not a suffix.
+  var REFS = [
+    { suffix: ['persistentVolumeClaim', 'claimName'], kind: 'PersistentVolumeClaim' },
+    { suffix: ['configMap', 'name'], kind: 'ConfigMap' },
+    { suffix: ['configMapRef', 'name'], kind: 'ConfigMap' },
+    { suffix: ['configMapKeyRef', 'name'], kind: 'ConfigMap' },
+    { suffix: ['secret', 'secretName'], kind: 'Secret' },
+    { suffix: ['secret', 'name'], kind: 'Secret' },
+    { suffix: ['secretRef', 'name'], kind: 'Secret' },
+    { suffix: ['secretKeyRef', 'name'], kind: 'Secret' },
+    { suffix: ['imagePullSecrets', '[]', 'name'], kind: 'Secret' },
+    { suffix: ['serviceAccountName'], kind: 'ServiceAccount' },
+    { suffix: ['nodeName'], kind: 'Node' },
+    { suffix: ['storageClassName'], kind: 'StorageClass' },
+    { suffix: ['spec', 'volumeName'], kind: 'PersistentVolume', exact: true },
+    { suffix: ['spec', 'serviceName'], kind: 'Service', exact: true },
+    { suffix: ['backend', 'service', 'name'], kind: 'Service' },
+    { suffix: ['claimRef', 'name'], kind: 'PersistentVolumeClaim', nsFrom: 'namespace' },
+    { suffix: ['ownerReferences', '[]', 'name'], kindFrom: 'kind' },
+    { suffix: ['scaleTargetRef', 'name'], kindFrom: 'kind' },
+    { suffix: ['roleRef', 'name'], kindFrom: 'kind' },
+    { suffix: ['subjects', '[]', 'name'], kindFrom: 'kind', nsFrom: 'namespace' },
+    { suffix: ['targetRef', 'name'], kindFrom: 'kind', nsFrom: 'namespace' }
+  ];
+  var CLUSTER_KINDS = { Node: 1, PersistentVolume: 1, StorageClass: 1, ClusterRole: 1, ClusterRoleBinding: 1, Namespace: 1,
+    PriorityClass: 1, CustomResourceDefinition: 1, IngressClass: 1, RuntimeClass: 1 };
+  var NOT_OBJECTS = { User: 1, Group: 1 };
+
+  function unquote(k) {
+    if (k.length >= 2 && k[0] === '"' && k[k.length - 1] === '"') { try { return JSON.parse(k); } catch (e) { return k.slice(1, -1); } }
+    if (k.length >= 2 && k[0] === "'" && k[k.length - 1] === "'") return k.slice(1, -1).replace(/''/g, "'");
+    return k;
+  }
+
+  // "key: value" → {key, value}; null when the text isn't a mapping entry.
+  function splitKey(s) {
+    if (s === '' || s[0] === '#') return null;
+    var end = -1;
+    if (s[0] === '"' || s[0] === "'") {
+      var q = s[0], i = 1;
+      while (i < s.length) {
+        if (q === '"' && s[i] === '\\') { i += 2; continue; }
+        if (s[i] === q) { if (q === "'" && s[i + 1] === "'") { i += 2; continue; } break; }
+        i++;
+      }
+      if (s[i + 1] === ':' && (i + 2 === s.length || s[i + 2] === ' ')) end = i + 1;
+    } else if ('{['.indexOf(s[0]) < 0) {
+      var at = s.indexOf(': ');
+      if (at > 0) end = at;
+      else if (s[s.length - 1] === ':') end = s.length - 1;
+    }
+    if (end < 0) return null;
+    return { key: s.slice(0, end), value: s.slice(end + 1).replace(/^ /, '') };
+  }
+
+  var BLOCK_IND = /^[|>][-+0-9]*$/;
+  function top(a) { return a[a.length - 1]; }
+
+  // parse returns the lines; each key line has its path, its block's end,
+  // its owner (the mapping or list item it belongs to) and, inside a
+  // container, the container's name.
+  function parse(text) {
+    var src = text.replace(/\n+$/, '').split('\n');
+    var lines = [], stack = [], info = {}, uid = 0;
+    var textUntil = -1, textKind = '';   // deeper lines belong to the previous value
+    for (var i = 0; i < src.length; i++) {
+      var raw = src[i];
+      var indent = raw.length - raw.replace(/^ +/, '').length;
+      var L = { i: i, n: i + 1, raw: raw, indent: indent, kind: 'other', dashes: [], keyCol: -1, end: i, owner: 0, anc: [] };
+      if (textUntil >= 0) {
+        if (raw.trim() === '' || indent > textUntil) { L.kind = textKind; L.text = raw.slice(indent); lines.push(L); continue; }
+        textUntil = -1;
+      }
+      var col = indent, rest = raw.slice(indent);
+      while (/^-( |$)/.test(rest)) {
+        while (stack.length && (top(stack).col > col || (top(stack).col === col && top(stack).item))) stack.pop();
+        var parent = stack.length ? top(stack) : null, id = ++uid;
+        info[id] = { item: true, listKey: parent && !parent.item ? parent.key : '' };
+        stack.push({ col: col, key: '[]', item: true, id: id });
+        L.dashes.push(col);
+        var m = rest.match(/^-( +|$)/);
+        col += m[0].length; rest = rest.slice(m[0].length);
+      }
+      var kv = splitKey(rest);
+      if (kv) {
+        while (stack.length && top(stack).col >= col) stack.pop();
+        var key = unquote(kv.key);
+        L.kind = 'key'; L.keyCol = col; L.keyText = kv.key; L.key = key; L.value = kv.value;
+        L.anc = stack.map(function(s) { return s.id; });
+        L.owner = stack.length ? top(stack).id : 0;
+        L.path = stack.map(function(s) { return s.key; }).concat(key);
+        var kid = ++uid;
+        info[kid] = { item: false };
+        stack.push({ col: col, key: key, item: false, id: kid });
+        if (BLOCK_IND.test(kv.value)) { textUntil = col; textKind = 'block'; }
+        else if (kv.value !== '') { textUntil = col; textKind = 'wrap'; }
+      } else if (rest !== '') {
+        L.kind = L.dashes.length ? 'item' : 'wrap'; L.value = rest; L.valCol = col;
+        L.anc = stack.map(function(s) { return s.id; });
+        if (L.dashes.length) {
+          textUntil = L.dashes[L.dashes.length - 1];
+          textKind = BLOCK_IND.test(rest) ? 'block' : 'wrap';
+        }
+      }
+      lines.push(L);
+    }
+    // A key's block: deeper lines, and "- " items at its own column when it has no value.
+    for (var a = 0; a < lines.length; a++) {
+      var K = lines[a];
+      if (K.kind !== 'key') continue;
+      var b = a + 1;
+      while (b < lines.length) {
+        var M = lines[b];
+        if (M.raw.trim() === '' || M.indent > K.keyCol) { b++; continue; }
+        if (K.value === '' && M.indent === K.keyCol && M.dashes.length && M.dashes[0] === K.keyCol) { b++; continue; }
+        break;
+      }
+      while (b - 1 > a && lines[b - 1].raw.trim() === '') b--;
+      K.end = b - 1;
+    }
+    // Keys by owner (for siblings), list items' names, and each line's container.
+    var owners = {}, itemName = {};
+    lines.forEach(function(L) {
+      if (L.kind !== 'key') return;
+      (owners[L.owner] = owners[L.owner] || {})[L.key] = L;
+      if (L.key === 'name' && info[L.owner] && info[L.owner].item && L.value !== '') itemName[L.owner] = unquote(L.value);
+    });
+    lines.forEach(function(L) {
+      for (var x = L.anc.length - 1; x >= 0; x--) {
+        var inf = info[L.anc[x]];
+        if (inf && inf.item && (inf.listKey === 'containers' || inf.listKey === 'initContainers')) { L.container = itemName[L.anc[x]] || ''; break; }
+      }
+    });
+    lines.owners = owners;
+    return lines;
+  }
+
+  function endsWith(path, suf, exact) {
+    if (!path || path.length < suf.length || (exact && path.length !== suf.length)) return false;
+    for (var i = 1; i <= suf.length; i++) if (path[path.length - i] !== suf[suf.length - i]) return false;
+    return true;
+  }
+
+  function sibling(lines, L, key) {
+    var o = lines.owners[L.owner];
+    var S = o && o[key];
+    return S && S.value ? unquote(S.value) : '';
+  }
+
+  // findRefs marks the lines that name another object; ns is the object's.
+  function findRefs(lines, ns) {
+    lines.forEach(function(L) {
+      if (L.kind !== 'key' || !L.value || BLOCK_IND.test(L.value)) return;
+      var name = unquote(L.value);
+      if (!name || name === 'null' || name === '~') return;
+      for (var r = 0; r < REFS.length; r++) {
+        var R = REFS[r];
+        if (!endsWith(L.path, R.suffix, R.exact)) continue;
+        var kind = R.kind || sibling(lines, L, R.kindFrom);
+        if (!kind || NOT_OBJECTS[kind]) return;
+        var refNs = CLUSTER_KINDS[kind] ? '_cluster' : (R.nsFrom && sibling(lines, L, R.nsFrom)) || ns;
+        if (refNs === '_cluster' && !CLUSTER_KINDS[kind]) return;
+        L.ref = { kind: kind, name: name, ns: refNs };
+        return;
+      }
+    });
+  }
+
+  // matchIssue finds the lines an issue from the server points at.
+  function matchIssue(lines, is) {
+    var out = [];
+    if (is.ref_kind) {
+      lines.forEach(function(L) { if (L.ref && L.ref.kind === is.ref_kind && L.ref.name === is.ref_name) out.push(L.i); });
+      if (out.length) return out;
+    }
+    var cands = [is.suffix || []].concat(is.fallback || []);
+    for (var c = 0; c < cands.length && !out.length; c++) {
+      if (!cands[c].length) continue;
+      lines.forEach(function(L) {
+        if (L.kind !== 'key' || !endsWith(L.path, cands[c])) return;
+        if (is.container && L.container !== is.container) return;
+        if (is.value && unquote(L.value || '') !== is.value) return;
+        out.push(L.i);
+      });
+    }
+    return out;
+  }
+
+  function ruleFor(L, hide) {
+    if (L.kind !== 'key') return null;
+    for (var r = 0; r < RULES.length; r++) if (hide[RULES[r].id] && RULES[r].match(L.path)) return RULES[r];
+    return null;
+  }
+
+  // Rows to draw: hidden blocks shrink to their key line, folded blocks too;
+  // hidden single lines disappear.
+  function rows(lines, hide, folded, revealed) {
+    var out = [], hiddenLines = 0, hiddenFields = 0;
+    for (var i = 0; i < lines.length; i++) {
+      var L = lines[i], rule = revealed[i] ? null : ruleFor(L, hide);
+      var size = L.end - L.i;
+      if (rule) {
+        hiddenFields++;
+        hiddenLines += size + 1;
+        if (size > 0) out.push({ line: L, pill: 'hidden', count: size });
+        i = L.end;
+        continue;
+      }
+      if (folded[i] && size > 0) { out.push({ line: L, pill: 'fold', count: size }); i = L.end; continue; }
+      out.push({ line: L });
+    }
+    return { rows: out, hiddenLines: hiddenLines, hiddenFields: hiddenFields };
+  }
+
+  // The YAML without hidden fields, still valid: a key left with nothing
+  // under it (annotations holding only last-applied) goes too.
+  function cleanText(lines, hide, revealed) {
+    var kept = [];
+    for (var i = 0; i < lines.length; i++) {
+      var L = lines[i];
+      if (!revealed[i] && ruleFor(L, hide)) { i = L.end; continue; }
+      kept.push(L);
+    }
+    for (var changed = true; changed;) {
+      changed = false;
+      for (var k = kept.length - 1; k >= 0; k--) {
+        var K = kept[k];
+        if (K.kind !== 'key' || K.value !== '' || K.end === K.i) continue;
+        var next = kept[k + 1];
+        var hasChild = next && (next.indent > K.keyCol || (next.indent === K.keyCol && next.dashes.length && next.dashes[0] === K.keyCol));
+        if (!hasChild) {
+          // A list item whose only key went keeps its dash on the next line, so leave it.
+          if (K.dashes.length) continue;
+          kept.splice(k, 1); changed = true;
+        }
+      }
+    }
+    return kept.map(function(L) { return L.raw; }).join('\n') + '\n';
+  }
+
+  // ── Colouring ───────────────────────────────────────────────────────────────
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function span(c, s) { return '<span class="' + c + '">' + esc(s) + '</span>'; }
+
+  function valueHTML(v) {
+    if (v === '') return '';
+    if (BLOCK_IND.test(v)) return span('yi', v);
+    if (v[0] === '"' || v[0] === "'") return span('ys', v);
+    if (/^(true|false|True|False|TRUE|FALSE)$/.test(v)) return span('yo', v);
+    if (/^(null|Null|NULL|~)$/.test(v)) return span('yo', v);
+    if (/^[-+]?(\d[\d_]*)(\.\d+)?([eE][-+]?\d+)?$/.test(v) || /^[-+]?\.(inf|Inf|INF)$|^\.(nan|NaN|NAN)$/.test(v) || /^0x[0-9a-fA-F]+$/.test(v)) return span('yv', v);
+    if (v === '{}' || v === '[]') return span('yp', v);
+    return span('ys', v);
+  }
+
+  // lineHTML colours one line. value (optional) replaces the value's HTML:
+  // a link to another object, or a masked Secret value.
+  function lineHTML(L, value) {
+    if (L.kind === 'block') return esc(' '.repeat(L.indent)) + span('yb', L.text);
+    if (L.kind === 'wrap' && !L.dashes.length) return esc(' '.repeat(L.indent)) + span('ys', L.text !== undefined ? L.text : L.value);
+    var h = '', pos = 0;
+    for (var d = 0; d < L.dashes.length; d++) {
+      h += ' '.repeat(L.dashes[d] - pos) + span('yp', '-');
+      pos = L.dashes[d] + 1;
+    }
+    if (L.kind === 'key') {
+      h += ' '.repeat(L.keyCol - pos) + span('yk', L.keyText) + span('yp', ':');
+      if (L.value !== '') h += ' ' + (value !== undefined ? value : valueHTML(L.value));
+      return h;
+    }
+    if (L.kind === 'item') return h + ' '.repeat(L.valCol - pos) + valueHTML(L.value);
+    return esc(L.raw);
+  }
+
+  // ── The panel: a stack of columns ───────────────────────────────────────────
+  var $ = function(id) { return document.getElementById(id); };
+  var stack = $('yd-stack'), scrim = $('yd-scrim');
+  var cols = [], hide = {}, opener = null, seq = 0;
+
+  try {
+    var saved = JSON.parse(localStorage.getItem('kh.yaml.hide') || 'null');
+    RULES.forEach(function(r) { hide[r.id] = saved ? !!saved[r.id] : true; });
+  } catch (e) { RULES.forEach(function(r) { hide[r.id] = true; }); }
+  function saveHide() { try { localStorage.setItem('kh.yaml.hide', JSON.stringify(hide)); } catch (e) {} }
+
+  function ident(o) { return o.kind.toLowerCase() + '|' + o.ns + '|' + o.name; }
+  function pageHref(o) {
+    return '/object/' + [o.ns, o.kind, o.name].map(encodeURIComponent).join('/') + '?ctx=' + encodeURIComponent(window.KH_CTX || '');
+  }
+
+  function drawHead(k) {
+    var c = cols[k], h = '';
+    h += '<div class="yd-title-row"><span class="yd-kind">' + esc(c.kind) + '</span><h2 class="yd-title" id="yd-t' + k + '">' + esc(c.name) + '</h2>' +
+      '<span class="yd-ns">' + (c.ns === '_cluster' ? 'cluster-wide' : 'in ' + esc(c.ns)) + '</span>' +
+      '<button class="yd-x" type="button" data-close aria-label="Close ' + esc(c.kind + ' ' + c.name) + '">×</button></div>';
+    if (c.from) h += '<div class="yd-from">from <b>' + esc(c.from.kind + ' ' + c.from.name) + '</b> · ' + esc(c.from.key) + '</div>';
+    if (c.failed) { c.el.querySelector('.yd-head').innerHTML = h; return; }
+    h += '<div class="yd-tools"><span class="yd-label">Hide</span>' + RULES.map(function(r) {
+      return '<button type="button" class="yd-chip" data-rule="' + r.id + '" aria-pressed="' + !!hide[r.id] + '">' + esc(r.label) + '</button>';
+    }).join('') + '<span class="yd-summary" data-summary></span><span class="yd-actions">' +
+      '<button class="yd-btn" type="button" data-collapse' + (c.lines ? '' : ' disabled') + '>' + (c.allFolded ? 'Expand all' : 'Collapse all') + '</button>' +
+      '<button class="yd-btn" type="button" data-copy title="Copies the YAML without the hidden fields; Secret values stay hidden"' + (c.lines ? '' : ' disabled') + '>Copy</button>' +
+      '<a class="yd-btn" target="_blank" rel="noopener" href="' + esc(pageHref(c)) + '" title="Open as a page in a new tab" aria-label="Open as a page in a new tab">↗</a></span></div>';
+    if (c.issues.length) {
+      h += '<div class="yd-issues" role="list" aria-label="Why it is failing">' + c.issues.map(function(is, x) {
+        var at = c.issueLines[x] || [];
+        var where = at.length ? 'line ' + (at[0] + 1) : 'not in the YAML';
+        var text = '<span>' + esc(is.text) + '</span><span class="where">' + where + '</span>';
+        return at.length
+          ? '<button type="button" class="yd-issue ' + esc(is.severity) + '" role="listitem" data-goto="' + at[0] + '">' + text + '</button>'
+          : '<div class="yd-issue ' + esc(is.severity) + '" role="listitem">' + text + '</div>';
+      }).join('') + '</div>';
+    }
+    c.el.querySelector('.yd-head').innerHTML = h;
+  }
+
+  function secretKeyFor(c, L) {
+    if (!c.secretKeys.length || L.kind !== 'key' || L.path.length !== 2 || unquote(L.value) !== '(hidden)') return null;
+    for (var i = 0; i < c.secretKeys.length; i++) {
+      var sk = c.secretKeys[i];
+      if (sk.field === L.path[0] && sk.key === L.path[1]) return sk;
+    }
+    return null;
+  }
+
+  function drawBody(k) {
+    var c = cols[k], body = c.el.querySelector('.yd-body');
+    if (!c.lines) return;
+    var open = {};
+    cols.slice(0, k + 1).forEach(function(o) { open[ident(o)] = true; });
+    var keep = body.scrollTop, keepX = body.scrollLeft;
+    var r = rows(c.lines, hide, c.folded, c.revealed);
+    var h = '<div class="yd-code">';
+    r.rows.forEach(function(row) {
+      var L = row.line, foldable = L.kind === 'key' && L.end > L.i, iss = c.issueAt[L.i], value, extra = '';
+      if (L.ref) {
+        value = open[ident(L.ref)]
+          ? '<span class="yref off" title="Already open to the left">' + esc(L.value) + '</span>'
+          : '<button type="button" class="yref" data-ref="' + L.i + '" title="Open ' + esc(L.ref.kind + ' ' + L.ref.name) + ' to the right">' + esc(L.value) + '</button>';
+      }
+      var sk = secretKeyFor(c, L);
+      if (sk) {
+        var id = sk.field + '/' + sk.key, shown = c.secrets[id];
+        if (!shown) {
+          value = '<button type="button" class="ysec" data-secret="' + esc(id) + '" title="Fetch and show this value">•••••• ' + sk.bytes + ' bytes · Reveal</button>';
+        } else if (shown.value.indexOf('\n') < 0) {
+          value = '<span class="ysec-val">' + esc(shown.value) + '</span>' + (shown.binary ? ' <span class="yp">(binary, base64)</span>' : '') +
+            ' <button type="button" class="ysec" data-secret="' + esc(id) + '">Hide</button>';
+        } else {
+          value = '<button type="button" class="ysec" data-secret="' + esc(id) + '">Hide</button>';
+          extra = '<div class="yr ysec-block"><span class="yg"></span><span class="yt">' + esc(shown.value.replace(/\n$/, '')) + '</span></div>';
+        }
+      }
+      h += '<div class="yr' + (iss ? ' iss ' + esc(iss.severity) : '') + '" data-i="' + L.i + '"><span class="yg"><span class="yn">' + L.n + '</span>';
+      if (foldable && row.pill !== 'hidden') {
+        var isOpen = row.pill !== 'fold';
+        h += '<button type="button" class="yc" data-fold="' + L.i + '" aria-expanded="' + isOpen + '" aria-label="' + (isOpen ? 'Fold ' : 'Unfold ') + esc(L.key) + '">' + (isOpen ? '▾' : '▸') + '</button>';
+      } else {
+        h += '<span class="yc blank"></span>';
+      }
+      h += '</span><span class="yt">' + lineHTML(L, value);
+      var n = row.count + (row.count === 1 ? ' line' : ' lines');
+      if (row.pill === 'hidden') h += '<button type="button" class="ypill hid" data-reveal="' + L.i + '" title="Show it">⋯ ' + n + ' hidden</button>';
+      if (row.pill === 'fold') h += '<button type="button" class="ypill" data-fold="' + L.i + '" title="Unfold">⋯ ' + n + '</button>';
+      if (iss) h += '<span class="yiss ' + esc(iss.severity) + '" title="' + esc(iss.text) + '">◂ ' + esc(iss.text) + '</span>';
+      h += '</span></div>' + extra;
+    });
+    body.innerHTML = h + '</div>';
+    body.scrollTop = keep; body.scrollLeft = keepX;
+    var s = c.el.querySelector('[data-summary]');
+    if (s) s.textContent = r.hiddenFields ? r.hiddenLines + ' line' + (r.hiddenLines === 1 ? '' : 's') + ' hidden' : '';
+  }
+
+  // Lines an issue points at stay visible: their hidden or folded blocks open.
+  function openAround(c, i) {
+    c.lines.forEach(function(A) {
+      if (A.kind === 'key' && A.i < i && A.end >= i) {
+        if (ruleFor(A, hide)) c.revealed[A.i] = true;
+        delete c.folded[A.i];
+      }
+    });
+  }
+
+  function goTo(k, i) {
+    var c = cols[k];
+    openAround(c, i);
+    drawBody(k);
+    var row = c.el.querySelector('.yr[data-i="' + i + '"]');
+    if (!row) return;
+    var body = c.el.querySelector('.yd-body');
+    body.scrollTop = Math.max(0, row.offsetTop - body.clientHeight / 3);
+    row.classList.remove('flash'); void row.offsetWidth; row.classList.add('flash');
+  }
+
+  // A column with no YAML (missing object, error): just the message, no tools.
+  function setState(c, html) {
+    c.failed = true;
+    c.el.querySelector('.yd-body').innerHTML = html;
+    var k = cols.indexOf(c);
+    if (k >= 0) drawHead(k);
+  }
+
+  function addColumn(spec) {
+    var c = { ns: spec.ns, kind: spec.kind, name: spec.name, from: spec.from || null, lines: null, folded: {}, revealed: {},
+      allFolded: false, secretKeys: [], issues: [], issueLines: [], issueAt: {}, secrets: {}, dead: false };
+    cols.push(c);
+    var k = cols.length - 1;
+    c.el = document.createElement('section');
+    c.el.className = 'yd-col' + (k ? ' enter' : '');
+    c.el.dataset.c = k;
+    c.el.setAttribute('aria-labelledby', 'yd-t' + k);
+    c.el.innerHTML = '<div class="yd-head"></div><div class="yd-body"><div class="yd-state">Loading YAML…</div></div>';
+    stack.appendChild(c.el);
+    drawHead(k);
+    updatePan();
+    if (k) requestAnimationFrame(function() { stack.scrollTo({ left: stack.scrollWidth, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); });
+    var gone = false;
+    fetch('/api/yaml/' + [c.ns, c.kind, c.name].map(encodeURIComponent).join('/'))
+      .then(function(r) { gone = r.status === 404; return r.json().catch(function() { return { error: 'HTTP ' + r.status }; }); })
+      .then(function(data) {
+        if (c.dead) return;
+        if (gone) {
+          setState(c, '<div class="yd-state err">This ' + esc(c.kind) + ' does not exist in the cluster.' +
+            (c.from ? ' ' + esc(c.from.kind + ' ' + c.from.name) + ' refers to it, so that is likely why it is failing.' : ' Its events stay in KubeHealth until they expire.') + '</div>');
+          return;
+        }
+        if (data.error) { setState(c, '<div class="yd-state err">Could not load the YAML: ' + esc(data.error) + '</div>'); return; }
+        c.lines = parse(data.yaml || '');
+        findRefs(c.lines, c.ns);
+        c.secretKeys = data.secret_keys || [];
+        c.issues = data.issues || [];
+        c.issueLines = c.issues.map(function(is) { return matchIssue(c.lines, is); });
+        c.issues.forEach(function(is, x) {
+          c.issueLines[x].forEach(function(i) {
+            if (!c.issueAt[i] || (is.severity === 'crit' && c.issueAt[i].severity !== 'crit')) c.issueAt[i] = is;
+            openAround(c, i);
+          });
+        });
+        var j = cols.indexOf(c);
+        drawHead(j);
+        drawBody(j);
+        // Start at the first line that explains the failure.
+        var first = -1;
+        c.issues.forEach(function(is, x) { if (first < 0 && is.severity === 'crit' && c.issueLines[x].length) first = c.issueLines[x][0]; });
+        if (first >= 0) goTo(j, first);
+      })
+      .catch(function(e) { if (!c.dead) setState(c, '<div class="yd-state err">Could not load the YAML: ' + esc(e.message || e) + '</div>'); });
+    return c;
+  }
+
+  function truncate(k) {
+    cols.splice(k).forEach(function(c) { c.dead = true; c.el.remove(); });
+    updatePan();
+  }
+
+  function open(ns, kind, name, from) {
+    truncate(0);
+    opener = from || document.activeElement;
+    scrim.hidden = false; stack.hidden = false;
+    addColumn({ ns: ns, kind: kind, name: name });
+    requestAnimationFrame(function() { scrim.classList.add('open'); stack.classList.add('open'); });
+    document.body.style.overflow = 'hidden';
+    var x = cols[0].el.querySelector('[data-close]');
+    if (x) x.focus({ preventScroll: true });
+  }
+
+  function openRef(k, i) {
+    var c = cols[k], L = c.lines[i];
+    if (!L || !L.ref) return;
+    var next = cols[k + 1];
+    if (next && ident(next) === ident(L.ref)) { next.el.scrollIntoView({ inline: 'end', behavior: 'smooth', block: 'nearest' }); return; }
+    truncate(k + 1);
+    var n = addColumn({ ns: L.ref.ns, kind: L.ref.kind, name: L.ref.name,
+      from: { kind: c.kind, name: c.name, key: L.path.filter(function(p) { return p !== '[]'; }).slice(-2).join('.') } });
+    var x = n.el.querySelector('[data-close]');
+    if (x) x.focus({ preventScroll: true });
+  }
+
+  function closeAll() {
+    if (stack.hidden) return;
+    scrim.classList.remove('open'); stack.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function() {
+      if (stack.classList.contains('open')) return;
+      truncate(0);
+      stack.hidden = true; scrim.hidden = true;
+    }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 230);
+    if (opener && document.contains(opener)) opener.focus();
+  }
+
+  function closeCol(k) {
+    if (k <= 0) { closeAll(); return; }
+    truncate(k);
+    var x = cols[k - 1].el.querySelector('[data-close]');
+    if (x) x.focus({ preventScroll: true });
+  }
+
+  function revealSecret(k, id) {
+    var c = cols[k], cut = id.indexOf('/'), field = id.slice(0, cut), key = id.slice(cut + 1);
+    if (c.secrets[id]) { delete c.secrets[id]; drawBody(k); return; }
+    fetch('/api/yaml/' + [c.ns, c.kind, c.name].map(encodeURIComponent).join('/') + '?reveal=' + encodeURIComponent(key) + '&field=' + encodeURIComponent(field))
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        if (c.dead) return;
+        if (d.error) { alert('Could not reveal ' + key + ': ' + d.error); return; }
+        c.secrets[id] = { value: d.value, binary: d.binary };
+        drawBody(cols.indexOf(c));
+      });
+  }
+
+  // ── Panning: drag sideways when the columns are wider than the screen ──────
+  var pan = null, swallowClick = false;
+  function updatePan() { requestAnimationFrame(function() { stack.classList.toggle('can-pan', stack.scrollWidth > stack.clientWidth + 1); }); }
+  window.addEventListener('resize', updatePan);
+  stack.addEventListener('pointerdown', function(e) {
+    if (e.button !== 0 || e.pointerType === 'touch' || stack.scrollWidth <= stack.clientWidth + 1) return;
+    if (e.target.closest('button, a, input, select, textarea')) return;
+    pan = { x: e.clientX, y: e.clientY, left: stack.scrollLeft, on: false, id: e.pointerId };
+  });
+  stack.addEventListener('pointermove', function(e) {
+    if (!pan || e.pointerId !== pan.id) return;
+    var dx = e.clientX - pan.x, dy = e.clientY - pan.y;
+    if (!pan.on) {
+      if (Math.abs(dx) < 6 || Math.abs(dx) < Math.abs(dy)) return;
+      pan.on = true;
+      stack.setPointerCapture(e.pointerId);
+      stack.classList.add('panning');
+      var sel = window.getSelection && window.getSelection();
+      if (sel) sel.removeAllRanges();
+    }
+    e.preventDefault();
+    stack.scrollLeft = pan.left - dx;
+  });
+  function endPan(e) {
+    if (!pan || (e && e.pointerId !== pan.id)) return;
+    if (pan.on) { swallowClick = true; setTimeout(function() { swallowClick = false; }, 0); }
+    stack.classList.remove('panning');
+    pan = null;
+  }
+  stack.addEventListener('pointerup', endPan);
+  stack.addEventListener('pointercancel', endPan);
+  stack.addEventListener('click', function(e) { if (swallowClick) { e.preventDefault(); e.stopPropagation(); swallowClick = false; } }, true);
+
+  // ── Events ──────────────────────────────────────────────────────────────────
+  // YAML buttons point at /object/{ns}/{kind}/{name}; a plain click opens the
+  // panel instead, a modified click still opens the page in a new tab.
+  document.addEventListener('click', function(e) {
+    var a = e.target.closest && e.target.closest('a.yaml-btn');
+    if (!a || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    var m = new URL(a.href, location.href).pathname.match(/^\/object\/([^/]+)\/([^/]+)\/(.+)$/);
+    if (!m) return;
+    e.preventDefault();
+    open(decodeURIComponent(m[1]), decodeURIComponent(m[2]), decodeURIComponent(m[3]), a);
+  }, true);
+
+  scrim.addEventListener('click', closeAll);
+
+  stack.addEventListener('click', function(e) {
+    var colEl = e.target.closest('.yd-col');
+    if (!colEl) return;
+    var k = +colEl.dataset.c, c = cols[k], t;
+    if (!c) return;
+    if ((t = e.target.closest('[data-close]'))) { closeCol(k); return; }
+    if ((t = e.target.closest('[data-rule]'))) {
+      hide[t.dataset.rule] = !hide[t.dataset.rule];
+      saveHide();
+      cols.forEach(function(o, j) {
+        o.revealed = {};
+        if (o.lines) o.issueLines.forEach(function(ls) { ls.forEach(function(i) { openAround(o, i); }); });
+        drawHead(j); drawBody(j);
+      });
+      var again = cols[k].el.querySelector('[data-rule="' + t.dataset.rule + '"]');
+      if (again) again.focus({ preventScroll: true });
+      return;
+    }
+    if ((t = e.target.closest('[data-ref]'))) { openRef(k, +t.dataset.ref); return; }
+    if ((t = e.target.closest('[data-secret]'))) { revealSecret(k, t.dataset.secret); return; }
+    if ((t = e.target.closest('[data-goto]'))) { goTo(k, +t.dataset.goto); return; }
+    if ((t = e.target.closest('[data-reveal]'))) { c.revealed[+t.dataset.reveal] = true; drawBody(k); return; }
+    if ((t = e.target.closest('[data-fold]'))) { var i = +t.dataset.fold; c.folded[i] = !c.folded[i]; drawBody(k); return; }
+    if ((t = e.target.closest('[data-collapse]'))) {
+      if (!c.lines) return;
+      c.allFolded = !c.allFolded;
+      c.folded = {};
+      if (c.allFolded) c.lines.forEach(function(L) { if (L.kind === 'key' && L.end > L.i) c.folded[L.i] = true; });
+      t.textContent = c.allFolded ? 'Expand all' : 'Collapse all';
+      drawBody(k);
+      return;
+    }
+    if ((t = e.target.closest('[data-copy]'))) {
+      if (!c.lines) return;
+      var btn = t, text = cleanText(c.lines, hide, c.revealed);
+      var ok = function() { btn.textContent = 'Copied'; btn.classList.add('done'); setTimeout(function() { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500); };
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(ok); return; }
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); ok(); } catch (err) {}
+      ta.remove();
+    }
+  });
+
+  stack.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeCol(cols.length - 1); return; }
+    if (e.key !== 'Tab') return;
+    var f = [].slice.call(stack.querySelectorAll('button:not(:disabled), a[href]')).filter(function(x) { return x.offsetParent !== null; });
+    if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  });
+
+  window.khYAML = {
+    open: function(ns, kind, name) { open(ns, kind, name); }, close: closeAll, columns: function() { return cols; },
+    _core: { parse: parse, rows: rows, cleanText: cleanText, lineHTML: lineHTML, findRefs: findRefs, matchIssue: matchIssue, RULES: RULES }
+  };
+})();
+</script>
+{{end}}

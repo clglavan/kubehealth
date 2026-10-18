@@ -466,7 +466,9 @@ xattr -d com.apple.quarantine kubehealth-embed
     ['01-overview.png', 'Overview', 'One row per broken workload, ranked new / ongoing / chronic. A computed brief says where to start; the model adds one note.'],
     ['02-namespace-status.png', 'Namespace status', 'Live counts of workloads, pods and claims, and what needs attention, without leaving the page.'],
     ['05-rca.png', 'Root cause analysis', 'The model reads the evidence and calls read-only tools for more: logs, describe, events, correlated events.'],
-    ['08-prod.png', 'Many clusters, clearly labelled', 'Every kubeconfig context, switched in place. Production gets a red stripe on every page.']
+    ['08-prod.png', 'Many clusters, clearly labelled', 'Every kubeconfig context, switched in place. Production gets a red stripe on every page.'],
+    ['10-yaml-why.png', 'YAML that points at the problem', 'The fields the warnings and container state blame are highlighted with the reason, listed on top and scrolled to. Status and other noise stay hidden until you ask.'],
+    ['11-yaml-references.png', 'Follow references, column by column', 'Every ConfigMap, Secret, claim, ServiceAccount or owner the YAML names opens to the right: Pod → PVC → a StorageClass that doesn\'t exist. Secrets stay masked until you reveal one key.']
   ];
   var STAGES = [
     ['Fetch', '≤ 1 call / 2 s', '2s', 'One worker, at most one list call every 2 seconds. Every 10 s it lists Warning events cluster-wide (fieldSelector=type=Warning); the other ticks refresh the stalest namespace. The client is capped at QPS 5, burst 10.'],
@@ -480,7 +482,7 @@ xattr -d com.apple.quarantine kubehealth-embed
   var ACTIONS = [
     ['Logs', 'current and previous run, inline'], ['Correlate', 'events ±5 min across namespaces, from the cache'],
     ['✦ AI', 'events, describe, container state, logs → one answer'], ['RCA', 'the same, plus four tools the model can call'],
-    ['YAML', 'the live object, noise hidden']
+    ['YAML', 'the fields that explain the failure, references, Secrets masked']
   ];
   var CATS = {
     scheduling: 'Scheduling', storage: 'Storage', images: 'Images', config: 'Config & Secrets', runtime: 'Runtime',

@@ -21,7 +21,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/util/homedir"
-	"sigs.k8s.io/yaml"
 )
 
 //go:embed templates/*.html
@@ -552,6 +551,7 @@ func main() {
 	mux.HandleFunc("/api/context", handleAPIContext)
 	mux.HandleFunc("/api/context/env", handleAPIContextEnv)
 	mux.HandleFunc("/api/object/", handleAPIObject)
+	mux.HandleFunc("/api/yaml/", handleAPIYAML)
 	mux.HandleFunc("/api/status", handleAPIStatus)
 	mux.HandleFunc("/api/refresh", handleRefresh)
 	mux.HandleFunc("/api/ai/insights/", handleAPIAIInsights)
@@ -1005,39 +1005,6 @@ func handleObject(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *clusterState) fetchObjectYAML(namespace, kind, name string) (string, error) {
-	namespace = apiNamespace(namespace)
-	gvr, err := c.kindToGVR(kind)
-	if err != nil {
-		return "", err
-	}
-
-	var obj interface{}
-	if namespace == "" || namespace == "_" {
-		o, err := c.dynamic.Resource(gvr).Get(context.Background(), name, metav1.GetOptions{})
-		if err != nil {
-			return "", err
-		}
-		obj = o.Object
-	} else {
-		o, err := c.dynamic.Resource(gvr).Namespace(namespace).Get(context.Background(), name, metav1.GetOptions{})
-		if err != nil {
-			return "", err
-		}
-		obj = o.Object
-	}
-
-	b, err := json.Marshal(obj)
-	if err != nil {
-		return "", err
-	}
-	y, err := yaml.JSONToYAML(b)
-	if err != nil {
-		return "", err
-	}
-	return string(y), nil
-}
-
 // staticGVR is a fast-path lookup for common built-in resource types.
 var staticGVR = map[string]schema.GroupVersionResource{
 	"pod":                   {Group: "", Version: "v1", Resource: "pods"},
@@ -1342,6 +1309,6 @@ func mustParseTemplate(name, file string, extras ...string) *template.Template {
 }
 
 var (
-	appTmpl    = mustParseTemplate("app.html", "templates/app.html", "templates/ns_view.html", "templates/header.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html")
+	appTmpl    = mustParseTemplate("app.html", "templates/app.html", "templates/ns_view.html", "templates/header.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html", "templates/yaml_drawer.html")
 	objectTmpl = mustParseTemplate("object.html", "templates/object.html")
 )

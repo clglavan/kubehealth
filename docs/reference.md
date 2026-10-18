@@ -52,12 +52,15 @@ Every object in the namespace view shows its counts, then the same buttons in th
 | **Correlate** | Scans the in-memory event cache across **all** namespaces for events whose timestamp falls within ±5 min of the selected object's events. | ❌ | ❌ |
 | **RCA** | Multi-step agent loop — sends events + describe + pod logs to the LLM with 4 tools; model calls tools iteratively until confident, then produces a structured Root Cause + Resolution + Confidence. | ✅ | ✅ |
 | **AI** | Single-shot analysis: streams events + describe + pod logs to the LLM and shows tokens as they arrive. For a workload it also sends the warnings of the objects it owns and its newest failing Pod's logs, like RCA. | ✅ | ✅ |
+| **YAML** | Opens the object's live YAML in a panel that slides in from the left, coloured, with line numbers. `status`, `managedFields`, the last-applied annotation and ids/timestamps are hidden by default (chips toggle them; a hidden block shows as one line you can click to reveal). Any key folds; **Collapse all** leaves the top-level keys. **Copy** copies the YAML without the hidden fields, like `kubectl neat`. **Why it fails:** the fields the object's warnings and container state point at (an image that won't pull, a memory limit an OOM kill hit, a failing probe, a missing ConfigMap or Secret, a StorageClass that doesn't exist, a quota or LimitRange, a Job deadline…) are highlighted with the reason, listed at the top, and the panel scrolls to the first one. **References** (ConfigMaps, Secrets, PVCs, ServiceAccounts, Nodes, StorageClasses, PVs, owners, claimRef, roleRef, subjects …) are links: each opens that object in a new column to the right, so a chain like Deployment → ServiceAccount → its pull Secret stays on screen; an object already open to the left can't be opened again, and columns wider than the screen scroll sideways by dragging. **Secret values** never reach the page: they show masked, with a per-key Reveal that fetches and decodes one value. Click outside or press Esc to close (Esc closes the last column); Cmd/Ctrl-click opens the YAML as a page instead. | ✅ | ❌ |
 
 Results are collapsible panels (expanded by default, except Correlate which is collapsed). AI and RCA results persist server-side — refreshing the page reconnects to a still-running analysis.
 
 | | |
 |---|---|
 | ![Pod logs inline](images/04-logs.png) | ![Root cause analysis](images/05-rca.png) |
+| ![YAML panel: the line that explains the failure](images/10-yaml-why.png) | ![YAML references open to the right](images/11-yaml-references.png) |
+| ![YAML panel: Secrets masked](images/12-yaml-secrets.png) | |
 
 ## AI and RCA
 
@@ -196,6 +199,7 @@ To add a case, record a snapshot of a cluster that shows the incident (or reuse 
 | `GET /api/status` | `{"loaded": N, "total": M, "ready": bool}` — namespace loading progress |
 | `GET /api/events` | Full dashboard data JSON |
 | `GET /api/object/{ns}/{kind}/{name}` | Live object describe (built-in types and CRDs) |
+| `GET /api/yaml/{ns}/{kind}/{name}[?reveal=key]` | The YAML panel: the object as YAML with Secret values masked, the masked keys, and the fields its warnings and container state point at (`_cluster` for cluster-scoped objects; 404 when it no longer exists). `?reveal=<key>` returns one Secret value, decoded |
 
 ### Clusters
 | Endpoint | Description |
@@ -261,7 +265,8 @@ templates/
 ├─ ai_modal.html       — AI Agent config modal (system prompt, context window estimate)
 ├─ settings_modal.html — Settings modal (log lines, timeouts, concurrency, RCA iterations)
 ├─ docs_modal.html     — Interactive architecture diagram with animated data flows
-└─ object.html         — YAML viewer
+├─ yaml_drawer.html    — YAML panel: columns, colouring, folding, hiding noisy fields, references, why-it-fails highlights, copy
+└─ object.html         — YAML as a page (the panel's ↗, or Cmd/Ctrl-click on YAML)
 ```
 
 ### Data flow summary
