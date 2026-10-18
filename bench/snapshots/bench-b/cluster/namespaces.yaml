@@ -1,0 +1,47 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:01Z"
+    labels:
+      kubernetes.io/metadata.name: default
+    name: default
+    resourceVersion: "23"
+    uid: c0f957ff-5903-42a7-b669-0a66a3cdda5e
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    labels:
+      kubernetes.io/metadata.name: larkspur-books
+      team: finance-platform
+    name: larkspur-books
+    resourceVersion: "8693"
+    uid: 714a0df4-2520-46fe-97e8-27c7ea0bc70e
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    labels:
+      kubernetes.io/metadata.name: larkspur-notify
+      team: finance-platform
+    name: larkspur-notify
+    resourceVersion: "10754"
+    uid: 5cf9325b-972e-4b5a-befd-095926b9522f
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+kind: List

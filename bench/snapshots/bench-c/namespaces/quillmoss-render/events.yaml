@@ -1,0 +1,3071 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: glyph-ocr-6696fcd458-6lwk9
+    namespace: quillmoss-render
+    resourceVersion: "8754"
+    uid: 51254c48-61c9-4b70-8934-70e96f9eacea
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Successfully assigned quillmoss-render/glyph-ocr-6696fcd458-6lwk9 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr-6696fcd458-6lwk9.18df92dab05aca44
+    namespace: quillmoss-render
+    resourceVersion: "8760"
+    uid: 4e13f651-c478-4699-8eb3-35e909f22aa3
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{ocr}
+    kind: Pod
+    name: glyph-ocr-6696fcd458-6lwk9
+    namespace: quillmoss-render
+    resourceVersion: "8756"
+    uid: 51254c48-61c9-4b70-8934-70e96f9eacea
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:51Z"
+  message: Container image "harbor.quillmoss.internal/render/glyph-ocr:2.2.0" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-6696fcd458-6lwk9.18df92dad016e3d6
+    namespace: quillmoss-render
+    resourceVersion: "13857"
+    uid: abebfffa-d925-4122-8cc5-49a188bae06c
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{ocr}
+    kind: Pod
+    name: glyph-ocr-6696fcd458-6lwk9
+    namespace: quillmoss-render
+    resourceVersion: "8756"
+    uid: 51254c48-61c9-4b70-8934-70e96f9eacea
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:51Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-6696fcd458-6lwk9.18df92dad24b0cae
+    namespace: quillmoss-render
+    resourceVersion: "13858"
+    uid: 31171270-ae8c-4d69-ae34-7f9132b26161
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{ocr}
+    kind: Pod
+    name: glyph-ocr-6696fcd458-6lwk9
+    namespace: quillmoss-render
+    resourceVersion: "8756"
+    uid: 51254c48-61c9-4b70-8934-70e96f9eacea
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:51Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-6696fcd458-6lwk9.18df92dad6b91196
+    namespace: quillmoss-render
+    resourceVersion: "13859"
+    uid: 315f6bf8-efe2-4268-9f75-b06b4f1c00d5
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 14
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:41Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{ocr}
+    kind: Pod
+    name: glyph-ocr-6696fcd458-6lwk9
+    namespace: quillmoss-render
+    resourceVersion: "8756"
+    uid: 51254c48-61c9-4b70-8934-70e96f9eacea
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:01Z"
+  message: Back-off restarting failed container ocr in pod glyph-ocr-6696fcd458-6lwk9_quillmoss-render(51254c48-61c9-4b70-8934-70e96f9eacea)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:41Z"
+    name: glyph-ocr-6696fcd458-6lwk9.18df92deb27f7ee0
+    namespace: quillmoss-render
+    resourceVersion: "13929"
+    uid: 29f42474-abcf-43d7-9d02-b9fe5eeff0db
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: glyph-ocr-6696fcd458
+    namespace: quillmoss-render
+    resourceVersion: "8752"
+    uid: 11e32d56-48ef-4db5-a956-68344056d8e9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: 'Created pod: glyph-ocr-6696fcd458-6lwk9'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr-6696fcd458.18df92dab020996e
+    namespace: quillmoss-render
+    resourceVersion: "8757"
+    uid: 65bb834e-cbb0-4398-9eef-c403b5f6c5b2
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8739"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Successfully assigned quillmoss-render/glyph-ocr-model-6578b5984d-zhqqt
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92daadfdad7a
+    namespace: quillmoss-render
+    resourceVersion: "8747"
+    uid: 0a47a021-5472-497a-92df-2f9510b42559
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model-server}
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8744"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:11Z"
+  message: Pulling image "quillmoss/ocr-model:5.0.2"
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92dacd0c2002
+    namespace: quillmoss-render
+    resourceVersion: "11287"
+    uid: cd9c5be9-6722-481c-9bf5-f6d7f22432aa
+  reason: Pulling
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model-server}
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8744"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:12Z"
+  message: 'Failed to pull image "quillmoss/ocr-model:5.0.2": failed to pull and unpack
+    image "docker.io/quillmoss/ocr-model:5.0.2": failed to resolve reference "docker.io/quillmoss/ocr-model:5.0.2":
+    pull access denied, repository does not exist or may require authorization: server
+    message: insufficient_scope: authorization failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92daf96f3345
+    namespace: quillmoss-render
+    resourceVersion: "11288"
+    uid: e0a6a718-3cb7-4146-9b62-315ab96a31e9
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model-server}
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8744"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:12Z"
+  message: 'Error: ErrImagePull'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92daf971b75f
+    namespace: quillmoss-render
+    resourceVersion: "11289"
+    uid: 6fc73937-7f73-46b1-ac01-d309269a5554
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 42
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model-server}
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8744"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:32Z"
+  message: Back-off pulling image "quillmoss/ocr-model:5.0.2"
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92db1aa5fe81
+    namespace: quillmoss-render
+    resourceVersion: "13278"
+    uid: 4f7ba7e2-32c5-412d-a54b-050d88cc7e0a
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 42
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model-server}
+    kind: Pod
+    name: glyph-ocr-model-6578b5984d-zhqqt
+    namespace: quillmoss-render
+    resourceVersion: "8744"
+    uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:32Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: glyph-ocr-model-6578b5984d-zhqqt.18df92db1aaac263
+    namespace: quillmoss-render
+    resourceVersion: "13279"
+    uid: 361d321f-1d90-4b46-b380-ea9785a15120
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: glyph-ocr-model-6578b5984d
+    namespace: quillmoss-render
+    resourceVersion: "8735"
+    uid: 9c679d9b-e5f0-46a8-9b48-a929a3a5c247
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: 'Created pod: glyph-ocr-model-6578b5984d-zhqqt'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr-model-6578b5984d.18df92daad6c08a2
+    namespace: quillmoss-render
+    resourceVersion: "8742"
+    uid: 9d48f3da-4d8c-45af-b948-4ad24d0b7f8c
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: glyph-ocr-model
+    namespace: quillmoss-render
+    resourceVersion: "8734"
+    uid: 637ac0c0-76e1-4cf9-8552-9fddf652d7e6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Scaled up replica set glyph-ocr-model-6578b5984d from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr-model.18df92daacdde1f8
+    namespace: quillmoss-render
+    resourceVersion: "8738"
+    uid: 83be18b6-88bf-4713-a84b-bab4a693ff21
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: glyph-ocr
+    namespace: quillmoss-render
+    resourceVersion: "8749"
+    uid: 67b70608-49f8-42fa-93b7-dc4be2282c7c
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Scaled up replica set glyph-ocr-6696fcd458 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-ocr.18df92daaf5d2b32
+    namespace: quillmoss-render
+    resourceVersion: "8753"
+    uid: afdc106c-f9e7-4b1c-8181-f556782b799c
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: glyph-preview-798f8c66d5-4zpc9
+    namespace: quillmoss-render
+    resourceVersion: "8769"
+    uid: b0bd69f4-6ee4-460d-bf81-256840b49a7d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Successfully assigned quillmoss-render/glyph-preview-798f8c66d5-4zpc9 to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-preview-798f8c66d5-4zpc9.18df92dac1c49990
+    namespace: quillmoss-render
+    resourceVersion: "8780"
+    uid: de560331-c6e9-4b86-ae06-122402b9749c
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-4zpc9
+    namespace: quillmoss-render
+    resourceVersion: "8774"
+    uid: b0bd69f4-6ee4-460d-bf81-256840b49a7d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-4zpc9.18df92dae008cc78
+    namespace: quillmoss-render
+    resourceVersion: "8806"
+    uid: b1a8920f-f063-419b-bb0f-f436d1126069
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-4zpc9
+    namespace: quillmoss-render
+    resourceVersion: "8774"
+    uid: b0bd69f4-6ee4-460d-bf81-256840b49a7d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-4zpc9.18df92dae4b60a6a
+    namespace: quillmoss-render
+    resourceVersion: "8812"
+    uid: ebdc0b36-79d5-424a-8c9c-f2e4dfe8d1ab
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-4zpc9
+    namespace: quillmoss-render
+    resourceVersion: "8774"
+    uid: b0bd69f4-6ee4-460d-bf81-256840b49a7d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-4zpc9.18df92dae9b75942
+    namespace: quillmoss-render
+    resourceVersion: "8827"
+    uid: cebbc327-3f93-4fc7-94d3-5df0f927b306
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: glyph-preview-798f8c66d5-tjclz
+    namespace: quillmoss-render
+    resourceVersion: "8775"
+    uid: fbfe3be3-7797-43f3-a98f-5e91a9400436
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Successfully assigned quillmoss-render/glyph-preview-798f8c66d5-tjclz to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-preview-798f8c66d5-tjclz.18df92dac2d868ac
+    namespace: quillmoss-render
+    resourceVersion: "8787"
+    uid: 244bdaf6-1f12-49eb-8f46-58e66c637fc8
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-tjclz
+    namespace: quillmoss-render
+    resourceVersion: "8782"
+    uid: fbfe3be3-7797-43f3-a98f-5e91a9400436
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-tjclz.18df92dae0622f0c
+    namespace: quillmoss-render
+    resourceVersion: "8808"
+    uid: 2f887450-6a2e-4107-86a0-c0964eba5f4f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-tjclz
+    namespace: quillmoss-render
+    resourceVersion: "8782"
+    uid: fbfe3be3-7797-43f3-a98f-5e91a9400436
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-tjclz.18df92dae3c8d088
+    namespace: quillmoss-render
+    resourceVersion: "8811"
+    uid: e74e975d-e9ff-4347-a1d2-0912899a937f
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{preview}
+    kind: Pod
+    name: glyph-preview-798f8c66d5-tjclz
+    namespace: quillmoss-render
+    resourceVersion: "8782"
+    uid: fbfe3be3-7797-43f3-a98f-5e91a9400436
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-preview-798f8c66d5-tjclz.18df92dae7f792f2
+    namespace: quillmoss-render
+    resourceVersion: "8818"
+    uid: 696b149f-0f4c-4aac-806f-24bad39d80e2
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: glyph-preview-798f8c66d5
+    namespace: quillmoss-render
+    resourceVersion: "8768"
+    uid: c2f6d3c6-bc42-4be5-b3ec-b19fd88306ad
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: 'Created pod: glyph-preview-798f8c66d5-4zpc9'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-preview-798f8c66d5.18df92dac0e66ed6
+    namespace: quillmoss-render
+    resourceVersion: "8773"
+    uid: e776ddab-92ad-41bb-9c35-51ffa9afcf51
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: glyph-preview-798f8c66d5
+    namespace: quillmoss-render
+    resourceVersion: "8768"
+    uid: c2f6d3c6-bc42-4be5-b3ec-b19fd88306ad
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: 'Created pod: glyph-preview-798f8c66d5-tjclz'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-preview-798f8c66d5.18df92dac1c3808c
+    namespace: quillmoss-render
+    resourceVersion: "8779"
+    uid: a274c6c8-81c7-4b1a-b5f6-d103983ebff0
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: glyph-preview
+    namespace: quillmoss-render
+    resourceVersion: "8767"
+    uid: ed7579ce-bc19-4dcc-8ed5-c3dd8e7a247f
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Scaled up replica set glyph-preview-798f8c66d5 from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-preview.18df92dac08a240a
+    namespace: quillmoss-render
+    resourceVersion: "8772"
+    uid: bdb15e2f-6a1a-419e-bfa6-96f9602c1755
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "8830"
+    uid: 52271e86-d76f-41cd-ac24-7de7afe2277d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Successfully assigned quillmoss-render/glyph-store-0 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: glyph-store-0.18df92dba0228629
+    namespace: quillmoss-render
+    resourceVersion: "9096"
+    uid: 09ac954f-247a-494b-8905-5ca19329406f
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "9094"
+    uid: 52271e86-d76f-41cd-ac24-7de7afe2277d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container image "harbor.quillmoss.internal/render/glyph-store:1.0.6" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: glyph-store-0.18df92dbbd6419f5
+    namespace: quillmoss-render
+    resourceVersion: "9154"
+    uid: c54855e5-12be-4066-a2fc-1a5f682d8e3e
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "9094"
+    uid: 52271e86-d76f-41cd-ac24-7de7afe2277d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: glyph-store-0.18df92dbc164a411
+    namespace: quillmoss-render
+    resourceVersion: "9162"
+    uid: 9f3c4e50-ada6-470f-b815-9719d8650e4c
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "9094"
+    uid: 52271e86-d76f-41cd-ac24-7de7afe2277d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: glyph-store-0.18df92dbc741af05
+    namespace: quillmoss-render
+    resourceVersion: "9163"
+    uid: 3b886f81-dc48-43be-bec6-78c894329bc8
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: glyph-store
+    namespace: quillmoss-render
+    resourceVersion: "8823"
+    uid: a6941a27-fd76-44a6-88b2-02328eb2eccf
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Create Claim glyphs-glyph-store-0 Pod glyph-store-0 in StatefulSet glyph-store
+    success
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-store.18df92daeab18f79
+    namespace: quillmoss-render
+    resourceVersion: "8832"
+    uid: 46c2c00c-aebe-457a-8978-125a54fbf694
+  reason: SuccessfulCreate
+  reportingComponent: statefulset-controller
+  reportingInstance: ""
+  source:
+    component: statefulset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: glyph-store
+    namespace: quillmoss-render
+    resourceVersion: "8823"
+    uid: a6941a27-fd76-44a6-88b2-02328eb2eccf
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Create Pod glyph-store-0 in StatefulSet glyph-store successful
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyph-store.18df92daeb5937ab
+    namespace: quillmoss-render
+    resourceVersion: "8834"
+    uid: 812405bf-0a9f-4af7-a70b-761085bf7b70
+  reason: SuccessfulCreate
+  reportingComponent: statefulset-controller
+  reportingInstance: ""
+  source:
+    component: statefulset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: glyphs-glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "8828"
+    uid: f28d98d9-e77d-487f-a647-066bd9a70fdb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: waiting for first consumer to be created before binding
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyphs-glyph-store-0.18df92daea8ecfa7
+    namespace: quillmoss-render
+    resourceVersion: "8833"
+    uid: 4751e016-9bdc-4105-ac19-3223aa0f3f3b
+  reason: WaitForFirstConsumer
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: glyphs-glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "8841"
+    uid: f28d98d9-e77d-487f-a647-066bd9a70fdb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Waiting for a volume to be created either by the external provisioner 'rancher.io/local-path'
+    or manually by the system administrator. If volume creation is delayed, please
+    verify that the provisioner is running and correctly registered.
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyphs-glyph-store-0.18df92daed55bfcf
+    namespace: quillmoss-render
+    resourceVersion: "8843"
+    uid: 9b17dd78-0d08-4477-8b4a-5845a592c1ac
+  reason: ExternalProvisioning
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: glyphs-glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "8841"
+    uid: f28d98d9-e77d-487f-a647-066bd9a70fdb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: External provisioner is provisioning volume for claim "quillmoss-render/glyphs-glyph-store-0"
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: glyphs-glyph-store-0.18df92daed8f4533
+    namespace: quillmoss-render
+    resourceVersion: "8844"
+    uid: c1d7f9f1-5ac9-4e28-afea-d8ecf96a9193
+  reason: Provisioning
+  reportingComponent: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  reportingInstance: ""
+  source:
+    component: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: glyphs-glyph-store-0
+    namespace: quillmoss-render
+    resourceVersion: "8841"
+    uid: f28d98d9-e77d-487f-a647-066bd9a70fdb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Successfully provisioned volume pvc-f28d98d9-e77d-487f-a647-066bd9a70fdb
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: glyphs-glyph-store-0.18df92db676233c5
+    namespace: quillmoss-render
+    resourceVersion: "9001"
+    uid: bc28c911-5a4f-49a8-96a5-e4682ae1a53c
+  reason: ProvisioningSucceeded
+  reportingComponent: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  reportingInstance: ""
+  source:
+    component: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-p8jlf
+    namespace: quillmoss-render
+    resourceVersion: "9108"
+    uid: 787ed142-8bed-4395-9c55-1d1fc1fb391c
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Successfully assigned quillmoss-render/inkwell-api-bc6ccb7bc-p8jlf to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-api-bc6ccb7bc-p8jlf.18df92dbaa1a96d5
+    namespace: quillmoss-render
+    resourceVersion: "9116"
+    uid: d6dffb43-7769-4e80-8711-f440361b8f76
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-p8jlf
+    namespace: quillmoss-render
+    resourceVersion: "9112"
+    uid: 787ed142-8bed-4395-9c55-1d1fc1fb391c
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-p8jlf.18df92dbcb3d270b
+    namespace: quillmoss-render
+    resourceVersion: "9171"
+    uid: 9215f806-0d71-46a0-b0e0-83e2607e022b
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-p8jlf
+    namespace: quillmoss-render
+    resourceVersion: "9112"
+    uid: 787ed142-8bed-4395-9c55-1d1fc1fb391c
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-p8jlf.18df92dbcd5ea555
+    namespace: quillmoss-render
+    resourceVersion: "9173"
+    uid: 19360d28-174d-4372-bced-733368e3ebdf
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-p8jlf
+    namespace: quillmoss-render
+    resourceVersion: "9112"
+    uid: 787ed142-8bed-4395-9c55-1d1fc1fb391c
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-p8jlf.18df92dbd5cd0b19
+    namespace: quillmoss-render
+    resourceVersion: "9195"
+    uid: dfd039c2-21fc-49a8-b078-cb71ed86caa0
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-r8pck
+    namespace: quillmoss-render
+    resourceVersion: "9111"
+    uid: 26cdefa7-1280-4af6-bf59-e9ed5a40f2d1
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Successfully assigned quillmoss-render/inkwell-api-bc6ccb7bc-r8pck to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-api-bc6ccb7bc-r8pck.18df92dbaafb40ef
+    namespace: quillmoss-render
+    resourceVersion: "9121"
+    uid: 1867ba8a-5a97-42a5-bbc2-e13144f7b978
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-r8pck
+    namespace: quillmoss-render
+    resourceVersion: "9119"
+    uid: 26cdefa7-1280-4af6-bf59-e9ed5a40f2d1
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-r8pck.18df92dbcd822d63
+    namespace: quillmoss-render
+    resourceVersion: "9174"
+    uid: 562f577e-c410-48a5-9986-bcd76d3d93f6
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-r8pck
+    namespace: quillmoss-render
+    resourceVersion: "9119"
+    uid: 26cdefa7-1280-4af6-bf59-e9ed5a40f2d1
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-r8pck.18df92dbd08b5abb
+    namespace: quillmoss-render
+    resourceVersion: "9179"
+    uid: 8806a494-b762-4981-997a-ff61f61d03e5
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: inkwell-api-bc6ccb7bc-r8pck
+    namespace: quillmoss-render
+    resourceVersion: "9119"
+    uid: 26cdefa7-1280-4af6-bf59-e9ed5a40f2d1
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-api-bc6ccb7bc-r8pck.18df92dbdac7511f
+    namespace: quillmoss-render
+    resourceVersion: "9205"
+    uid: bdc95346-3d6c-4268-adc1-c25d8ee7d997
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: inkwell-api-bc6ccb7bc
+    namespace: quillmoss-render
+    resourceVersion: "9104"
+    uid: 47413b38-b20c-4c72-bf1f-370af0547690
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Created pod: inkwell-api-bc6ccb7bc-p8jlf'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-api-bc6ccb7bc.18df92dba9a45759
+    namespace: quillmoss-render
+    resourceVersion: "9113"
+    uid: 122a6e5b-0537-489a-b02c-2cccf751cb61
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: inkwell-api-bc6ccb7bc
+    namespace: quillmoss-render
+    resourceVersion: "9104"
+    uid: 47413b38-b20c-4c72-bf1f-370af0547690
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Created pod: inkwell-api-bc6ccb7bc-r8pck'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-api-bc6ccb7bc.18df92dbaa34a2b9
+    namespace: quillmoss-render
+    resourceVersion: "9120"
+    uid: 2cc4678b-6a11-45ab-9579-a58752cb7280
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: inkwell-api
+    namespace: quillmoss-render
+    resourceVersion: "9103"
+    uid: f971225d-3b9f-4b28-b7bd-2481eac986b3
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Scaled up replica set inkwell-api-bc6ccb7bc from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-api.18df92dba913dafd
+    namespace: quillmoss-render
+    resourceVersion: "9105"
+    uid: 7fb18a08-5645-4eef-a3af-be4d96fad423
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: inkwell-thumbnailer-8465884f59-nxprj
+    namespace: quillmoss-render
+    resourceVersion: "9132"
+    uid: a61d45f3-540d-4705-b8c6-55f0ab5ef4c7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Successfully assigned quillmoss-render/inkwell-thumbnailer-8465884f59-nxprj
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-thumbnailer-8465884f59-nxprj.18df92dbadbfd2cd
+    namespace: quillmoss-render
+    resourceVersion: "9139"
+    uid: 9ba5c510-4aa4-4678-adfc-37a6378125d7
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{thumbnailer}
+    kind: Pod
+    name: inkwell-thumbnailer-8465884f59-nxprj
+    namespace: quillmoss-render
+    resourceVersion: "9136"
+    uid: a61d45f3-540d-4705-b8c6-55f0ab5ef4c7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:42Z"
+  message: Container image "harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-thumbnailer-8465884f59-nxprj.18df92dbce8362b3
+    namespace: quillmoss-render
+    resourceVersion: "13818"
+    uid: efc6ee51-0cbc-4708-be33-1923c6f2357b
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{thumbnailer}
+    kind: Pod
+    name: inkwell-thumbnailer-8465884f59-nxprj
+    namespace: quillmoss-render
+    resourceVersion: "9136"
+    uid: a61d45f3-540d-4705-b8c6-55f0ab5ef4c7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:42Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-thumbnailer-8465884f59-nxprj.18df92dbd1d0b4ed
+    namespace: quillmoss-render
+    resourceVersion: "13819"
+    uid: 6fc8de5d-c13a-4642-bb30-c6a787dd9bfe
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{thumbnailer}
+    kind: Pod
+    name: inkwell-thumbnailer-8465884f59-nxprj
+    namespace: quillmoss-render
+    resourceVersion: "9136"
+    uid: a61d45f3-540d-4705-b8c6-55f0ab5ef4c7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:42Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: inkwell-thumbnailer-8465884f59-nxprj.18df92dbd8f965d5
+    namespace: quillmoss-render
+    resourceVersion: "13820"
+    uid: a5bcb35c-71cc-4a77-b44c-40275f48bf37
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 15
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:43Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{thumbnailer}
+    kind: Pod
+    name: inkwell-thumbnailer-8465884f59-nxprj
+    namespace: quillmoss-render
+    resourceVersion: "9136"
+    uid: a61d45f3-540d-4705-b8c6-55f0ab5ef4c7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:49Z"
+  message: Back-off restarting failed container thumbnailer in pod inkwell-thumbnailer-8465884f59-nxprj_quillmoss-render(a61d45f3-540d-4705-b8c6-55f0ab5ef4c7)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:43Z"
+    name: inkwell-thumbnailer-8465884f59-nxprj.18df92df2abca6c6
+    namespace: quillmoss-render
+    resourceVersion: "13844"
+    uid: 16b4e23f-df1d-41a5-b8e5-cfe90f2c2e1f
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: inkwell-thumbnailer-8465884f59
+    namespace: quillmoss-render
+    resourceVersion: "9128"
+    uid: 39947e2d-c9b7-4961-a4e6-dfd65dfeb400
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Created pod: inkwell-thumbnailer-8465884f59-nxprj'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-thumbnailer-8465884f59.18df92dbad1ab36f
+    namespace: quillmoss-render
+    resourceVersion: "9134"
+    uid: a9c4d697-9c64-4b56-b932-47c4dd90e929
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: inkwell-thumbnailer
+    namespace: quillmoss-render
+    resourceVersion: "9124"
+    uid: 1e98e732-6a5f-4fe3-89df-004b9402b4f8
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Scaled up replica set inkwell-thumbnailer-8465884f59 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: inkwell-thumbnailer.18df92dbacaa453f
+    namespace: quillmoss-render
+    resourceVersion: "9131"
+    uid: 3cc5355d-b210-4a05-9813-68c3faa337ac
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: proof-scheduler-68b6f949df-5fgs4
+    namespace: quillmoss-render
+    resourceVersion: "9248"
+    uid: ad0bf7bd-7e98-45fa-b380-b33f185ba913
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Successfully assigned quillmoss-render/proof-scheduler-68b6f949df-5fgs4
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-5fgs4.18df92dbfa689849
+    namespace: quillmoss-render
+    resourceVersion: "9255"
+    uid: fda94335-e9e1-4049-a2f6-81b8f3c07fac
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scheduler}
+    kind: Pod
+    name: proof-scheduler-68b6f949df-5fgs4
+    namespace: quillmoss-render
+    resourceVersion: "9251"
+    uid: ad0bf7bd-7e98-45fa-b380-b33f185ba913
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-5fgs4.18df92dc19ac21d5
+    namespace: quillmoss-render
+    resourceVersion: "9290"
+    uid: 83a4e119-485d-49aa-b1d4-65f801e27478
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scheduler}
+    kind: Pod
+    name: proof-scheduler-68b6f949df-5fgs4
+    namespace: quillmoss-render
+    resourceVersion: "9251"
+    uid: ad0bf7bd-7e98-45fa-b380-b33f185ba913
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-5fgs4.18df92dc1c14234b
+    namespace: quillmoss-render
+    resourceVersion: "9292"
+    uid: cf1044e1-6bd5-42e9-bf4a-9affd5838fb0
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scheduler}
+    kind: Pod
+    name: proof-scheduler-68b6f949df-5fgs4
+    namespace: quillmoss-render
+    resourceVersion: "9251"
+    uid: ad0bf7bd-7e98-45fa-b380-b33f185ba913
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-5fgs4.18df92dc2108bbaf
+    namespace: quillmoss-render
+    resourceVersion: "9298"
+    uid: c183aeee-5667-49d7-8843-5abf1bc04feb
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: proof-scheduler-68b6f949df-clldt
+    namespace: quillmoss-render
+    resourceVersion: "9253"
+    uid: 703a3bb0-b922-41ea-808b-d21afb370d06
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:01Z"
+  message: '0/3 nodes are available: 1 node(s) didn''t match pod anti-affinity rules,
+    2 node(s) had untolerated taint(s). preemption: 0/3 nodes are available: 1 No
+    preemption victims found for incoming pod, 2 Preemption is not helpful for scheduling.'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-clldt.18df92dbfb3c7597
+    namespace: quillmoss-render
+    resourceVersion: "13419"
+    uid: 72505abe-ff48-4100-aaf9-dfdba8f191d7
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: proof-scheduler-68b6f949df-ldrxc
+    namespace: quillmoss-render
+    resourceVersion: "9252"
+    uid: 4f27b7a5-b45c-4f52-b013-62a80cc73129
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:01Z"
+  message: '0/3 nodes are available: 1 node(s) didn''t match pod anti-affinity rules,
+    2 node(s) had untolerated taint(s). preemption: 0/3 nodes are available: 1 No
+    preemption victims found for incoming pod, 2 Preemption is not helpful for scheduling.'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df-ldrxc.18df92dbfa761eb5
+    namespace: quillmoss-render
+    resourceVersion: "13418"
+    uid: bcde6939-b94f-4bee-be6c-3bae4be84d45
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: proof-scheduler-68b6f949df
+    namespace: quillmoss-render
+    resourceVersion: "9246"
+    uid: 94534615-746f-4504-9ce4-2f176224bdec
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: 'Created pod: proof-scheduler-68b6f949df-5fgs4'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df.18df92dbf9cff715
+    namespace: quillmoss-render
+    resourceVersion: "9250"
+    uid: 82f38f58-d644-4d1a-b19f-428df5cd1568
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: proof-scheduler-68b6f949df
+    namespace: quillmoss-render
+    resourceVersion: "9246"
+    uid: 94534615-746f-4504-9ce4-2f176224bdec
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: 'Created pod: proof-scheduler-68b6f949df-ldrxc'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df.18df92dbfa704161
+    namespace: quillmoss-render
+    resourceVersion: "9256"
+    uid: 84227344-b7ee-4c3d-831f-22b67403a5da
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: proof-scheduler-68b6f949df
+    namespace: quillmoss-render
+    resourceVersion: "9246"
+    uid: 94534615-746f-4504-9ce4-2f176224bdec
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: 'Created pod: proof-scheduler-68b6f949df-clldt'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler-68b6f949df.18df92dbfa72b6df
+    namespace: quillmoss-render
+    resourceVersion: "9264"
+    uid: cb308069-fcd5-4cc5-890c-de4bfcced0e4
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: proof-scheduler
+    namespace: quillmoss-render
+    resourceVersion: "9245"
+    uid: 65176a7a-566f-4a60-a308-3e59c36c4672
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Scaled up replica set proof-scheduler-68b6f949df from 0 to 3
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: proof-scheduler.18df92dbf9429537
+    namespace: quillmoss-render
+    resourceVersion: "9247"
+    uid: 4676e5c0-e7a3-4ecd-8c86-89c5ffed831b
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-2p6h9
+    namespace: quillmoss-render
+    resourceVersion: "8914"
+    uid: 4d91a3fe-b3ef-40ac-a6ca-bf0d7f2b66f2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Successfully assigned quillmoss-render/stencil-cdn-755bc7b89c-2p6h9 to
+    kh-bench-worker2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: stencil-cdn-755bc7b89c-2p6h9.18df92db337f8fad
+    namespace: quillmoss-render
+    resourceVersion: "8926"
+    uid: 2d0f33e2-e58c-4e68-b8c9-3772d29c1854
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-2p6h9
+    namespace: quillmoss-render
+    resourceVersion: "8920"
+    uid: 4d91a3fe-b3ef-40ac-a6ca-bf0d7f2b66f2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-2p6h9.18df92db5121cf53
+    namespace: quillmoss-render
+    resourceVersion: "8953"
+    uid: 36b877a7-cc9d-417e-8f72-ec8a5425625e
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-2p6h9
+    namespace: quillmoss-render
+    resourceVersion: "8920"
+    uid: 4d91a3fe-b3ef-40ac-a6ca-bf0d7f2b66f2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-2p6h9.18df92db547795e3
+    namespace: quillmoss-render
+    resourceVersion: "8966"
+    uid: 4718920d-9ddb-4748-b1e5-a70f8240c756
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-2p6h9
+    namespace: quillmoss-render
+    resourceVersion: "8920"
+    uid: 4d91a3fe-b3ef-40ac-a6ca-bf0d7f2b66f2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-2p6h9.18df92db5b29f845
+    namespace: quillmoss-render
+    resourceVersion: "8985"
+    uid: 3ea10ca9-7b52-464d-b7ce-218e2b01b78b
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-k5k2r
+    namespace: quillmoss-render
+    resourceVersion: "8911"
+    uid: 74b15fe3-475e-40eb-98cf-240c4be4d6dd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Successfully assigned quillmoss-render/stencil-cdn-755bc7b89c-k5k2r to
+    kh-bench-worker2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: stencil-cdn-755bc7b89c-k5k2r.18df92db32463551
+    namespace: quillmoss-render
+    resourceVersion: "8917"
+    uid: 4f72d732-9c8e-4b35-a50f-fc032ea40fbe
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-k5k2r
+    namespace: quillmoss-render
+    resourceVersion: "8913"
+    uid: 74b15fe3-475e-40eb-98cf-240c4be4d6dd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-k5k2r.18df92db4f691c25
+    namespace: quillmoss-render
+    resourceVersion: "8951"
+    uid: 84475d6a-fd61-4fba-bfb6-ecce7fca45a1
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-k5k2r
+    namespace: quillmoss-render
+    resourceVersion: "8913"
+    uid: 74b15fe3-475e-40eb-98cf-240c4be4d6dd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-k5k2r.18df92db51d1a563
+    namespace: quillmoss-render
+    resourceVersion: "8955"
+    uid: ab1e1c5a-b002-4d78-8625-85f1157ab1f0
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{cdn}
+    kind: Pod
+    name: stencil-cdn-755bc7b89c-k5k2r
+    namespace: quillmoss-render
+    resourceVersion: "8913"
+    uid: 74b15fe3-475e-40eb-98cf-240c4be4d6dd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: stencil-cdn-755bc7b89c-k5k2r.18df92db580dbb65
+    namespace: quillmoss-render
+    resourceVersion: "8973"
+    uid: 14f99580-62ac-447e-b35f-397bd2effe71
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: stencil-cdn-755bc7b89c
+    namespace: quillmoss-render
+    resourceVersion: "8909"
+    uid: 2a0af03d-da15-4ff7-9775-53f0bf5b6806
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: 'Created pod: stencil-cdn-755bc7b89c-k5k2r'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: stencil-cdn-755bc7b89c.18df92db3215d929
+    namespace: quillmoss-render
+    resourceVersion: "8915"
+    uid: ff5549e9-0e77-4322-bce5-2eb878a0ae87
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: stencil-cdn-755bc7b89c
+    namespace: quillmoss-render
+    resourceVersion: "8909"
+    uid: 2a0af03d-da15-4ff7-9775-53f0bf5b6806
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: 'Created pod: stencil-cdn-755bc7b89c-2p6h9'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: stencil-cdn-755bc7b89c.18df92db32b16fe7
+    namespace: quillmoss-render
+    resourceVersion: "8922"
+    uid: 785e49cf-889c-42e1-ac3c-62fd4e4c1954
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: stencil-cdn
+    namespace: quillmoss-render
+    resourceVersion: "8908"
+    uid: 53dd6d68-33c4-464d-b39a-5086cd62ddbe
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Scaled up replica set stencil-cdn-755bc7b89c from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: stencil-cdn.18df92db30ecf3e3
+    namespace: quillmoss-render
+    resourceVersion: "8910"
+    uid: e85326c7-2891-4dbf-8e65-4ab7510de04c
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 16
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{schema-check}
+    kind: Pod
+    name: stencil-renderer-f869d948-jxfjz
+    namespace: quillmoss-render
+    resourceVersion: "9347"
+    uid: 9c5e9014-17b2-481f-8aff-ec6bf0b0fdac
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:06Z"
+  message: Back-off restarting failed container schema-check in pod stencil-renderer-f869d948-jxfjz_quillmoss-render(9c5e9014-17b2-481f-8aff-ec6bf0b0fdac)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: stencil-renderer-f869d948-jxfjz.18df92dbf2369505
+    namespace: quillmoss-render
+    resourceVersion: "13713"
+    uid: f5c7c646-2143-42b9-80fd-0b24b7a76b17
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: stencil-renderer-f869d948-jxfjz
+    namespace: quillmoss-render
+    resourceVersion: "9344"
+    uid: 9c5e9014-17b2-481f-8aff-ec6bf0b0fdac
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: Successfully assigned quillmoss-render/stencil-renderer-f869d948-jxfjz
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: stencil-renderer-f869d948-jxfjz.18df92dc45b7b3ed
+    namespace: quillmoss-render
+    resourceVersion: "9349"
+    uid: 43934110-cdef-4d0e-8fa1-34c6ced58d51
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:32Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{schema-check}
+    kind: Pod
+    name: stencil-renderer-f869d948-jxfjz
+    namespace: quillmoss-render
+    resourceVersion: "9347"
+    uid: 9c5e9014-17b2-481f-8aff-ec6bf0b0fdac
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:05Z"
+  message: Container image "harbor.quillmoss.internal/render/stencil-renderer:41.2.0"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:32Z"
+    name: stencil-renderer-f869d948-jxfjz.18df92dc65d13ac3
+    namespace: quillmoss-render
+    resourceVersion: "13705"
+    uid: 1422af19-e6cc-4495-85d2-151a24b07449
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:32Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{schema-check}
+    kind: Pod
+    name: stencil-renderer-f869d948-jxfjz
+    namespace: quillmoss-render
+    resourceVersion: "9347"
+    uid: 9c5e9014-17b2-481f-8aff-ec6bf0b0fdac
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:05Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:32Z"
+    name: stencil-renderer-f869d948-jxfjz.18df92dc681c6857
+    namespace: quillmoss-render
+    resourceVersion: "13710"
+    uid: f45b2d1a-9dda-4a98-bfd8-4812328a6926
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:32Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{schema-check}
+    kind: Pod
+    name: stencil-renderer-f869d948-jxfjz
+    namespace: quillmoss-render
+    resourceVersion: "9347"
+    uid: 9c5e9014-17b2-481f-8aff-ec6bf0b0fdac
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:06Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:32Z"
+    name: stencil-renderer-f869d948-jxfjz.18df92dc6d067cbd
+    namespace: quillmoss-render
+    resourceVersion: "13711"
+    uid: cf44ff5c-c7be-4da8-9e77-9314880d307d
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: stencil-renderer-f869d948
+    namespace: quillmoss-render
+    resourceVersion: "9341"
+    uid: ad54809f-e22f-436c-ba71-b53780b4d843
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: 'Created pod: stencil-renderer-f869d948-jxfjz'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: stencil-renderer-f869d948.18df92dc453632f5
+    namespace: quillmoss-render
+    resourceVersion: "9345"
+    uid: 7d2e59ed-2231-43d7-a05e-980e198fcb13
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: stencil-renderer
+    namespace: quillmoss-render
+    resourceVersion: "9340"
+    uid: fc1513c6-34b4-43a1-951a-7105f838e64d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: Scaled up replica set stencil-renderer-f869d948 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: stencil-renderer.18df92dc44cbb803
+    namespace: quillmoss-render
+    resourceVersion: "9342"
+    uid: 6d73f543-7848-4370-aa21-28cdbbada36b
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: vellum-docs-648796bfd8-q6jbp
+    namespace: quillmoss-render
+    resourceVersion: "9005"
+    uid: abfc06ed-a2d0-4f68-bf33-91ecfee5170e
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Successfully assigned quillmoss-render/vellum-docs-648796bfd8-q6jbp to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: vellum-docs-648796bfd8-q6jbp.18df92db6a28bbf1
+    namespace: quillmoss-render
+    resourceVersion: "9017"
+    uid: 59b00e7d-09d8-4d21-b30b-7641a85660a8
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-q6jbp
+    namespace: quillmoss-render
+    resourceVersion: "9009"
+    uid: abfc06ed-a2d0-4f68-bf33-91ecfee5170e
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-q6jbp.18df92db89e23657
+    namespace: quillmoss-render
+    resourceVersion: "9054"
+    uid: 65e23100-17a4-40cd-9c7c-3c3218ed30c6
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-q6jbp
+    namespace: quillmoss-render
+    resourceVersion: "9009"
+    uid: abfc06ed-a2d0-4f68-bf33-91ecfee5170e
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-q6jbp.18df92db8c9c578d
+    namespace: quillmoss-render
+    resourceVersion: "9058"
+    uid: 3df858e5-0d5c-4edc-b9f1-739ed0e5f9fd
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-q6jbp
+    namespace: quillmoss-render
+    resourceVersion: "9009"
+    uid: abfc06ed-a2d0-4f68-bf33-91ecfee5170e
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-q6jbp.18df92db927a2897
+    namespace: quillmoss-render
+    resourceVersion: "9061"
+    uid: 440b7bf1-3800-499a-a123-88d19492c0a1
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: vellum-docs-648796bfd8-ww745
+    namespace: quillmoss-render
+    resourceVersion: "9011"
+    uid: c4d0d515-764b-454e-b428-e30ead921056
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Successfully assigned quillmoss-render/vellum-docs-648796bfd8-ww745 to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: vellum-docs-648796bfd8-ww745.18df92db6b9a528d
+    namespace: quillmoss-render
+    resourceVersion: "9024"
+    uid: c20fa9a0-892b-4ca3-8969-ba22c344ad00
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-ww745
+    namespace: quillmoss-render
+    resourceVersion: "9020"
+    uid: c4d0d515-764b-454e-b428-e30ead921056
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-ww745.18df92db8b76ffed
+    namespace: quillmoss-render
+    resourceVersion: "9056"
+    uid: f9c4a997-8edd-4177-aae5-11e5e82dde8f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-ww745
+    namespace: quillmoss-render
+    resourceVersion: "9020"
+    uid: c4d0d515-764b-454e-b428-e30ead921056
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-ww745.18df92db8e443867
+    namespace: quillmoss-render
+    resourceVersion: "9060"
+    uid: 0f436bb3-6241-4965-8c83-9fbe33ebb21b
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{docs}
+    kind: Pod
+    name: vellum-docs-648796bfd8-ww745
+    namespace: quillmoss-render
+    resourceVersion: "9020"
+    uid: c4d0d515-764b-454e-b428-e30ead921056
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: vellum-docs-648796bfd8-ww745.18df92db936bcf21
+    namespace: quillmoss-render
+    resourceVersion: "9063"
+    uid: 21031921-29ab-4990-8239-751b4a6f93b2
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: vellum-docs-648796bfd8
+    namespace: quillmoss-render
+    resourceVersion: "9000"
+    uid: ef34ef26-0928-4b0b-9f2c-ce14afe0c0a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: 'Created pod: vellum-docs-648796bfd8-q6jbp'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: vellum-docs-648796bfd8.18df92db68c4e555
+    namespace: quillmoss-render
+    resourceVersion: "9008"
+    uid: e057a16d-81cc-4e8b-a75c-fd58057ea0d8
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: vellum-docs-648796bfd8
+    namespace: quillmoss-render
+    resourceVersion: "9000"
+    uid: ef34ef26-0928-4b0b-9f2c-ce14afe0c0a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: 'Created pod: vellum-docs-648796bfd8-ww745'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: vellum-docs-648796bfd8.18df92db6a1923b7
+    namespace: quillmoss-render
+    resourceVersion: "9021"
+    uid: eea69931-db03-4f3a-9a6a-91be8e3ba815
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:27Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vellum-docs
+    namespace: quillmoss-render
+    resourceVersion: "8998"
+    uid: 26a5dc3e-199a-4bc5-bf17-d3324a30d8e7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:27Z"
+  message: Scaled up replica set vellum-docs-648796bfd8 from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    name: vellum-docs.18df92db67939feb
+    namespace: quillmoss-render
+    resourceVersion: "9004"
+    uid: 9c189148-7bcb-4a28-9cf3-64671c62d091
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-6d57n
+    namespace: quillmoss-render
+    resourceVersion: "9423"
+    uid: 20dfa335-ecba-4a1c-997c-e616caf4ba59
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Successfully assigned quillmoss-render/vellum-gateway-6bfd996d7f-6d57n
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: vellum-gateway-6bfd996d7f-6d57n.18df92dbe01c74c5
+    namespace: quillmoss-render
+    resourceVersion: "9430"
+    uid: 0b0abaeb-6a39-438e-a002-a40b9538c642
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-6d57n
+    namespace: quillmoss-render
+    resourceVersion: "9426"
+    uid: 20dfa335-ecba-4a1c-997c-e616caf4ba59
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container image "harbor.quillmoss.internal/render/vellum-gateway:3.4.0"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-6d57n.18df92dc0a691765
+    namespace: quillmoss-render
+    resourceVersion: "9496"
+    uid: 5c4df323-86ca-42a1-ad8a-9ffdebd1fae1
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-6d57n
+    namespace: quillmoss-render
+    resourceVersion: "9426"
+    uid: 20dfa335-ecba-4a1c-997c-e616caf4ba59
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-6d57n.18df92dc0d6a4623
+    namespace: quillmoss-render
+    resourceVersion: "9498"
+    uid: 6461c040-3295-4226-b529-74b89381e763
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-6d57n
+    namespace: quillmoss-render
+    resourceVersion: "9426"
+    uid: 20dfa335-ecba-4a1c-997c-e616caf4ba59
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-6d57n.18df92dc186fdbe1
+    namespace: quillmoss-render
+    resourceVersion: "9507"
+    uid: eaf9bc08-adaa-4896-8714-712806d53f71
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-l4bnp
+    namespace: quillmoss-render
+    resourceVersion: "9419"
+    uid: ccde2492-c198-480e-aaa1-ac838f9403d2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Successfully assigned quillmoss-render/vellum-gateway-6bfd996d7f-l4bnp
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: vellum-gateway-6bfd996d7f-l4bnp.18df92dbde6d3abf
+    namespace: quillmoss-render
+    resourceVersion: "9424"
+    uid: 5c39af0f-681f-473d-affd-6c5a9f614cf0
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-l4bnp
+    namespace: quillmoss-render
+    resourceVersion: "9421"
+    uid: ccde2492-c198-480e-aaa1-ac838f9403d2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container image "harbor.quillmoss.internal/render/vellum-gateway:3.4.0"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-l4bnp.18df92dc05dc9c17
+    namespace: quillmoss-render
+    resourceVersion: "9491"
+    uid: af5aa7ad-cea4-427c-8546-69451488aabe
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-l4bnp
+    namespace: quillmoss-render
+    resourceVersion: "9421"
+    uid: ccde2492-c198-480e-aaa1-ac838f9403d2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-l4bnp.18df92dc08b121b5
+    namespace: quillmoss-render
+    resourceVersion: "9493"
+    uid: cf082b11-efec-4eec-92f5-0d523b60ee7e
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-6bfd996d7f-l4bnp
+    namespace: quillmoss-render
+    resourceVersion: "9421"
+    uid: ccde2492-c198-480e-aaa1-ac838f9403d2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:30Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: vellum-gateway-6bfd996d7f-l4bnp.18df92dc0e5c8ba9
+    namespace: quillmoss-render
+    resourceVersion: "9500"
+    uid: 792f8c21-b74f-44e2-9c6a-d66a29723287
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: vellum-gateway-6bfd996d7f
+    namespace: quillmoss-render
+    resourceVersion: "9417"
+    uid: d14c347f-1c05-49b4-9e12-ccc77d0c25ed
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Created pod: vellum-gateway-6bfd996d7f-l4bnp'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: vellum-gateway-6bfd996d7f.18df92dbde34537b
+    namespace: quillmoss-render
+    resourceVersion: "9422"
+    uid: 893f2012-f203-4e55-9093-8d3df0de47a1
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: vellum-gateway-6bfd996d7f
+    namespace: quillmoss-render
+    resourceVersion: "9417"
+    uid: d14c347f-1c05-49b4-9e12-ccc77d0c25ed
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Created pod: vellum-gateway-6bfd996d7f-6d57n'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: vellum-gateway-6bfd996d7f.18df92dbdf53bc97
+    namespace: quillmoss-render
+    resourceVersion: "9427"
+    uid: 665bf194-383e-4188-a1dd-95a3d2166135
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9570"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: Successfully assigned quillmoss-render/vellum-gateway-7fff594c4b-tmpbg
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dc336f3531
+    namespace: quillmoss-render
+    resourceVersion: "9576"
+    uid: f05cd7a4-48c5-431d-8cc2-f8f0e07b3426
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9573"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:13Z"
+  message: Container image "harbor.quillmoss.internal/render/vellum-gateway:3.5.0"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dc54e6f8c5
+    namespace: quillmoss-render
+    resourceVersion: "13738"
+    uid: ac8ab5ee-735c-4305-a1e8-ca9b24520f6e
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9573"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:13Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dc578a07ed
+    namespace: quillmoss-render
+    resourceVersion: "13741"
+    uid: 2cc92c91-bbd3-4bcf-bdeb-06d3eb9c2e92
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9573"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:14Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dc5d87a03d
+    namespace: quillmoss-render
+    resourceVersion: "13742"
+    uid: 64f838d5-8abe-4735-a8d5-4e24e65dd224
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9573"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:14Z"
+  message: 'Readiness probe failed: dial tcp 10.244.1.135:8080: connect: connection
+    refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dc5dbadc05
+    namespace: quillmoss-render
+    resourceVersion: "13743"
+    uid: f6c1865d-f7d2-43e3-95c0-b7bbfeac16c3
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 19
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:33Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: vellum-gateway-7fff594c4b-tmpbg
+    namespace: quillmoss-render
+    resourceVersion: "9573"
+    uid: 56f9ae74-a9fe-46a9-9dc2-052e156df350
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:02Z"
+  message: Back-off restarting failed container gateway in pod vellum-gateway-7fff594c4b-tmpbg_quillmoss-render(56f9ae74-a9fe-46a9-9dc2-052e156df350)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:33Z"
+    name: vellum-gateway-7fff594c4b-tmpbg.18df92dcd31da1a3
+    namespace: quillmoss-render
+    resourceVersion: "13427"
+    uid: eb69a1c8-41f1-4d82-9c96-e488c2f02c7d
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: vellum-gateway-7fff594c4b
+    namespace: quillmoss-render
+    resourceVersion: "9567"
+    uid: 9d02a390-6c4f-4ed3-8cde-f49bf7fed351
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: 'Created pod: vellum-gateway-7fff594c4b-tmpbg'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway-7fff594c4b.18df92dc32d21391
+    namespace: quillmoss-render
+    resourceVersion: "9571"
+    uid: 4f842391-82c9-41cf-87ff-9383e916a27b
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vellum-gateway
+    namespace: quillmoss-render
+    resourceVersion: "9416"
+    uid: 3d4e0ede-0def-4fff-8cdf-953a5dbc0f10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Scaled up replica set vellum-gateway-6bfd996d7f from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: vellum-gateway.18df92dbdd83aadf
+    namespace: quillmoss-render
+    resourceVersion: "9420"
+    uid: 946d8a09-7040-4d74-ab01-83ac15de306e
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: vellum-gateway
+    namespace: quillmoss-render
+    resourceVersion: "9566"
+    uid: 3d4e0ede-0def-4fff-8cdf-953a5dbc0f10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:31Z"
+  message: Scaled up replica set vellum-gateway-7fff594c4b from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: vellum-gateway.18df92dc31b9a663
+    namespace: quillmoss-render
+    resourceVersion: "9568"
+    uid: 484384f8-33ee-4fda-97e9-4c79feb7d32a
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+kind: List

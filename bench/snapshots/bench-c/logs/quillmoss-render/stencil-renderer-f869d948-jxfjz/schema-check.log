@@ -1,0 +1,4 @@
+schema-check: connecting to catalog database stencil-catalog:5432
+schema-check: catalog database reports schema version 39
+schema-check: stencil-renderer 41.2.0 requires schema version 41
+schema-check: run 'stencil-renderer migrate --to=41' against the catalog database before rolling out this release

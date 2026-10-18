@@ -1,0 +1,7 @@
+id: healthy-stencil-cdn
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: stencil-cdn}
+truth: "healthy Deployment on the reporting pool (nodeSelector + toleration both set) — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-stencil-cdn, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

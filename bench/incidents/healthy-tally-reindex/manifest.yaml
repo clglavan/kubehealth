@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata: {name: tally-reindex, namespace: larkspur-books, labels: {app: tally-reindex}}
+spec:
+  backoffLimit: 4
+  template:
+    metadata: {labels: {app: tally-reindex}}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: reindex
+          image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+          env:
+            - name: LOCK_HELD_UNTIL
+              value: "@LOCK_HELD_UNTIL@"
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

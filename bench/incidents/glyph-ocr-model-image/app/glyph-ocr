@@ -1,0 +1,13 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+model="http://glyph-ocr-model:8501/v1/models/ocr"
+for a in "$@"; do case "$a" in --model=*) model="${a#--model=}" ;; esac; done
+echo "glyph-ocr 2.2.0: model endpoint $model"
+for i in 1 2 3; do
+  echo "waiting for model server: GET $model (attempt $i/3)"
+  if out=$(wget -q -T 3 -O /dev/null "$model" 2>&1); then echo "model ready"; exec sleep 86400; fi
+  echo "$out"
+  sleep 2
+done
+echo "FATAL: OCR model server not available, exiting"
+exit 1

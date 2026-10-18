@@ -1,0 +1,13 @@
+context: payments-prod
+log_tail_lines: 150
+name: payments-prod
+namespaces:
+- default
+- payments
+recorded_at: "2026-10-18T07:05:12Z"
+recorded_with: kubehealth v0.2.0-5-gb9cd8f2
+skipped_namespaces:
+- kube-system
+- kube-public
+- kube-node-lease
+- local-path-storage

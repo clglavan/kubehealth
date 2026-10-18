@@ -1,0 +1,47 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:01Z"
+    labels:
+      kubernetes.io/metadata.name: default
+    name: default
+    resourceVersion: "23"
+    uid: c0f957ff-5903-42a7-b669-0a66a3cdda5e
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    labels:
+      kubernetes.io/metadata.name: quillmoss-render
+      team: print-studio
+    name: quillmoss-render
+    resourceVersion: "8731"
+    uid: 4991c367-4558-4d70-9cb8-774e29950081
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    labels:
+      kubernetes.io/metadata.name: quillmoss-sandbox
+      team: print-studio
+    name: quillmoss-sandbox
+    resourceVersion: "10958"
+    uid: d7d9c502-c5bb-4043-8bdc-7a681951dc65
+  spec:
+    finalizers:
+    - kubernetes
+  status:
+    phase: Active
+kind: List

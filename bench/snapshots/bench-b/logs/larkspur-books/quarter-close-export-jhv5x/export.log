@@ -1,0 +1,4 @@
+quarter-close 2.0.3: closing period 2026-Q3
+reading trial balance from /data/close/2026-09.csv
+Error: open /data/close/2026-09.csv: no such file or directory
+quarter-close: aborted, nothing exported

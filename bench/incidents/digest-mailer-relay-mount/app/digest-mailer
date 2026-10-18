@@ -1,0 +1,10 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+relay="mail-relay:2525"
+for a in "$@"; do case "$a" in --relay=*) relay="${a#--relay=}" ;; esac; done
+echo "digest-mailer 1.4.2: building daily digest for 1,284 subscribers"
+echo "digest rendered (1,284 messages); handing off to SMTP relay $relay"
+if nc -z -w 5 "${relay%:*}" "${relay##*:}" 2>/dev/null; then echo "relay accepted"; exit 0; fi
+echo "smtp: $(telnet "${relay%:*}" "${relay##*:}" </dev/null 2>&1 | head -1)"
+echo "Error: could not hand off digest to $relay, 1,284 messages not sent"
+exit 1

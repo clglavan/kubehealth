@@ -1,0 +1,8 @@
+id: log-shipper-registry
+snapshot: shop-staging
+anchor: {ns: checkout, kind: Deployment, name: log-shipper}
+truth: "image from registry.acme-demo.internal, which doesn't resolve -> image pull fails (same in 3 namespaces)"
+cause: [["registry", "pull", "image"], ["resolve", "dns", "no such host", "acme-demo", "unreachable", "lookup", "not found"]]
+fix: [["registry", "image"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

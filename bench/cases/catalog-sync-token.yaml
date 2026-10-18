@@ -1,0 +1,10 @@
+id: catalog-sync-token
+snapshot: shop-staging
+anchor: {ns: catalog, kind: CronJob, name: catalog-sync}
+truth: "supplier API returns 401 Unauthorized: token expired -> every run fails (only the failed Pods' logs say so: KubeHealth puts no logs in the first prompt for Job pods that exit without Warning events)"
+cause: [["token", "401", "unauthorized", "credential"]]
+deep: [["401", "unauthorized", "expired"]]
+fix: [["token", "credential", "secret", "rotate", "renew", "refresh"]]
+needs_tool: true
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

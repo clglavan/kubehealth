@@ -1,0 +1,25 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    labels:
+      app: orders-db
+    name: data-orders-db-0
+    namespace: orders
+    resourceVersion: "683"
+    uid: 5a2bc12d-d2ee-42cd-bfaa-6faa409776b4
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: fast-ssd
+    volumeMode: Filesystem
+  status:
+    phase: Pending
+kind: List

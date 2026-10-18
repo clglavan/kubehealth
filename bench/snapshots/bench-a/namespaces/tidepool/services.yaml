@@ -1,0 +1,58 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: reef-catalog
+    namespace: tidepool
+    resourceVersion: "8865"
+    uid: 30a94550-d214-4fbe-8185-dc87de2c6f4a
+  spec:
+    clusterIP: 10.96.69.184
+    clusterIPs:
+    - 10.96.69.184
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: reef-catalog
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    labels:
+      app: tidepool-pg
+    name: tidepool-pg
+    namespace: tidepool
+    resourceVersion: "8651"
+    uid: 0da9c59f-874d-4509-a739-2abcbbfe47ac
+  spec:
+    clusterIP: 10.96.52.89
+    clusterIPs:
+    - 10.96.52.89
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: tidepool-pg
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List

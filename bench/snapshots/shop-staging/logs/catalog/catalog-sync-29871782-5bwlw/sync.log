@@ -1,0 +1,4 @@
+2026-10-18T07:02:11Z INFO  catalog-sync 3.2.0: fetching supplier feed
+2026-10-18T07:02:11Z INFO  GET https://api.supplier.example/v2/feed?since=last_run
+2026-10-18T07:02:12Z ERROR supplier API returned 401 Unauthorized: token expired at 2026-10-14T00:00:00Z
+2026-10-18T07:02:12Z ERROR sync aborted, 0 of 18,240 products updated

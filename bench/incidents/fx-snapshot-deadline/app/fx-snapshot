@@ -1,0 +1,11 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/fx-snapshot:3.1.0
+echo "fx-snapshot 3.1.0: fetching rates from 14 providers"
+i=0
+for p in ecb boe fed boj snb rba boc rbnz norges riksbank nbp cnb mnb bnr; do
+  i=$((i+1))
+  echo "provider $i/14 ($p): requesting EOD rates"
+  sleep 5
+  echo "provider $i/14 ($p): 31 rates"
+done
+echo "wrote /tmp/rates.json"

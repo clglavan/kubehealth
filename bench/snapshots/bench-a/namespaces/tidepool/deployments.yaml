@@ -1,0 +1,365 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    generation: 1
+    labels:
+      app: buoy-forecast
+    name: buoy-forecast
+    namespace: tidepool
+    resourceVersion: "13512"
+    uid: 7ccfe813-84dc-4df6-9ae7-626c78e7c70a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: buoy-forecast
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: buoy-forecast
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: forecast
+          resources:
+            limits:
+              cpu: "24"
+              memory: 1Gi
+            requests:
+              cpu: "24"
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:23Z"
+      lastUpdateTime: "2026-10-18T08:37:23Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:47:24Z"
+      lastUpdateTime: "2026-10-18T08:47:24Z"
+      message: ReplicaSet "buoy-forecast-7565f5fbff" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    generation: 1
+    labels:
+      app: current-mapper
+    name: current-mapper
+    namespace: tidepool
+    resourceVersion: "12585"
+    uid: fe26dee6-c5e2-4266-9062-54c5da890bdb
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: current-mapper
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: current-mapper
+      spec:
+        containers:
+        - args:
+          - --db=postgres://mapper@tidepool-pg.tidepool.svc:5432/currents
+          - --grid=0.25
+          - --region=north-atlantic
+          image: harbor.tidepool.internal/ocean/current-mapper:2.3.0
+          imagePullPolicy: IfNotPresent
+          name: mapper
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:23Z"
+      lastUpdateTime: "2026-10-18T08:37:24Z"
+      message: ReplicaSet "current-mapper-76f75d78cc" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:43:43Z"
+      lastUpdateTime: "2026-10-18T08:43:43Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: kelp-tiler
+    name: kelp-tiler
+    namespace: tidepool
+    resourceVersion: "13529"
+    uid: 92171b70-4b75-48a6-af08-de4f5751fc3b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: kelp-tiler
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: kelp-tiler
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: tiler
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          node-pool: reporting
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:29Z"
+      lastUpdateTime: "2026-10-18T08:37:29Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:47:30Z"
+      lastUpdateTime: "2026-10-18T08:47:30Z"
+      message: ReplicaSet "kelp-tiler-6df8744489" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 2
+    terminatingReplicas: 0
+    unavailableReplicas: 2
+    updatedReplicas: 2
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    generation: 2
+    labels:
+      app: reef-catalog
+    name: reef-catalog
+    namespace: tidepool
+    resourceVersion: "9696"
+    uid: b53007aa-0380-49de-b7b7-386d1ffaca1b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: reef-catalog
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-10-18T11:37:30+03:00"
+        labels:
+          app: reef-catalog
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: catalog
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:27Z"
+      lastUpdateTime: "2026-10-18T08:37:27Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:37:26Z"
+      lastUpdateTime: "2026-10-18T08:37:32Z"
+      message: ReplicaSet "reef-catalog-5cf598b974" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+    updatedReplicas: 2
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generation: 1
+    labels:
+      app: sediment-cache
+    name: sediment-cache
+    namespace: tidepool
+    resourceVersion: "13536"
+    uid: 8fcb96b1-8fce-4827-88cb-b1e94b8da915
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: sediment-cache
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: sediment-cache
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: cache
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/cache/sediment
+            name: scratch
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: scratch
+          persistentVolumeClaim:
+            claimName: sediment-scratch
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:31Z"
+      lastUpdateTime: "2026-10-18T08:37:31Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:47:32Z"
+      lastUpdateTime: "2026-10-18T08:47:32Z"
+      message: ReplicaSet "sediment-cache-545864d556" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+kind: List

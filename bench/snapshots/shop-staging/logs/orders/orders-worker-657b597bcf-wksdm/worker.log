@@ -1,0 +1,7 @@
+2026-10-18T07:04:04Z INFO  orders-worker v1.8.2 starting
+2026-10-18T07:04:04Z INFO  loading config from /etc/orders/config.yaml
+2026-10-18T07:04:04Z INFO  connecting to postgres at orders-db.orders.svc:5432 (db=orders)
+2026-10-18T07:04:06Z WARN  attempt 1/3: dial tcp: lookup orders-db.orders.svc: no such host
+2026-10-18T07:04:07Z WARN  attempt 2/3: dial tcp: lookup orders-db.orders.svc: no such host
+2026-10-18T07:04:08Z ERROR attempt 3/3: dial tcp: lookup orders-db.orders.svc: no such host
+2026-10-18T07:04:08Z FATAL could not connect to database: giving up after 3 attempts

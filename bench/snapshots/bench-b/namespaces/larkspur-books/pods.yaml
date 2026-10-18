@@ -1,0 +1,2711 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    generateName: balance-digest-29871886-
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+      batch.kubernetes.io/job-name: balance-digest-29871886
+      controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+      job-name: balance-digest-29871886
+    name: balance-digest-29871886-cpbc2
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: balance-digest-29871886
+      uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+    resourceVersion: "13198"
+    uid: 6744194b-7c50-4163-bfde-683b3ff9f903
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imagePullPolicy: IfNotPresent
+      name: digest
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-hjxvp
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-hjxvp
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:04Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:00Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://57c7d6888789a0ac729965bac6e4b71f355d4b93dfaacef97d990782546c1e57
+      image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imageID: sha256:ca821a6e02b8289737b11bcbc23324e93f24a327a885a46f673564c0362d01e1
+      lastState: {}
+      name: digest
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://57c7d6888789a0ac729965bac6e4b71f355d4b93dfaacef97d990782546c1e57
+          exitCode: 0
+          finishedAt: "2026-10-18T08:46:02Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:46:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-hjxvp
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.182
+    podIPs:
+    - ip: 10.244.1.182
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:46:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    generateName: balance-digest-29871887-
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+      batch.kubernetes.io/job-name: balance-digest-29871887
+      controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+      job-name: balance-digest-29871887
+    name: balance-digest-29871887-fsdl2
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: balance-digest-29871887
+      uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+    resourceVersion: "13444"
+    uid: 1c8adfba-a08e-4613-a350-9469e1928f6f
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imagePullPolicy: IfNotPresent
+      name: digest
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sw6b5
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-sw6b5
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:04Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:00Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://ddc5b94ed25c81b16b4e0890025b0ae03d2ba5279a086373c3d6c6452295d043
+      image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imageID: sha256:ca821a6e02b8289737b11bcbc23324e93f24a327a885a46f673564c0362d01e1
+      lastState: {}
+      name: digest
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://ddc5b94ed25c81b16b4e0890025b0ae03d2ba5279a086373c3d6c6452295d043
+          exitCode: 0
+          finishedAt: "2026-10-18T08:47:02Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:47:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sw6b5
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.186
+    podIPs:
+    - ip: 10.244.1.186
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:47:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    generateName: balance-digest-29871888-
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+      batch.kubernetes.io/job-name: balance-digest-29871888
+      controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+      job-name: balance-digest-29871888
+    name: balance-digest-29871888-bxtm4
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: balance-digest-29871888
+      uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+    resourceVersion: "13692"
+    uid: d69ffe53-4432-44fe-961f-888e5f233815
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imagePullPolicy: IfNotPresent
+      name: digest
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tf4cl
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-tf4cl
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:05Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:00Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:03Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://bd4180ad6efd1cc0f1791d28a48b9ecea12a4cfbf5218abff4a4d26a95ffcfa4
+      image: harbor.larkspur.internal/books/balance-digest:2.0.0
+      imageID: sha256:ca821a6e02b8289737b11bcbc23324e93f24a327a885a46f673564c0362d01e1
+      lastState: {}
+      name: digest
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://bd4180ad6efd1cc0f1791d28a48b9ecea12a4cfbf5218abff4a4d26a95ffcfa4
+          exitCode: 0
+          finishedAt: "2026-10-18T08:48:02Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:48:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tf4cl
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.188
+    podIPs:
+    - ip: 10.244.1.188
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:48:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    generateName: quarter-close-export-
+    generation: 1
+    labels:
+      app: quarter-close
+      batch.kubernetes.io/controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      batch.kubernetes.io/job-name: quarter-close-export
+      controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      job-name: quarter-close-export
+    name: quarter-close-export-jhv5x
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: quarter-close-export
+      uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+    resourceVersion: "9717"
+    uid: 7e4fb695-d210-4768-b9e8-c8dc8341a195
+  spec:
+    containers:
+    - args:
+      - --period=2026-Q3
+      - --input=/data/close/2026-09.csv
+      - --out=s3://larkspur-books-exports/2026-Q3/
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imagePullPolicy: IfNotPresent
+      name: export
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bjnq7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: inputs
+      persistentVolumeClaim:
+        claimName: close-inputs
+    - name: kube-api-access-bjnq7
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:33Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:32Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:32Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://4ed950ea634570110a5541bf34d6ef3c5eaef4da364b1b23c42056f863dae53b
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imageID: sha256:d36743b074b4d2154c7b2b21af0ebf118a103153a5f32952de4fac6e1b19329a
+      lastState: {}
+      name: export
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://4ed950ea634570110a5541bf34d6ef3c5eaef4da364b1b23c42056f863dae53b
+          exitCode: 1
+          finishedAt: "2026-10-18T08:37:32Z"
+          reason: Error
+          startedAt: "2026-10-18T08:37:32Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bjnq7
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.136
+    podIPs:
+    - ip: 10.244.1.136
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:31Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:42Z"
+    generateName: quarter-close-export-
+    generation: 1
+    labels:
+      app: quarter-close
+      batch.kubernetes.io/controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      batch.kubernetes.io/job-name: quarter-close-export
+      controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      job-name: quarter-close-export
+    name: quarter-close-export-nrszn
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: quarter-close-export
+      uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+    resourceVersion: "9883"
+    uid: b125049c-40c3-47da-b989-46c1fbbb043b
+  spec:
+    containers:
+    - args:
+      - --period=2026-Q3
+      - --input=/data/close/2026-09.csv
+      - --out=s3://larkspur-books-exports/2026-Q3/
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imagePullPolicy: IfNotPresent
+      name: export
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vrnfb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: inputs
+      persistentVolumeClaim:
+        claimName: close-inputs
+    - name: kube-api-access-vrnfb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:44Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:42Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:42Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:42Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:42Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://1ce8050b97fc0880edb2086baa80bda1322403bc59cca375e279804fb568e5a2
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imageID: sha256:d36743b074b4d2154c7b2b21af0ebf118a103153a5f32952de4fac6e1b19329a
+      lastState: {}
+      name: export
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://1ce8050b97fc0880edb2086baa80bda1322403bc59cca375e279804fb568e5a2
+          exitCode: 1
+          finishedAt: "2026-10-18T08:37:42Z"
+          reason: Error
+          startedAt: "2026-10-18T08:37:42Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vrnfb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.140
+    podIPs:
+    - ip: 10.244.1.140
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:42Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:38:02Z"
+    generateName: quarter-close-export-
+    generation: 1
+    labels:
+      app: quarter-close
+      batch.kubernetes.io/controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      batch.kubernetes.io/job-name: quarter-close-export
+      controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+      job-name: quarter-close-export
+    name: quarter-close-export-tkn6m
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: quarter-close-export
+      uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+    resourceVersion: "10136"
+    uid: 213ccfab-4772-4bbb-b76f-1f407c5e18d6
+  spec:
+    containers:
+    - args:
+      - --period=2026-Q3
+      - --input=/data/close/2026-09.csv
+      - --out=s3://larkspur-books-exports/2026-Q3/
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imagePullPolicy: IfNotPresent
+      name: export
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qq9zg
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: inputs
+      persistentVolumeClaim:
+        claimName: close-inputs
+    - name: kube-api-access-qq9zg
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:38:04Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:38:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:38:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:38:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:38:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://84842a9bd9527bbaf0ee1de7c17fc5b9cac07550012f3b8d5ea14f0564f4a541
+      image: harbor.larkspur.internal/books/quarter-close:2.0.3
+      imageID: sha256:d36743b074b4d2154c7b2b21af0ebf118a103153a5f32952de4fac6e1b19329a
+      lastState: {}
+      name: export
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://84842a9bd9527bbaf0ee1de7c17fc5b9cac07550012f3b8d5ea14f0564f4a541
+          exitCode: 1
+          finishedAt: "2026-10-18T08:38:02Z"
+          reason: Error
+          startedAt: "2026-10-18T08:38:02Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /data/close
+        name: inputs
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qq9zg
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.144
+    podIPs:
+    - ip: 10.244.1.144
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:38:02Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    generateName: quill-reconciler-b95dd9b7f-
+    generation: 1
+    labels:
+      app: quill-reconciler
+      pod-template-hash: b95dd9b7f
+    name: quill-reconciler-b95dd9b7f-xvzpk
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: quill-reconciler-b95dd9b7f
+      uid: 5e9b6ce8-e1a7-4112-87d2-115d269ecc35
+    resourceVersion: "13725"
+    uid: 3c36b345-b266-4abb-829f-1ee263a357a7
+  spec:
+    containers:
+    - args:
+      - --period=2026-10
+      - --accounts=all
+      image: harbor.larkspur.internal/books/quill-reconciler:1.9.0
+      imagePullPolicy: IfNotPresent
+      name: reconciler
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-d7hjb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-d7hjb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:08Z"
+      message: 'containers with unready status: [reconciler]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:08Z"
+      message: 'containers with unready status: [reconciler]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://565b276599ea77fa747a15ccb62a66080f777da78d19a696633c59d6e545d57c
+      image: harbor.larkspur.internal/books/quill-reconciler:1.9.0
+      imageID: sha256:6329bc36e384dcd2859ce2169afd30817d8531eae5185580e0a653f900919417
+      lastState:
+        terminated:
+          containerID: containerd://14951a9d32eb853ca6bc110b9387399be6b58c01d5fa1d76877ed0adfac29f87
+          exitCode: 137
+          finishedAt: "2026-10-18T08:42:54Z"
+          reason: OOMKilled
+          startedAt: "2026-10-18T08:42:54Z"
+      name: reconciler
+      ready: false
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        terminated:
+          containerID: containerd://565b276599ea77fa747a15ccb62a66080f777da78d19a696633c59d6e545d57c
+          exitCode: 137
+          finishedAt: "2026-10-18T08:48:08Z"
+          reason: OOMKilled
+          startedAt: "2026-10-18T08:48:08Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-d7hjb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.126
+    podIPs:
+    - ip: 10.244.1.126
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:30Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:35Z"
+    generateName: statement-backfill-
+    generation: 1
+    labels:
+      app: statement-backfill
+      batch.kubernetes.io/controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      batch.kubernetes.io/job-name: statement-backfill
+      controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      job-name: statement-backfill
+    name: statement-backfill-8wkj9
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: statement-backfill
+      uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+    resourceVersion: "9813"
+    uid: fa3b6ae6-5650-461b-aeef-d7f1d5df9c8b
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imagePullPolicy: IfNotPresent
+      name: backfill
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sswkb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-sswkb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:41Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:35Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:39Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:39Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:35Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://aaa371d44325012d3990a1b2967073c5e191d2c22e5370f914990e3586763e35
+      image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imageID: docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      lastState: {}
+      name: backfill
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://aaa371d44325012d3990a1b2967073c5e191d2c22e5370f914990e3586763e35
+          exitCode: 0
+          finishedAt: "2026-10-18T08:37:39Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:37:36Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-sswkb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.138
+    podIPs:
+    - ip: 10.244.1.138
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:35Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generateName: statement-backfill-
+    generation: 1
+    labels:
+      app: statement-backfill
+      batch.kubernetes.io/controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      batch.kubernetes.io/job-name: statement-backfill
+      controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      job-name: statement-backfill
+    name: statement-backfill-bmknw
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: statement-backfill
+      uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+    resourceVersion: "9728"
+    uid: 49174923-f1a9-4dfe-96fd-de4bd55815c2
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imagePullPolicy: IfNotPresent
+      name: backfill
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vtg9v
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-vtg9v
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:34Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:33Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:33Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://4f350d1d5310fcaec82cb4c116817ab21ec0847d242b9644167a46151a21ad8f
+      image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imageID: docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      lastState: {}
+      name: backfill
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://4f350d1d5310fcaec82cb4c116817ab21ec0847d242b9644167a46151a21ad8f
+          exitCode: 0
+          finishedAt: "2026-10-18T08:37:33Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:37:30Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vtg9v
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.133
+    podIPs:
+    - ip: 10.244.1.133
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:29Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    generateName: statement-backfill-
+    generation: 1
+    labels:
+      app: statement-backfill
+      batch.kubernetes.io/controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      batch.kubernetes.io/job-name: statement-backfill
+      controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+      job-name: statement-backfill
+    name: statement-backfill-mmjfw
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: statement-backfill
+      uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+    resourceVersion: "9441"
+    uid: 04aae474-9a6a-4f00-a72c-5e01990664b1
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imagePullPolicy: IfNotPresent
+      name: backfill
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tsv8d
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-tsv8d
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:26Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:26Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://a5485961c78bb99dce06fb1b26a766921e1d7e8e8071eba018452a28bd650255
+      image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+      imageID: docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      lastState: {}
+      name: backfill
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://a5485961c78bb99dce06fb1b26a766921e1d7e8e8071eba018452a28bd650255
+          exitCode: 0
+          finishedAt: "2026-10-18T08:37:30Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:37:27Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tsv8d
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.112
+    podIPs:
+    - ip: 10.244.1.112
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:26Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generateName: tally-consumer-7f7f6fb7b8-
+    generation: 1
+    labels:
+      app: tally-consumer
+      pod-template-hash: 7f7f6fb7b8
+    name: tally-consumer-7f7f6fb7b8-85p6v
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tally-consumer-7f7f6fb7b8
+      uid: b243cd78-1ae2-4ce8-aabd-9009b99490db
+    resourceVersion: "13081"
+    uid: d4ed6926-cda8-4030-b0b6-cf00dfecbc90
+  spec:
+    containers:
+    - args:
+      - --redis=tally-redis:6379
+      - --stream=tally-events
+      - --group=reconcilers
+      image: harbor.larkspur.internal/books/tally-consumer:2.7.0
+      imagePullPolicy: IfNotPresent
+      name: consumer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vvqxk
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-vvqxk
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:44:23Z"
+      message: 'containers with unready status: [consumer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:44:23Z"
+      message: 'containers with unready status: [consumer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://d49dbc7532b62378c2f943a1f58529cfbcfe12d40782eb8a971133543efbdc18
+      image: harbor.larkspur.internal/books/tally-consumer:2.7.0
+      imageID: docker.io/library/import-2026-10-18@sha256:572ed988778b9466e234e518886ac8f3ca03f239d287b53c7d011b1a88eb6310
+      lastState:
+        terminated:
+          containerID: containerd://d49dbc7532b62378c2f943a1f58529cfbcfe12d40782eb8a971133543efbdc18
+          exitCode: 1
+          finishedAt: "2026-10-18T08:44:22Z"
+          reason: Error
+          startedAt: "2026-10-18T08:44:13Z"
+      name: consumer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=consumer pod=tally-consumer-7f7f6fb7b8-85p6v_larkspur-books(d4ed6926-cda8-4030-b0b6-cf00dfecbc90)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vvqxk
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.129
+    podIPs:
+    - ip: 10.244.1.129
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:31Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:32Z"
+    generateName: tally-importer-658b64578d-
+    generation: 1
+    labels:
+      app: tally-importer
+      pod-template-hash: 658b64578d
+    name: tally-importer-658b64578d-hdj4x
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tally-importer-658b64578d
+      uid: cbc253e0-2c9a-4608-b313-913cf92cb5bf
+    resourceVersion: "13618"
+    uid: 0cc4dc40-485d-482c-831e-663e53e2e1b9
+  spec:
+    containers:
+    - args:
+      - --source=/data/inbox
+      - --batch-sise=500
+      - --workers=4
+      image: harbor.larkspur.internal/books/tally-importer:4.2.1
+      imagePullPolicy: IfNotPresent
+      name: importer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-k65wt
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-k65wt
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:57Z"
+      message: 'containers with unready status: [importer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:57Z"
+      message: 'containers with unready status: [importer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:32Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://c81c0d87cbb23a86cffdacee4a1bb709a974f91cf4e166a462cd898759cc3294
+      image: harbor.larkspur.internal/books/tally-importer:4.2.1
+      imageID: sha256:77f3fd7e25439d39dbc5d75f62d141626f574b90b14b57b798e98e867fa188db
+      lastState:
+        terminated:
+          containerID: containerd://1d8dce0d60445cd168cee7bbe7a55888136d2d5ed09466f383b9b3eeaa3da0c6
+          exitCode: 2
+          finishedAt: "2026-10-18T08:42:55Z"
+          reason: Error
+          startedAt: "2026-10-18T08:42:55Z"
+      name: importer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 7
+      started: false
+      state:
+        terminated:
+          containerID: containerd://c81c0d87cbb23a86cffdacee4a1bb709a974f91cf4e166a462cd898759cc3294
+          exitCode: 2
+          finishedAt: "2026-10-18T08:47:57Z"
+          reason: Error
+          startedAt: "2026-10-18T08:47:57Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-k65wt
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.130
+    podIPs:
+    - ip: 10.244.1.130
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:31Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generateName: tally-redis-5cb7c8b88d-
+    generation: 1
+    labels:
+      app: tally-redis
+      pod-template-hash: 5cb7c8b88d
+    name: tally-redis-5cb7c8b88d-pgr8n
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: tally-redis-5cb7c8b88d
+      uid: a6714863-f0cf-4864-9627-686eee6ada0b
+    resourceVersion: "13784"
+    uid: bc3d45e0-f6f8-4d44-85e3-bfaea2620f19
+  spec:
+    containers:
+    - args:
+      - --appendonly
+      - "no"
+      - --dir
+      - /data
+      image: harbor.larkspur.internal/books/redis:7.2.4
+      imagePullPolicy: IfNotPresent
+      name: redis
+      ports:
+      - containerPort: 6379
+        protocol: TCP
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-zwfb7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-zwfb7
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:25Z"
+      message: 'containers with unready status: [redis]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:25Z"
+      message: 'containers with unready status: [redis]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:31Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://a13bafa3822db5b006c6d1cf7693cb96c42e9c1cbbbd20f3d9e92e8d323d7634
+      image: harbor.larkspur.internal/books/redis:7.2.4
+      imageID: sha256:97feb2429778d322c8176e099d7cbd405977e5681d6a2479f54a0bd70ec94715
+      lastState:
+        terminated:
+          containerID: containerd://7ca97bb508f8782c74f29b0803cccdb74bdd39a3fd0cded875c02067e19d50a3
+          exitCode: 137
+          finishedAt: "2026-10-18T08:43:03Z"
+          reason: OOMKilled
+          startedAt: "2026-10-18T08:43:03Z"
+      name: redis
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 7
+      started: false
+      state:
+        terminated:
+          containerID: containerd://a13bafa3822db5b006c6d1cf7693cb96c42e9c1cbbbd20f3d9e92e8d323d7634
+          exitCode: 137
+          finishedAt: "2026-10-18T08:48:24Z"
+          reason: OOMKilled
+          startedAt: "2026-10-18T08:48:24Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-zwfb7
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.128
+    podIPs:
+    - ip: 10.244.1.128
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:31Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:57Z"
+    generateName: tally-reindex-
+    generation: 1
+    labels:
+      app: tally-reindex
+      batch.kubernetes.io/controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      batch.kubernetes.io/job-name: tally-reindex
+      controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      job-name: tally-reindex
+    name: tally-reindex-9hpvd
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: tally-reindex
+      uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+    resourceVersion: "10031"
+    uid: 1efdec48-633a-42c1-8813-e596b18a9981
+  spec:
+    containers:
+    - env:
+      - name: LOCK_HELD_UNTIL
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imagePullPolicy: IfNotPresent
+      name: reindex
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rtjf8
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-rtjf8
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:59Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:57Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:58Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:58Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:57Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://e43c322e6e7590f559313a01f2061c317e8674560ef75ebc05dcd3e72e14a027
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imageID: sha256:a5fc7a1cbb639b7e4117680e3de6392838f0f5b9449ed0cfb2cf79f92e588125
+      lastState: {}
+      name: reindex
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://e43c322e6e7590f559313a01f2061c317e8674560ef75ebc05dcd3e72e14a027
+          exitCode: 0
+          finishedAt: "2026-10-18T08:37:57Z"
+          reason: Completed
+          startedAt: "2026-10-18T08:37:57Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rtjf8
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.1.141
+    podIPs:
+    - ip: 10.244.1.141
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:57Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:37Z"
+    generateName: tally-reindex-
+    generation: 1
+    labels:
+      app: tally-reindex
+      batch.kubernetes.io/controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      batch.kubernetes.io/job-name: tally-reindex
+      controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      job-name: tally-reindex
+    name: tally-reindex-pbcjr
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: tally-reindex
+      uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+    resourceVersion: "9796"
+    uid: 9dca6aa0-0279-4b3f-986b-4cf5564d957e
+  spec:
+    containers:
+    - env:
+      - name: LOCK_HELD_UNTIL
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imagePullPolicy: IfNotPresent
+      name: reindex
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-n58nk
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-n58nk
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:39Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:37Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:37Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://d83e9181aff2c0216741b8f5db7f7f1ff5c1e28c0b6853182383852e086cb53b
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imageID: sha256:a5fc7a1cbb639b7e4117680e3de6392838f0f5b9449ed0cfb2cf79f92e588125
+      lastState: {}
+      name: reindex
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://d83e9181aff2c0216741b8f5db7f7f1ff5c1e28c0b6853182383852e086cb53b
+          exitCode: 1
+          finishedAt: "2026-10-18T08:37:37Z"
+          reason: Error
+          startedAt: "2026-10-18T08:37:37Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-n58nk
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.139
+    podIPs:
+    - ip: 10.244.1.139
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:37Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    generateName: tally-reindex-
+    generation: 1
+    labels:
+      app: tally-reindex
+      batch.kubernetes.io/controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      batch.kubernetes.io/job-name: tally-reindex
+      controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+      job-name: tally-reindex
+    name: tally-reindex-wvczx
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: tally-reindex
+      uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+    resourceVersion: "9243"
+    uid: bfa784b0-2672-461f-96c1-37ac958da6b2
+  spec:
+    containers:
+    - env:
+      - name: LOCK_HELD_UNTIL
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imagePullPolicy: IfNotPresent
+      name: reindex
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-s2l8q
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-s2l8q
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:27Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:28Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:28Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:27Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://b74b6fa298ebfdc0748b5a32daf84627c683195dce33737154067b58e1ea28b0
+      image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+      imageID: sha256:a5fc7a1cbb639b7e4117680e3de6392838f0f5b9449ed0cfb2cf79f92e588125
+      lastState: {}
+      name: reindex
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://b74b6fa298ebfdc0748b5a32daf84627c683195dce33737154067b58e1ea28b0
+          exitCode: 1
+          finishedAt: "2026-10-18T08:37:27Z"
+          reason: Error
+          startedAt: "2026-10-18T08:37:27Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-s2l8q
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.113
+    podIPs:
+    - ip: 10.244.1.113
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:27Z"
+kind: List

@@ -1,0 +1,13 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/notify/sms-gateway:5.3.0
+trap 'echo "received SIGTERM, shutting down"; exit 143' TERM
+echo "sms-gateway 5.3.0 $*"
+echo "loading carrier routing tables from /var/lib/sms/routes (38 carriers, 2.1M prefixes); this takes about 45s"
+for p in 10 20 30 40 50 60 70 80 90; do
+  sleep 5 & wait $!
+  echo "routing tables: $p% loaded"
+done
+sleep 5 & wait $!
+echo "routing tables loaded; listening on :8080"
+mkdir -p /tmp/www && echo ok > /tmp/www/livez
+httpd -f -p 8080 -h /tmp/www & wait $!

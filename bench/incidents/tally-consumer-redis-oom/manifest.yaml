@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: tally-redis, namespace: larkspur-books, labels: {app: tally-redis}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: tally-redis}}
+  template:
+    metadata: {labels: {app: tally-redis}}
+    spec:
+      containers:
+        - name: redis
+          image: harbor.larkspur.internal/books/redis:7.2.4
+          args: ["--appendonly", "no", "--dir", "/data"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}
+          ports: [{containerPort: 6379}]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: tally-redis, namespace: larkspur-books, labels: {app: tally-redis}}
+spec:
+  selector: {app: tally-redis}
+  ports: [{name: redis, port: 6379, targetPort: 6379}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: tally-consumer, namespace: larkspur-books, labels: {app: tally-consumer}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: tally-consumer}}
+  template:
+    metadata: {labels: {app: tally-consumer}}
+    spec:
+      containers:
+        - name: consumer
+          image: harbor.larkspur.internal/books/tally-consumer:2.7.0
+          args: ["--redis=tally-redis:6379", "--stream=tally-events", "--group=reconcilers"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

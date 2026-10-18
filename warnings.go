@@ -213,6 +213,18 @@ func mergeEvents(base, extra []EventSummary) []EventSummary {
 	return out
 }
 
+// sortNewestFirst orders events newest first. Events seen in the same second
+// go by namespace and name, so lists merged from maps always come out in one
+// order (prompts built from them don't change between runs).
 func sortNewestFirst(evs []EventSummary) {
-	sort.SliceStable(evs, func(i, j int) bool { return evs[i].LastTime.After(evs[j].LastTime) })
+	sort.SliceStable(evs, func(i, j int) bool {
+		a, b := evs[i], evs[j]
+		if !a.LastTime.Equal(b.LastTime) {
+			return a.LastTime.After(b.LastTime)
+		}
+		if a.Namespace != b.Namespace {
+			return a.Namespace < b.Namespace
+		}
+		return a.Name < b.Name
+	})
 }

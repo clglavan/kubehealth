@@ -1,0 +1,476 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 242
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:56Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: data-orders-db-0
+    namespace: orders
+    resourceVersion: "683"
+    uid: 5a2bc12d-d2ee-42cd-bfaa-6faa409776b4
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:21Z"
+  message: storageclass.storage.k8s.io "fast-ssd" not found
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:56Z"
+    name: data-orders-db-0.18df8aa4a328d369
+    namespace: orders
+    resourceVersion: "22838"
+    uid: 16679932-04ec-4dac-9324-39189d9311a0
+  reason: ProvisioningFailed
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Warning
+- apiVersion: v1
+  count: 58
+  eventTime: null
+  firstTimestamp: "2026-10-18T02:03:30Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: orders-db-0
+    namespace: orders
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:30Z"
+  message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims.
+    preemption: 0/3 nodes are available: 3 Preemption is not helpful for scheduling.'
+  metadata:
+    creationTimestamp: "2026-10-18T07:03:30Z"
+    name: demo-aged-db
+    namespace: orders
+    resourceVersion: "23076"
+    uid: f34b624b-1858-4ce2-8fbf-31da7ca50ea5
+  reason: FailedScheduling
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 64
+  eventTime: null
+  firstTimestamp: "2026-10-18T02:03:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-9xk2m
+    namespace: orders
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:30Z"
+  message: Back-off restarting failed container worker in pod orders-worker-657b597bcf-9xk2m_orders
+  metadata:
+    creationTimestamp: "2026-10-18T07:03:30Z"
+    name: demo-aged-worker
+    namespace: orders
+    resourceVersion: "23075"
+    uid: e0eb5b80-00c4-49c6-98b8-ee96692c880d
+  reason: BackOff
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: kubelet
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    resourceVersion: "11719"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: Pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0"
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: log-shipper-785d97bcf4-5tsr4.18df8aa05441b51d
+    namespace: orders
+    resourceVersion: "13522"
+    uid: b6aabe36-d956-4e87-94d2-49f5bd34c3c6
+  reason: Pulling
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    resourceVersion: "11719"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: 'Failed to pull image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to pull and unpack image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to resolve reference "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to do request: Head "https://registry.acme-demo.internal/v2/platform/log-shipper/manifests/3.1.0":
+    dial tcp: lookup registry.acme-demo.internal on 192.168.65.254:53: no such host'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-5tsr4.18df8aa060bc531e
+    namespace: orders
+    resourceVersion: "13525"
+    uid: 3960e76a-958c-4a6f-b700-e382d8e17aa5
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    resourceVersion: "11719"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: 'Error: ErrImagePull'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-5tsr4.18df8aa060bdf76e
+    namespace: orders
+    resourceVersion: "13526"
+    uid: c8f4f309-a3e9-417e-b4aa-924426c57665
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 266
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    resourceVersion: "11719"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:13Z"
+  message: Back-off pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0"
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-5tsr4.18df8aa08d97e5a6
+    namespace: orders
+    resourceVersion: "22796"
+    uid: cd5d0cf8-dc05-43a0-bea4-f9330283f3ff
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 266
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    resourceVersion: "11719"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:13Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-5tsr4.18df8aa08d98aed2
+    namespace: orders
+    resourceVersion: "22797"
+    uid: 4ca28d7d-4f03-4853-88f1-7b815b9eec2e
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 20
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:53Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: orders-db-0
+    namespace: orders
+    resourceVersion: "706"
+    uid: 7c434124-206e-4876-8c90-40090b4abc62
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:28Z"
+  message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims.
+    not found'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:53Z"
+    name: orders-db-0.18df8aa40239b5f9
+    namespace: orders
+    resourceVersion: "23291"
+    uid: 973b4d2c-9e0e-4bb0-a82b-e00ef34a9656
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 16
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-h8zg7
+    namespace: orders
+    resourceVersion: "12108"
+    uid: 11574d65-b6fc-4ccc-b9c4-c0a999386e7b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:03:52Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: orders-worker-657b597bcf-h8zg7.18df8aa08a95fad2
+    namespace: orders
+    resourceVersion: "23116"
+    uid: 60e17d31-2d23-4a19-8097-9d8baa1a8195
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 13
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-h8zg7
+    namespace: orders
+    resourceVersion: "12108"
+    uid: 11574d65-b6fc-4ccc-b9c4-c0a999386e7b
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:36Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: orders-worker-657b597bcf-h8zg7.18df8aa0919c41ce
+    namespace: orders
+    resourceVersion: "20445"
+    uid: ba476ac1-4517-4ead-952e-c2c92d437dfd
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 9
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:39Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-h8zg7
+    namespace: orders
+    resourceVersion: "12108"
+    uid: 11574d65-b6fc-4ccc-b9c4-c0a999386e7b
+  kind: Event
+  lastTimestamp: "2026-10-18T06:27:53Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:39Z"
+    name: orders-worker-657b597bcf-h8zg7.18df8aa09d59d1a2
+    namespace: orders
+    resourceVersion: "16821"
+    uid: d17f4b39-e8e8-419b-a778-9628e93513a3
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 60
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:43Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-h8zg7
+    namespace: orders
+    resourceVersion: "12108"
+    uid: 11574d65-b6fc-4ccc-b9c4-c0a999386e7b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:17Z"
+  message: Back-off restarting failed container worker in pod orders-worker-657b597bcf-h8zg7_orders(11574d65-b6fc-4ccc-b9c4-c0a999386e7b)
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:43Z"
+    name: orders-worker-657b597bcf-h8zg7.18df8aa1ba47a252
+    namespace: orders
+    resourceVersion: "22821"
+    uid: e27c7e7c-30c1-4b97-8a58-ab673d6a5cfc
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 16
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-wksdm
+    namespace: orders
+    resourceVersion: "12152"
+    uid: d2941800-2feb-4767-957c-34d842d4c5a3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:04Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:42Z"
+    name: orders-worker-657b597bcf-wksdm.18df8aa040fecb0d
+    namespace: orders
+    resourceVersion: "23188"
+    uid: 38990d4a-fab5-4cf0-8bb9-7b7f24dacacf
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 13
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-wksdm
+    namespace: orders
+    resourceVersion: "12152"
+    uid: d2941800-2feb-4767-957c-34d842d4c5a3
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:35Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:42Z"
+    name: orders-worker-657b597bcf-wksdm.18df8aa04f5d4035
+    namespace: orders
+    resourceVersion: "20435"
+    uid: 554be522-def1-44f8-967c-07299539ee99
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 9
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-wksdm
+    namespace: orders
+    resourceVersion: "12152"
+    uid: d2941800-2feb-4767-957c-34d842d4c5a3
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:08Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:42Z"
+    name: orders-worker-657b597bcf-wksdm.18df8aa0641cc71e
+    namespace: orders
+    resourceVersion: "16905"
+    uid: 59116bf9-703c-4fa3-877d-02a0a60b53fa
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 57
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:42Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: orders-worker-657b597bcf-wksdm
+    namespace: orders
+    resourceVersion: "12152"
+    uid: d2941800-2feb-4767-957c-34d842d4c5a3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:18Z"
+  message: Back-off restarting failed container worker in pod orders-worker-657b597bcf-wksdm_orders(d2941800-2feb-4767-957c-34d842d4c5a3)
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:42Z"
+    name: orders-worker-657b597bcf-wksdm.18df8aa17e8fd2a2
+    namespace: orders
+    resourceVersion: "22830"
+    uid: 2e9eb43a-49c9-4167-99f5-c1e54ba63854
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Warning
+kind: List

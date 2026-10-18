@@ -1,0 +1,55 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:28Z"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generateName: ink-queue-
+    generation: 1
+    labels:
+      app: ink-queue
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: ink-queue
+    name: ink-queue-x9t75
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: ink-queue
+      uid: b9a25c4e-90c8-4367-ad1b-08885d257e7a
+    resourceVersion: "9076"
+    uid: 83594e6b-f5d9-46bf-b114-308244b938b8
+  ports: null
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:29Z"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generateName: quill-mq-
+    generation: 1
+    labels:
+      app: quill-mq
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: quill-mq
+    name: quill-mq-xgd8n
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: quill-mq
+      uid: 8ea69e28-68a8-4bd8-a935-d9620670d1da
+    resourceVersion: "9217"
+    uid: ef869089-1c60-408e-90eb-cbb729beb3b5
+  ports: null
+kind: List

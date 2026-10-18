@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-notify, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: hook-courier, namespace: larkspur-notify, labels: {app: hook-courier}}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: hook-courier}}
+  template:
+    metadata: {labels: {app: hook-courier}}
+    spec:
+      containers:
+        - name: courier
+          image: nginx:1.27-alpine
+          ports: [{name: http, containerPort: 80}]
+          readinessProbe: {httpGet: {path: /, port: 8080}, periodSeconds: 5, failureThreshold: 3}
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: hook-courier, namespace: larkspur-notify}
+spec:
+  selector: {app: hook-courier}
+  ports: [{name: http, port: 80, targetPort: http}]

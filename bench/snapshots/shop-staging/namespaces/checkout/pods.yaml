@@ -1,0 +1,1116 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: checkout-api-574ccd5ccb-
+    generation: 1
+    labels:
+      app: checkout-api
+      pod-template-hash: 574ccd5ccb
+    name: checkout-api-574ccd5ccb-2dtjc
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: checkout-api-574ccd5ccb
+      uid: b7c632d9-4ee6-42aa-95a7-32fd56740af7
+    resourceVersion: "12470"
+    uid: 657a12b1-2db6-45db-b248-0a449056f59f
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bz5xq
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-bz5xq
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://f20358c654157f78ea6943099e54ba316c8a44a790bcfe020e74e5c4b09f52e7
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://20a95f0d0c39ee4b09e472b4a0363a5d7ea898bdd2c30304b269811ccdeeaf2c
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:16Z"
+      name: api
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bz5xq
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.9
+    podIPs:
+    - ip: 10.244.2.9
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: checkout-api-574ccd5ccb-
+    generation: 1
+    labels:
+      app: checkout-api
+      pod-template-hash: 574ccd5ccb
+    name: checkout-api-574ccd5ccb-wg8f5
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: checkout-api-574ccd5ccb
+      uid: b7c632d9-4ee6-42aa-95a7-32fd56740af7
+    resourceVersion: "12430"
+    uid: efcebb9a-a203-4da7-87aa-e5752d93f0e4
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-wrj9l
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-wrj9l
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://aa35d92fd2932758fa533d45d33ee054f1b54084169f3d91f7776c15085a1e8e
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://ea721c62a92facb70198d382ea8ca84f02b1e9e699936afd671b4efeb1c76ec8
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:15Z"
+      name: api
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-wrj9l
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.2
+    hostIPs:
+    - ip: 172.21.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.9
+    podIPs:
+    - ip: 10.244.1.9
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: checkout-api-574ccd5ccb-
+    generation: 1
+    labels:
+      app: checkout-api
+      pod-template-hash: 574ccd5ccb
+    name: checkout-api-574ccd5ccb-zbt6t
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: checkout-api-574ccd5ccb
+      uid: b7c632d9-4ee6-42aa-95a7-32fd56740af7
+    resourceVersion: "12474"
+    uid: a285ceb9-5ecd-4d27-989e-8af91b8abb99
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cl6bs
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-cl6bs
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://a25d2a621e27c7682b02def109ff15b6df2ee20938134510be5ffbdeabbe284e
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://ecb57c6460cae1c5e9274b64aff295688008817610129c0763bdccf1fc4b5dd3
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:15Z"
+      name: api
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-cl6bs
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.11
+    podIPs:
+    - ip: 10.244.2.11
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:38Z"
+    generateName: checkout-api-67d6f549fc-
+    generation: 1
+    labels:
+      app: checkout-api
+      pod-template-hash: 67d6f549fc
+    name: checkout-api-67d6f549fc-cr2fw
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: checkout-api-67d6f549fc
+      uid: 851fd913-b77c-4c7a-98d7-cd77aa602744
+    resourceVersion: "23247"
+    uid: 9f729a45-96a1-47c6-abaa-70d54836f996
+  spec:
+    containers:
+    - image: nginx:1.27.9-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2tkn4
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-2tkn4
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:39Z"
+      message: 'containers with unready status: [api]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:39Z"
+      message: 'containers with unready status: [api]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: nginx:1.27.9-alpine
+      imageID: ""
+      lastState: {}
+      name: api
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: 'Back-off pulling image "nginx:1.27.9-alpine": ErrImagePull: rpc
+            error: code = NotFound desc = failed to pull and unpack image "docker.io/library/nginx:1.27.9-alpine":
+            failed to resolve reference "docker.io/library/nginx:1.27.9-alpine": docker.io/library/nginx:1.27.9-alpine:
+            not found'
+          reason: ImagePullBackOff
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2tkn4
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.2.4
+    podIPs:
+    - ip: 10.244.2.4
+    qosClass: Burstable
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:39Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:25Z"
+    generateName: log-shipper-785d97bcf4-
+    generation: 1
+    labels:
+      app: log-shipper
+      pod-template-hash: 785d97bcf4
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: log-shipper-785d97bcf4
+      uid: aff2d0e2-e451-428a-b3d5-f9c2f962a3b7
+    resourceVersion: "23302"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  spec:
+    containers:
+    - image: registry.acme-demo.internal/platform/log-shipper:3.1.0
+      imagePullPolicy: IfNotPresent
+      name: shipper
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-r6gxf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-r6gxf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      message: 'containers with unready status: [shipper]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      message: 'containers with unready status: [shipper]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: registry.acme-demo.internal/platform/log-shipper:3.1.0
+      imageID: ""
+      lastState: {}
+      name: shipper
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: 'Back-off pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            ErrImagePull: failed to pull and unpack image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            failed to resolve reference "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            failed to do request: Head "https://registry.acme-demo.internal/v2/platform/log-shipper/manifests/3.1.0":
+            dial tcp: lookup registry.acme-demo.internal on 192.168.65.254:53: no
+            such host'
+          reason: ImagePullBackOff
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-r6gxf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.2.2
+    podIPs:
+    - ip: 10.244.2.2
+    qosClass: Burstable
+    resources:
+      requests:
+        cpu: 5m
+        memory: 8Mi
+    startTime: "2026-10-17T20:14:25Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: payment-gateway-8949d87d9-
+    generation: 1
+    labels:
+      app: payment-gateway
+      pod-template-hash: 8949d87d9
+    name: payment-gateway-8949d87d9-5j8jg
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: payment-gateway-8949d87d9
+      uid: 5a5acf5e-bfa8-48ca-a8aa-8b999939da36
+    resourceVersion: "12423"
+    uid: 2e3be340-e5a0-4caf-aee1-5ca3372efc8f
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: gw
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-48m62
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-48m62
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://b1e9fd7e7df9df78877c223f0e85e8bb3c866d5cc31b5efa44951ef74b27a8b0
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://a0cd2099028eca9a13dc4ce0a348ed5decda93e7df5d53b9d640387c48258e02
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:16Z"
+      name: gw
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-48m62
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.2
+    hostIPs:
+    - ip: 172.21.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.7
+    podIPs:
+    - ip: 10.244.1.7
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: payment-gateway-8949d87d9-
+    generation: 1
+    labels:
+      app: payment-gateway
+      pod-template-hash: 8949d87d9
+    name: payment-gateway-8949d87d9-lcrkz
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: payment-gateway-8949d87d9
+      uid: 5a5acf5e-bfa8-48ca-a8aa-8b999939da36
+    resourceVersion: "12446"
+    uid: 956166d8-22ea-41fa-bb06-a809a1a0976b
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: gw
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-v2bj6
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-v2bj6
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://c07601f9a82ff9ff3a2c1038935df8298e88b53bae6e254c12d759ea30c12cfe
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://5fa5537eacb553ec5328282cd43edf5dacf813c7ee4dcc0a03de1f589dba0955
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:17Z"
+      name: gw
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-v2bj6
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.5
+    podIPs:
+    - ip: 10.244.2.5
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+kind: List

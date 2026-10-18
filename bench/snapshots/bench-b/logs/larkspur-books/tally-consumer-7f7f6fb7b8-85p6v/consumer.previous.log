@@ -1,0 +1,5 @@
+tally-consumer 2.7.0: stream=tally-events group=reconcilers redis=tally-redis:6379
+redis tally-redis:6379: telnet: can't connect to remote host (10.96.25.183): Connection refused (attempt 1/3)
+redis tally-redis:6379: telnet: can't connect to remote host (10.96.25.183): Connection refused (attempt 2/3)
+redis tally-redis:6379: telnet: can't connect to remote host (10.96.25.183): Connection refused (attempt 3/3)
+Error: redis tally-redis:6379 unavailable, giving up

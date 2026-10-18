@@ -1,0 +1,124 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-17T20:14:10Z"
+    generation: 1
+    labels:
+      app: cdn-proxy
+      pod-template-hash: 6ccb49fbb6
+    name: cdn-proxy-6ccb49fbb6
+    namespace: frontend
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: cdn-proxy
+      uid: 902a332b-70b0-4a15-b99e-ad693ed7e953
+    resourceVersion: "1017"
+    uid: 7cf9eebd-fe0a-4b3c-8c96-336ac952e861
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: cdn-proxy
+        pod-template-hash: 6ccb49fbb6
+    template:
+      metadata:
+        labels:
+          app: cdn-proxy
+          pod-template-hash: 6ccb49fbb6
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: proxy
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-17T20:14:10Z"
+    generation: 1
+    labels:
+      app: storefront
+      pod-template-hash: 689c5cb9fc
+    name: storefront-689c5cb9fc
+    namespace: frontend
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: storefront
+      uid: 554947f1-b1e4-4a8b-9f31-c1c040850b5a
+    resourceVersion: "820"
+    uid: 89e950a5-373a-45da-833d-df3af511cb2c
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: storefront
+        pod-template-hash: 689c5cb9fc
+    template:
+      metadata:
+        labels:
+          app: storefront
+          pod-template-hash: 689c5cb9fc
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: web
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    replicas: 2
+    terminatingReplicas: 0
+kind: List

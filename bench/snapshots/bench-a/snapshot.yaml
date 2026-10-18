@@ -1,0 +1,14 @@
+context: kh-bench
+log_tail_lines: 150
+name: bench-a
+namespaces:
+- default
+- tidepool
+- tidepool-ingest
+recorded_at: "2026-10-18T08:48:45Z"
+recorded_with: kubehealth dev
+skipped_namespaces:
+- kube-system
+- kube-public
+- kube-node-lease
+- local-path-storage

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: tally-importer, namespace: larkspur-books, labels: {app: tally-importer}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: tally-importer}}
+  template:
+    metadata: {labels: {app: tally-importer}}
+    spec:
+      containers:
+        - name: importer
+          image: harbor.larkspur.internal/books/tally-importer:4.2.1
+          args: ["--source=/data/inbox", "--batch-sise=500", "--workers=4"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

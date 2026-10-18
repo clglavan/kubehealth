@@ -1,0 +1,7 @@
+id: healthy-metrics-rollup
+snapshot: shop-staging
+anchor: {ns: monitoring, kind: CronJob, name: metrics-rollup}
+healthy: true
+truth: "healthy CronJob — nothing to fix"
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

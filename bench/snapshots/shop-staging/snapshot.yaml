@@ -1,0 +1,18 @@
+context: shop-staging
+log_tail_lines: 150
+name: shop-staging
+namespaces:
+- catalog
+- checkout
+- default
+- frontend
+- monitoring
+- orders
+- search
+recorded_at: "2026-10-18T07:04:53Z"
+recorded_with: kubehealth v0.2.0-5-gb9cd8f2
+skipped_namespaces:
+- kube-system
+- kube-public
+- kube-node-lease
+- local-path-storage

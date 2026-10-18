@@ -1,0 +1,44 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.128
+    conditions:
+      ready: false
+      serving: false
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: tally-redis-5cb7c8b88d-pgr8n
+      namespace: larkspur-books
+      uid: bc3d45e0-f6f8-4d44-85e3-bfaea2620f19
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:48:25Z"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generateName: tally-redis-
+    generation: 17
+    labels:
+      app: tally-redis
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: tally-redis
+    name: tally-redis-jtgrz
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: tally-redis
+      uid: c47e309b-8796-4ee5-93ab-597285b50a26
+    resourceVersion: "13788"
+    uid: 0b550025-bd71-416d-a2b9-65c9a84e65ac
+  ports:
+  - name: redis
+    port: 6379
+    protocol: TCP
+kind: List

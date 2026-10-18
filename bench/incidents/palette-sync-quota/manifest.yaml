@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-sandbox, labels: {team: print-studio}}
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata: {name: sandbox-quota, namespace: quillmoss-sandbox}
+spec:
+  hard: {pods: "2"}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: palette-sync, namespace: quillmoss-sandbox, labels: {app: palette-sync}}
+spec:
+  replicas: 4
+  selector: {matchLabels: {app: palette-sync}}
+  template:
+    metadata: {labels: {app: palette-sync}}
+    spec:
+
+      containers:
+        - name: sync
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}

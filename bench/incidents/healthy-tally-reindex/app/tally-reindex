@@ -1,0 +1,10 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+echo "tally-reindex 3.0.1: rebuilding account index"
+now=$(date +%s)
+if [ -n "$LOCK_HELD_UNTIL" ] && [ "$now" -lt "$LOCK_HELD_UNTIL" ]; then
+  echo "index lock is held by the previous reindex run; exiting so the Job retries"
+  exit 1
+fi
+sleep 3
+echo "index rebuilt: 1,906,224 accounts"

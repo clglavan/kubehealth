@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool-ingest, labels: {team: ocean-data}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: salinity-model, namespace: tidepool-ingest, labels: {app: salinity-model}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: salinity-model}}
+  template:
+    metadata: {labels: {app: salinity-model}}
+    spec:
+      imagePullSecrets: [{name: tidepool-ghcr}]
+      containers:
+        - name: model
+          image: ghcr.io/tidepool-oceanics/salinity-model:2.4.1
+          resources: {requests: {cpu: 10m, memory: 16Mi}}

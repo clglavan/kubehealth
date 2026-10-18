@@ -1,0 +1,1425 @@
+resources:
+- groupVersion: admissionregistration.k8s.io/v1
+  resources:
+  - categories:
+    - api-extensions
+    kind: MutatingAdmissionPolicy
+    name: mutatingadmissionpolicies
+    namespaced: false
+    singularName: mutatingadmissionpolicy
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - api-extensions
+    kind: MutatingAdmissionPolicyBinding
+    name: mutatingadmissionpolicybindings
+    namespaced: false
+    singularName: mutatingadmissionpolicybinding
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - api-extensions
+    kind: MutatingWebhookConfiguration
+    name: mutatingwebhookconfigurations
+    namespaced: false
+    singularName: mutatingwebhookconfiguration
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - api-extensions
+    kind: ValidatingAdmissionPolicy
+    name: validatingadmissionpolicies
+    namespaced: false
+    singularName: validatingadmissionpolicy
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ValidatingAdmissionPolicy
+    name: validatingadmissionpolicies/status
+    namespaced: false
+    singularName: validatingadmissionpolicy
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - api-extensions
+    kind: ValidatingAdmissionPolicyBinding
+    name: validatingadmissionpolicybindings
+    namespaced: false
+    singularName: validatingadmissionpolicybinding
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - api-extensions
+    kind: ValidatingWebhookConfiguration
+    name: validatingwebhookconfigurations
+    namespaced: false
+    singularName: validatingwebhookconfiguration
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: apiextensions.k8s.io/v1
+  resources:
+  - categories:
+    - api-extensions
+    kind: CustomResourceDefinition
+    name: customresourcedefinitions
+    namespaced: false
+    shortNames:
+    - crd
+    - crds
+    singularName: customresourcedefinition
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: CustomResourceDefinition
+    name: customresourcedefinitions/status
+    namespaced: false
+    singularName: customresourcedefinition
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: apiregistration.k8s.io/v1
+  resources:
+  - categories:
+    - api-extensions
+    kind: APIService
+    name: apiservices
+    namespaced: false
+    singularName: apiservice
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: APIService
+    name: apiservices/status
+    namespaced: false
+    singularName: apiservice
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: apps/v1
+  resources:
+  - kind: ControllerRevision
+    name: controllerrevisions
+    namespaced: true
+    singularName: controllerrevision
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - all
+    kind: DaemonSet
+    name: daemonsets
+    namespaced: true
+    shortNames:
+    - ds
+    singularName: daemonset
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: DaemonSet
+    name: daemonsets/status
+    namespaced: true
+    singularName: daemonset
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - all
+    kind: Deployment
+    name: deployments
+    namespaced: true
+    shortNames:
+    - deploy
+    singularName: deployment
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - group: autoscaling
+    kind: Scale
+    name: deployments/scale
+    namespaced: true
+    singularName: deployment
+    verbs:
+    - get
+    - patch
+    - update
+    version: v1
+  - kind: Deployment
+    name: deployments/status
+    namespaced: true
+    singularName: deployment
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - all
+    kind: ReplicaSet
+    name: replicasets
+    namespaced: true
+    shortNames:
+    - rs
+    singularName: replicaset
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - group: autoscaling
+    kind: Scale
+    name: replicasets/scale
+    namespaced: true
+    singularName: replicaset
+    verbs:
+    - get
+    - patch
+    - update
+    version: v1
+  - kind: ReplicaSet
+    name: replicasets/status
+    namespaced: true
+    singularName: replicaset
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - all
+    kind: StatefulSet
+    name: statefulsets
+    namespaced: true
+    shortNames:
+    - sts
+    singularName: statefulset
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - group: autoscaling
+    kind: Scale
+    name: statefulsets/scale
+    namespaced: true
+    singularName: statefulset
+    verbs:
+    - get
+    - patch
+    - update
+    version: v1
+  - kind: StatefulSet
+    name: statefulsets/status
+    namespaced: true
+    singularName: statefulset
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: authentication.k8s.io/v1
+  resources:
+  - kind: SelfSubjectReview
+    name: selfsubjectreviews
+    namespaced: false
+    singularName: selfsubjectreview
+    verbs:
+    - create
+  - kind: TokenReview
+    name: tokenreviews
+    namespaced: false
+    singularName: tokenreview
+    verbs:
+    - create
+- groupVersion: authorization.k8s.io/v1
+  resources:
+  - kind: LocalSubjectAccessReview
+    name: localsubjectaccessreviews
+    namespaced: true
+    singularName: localsubjectaccessreview
+    verbs:
+    - create
+  - kind: SelfSubjectAccessReview
+    name: selfsubjectaccessreviews
+    namespaced: false
+    singularName: selfsubjectaccessreview
+    verbs:
+    - create
+  - kind: SelfSubjectRulesReview
+    name: selfsubjectrulesreviews
+    namespaced: false
+    singularName: selfsubjectrulesreview
+    verbs:
+    - create
+  - kind: SubjectAccessReview
+    name: subjectaccessreviews
+    namespaced: false
+    singularName: subjectaccessreview
+    verbs:
+    - create
+- groupVersion: autoscaling/v1
+  resources:
+  - categories:
+    - all
+    kind: HorizontalPodAutoscaler
+    name: horizontalpodautoscalers
+    namespaced: true
+    shortNames:
+    - hpa
+    singularName: horizontalpodautoscaler
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: HorizontalPodAutoscaler
+    name: horizontalpodautoscalers/status
+    namespaced: true
+    singularName: horizontalpodautoscaler
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: autoscaling/v2
+  resources:
+  - categories:
+    - all
+    kind: HorizontalPodAutoscaler
+    name: horizontalpodautoscalers
+    namespaced: true
+    shortNames:
+    - hpa
+    singularName: horizontalpodautoscaler
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: HorizontalPodAutoscaler
+    name: horizontalpodautoscalers/status
+    namespaced: true
+    singularName: horizontalpodautoscaler
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: batch/v1
+  resources:
+  - categories:
+    - all
+    kind: CronJob
+    name: cronjobs
+    namespaced: true
+    shortNames:
+    - cj
+    singularName: cronjob
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: CronJob
+    name: cronjobs/status
+    namespaced: true
+    singularName: cronjob
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - all
+    kind: Job
+    name: jobs
+    namespaced: true
+    singularName: job
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Job
+    name: jobs/status
+    namespaced: true
+    singularName: job
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: certificates.k8s.io/v1
+  resources:
+  - kind: CertificateSigningRequest
+    name: certificatesigningrequests
+    namespaced: false
+    shortNames:
+    - csr
+    singularName: certificatesigningrequest
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: CertificateSigningRequest
+    name: certificatesigningrequests/approval
+    namespaced: false
+    singularName: certificatesigningrequest
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: CertificateSigningRequest
+    name: certificatesigningrequests/status
+    namespaced: false
+    singularName: certificatesigningrequest
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: ClusterTrustBundle
+    name: clustertrustbundles
+    namespaced: false
+    singularName: clustertrustbundle
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PodCertificateRequest
+    name: podcertificaterequests
+    namespaced: true
+    singularName: podcertificaterequest
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PodCertificateRequest
+    name: podcertificaterequests/status
+    namespaced: true
+    singularName: podcertificaterequest
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: coordination.k8s.io/v1
+  resources:
+  - kind: Lease
+    name: leases
+    namespaced: true
+    singularName: lease
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: discovery.k8s.io/v1
+  resources:
+  - kind: EndpointSlice
+    name: endpointslices
+    namespaced: true
+    singularName: endpointslice
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: events.k8s.io/v1
+  resources:
+  - kind: Event
+    name: events
+    namespaced: true
+    shortNames:
+    - ev
+    singularName: event
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: flowcontrol.apiserver.k8s.io/v1
+  resources:
+  - kind: FlowSchema
+    name: flowschemas
+    namespaced: false
+    singularName: flowschema
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: FlowSchema
+    name: flowschemas/status
+    namespaced: false
+    singularName: flowschema
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: PriorityLevelConfiguration
+    name: prioritylevelconfigurations
+    namespaced: false
+    singularName: prioritylevelconfiguration
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PriorityLevelConfiguration
+    name: prioritylevelconfigurations/status
+    namespaced: false
+    singularName: prioritylevelconfiguration
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: networking.k8s.io/v1
+  resources:
+  - kind: IngressClass
+    name: ingressclasses
+    namespaced: false
+    singularName: ingressclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Ingress
+    name: ingresses
+    namespaced: true
+    shortNames:
+    - ing
+    singularName: ingress
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Ingress
+    name: ingresses/status
+    namespaced: true
+    singularName: ingress
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: IPAddress
+    name: ipaddresses
+    namespaced: false
+    shortNames:
+    - ip
+    singularName: ipaddress
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: NetworkPolicy
+    name: networkpolicies
+    namespaced: true
+    shortNames:
+    - netpol
+    singularName: networkpolicy
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ServiceCIDR
+    name: servicecidrs
+    namespaced: false
+    singularName: servicecidr
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ServiceCIDR
+    name: servicecidrs/status
+    namespaced: false
+    singularName: servicecidr
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: node.k8s.io/v1
+  resources:
+  - kind: RuntimeClass
+    name: runtimeclasses
+    namespaced: false
+    singularName: runtimeclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: policy/v1
+  resources:
+  - kind: PodDisruptionBudget
+    name: poddisruptionbudgets
+    namespaced: true
+    shortNames:
+    - pdb
+    singularName: poddisruptionbudget
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PodDisruptionBudget
+    name: poddisruptionbudgets/status
+    namespaced: true
+    singularName: poddisruptionbudget
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: rbac.authorization.k8s.io/v1
+  resources:
+  - kind: ClusterRoleBinding
+    name: clusterrolebindings
+    namespaced: false
+    singularName: clusterrolebinding
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ClusterRole
+    name: clusterroles
+    namespaced: false
+    singularName: clusterrole
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: RoleBinding
+    name: rolebindings
+    namespaced: true
+    singularName: rolebinding
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Role
+    name: roles
+    namespaced: true
+    singularName: role
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: resource.k8s.io/v1
+  resources:
+  - kind: DeviceClass
+    name: deviceclasses
+    namespaced: false
+    singularName: deviceclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: DeviceTaintRule
+    name: devicetaintrules
+    namespaced: false
+    singularName: devicetaintrule
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: DeviceTaintRule
+    name: devicetaintrules/status
+    namespaced: false
+    singularName: devicetaintrule
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: ResourceClaim
+    name: resourceclaims
+    namespaced: true
+    singularName: resourceclaim
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ResourceClaim
+    name: resourceclaims/status
+    namespaced: true
+    singularName: resourceclaim
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: ResourceClaimTemplate
+    name: resourceclaimtemplates
+    namespaced: true
+    singularName: resourceclaimtemplate
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ResourceSlice
+    name: resourceslices
+    namespaced: false
+    singularName: resourceslice
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: scheduling.k8s.io/v1
+  resources:
+  - kind: PriorityClass
+    name: priorityclasses
+    namespaced: false
+    shortNames:
+    - pc
+    singularName: priorityclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: storage.k8s.io/v1
+  resources:
+  - kind: CSIDriver
+    name: csidrivers
+    namespaced: false
+    singularName: csidriver
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: CSINode
+    name: csinodes
+    namespaced: false
+    singularName: csinode
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: CSINode
+    name: csinodes/status
+    namespaced: false
+    singularName: csinode
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: CSIStorageCapacity
+    name: csistoragecapacities
+    namespaced: true
+    singularName: csistoragecapacity
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: StorageClass
+    name: storageclasses
+    namespaced: false
+    shortNames:
+    - sc
+    singularName: storageclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: VolumeAttachment
+    name: volumeattachments
+    namespaced: false
+    singularName: volumeattachment
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: VolumeAttachment
+    name: volumeattachments/status
+    namespaced: false
+    singularName: volumeattachment
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: VolumeAttributesClass
+    name: volumeattributesclasses
+    namespaced: false
+    shortNames:
+    - vac
+    singularName: volumeattributesclass
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+- groupVersion: storagemigration.k8s.io/v1
+  resources:
+  - kind: StorageVersionMigration
+    name: storageversionmigrations
+    namespaced: false
+    singularName: storageversionmigration
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: StorageVersionMigration
+    name: storageversionmigrations/status
+    namespaced: false
+    singularName: storageversionmigration
+    verbs:
+    - get
+    - patch
+    - update
+- groupVersion: v1
+  resources:
+  - kind: Binding
+    name: bindings
+    namespaced: true
+    singularName: binding
+    verbs:
+    - create
+  - kind: ComponentStatus
+    name: componentstatuses
+    namespaced: false
+    shortNames:
+    - cs
+    singularName: componentstatus
+    verbs:
+    - get
+    - list
+  - kind: ConfigMap
+    name: configmaps
+    namespaced: true
+    shortNames:
+    - cm
+    singularName: configmap
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Endpoints
+    name: endpoints
+    namespaced: true
+    shortNames:
+    - ep
+    singularName: endpoints
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Event
+    name: events
+    namespaced: true
+    shortNames:
+    - ev
+    singularName: event
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: LimitRange
+    name: limitranges
+    namespaced: true
+    shortNames:
+    - limits
+    singularName: limitrange
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Namespace
+    name: namespaces
+    namespaced: false
+    shortNames:
+    - ns
+    singularName: namespace
+    verbs:
+    - create
+    - delete
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: Namespace
+    name: namespaces/finalize
+    namespaced: false
+    singularName: namespace
+    verbs:
+    - update
+  - kind: Namespace
+    name: namespaces/status
+    namespaced: false
+    singularName: namespace
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: Node
+    name: nodes
+    namespaced: false
+    shortNames:
+    - "no"
+    singularName: node
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: NodeProxyOptions
+    name: nodes/proxy
+    namespaced: false
+    singularName: node
+    verbs:
+    - create
+    - delete
+    - get
+    - patch
+    - update
+  - kind: Node
+    name: nodes/status
+    namespaced: false
+    singularName: node
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: PersistentVolumeClaim
+    name: persistentvolumeclaims
+    namespaced: true
+    shortNames:
+    - pvc
+    singularName: persistentvolumeclaim
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PersistentVolumeClaim
+    name: persistentvolumeclaims/status
+    namespaced: true
+    singularName: persistentvolumeclaim
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: PersistentVolume
+    name: persistentvolumes
+    namespaced: false
+    shortNames:
+    - pv
+    singularName: persistentvolume
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PersistentVolume
+    name: persistentvolumes/status
+    namespaced: false
+    singularName: persistentvolume
+    verbs:
+    - get
+    - patch
+    - update
+  - categories:
+    - all
+    kind: Pod
+    name: pods
+    namespaced: true
+    shortNames:
+    - po
+    singularName: pod
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: PodAttachOptions
+    name: pods/attach
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+    - get
+  - kind: Binding
+    name: pods/binding
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+  - kind: Pod
+    name: pods/ephemeralcontainers
+    namespaced: true
+    singularName: pod
+    verbs:
+    - get
+    - patch
+    - update
+  - group: policy
+    kind: Eviction
+    name: pods/eviction
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+    version: v1
+  - kind: PodExecOptions
+    name: pods/exec
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+    - get
+  - kind: Pod
+    name: pods/log
+    namespaced: true
+    singularName: pod
+    verbs:
+    - get
+  - kind: PodPortForwardOptions
+    name: pods/portforward
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+    - get
+  - kind: PodProxyOptions
+    name: pods/proxy
+    namespaced: true
+    singularName: pod
+    verbs:
+    - create
+    - delete
+    - get
+    - patch
+    - update
+  - kind: Pod
+    name: pods/resize
+    namespaced: true
+    singularName: pod
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: Pod
+    name: pods/status
+    namespaced: true
+    singularName: pod
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: PodTemplate
+    name: podtemplates
+    namespaced: true
+    singularName: podtemplate
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - categories:
+    - all
+    kind: ReplicationController
+    name: replicationcontrollers
+    namespaced: true
+    shortNames:
+    - rc
+    singularName: replicationcontroller
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - group: autoscaling
+    kind: Scale
+    name: replicationcontrollers/scale
+    namespaced: true
+    singularName: replicationcontroller
+    verbs:
+    - get
+    - patch
+    - update
+    version: v1
+  - kind: ReplicationController
+    name: replicationcontrollers/status
+    namespaced: true
+    singularName: replicationcontroller
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: ResourceQuota
+    name: resourcequotas
+    namespaced: true
+    shortNames:
+    - quota
+    singularName: resourcequota
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ResourceQuota
+    name: resourcequotas/status
+    namespaced: true
+    singularName: resourcequota
+    verbs:
+    - get
+    - patch
+    - update
+  - kind: Secret
+    name: secrets
+    namespaced: true
+    singularName: secret
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ServiceAccount
+    name: serviceaccounts
+    namespaced: true
+    shortNames:
+    - sa
+    singularName: serviceaccount
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - group: authentication.k8s.io
+    kind: TokenRequest
+    name: serviceaccounts/token
+    namespaced: true
+    singularName: serviceaccount
+    verbs:
+    - create
+    version: v1
+  - categories:
+    - all
+    kind: Service
+    name: services
+    namespaced: true
+    shortNames:
+    - svc
+    singularName: service
+    verbs:
+    - create
+    - delete
+    - deletecollection
+    - get
+    - list
+    - patch
+    - update
+    - watch
+  - kind: ServiceProxyOptions
+    name: services/proxy
+    namespaced: true
+    singularName: service
+    verbs:
+    - create
+    - delete
+    - get
+    - patch
+    - update
+  - kind: Service
+    name: services/status
+    namespaced: true
+    singularName: service
+    verbs:
+    - get
+    - patch
+    - update

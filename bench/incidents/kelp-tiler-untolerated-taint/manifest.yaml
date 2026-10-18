@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool, labels: {team: ocean-data}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: kelp-tiler, namespace: tidepool, labels: {app: kelp-tiler}}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: kelp-tiler}}
+  template:
+    metadata: {labels: {app: kelp-tiler}}
+    spec:
+      nodeSelector: {node-pool: reporting}
+      containers:
+        - name: tiler
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}

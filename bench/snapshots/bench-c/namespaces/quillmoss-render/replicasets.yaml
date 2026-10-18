@@ -1,0 +1,724 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generation: 1
+    labels:
+      app: glyph-ocr
+      pod-template-hash: 6696fcd458
+    name: glyph-ocr-6696fcd458
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: glyph-ocr
+      uid: 67b70608-49f8-42fa-93b7-dc4be2282c7c
+    resourceVersion: "13931"
+    uid: 11e32d56-48ef-4db5-a956-68344056d8e9
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: glyph-ocr
+        pod-template-hash: 6696fcd458
+    template:
+      metadata:
+        labels:
+          app: glyph-ocr
+          pod-template-hash: 6696fcd458
+      spec:
+        containers:
+        - args:
+          - --model=http://glyph-ocr-model:8501/v1/models/ocr
+          - --workers=2
+          image: harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+          imagePullPolicy: IfNotPresent
+          name: ocr
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generation: 1
+    labels:
+      app: glyph-ocr-model
+      pod-template-hash: 6578b5984d
+    name: glyph-ocr-model-6578b5984d
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: glyph-ocr-model
+      uid: 637ac0c0-76e1-4cf9-8552-9fddf652d7e6
+    resourceVersion: "8748"
+    uid: 9c679d9b-e5f0-46a8-9b48-a929a3a5c247
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: glyph-ocr-model
+        pod-template-hash: 6578b5984d
+    template:
+      metadata:
+        labels:
+          app: glyph-ocr-model
+          pod-template-hash: 6578b5984d
+      spec:
+        containers:
+        - image: quillmoss/ocr-model:5.0.2
+          imagePullPolicy: IfNotPresent
+          name: model-server
+          ports:
+          - containerPort: 8501
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generation: 1
+    labels:
+      app: glyph-preview
+      pod-template-hash: 798f8c66d5
+    name: glyph-preview-798f8c66d5
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: glyph-preview
+      uid: ed7579ce-bc19-4dcc-8ed5-c3dd8e7a247f
+    resourceVersion: "8836"
+    uid: c2f6d3c6-bc42-4be5-b3ec-b19fd88306ad
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: glyph-preview
+        pod-template-hash: 798f8c66d5
+    template:
+      metadata:
+        labels:
+          app: glyph-preview
+          pod-template-hash: 798f8c66d5
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: preview
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: inkwell-api
+      pod-template-hash: bc6ccb7bc
+    name: inkwell-api-bc6ccb7bc
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: inkwell-api
+      uid: f971225d-3b9f-4b28-b7bd-2481eac986b3
+    resourceVersion: "9207"
+    uid: 47413b38-b20c-4c72-bf1f-370af0547690
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: inkwell-api
+        pod-template-hash: bc6ccb7bc
+    template:
+      metadata:
+        labels:
+          app: inkwell-api
+          pod-template-hash: bc6ccb7bc
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: api
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: inkwell-thumbnailer
+      pod-template-hash: 8465884f59
+    name: inkwell-thumbnailer-8465884f59
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: inkwell-thumbnailer
+      uid: 1e98e732-6a5f-4fe3-89df-004b9402b4f8
+    resourceVersion: "13848"
+    uid: 39947e2d-c9b7-4961-a4e6-dfd65dfeb400
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: inkwell-thumbnailer
+        pod-template-hash: 8465884f59
+    template:
+      metadata:
+        labels:
+          app: inkwell-thumbnailer
+          pod-template-hash: 8465884f59
+      spec:
+        containers:
+        - args:
+          - --assets=http://inkwell-api/v1/assets
+          - --sizes=64,256,1024
+          image: harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+          imagePullPolicy: IfNotPresent
+          name: thumbnailer
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    generation: 1
+    labels:
+      app: proof-scheduler
+      pod-template-hash: 68b6f949df
+    name: proof-scheduler-68b6f949df
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: proof-scheduler
+      uid: 65176a7a-566f-4a60-a308-3e59c36c4672
+    resourceVersion: "9305"
+    uid: 94534615-746f-4504-9ce4-2f176224bdec
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: proof-scheduler
+        pod-template-hash: 68b6f949df
+    template:
+      metadata:
+        labels:
+          app: proof-scheduler
+          pod-template-hash: 68b6f949df
+      spec:
+        affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app: proof-scheduler
+              topologyKey: kubernetes.io/hostname
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: scheduler
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 3
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 3
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    generation: 1
+    labels:
+      app: stencil-cdn
+      pod-template-hash: 755bc7b89c
+    name: stencil-cdn-755bc7b89c
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: stencil-cdn
+      uid: 53dd6d68-33c4-464d-b39a-5086cd62ddbe
+    resourceVersion: "8989"
+    uid: 2a0af03d-da15-4ff7-9775-53f0bf5b6806
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: stencil-cdn
+        pod-template-hash: 755bc7b89c
+    template:
+      metadata:
+        labels:
+          app: stencil-cdn
+          pod-template-hash: 755bc7b89c
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: cdn
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          node-pool: reporting
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - effect: NoSchedule
+          key: dedicated
+          operator: Equal
+          value: reporting
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generation: 1
+    labels:
+      app: stencil-renderer
+      pod-template-hash: f869d948
+    name: stencil-renderer-f869d948
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: stencil-renderer
+      uid: fc1513c6-34b4-43a1-951a-7105f838e64d
+    resourceVersion: "9350"
+    uid: ad54809f-e22f-436c-ba71-b53780b4d843
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: stencil-renderer
+        pod-template-hash: f869d948
+    template:
+      metadata:
+        labels:
+          app: stencil-renderer
+          pod-template-hash: f869d948
+      spec:
+        containers:
+        - args:
+          - serve
+          image: harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+          imagePullPolicy: IfNotPresent
+          name: renderer
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - check-schema
+          - --want=41
+          image: harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+          imagePullPolicy: IfNotPresent
+          name: schema-check
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    generation: 1
+    labels:
+      app: vellum-docs
+      pod-template-hash: 648796bfd8
+    name: vellum-docs-648796bfd8
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: vellum-docs
+      uid: 26a5dc3e-199a-4bc5-bf17-d3324a30d8e7
+    resourceVersion: "9088"
+    uid: ef34ef26-0928-4b0b-9f2c-ce14afe0c0a9
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: vellum-docs
+        pod-template-hash: 648796bfd8
+    template:
+      metadata:
+        labels:
+          app: vellum-docs
+          pod-template-hash: 648796bfd8
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: docs
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: vellum-gateway
+      pod-template-hash: 6bfd996d7f
+    name: vellum-gateway-6bfd996d7f
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: vellum-gateway
+      uid: 3d4e0ede-0def-4fff-8cdf-953a5dbc0f10
+    resourceVersion: "9510"
+    uid: d14c347f-1c05-49b4-9e12-ccc77d0c25ed
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: vellum-gateway
+        pod-template-hash: 6bfd996d7f
+    template:
+      metadata:
+        labels:
+          app: vellum-gateway
+          pod-template-hash: 6bfd996d7f
+      spec:
+        containers:
+        - args:
+          - --listen=:8080
+          - --upstreams=stencil-renderer,glyph-preview
+          image: harbor.quillmoss.internal/render/vellum-gateway:3.4.0
+          imagePullPolicy: IfNotPresent
+          name: gateway
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "2"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generation: 1
+    labels:
+      app: vellum-gateway
+      pod-template-hash: 7fff594c4b
+    name: vellum-gateway-7fff594c4b
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: vellum-gateway
+      uid: 3d4e0ede-0def-4fff-8cdf-953a5dbc0f10
+    resourceVersion: "9575"
+    uid: 9d02a390-6c4f-4ed3-8cde-f49bf7fed351
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: vellum-gateway
+        pod-template-hash: 7fff594c4b
+    template:
+      metadata:
+        labels:
+          app: vellum-gateway
+          pod-template-hash: 7fff594c4b
+      spec:
+        containers:
+        - args:
+          - --listen=:80800
+          - --upstreams=stencil-renderer,glyph-preview
+          image: harbor.quillmoss.internal/render/vellum-gateway:3.5.0
+          imagePullPolicy: IfNotPresent
+          name: gateway
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+kind: List

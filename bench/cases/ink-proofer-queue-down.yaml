@@ -1,0 +1,10 @@
+id: ink-proofer-queue-down
+snapshot: bench-d
+anchor: {ns: quillmoss-ops, kind: Deployment, name: ink-proofer}
+truth: "proofer crash-loops on 'connection refused' to ink-queue:5672: ink-queue has no pods because its 1Gi memory limit exceeds the namespace LimitRange max (256Mi)"
+cause: [["ink-queue"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "no pods"]]
+deep: [["limitrange", "limit range", "256mi", "maximum memory", "forbidden"]]
+fix: [["ink-queue"], ["memory", "limit"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/ink-proofer-queue-down, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

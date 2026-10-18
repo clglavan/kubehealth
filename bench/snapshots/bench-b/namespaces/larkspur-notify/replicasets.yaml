@@ -1,0 +1,417 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generation: 1
+    labels:
+      app: dispatch-worker
+      pod-template-hash: 5995976cf7
+    name: dispatch-worker-5995976cf7
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: dispatch-worker
+      uid: 771aac14-950f-49bf-84a5-14d15977cad1
+    resourceVersion: "13345"
+    uid: 29801733-c1be-4475-9ae5-2b9e2da7212d
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: dispatch-worker
+        pod-template-hash: 5995976cf7
+    template:
+      metadata:
+        labels:
+          app: dispatch-worker
+          pod-template-hash: 5995976cf7
+      spec:
+        containers:
+        - args:
+          - --templates=http://notify-templates:8080
+          - --queue=outbound
+          image: harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+          imagePullPolicy: IfNotPresent
+          name: worker
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generation: 1
+    labels:
+      app: hook-courier
+      pod-template-hash: 5d48f76745
+    name: hook-courier-5d48f76745
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: hook-courier
+      uid: 7b4b42cb-8bad-4689-9399-569da3a319f3
+    resourceVersion: "10906"
+    uid: dda229d5-2d47-4284-99f2-f5d38ee83774
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: hook-courier
+        pod-template-hash: 5d48f76745
+    template:
+      metadata:
+        labels:
+          app: hook-courier
+          pod-template-hash: 5d48f76745
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: courier
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generation: 1
+    labels:
+      app: mail-relay
+      pod-template-hash: 579f9fbd7d
+    name: mail-relay-579f9fbd7d
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: mail-relay
+      uid: 7b088446-be30-4c46-a398-9e65bacf0621
+    resourceVersion: "10772"
+    uid: fd5937d6-aa64-4153-9de8-43ee4a5b1203
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: mail-relay
+        pod-template-hash: 579f9fbd7d
+    template:
+      metadata:
+        labels:
+          app: mail-relay
+          pod-template-hash: 579f9fbd7d
+      spec:
+        containers:
+        - image: harbor.larkspur.internal/notify/mail-relay:2.6.0
+          imagePullPolicy: IfNotPresent
+          name: relay
+          ports:
+          - containerPort: 2525
+            protocol: TCP
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/relay
+            name: routes
+            readOnly: true
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: relay-routes
+          name: routes
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generation: 2
+    labels:
+      app: notify-fanout
+      pod-template-hash: 5ddf8747f
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: notify-fanout
+      uid: 4df82cac-f23c-4340-b1fa-a949d4adc221
+    resourceVersion: "11214"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: notify-fanout
+        pod-template-hash: 5ddf8747f
+    template:
+      metadata:
+        labels:
+          app: notify-fanout
+          pod-template-hash: 5ddf8747f
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: fanout
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    fullyLabeledReplicas: 1
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generation: 1
+    labels:
+      app: notify-templates
+      pod-template-hash: 8597fbb5dc
+    name: notify-templates-8597fbb5dc
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: notify-templates
+      uid: 99af7cd8-78ea-4522-a077-ac14730f427d
+    resourceVersion: "10952"
+    uid: 397874ae-7db6-41d5-9fba-66f4adee1868
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: notify-templates
+        pod-template-hash: 8597fbb5dc
+    template:
+      metadata:
+        labels:
+          app: notify-templates
+          pod-template-hash: 8597fbb5dc
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: templates
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /
+              port: 80
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    generation: 1
+    labels:
+      app: sms-gateway
+      pod-template-hash: 99b5477fd
+    name: sms-gateway-99b5477fd
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: sms-gateway
+      uid: b9717b57-2053-49b4-973c-ad6fb8603472
+    resourceVersion: "13508"
+    uid: e530c6ba-a497-445d-b3aa-46e142256aab
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: sms-gateway
+        pod-template-hash: 99b5477fd
+    template:
+      metadata:
+        labels:
+          app: sms-gateway
+          pod-template-hash: 99b5477fd
+      spec:
+        containers:
+        - args:
+          - --listen=:8080
+          - --routes=/var/lib/sms/routes
+          image: harbor.larkspur.internal/notify/sms-gateway:5.3.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /livez
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: gateway
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 5
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+kind: List

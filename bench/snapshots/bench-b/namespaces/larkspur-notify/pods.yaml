@@ -1,0 +1,1896 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    generateName: digest-mailer-29871886-
+    generation: 1
+    labels:
+      app: digest-mailer
+      batch.kubernetes.io/controller-uid: 5277abec-e236-4e0d-a045-3415d735e7d8
+      batch.kubernetes.io/job-name: digest-mailer-29871886
+      controller-uid: 5277abec-e236-4e0d-a045-3415d735e7d8
+      job-name: digest-mailer-29871886
+    name: digest-mailer-29871886-gd5tj
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: digest-mailer-29871886
+      uid: 5277abec-e236-4e0d-a045-3415d735e7d8
+    resourceVersion: "13197"
+    uid: bcd7705f-27a3-43f8-925a-64e316bb32e6
+  spec:
+    containers:
+    - args:
+      - --relay=mail-relay:2525
+      - --digest=daily
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imagePullPolicy: IfNotPresent
+      name: mailer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rlg6p
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-rlg6p
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:04Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://811b12a73c8061cd3ff64a390e129d8873d06981244ab7e54da7c3575a933998
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imageID: sha256:94306ec943c7a3da237297cb58da7d2f811109243677f0470e540c835e788c71
+      lastState: {}
+      name: mailer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://811b12a73c8061cd3ff64a390e129d8873d06981244ab7e54da7c3575a933998
+          exitCode: 1
+          finishedAt: "2026-10-18T08:46:02Z"
+          reason: Error
+          startedAt: "2026-10-18T08:46:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-rlg6p
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.181
+    podIPs:
+    - ip: 10.244.1.181
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:46:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    generateName: digest-mailer-29871887-
+    generation: 1
+    labels:
+      app: digest-mailer
+      batch.kubernetes.io/controller-uid: 1d35abca-9cf9-4898-8f0a-e77c8332e8a9
+      batch.kubernetes.io/job-name: digest-mailer-29871887
+      controller-uid: 1d35abca-9cf9-4898-8f0a-e77c8332e8a9
+      job-name: digest-mailer-29871887
+    name: digest-mailer-29871887-mzbq9
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: digest-mailer-29871887
+      uid: 1d35abca-9cf9-4898-8f0a-e77c8332e8a9
+    resourceVersion: "13443"
+    uid: 09095ce7-1baf-4a40-891b-028269e24e50
+  spec:
+    containers:
+    - args:
+      - --relay=mail-relay:2525
+      - --digest=daily
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imagePullPolicy: IfNotPresent
+      name: mailer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmgpb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-xmgpb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:04Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://20f6ca8080c116fa2dbc363c8d2973a259c9c605857ecd02c3399a1ffebcefeb
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imageID: sha256:94306ec943c7a3da237297cb58da7d2f811109243677f0470e540c835e788c71
+      lastState: {}
+      name: mailer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://20f6ca8080c116fa2dbc363c8d2973a259c9c605857ecd02c3399a1ffebcefeb
+          exitCode: 1
+          finishedAt: "2026-10-18T08:47:02Z"
+          reason: Error
+          startedAt: "2026-10-18T08:47:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xmgpb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.184
+    podIPs:
+    - ip: 10.244.1.184
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:47:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    generateName: digest-mailer-29871888-
+    generation: 1
+    labels:
+      app: digest-mailer
+      batch.kubernetes.io/controller-uid: 383fd91d-46bc-4206-ae6d-9928fc3868e4
+      batch.kubernetes.io/job-name: digest-mailer-29871888
+      controller-uid: 383fd91d-46bc-4206-ae6d-9928fc3868e4
+      job-name: digest-mailer-29871888
+    name: digest-mailer-29871888-f5glq
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: digest-mailer-29871888
+      uid: 383fd91d-46bc-4206-ae6d-9928fc3868e4
+    resourceVersion: "13693"
+    uid: 4c453cc6-c5b1-42b4-b249-c2480f2f187a
+  spec:
+    containers:
+    - args:
+      - --relay=mail-relay:2525
+      - --digest=daily
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imagePullPolicy: IfNotPresent
+      name: mailer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-pq2tc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-pq2tc
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:05Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:03Z"
+      observedGeneration: 1
+      reason: PodFailed
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:48:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://abe45d9da8dcc4bffd6d62d843bdf891d3cec3554b5b108a51a8b1653430a094
+      image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      imageID: sha256:94306ec943c7a3da237297cb58da7d2f811109243677f0470e540c835e788c71
+      lastState: {}
+      name: mailer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://abe45d9da8dcc4bffd6d62d843bdf891d3cec3554b5b108a51a8b1653430a094
+          exitCode: 1
+          finishedAt: "2026-10-18T08:48:02Z"
+          reason: Error
+          startedAt: "2026-10-18T08:48:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-pq2tc
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Failed
+    podIP: 10.244.1.189
+    podIPs:
+    - ip: 10.244.1.189
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:48:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: dispatch-worker-5995976cf7-
+    generation: 1
+    labels:
+      app: dispatch-worker
+      pod-template-hash: 5995976cf7
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: dispatch-worker-5995976cf7
+      uid: 29801733-c1be-4475-9ae5-2b9e2da7212d
+    resourceVersion: "13675"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  spec:
+    containers:
+    - args:
+      - --templates=http://notify-templates:8080
+      - --queue=outbound
+      image: harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+      imagePullPolicy: IfNotPresent
+      name: worker
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-4h2fc
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-4h2fc
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:48Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:46:48Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://6d481fe1f38582ab418a833e05fb00fedd5ac95997732a0709d1fff7348ec1c3
+      image: harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+      imageID: sha256:b4a4a8385259be0fdf136c2bf49aa668115f7470a01f783ba2fab8492e90fc02
+      lastState:
+        terminated:
+          containerID: containerd://6d481fe1f38582ab418a833e05fb00fedd5ac95997732a0709d1fff7348ec1c3
+          exitCode: 1
+          finishedAt: "2026-10-18T08:46:48Z"
+          reason: Error
+          startedAt: "2026-10-18T08:46:39Z"
+      name: worker
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=worker pod=dispatch-worker-5995976cf7-kcd6h_larkspur-notify(58dfecc2-19c5-49f4-a814-a024389b377a)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-4h2fc
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.149
+    podIPs:
+    - ip: 10.244.1.149
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:39:58Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generateName: hook-courier-5d48f76745-
+    generation: 1
+    labels:
+      app: hook-courier
+      pod-template-hash: 5d48f76745
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: hook-courier-5d48f76745
+      uid: dda229d5-2d47-4284-99f2-f5d38ee83774
+    resourceVersion: "11698"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: courier
+      ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 8080
+          scheme: HTTP
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-5x28k
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-5x28k
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [courier]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [courier]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://c69112e2b450fe2f324a69376bd7f3d1113f08859b922cd7b44ddbd8b058e578
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState: {}
+      name: courier
+      ready: false
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:40:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-5x28k
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.154
+    podIPs:
+    - ip: 10.244.1.154
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:39:59Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generateName: hook-courier-5d48f76745-
+    generation: 1
+    labels:
+      app: hook-courier
+      pod-template-hash: 5d48f76745
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: hook-courier-5d48f76745
+      uid: dda229d5-2d47-4284-99f2-f5d38ee83774
+    resourceVersion: "11703"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: courier
+      ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 8080
+          scheme: HTTP
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kjbtx
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-kjbtx
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [courier]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [courier]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://08f0e143447b743f5916090dda974a7fb0fec4ff40dc0833feb638be4bd53416
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState: {}
+      name: courier
+      ready: false
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:40:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kjbtx
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.155
+    podIPs:
+    - ip: 10.244.1.155
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:39:59Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: mail-relay-579f9fbd7d-
+    generation: 1
+    labels:
+      app: mail-relay
+      pod-template-hash: 579f9fbd7d
+    name: mail-relay-579f9fbd7d-gdzgg
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: mail-relay-579f9fbd7d
+      uid: fd5937d6-aa64-4153-9de8-43ee4a5b1203
+    resourceVersion: "10774"
+    uid: 436870fb-ad87-42a3-9e2a-0e40537d1eff
+  spec:
+    containers:
+    - image: harbor.larkspur.internal/notify/mail-relay:2.6.0
+      imagePullPolicy: IfNotPresent
+      name: relay
+      ports:
+      - containerPort: 2525
+        protocol: TCP
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /etc/relay
+        name: routes
+        readOnly: true
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-849q5
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: relay-routes
+      name: routes
+    - name: kube-api-access-849q5
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      message: no pod sandbox exists
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      message: 'containers with unready status: [relay]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      message: 'containers with unready status: [relay]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: harbor.larkspur.internal/notify/mail-relay:2.6.0
+      imageID: ""
+      lastState: {}
+      name: relay
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          reason: ContainerCreating
+      volumeMounts:
+      - mountPath: /etc/relay
+        name: routes
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-849q5
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Pending
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        cpu: 5m
+        memory: 8Mi
+    startTime: "2026-10-18T08:39:58Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generateName: notify-fanout-5ddf8747f-
+    generation: 1
+    labels:
+      app: notify-fanout
+      pod-template-hash: 5ddf8747f
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: notify-fanout-5ddf8747f
+      uid: be55ec8c-af05-4640-ab4a-e158610151ab
+    resourceVersion: "11072"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: fanout
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bsbnp
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-bsbnp
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://8ae5dc2afa6b6d3b762947903f4a51b843bbe9a86b8042e58deabed9a52e2329
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState: {}
+      name: fanout
+      ready: true
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:39:59Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-bsbnp
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.151
+    podIPs:
+    - ip: 10.244.1.151
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:39:59Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: notify-templates-8597fbb5dc-
+    generation: 1
+    labels:
+      app: notify-templates
+      pod-template-hash: 8597fbb5dc
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: notify-templates-8597fbb5dc
+      uid: 397874ae-7db6-41d5-9fba-66f4adee1868
+    resourceVersion: "11075"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: templates
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-f5jrw
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-f5jrw
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://e06de607403bb303465041f2d8e78d4e5ff0b494ea55b87ba918ca8310e05400
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState: {}
+      name: templates
+      ready: true
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:39:59Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-f5jrw
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.147
+    podIPs:
+    - ip: 10.244.1.147
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:39:58Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: notify-templates-8597fbb5dc-
+    generation: 1
+    labels:
+      app: notify-templates
+      pod-template-hash: 8597fbb5dc
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: notify-templates-8597fbb5dc
+      uid: 397874ae-7db6-41d5-9fba-66f4adee1868
+    resourceVersion: "11069"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: templates
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /
+          port: 80
+          scheme: HTTP
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-hksxr
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-hksxr
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:58Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://f627d0c5714d516ac0c875be434b30717f8fe76e77a8ccbdca66076983d907ad
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState: {}
+      name: templates
+      ready: true
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:39:59Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-hksxr
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.148
+    podIPs:
+    - ip: 10.244.1.148
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:39:58Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    generateName: sms-gateway-99b5477fd-
+    generation: 1
+    labels:
+      app: sms-gateway
+      pod-template-hash: 99b5477fd
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: sms-gateway-99b5477fd
+      uid: e530c6ba-a497-445d-b3aa-46e142256aab
+    resourceVersion: "13507"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  spec:
+    containers:
+    - args:
+      - --listen=:8080
+      - --routes=/var/lib/sms/routes
+      image: harbor.larkspur.internal/notify/sms-gateway:5.3.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /livez
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: gateway
+      ports:
+      - containerPort: 8080
+        protocol: TCP
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-md2s8
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 5
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-md2s8
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:23Z"
+      message: 'containers with unready status: [gateway]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:23Z"
+      message: 'containers with unready status: [gateway]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://d37a90d75a76582d1611104c4dd30f0461f2557281a903d38c55f5cc9d49c076
+      image: harbor.larkspur.internal/notify/sms-gateway:5.3.0
+      imageID: sha256:a28252fabab0a83ef4591f7e559d79263d49eb02fd5d4f088d364b819a3f3b13
+      lastState:
+        terminated:
+          containerID: containerd://d37a90d75a76582d1611104c4dd30f0461f2557281a903d38c55f5cc9d49c076
+          exitCode: 143
+          finishedAt: "2026-10-18T08:47:22Z"
+          reason: Error
+          startedAt: "2026-10-18T08:47:03Z"
+      name: gateway
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 7
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=gateway pod=sms-gateway-99b5477fd-xvq6b_larkspur-notify(f7891fce-a87d-4a0f-b127-41dabf9bf8f7)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-md2s8
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.163
+    podIPs:
+    - ip: 10.244.1.163
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:40:00Z"
+kind: List

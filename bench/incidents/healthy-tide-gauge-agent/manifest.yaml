@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool, labels: {team: ocean-data}}
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata: {name: tide-gauge-agent, namespace: tidepool, labels: {app: tide-gauge-agent}}
+spec:
+  selector: {matchLabels: {app: tide-gauge-agent}}
+  template:
+    metadata: {labels: {app: tide-gauge-agent}}
+    spec:
+      tolerations: [{key: dedicated, operator: Equal, value: reporting, effect: NoSchedule}]
+      containers:
+        - name: agent
+          image: busybox:1.36
+          command: ["sh", "-c", "while true; do echo \"$(date -u +%H:%M:%S) gauge sample ok\"; sleep 30; done"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

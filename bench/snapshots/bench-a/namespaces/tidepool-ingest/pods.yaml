@@ -1,0 +1,819 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:57Z"
+    generateName: buoy-uplink-868b8cf6b-
+    generation: 1
+    labels:
+      app: buoy-uplink
+      pod-template-hash: 868b8cf6b
+    name: buoy-uplink-868b8cf6b-rbxbt
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: buoy-uplink-868b8cf6b
+      uid: 41e2a78a-4679-48d0-a8a4-b15b2f47238e
+    resourceVersion: "10750"
+    uid: cfa6c81f-03a9-411e-b3c0-eb01884800cf
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: uplink
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/spool/buoy
+        name: spool
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-xqw49
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: spool
+      persistentVolumeClaim:
+        claimName: buoy-spool
+    - name: kube-api-access-xqw49
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:57Z"
+      message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims.
+        not found'
+      observedGeneration: 1
+      reason: Unschedulable
+      status: "False"
+      type: PodScheduled
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generateName: ingest-gauge-95865f5c5-
+    generation: 1
+    labels:
+      app: ingest-gauge
+      pod-template-hash: 95865f5c5
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ingest-gauge-95865f5c5
+      uid: c3626137-7b1b-48e6-a99b-37b13bb9aa70
+    resourceVersion: "13066"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - while true; do date; sleep 60; done
+      image: busybox:1.63
+      imagePullPolicy: IfNotPresent
+      name: gauge
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dfhnb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-dfhnb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [gauge]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      message: 'containers with unready status: [gauge]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:39:59Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: busybox:1.63
+      imageID: ""
+      lastState: {}
+      name: gauge
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: 'Back-off pulling image "busybox:1.63": ErrImagePull: rpc error:
+            code = NotFound desc = failed to pull and unpack image "docker.io/library/busybox:1.63":
+            failed to resolve reference "docker.io/library/busybox:1.63": docker.io/library/busybox:1.63:
+            not found'
+          reason: ImagePullBackOff
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dfhnb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.1.156
+    podIPs:
+    - ip: 10.244.1.156
+    qosClass: Burstable
+    resources:
+      requests:
+        cpu: 5m
+        memory: 8Mi
+    startTime: "2026-10-18T08:39:59Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: kelp-archiver-6485ccf74d-
+    generation: 1
+    labels:
+      app: kelp-archiver
+      pod-template-hash: 6485ccf74d
+    name: kelp-archiver-6485ccf74d-pvj7k
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: kelp-archiver-6485ccf74d
+      uid: 7d504aea-98ea-4c03-91f1-9901a98ccd5b
+    resourceVersion: "11774"
+    uid: 87a3a593-933f-4ef8-85b5-6bcdf82b256d
+  spec:
+    containers:
+    - image: harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+      imagePullPolicy: IfNotPresent
+      name: archiver
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /archive
+        name: archive
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-grr5p
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: archive
+      persistentVolumeClaim:
+        claimName: kelp-archive
+    - name: kube-api-access-grr5p
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:03Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:02Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://edca1a685505d5ef667399fc4d39adba672a2ca5664c6a5ccec1b861f4043a97
+      image: harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+      imageID: sha256:6cdfd062605254b50660cbca8d8d44fedb5340e38b09cf96e09d1b1ddcd93b20
+      lastState: {}
+      name: archiver
+      ready: true
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:40:03Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /archive
+        name: archive
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-grr5p
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.165
+    podIPs:
+    - ip: 10.244.1.165
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:40:02Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    generateName: salinity-model-564c99d44c-
+    generation: 1
+    labels:
+      app: salinity-model
+      pod-template-hash: 564c99d44c
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: salinity-model-564c99d44c
+      uid: 6b52caa7-20ee-412a-bf09-0ed091be23b0
+    resourceVersion: "13085"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  spec:
+    containers:
+    - image: ghcr.io/tidepool-oceanics/salinity-model:2.4.1
+      imagePullPolicy: IfNotPresent
+      name: model
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-69kg8
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    imagePullSecrets:
+    - name: tidepool-ghcr
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-69kg8
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      message: 'containers with unready status: [model]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      message: 'containers with unready status: [model]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: ghcr.io/tidepool-oceanics/salinity-model:2.4.1
+      imageID: ""
+      lastState: {}
+      name: model
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: 'Back-off pulling image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+            ErrImagePull: failed to pull and unpack image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+            failed to resolve reference "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+            failed to authorize: failed to fetch anonymous token: unexpected status
+            from GET request to https://ghcr.io/token?scope=repository%3Atidepool-oceanics%2Fsalinity-model%3Apull&service=ghcr.io:
+            403 Forbidden'
+          reason: ImagePullBackOff
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-69kg8
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.1.162
+    podIPs:
+    - ip: 10.244.1.162
+    qosClass: Burstable
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
+    startTime: "2026-10-18T08:40:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    generateName: swell-primary-
+    generation: 1
+    labels:
+      app: swell-primary
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: swell-primary-c666b8686
+      statefulset.kubernetes.io/pod-name: swell-primary-0
+    name: swell-primary-0
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: swell-primary
+      uid: 6f29b0af-199b-4fe7-bde3-da975c61eee5
+    resourceVersion: "11120"
+    uid: 4ac6ecdf-2991-4419-a940-5a10e6ac2ae0
+  spec:
+    containers:
+    - args:
+      - --role=primary
+      image: harbor.tidepool.internal/ocean/swell-store:1.8.2
+      imagePullPolicy: IfNotPresent
+      name: store
+      ports:
+      - containerPort: 5433
+        protocol: TCP
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dd9zp
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: swell-primary-0
+    nodeSelector:
+      disktype: nvme
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: swell-primary
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-dd9zp
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      message: '0/3 nodes are available: 1 node(s) didn''t match Pod''s node affinity/selector,
+        2 node(s) had untolerated taint(s). preemption: 0/3 nodes are available: 3
+        Preemption is not helpful for scheduling.'
+      observedGeneration: 1
+      reason: Unschedulable
+      status: "False"
+      type: PodScheduled
+    phase: Pending
+    qosClass: Burstable
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    generateName: swell-replica-
+    generation: 1
+    labels:
+      app: swell-replica
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: swell-replica-8c496555c
+      statefulset.kubernetes.io/pod-name: swell-replica-0
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: swell-replica
+      uid: e377e0ca-1718-4576-9a98-00973380dbb6
+    resourceVersion: "13734"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  spec:
+    containers:
+    - args:
+      - --role=replica
+      - --primary=swell-primary.tidepool-ingest.svc:5433
+      image: harbor.tidepool.internal/ocean/swell-store:1.8.2
+      imagePullPolicy: IfNotPresent
+      name: store
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-nb8l5
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: swell-replica-0
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: swell-replica
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-nb8l5
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:07Z"
+      message: 'containers with unready status: [store]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:07Z"
+      message: 'containers with unready status: [store]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:40:01Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://090c42790f5b98a993e85dfb103ba50cc2aeeed3672f1a137b7523b6342ffdc3
+      image: harbor.tidepool.internal/ocean/swell-store:1.8.2
+      imageID: sha256:eba2024e3cccaa262f3540096e842e3293a7a5d2cfb3be7a473fa71fd9cd0442
+      lastState:
+        terminated:
+          containerID: containerd://090c42790f5b98a993e85dfb103ba50cc2aeeed3672f1a137b7523b6342ffdc3
+          exitCode: 1
+          finishedAt: "2026-10-18T08:47:06Z"
+          reason: Error
+          startedAt: "2026-10-18T08:46:54Z"
+      name: store
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=store pod=swell-replica-0_tidepool-ingest(33fe1b1d-eb53-4558-9fc2-9965a1e8b79b)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-nb8l5
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.164
+    podIPs:
+    - ip: 10.244.1.164
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:40:01Z"
+kind: List

@@ -1,0 +1,10 @@
+id: sediment-cache-rwx-claim
+snapshot: bench-a
+anchor: {ns: tidepool, kind: Deployment, name: sediment-cache}
+truth: "PVC sediment-scratch asks for ReadWriteMany; the local-path provisioner of StorageClass standard only supports ReadWriteOnce -> ProvisioningFailed on the PVC; the pod is Pending with no events of its own"
+cause: [["sediment-scratch", "pvc", "persistentvolumeclaim", "claim", "volume"]]
+deep: [["readwritemany", "rwx", "access mode", "readwriteonce"]]
+fix: [["readwriteonce", "access mode", "rwx", "readwritemany", "storageclass", "storage class"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/sediment-cache-rwx-claim, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

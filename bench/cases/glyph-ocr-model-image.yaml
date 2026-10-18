@@ -1,0 +1,11 @@
+id: glyph-ocr-model-image
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: glyph-ocr}
+truth: "ocr crash-loops on 'connection refused' to glyph-ocr-model:8501: the model server's image quillmoss/ocr-model:5.0.2 can't be pulled (repository does not exist) -> no endpoints"
+cause: [["glyph-ocr-model", "model server"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect"]]
+deep: [["image", "pull", "ocr-model:5.0.2"]]
+fix: [["image", "repository", "registry", "pull"]]
+needs_tool: true
+note_target: true
+source: kubehealth bench incidents (bench/incidents/glyph-ocr-model-image, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

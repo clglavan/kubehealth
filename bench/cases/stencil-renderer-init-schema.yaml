@@ -1,0 +1,8 @@
+id: stencil-renderer-init-schema
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: stencil-renderer}
+truth: "init container schema-check fails: the catalog database is at schema 39, release 41.2.0 needs 41 -> Init:CrashLoopBackOff; run the migration first"
+cause: [["init", "schema-check"], ["schema", "migration", "migrate", "41", "39"]]
+fix: [["migrat"]]
+source: kubehealth bench incidents (bench/incidents/stencil-renderer-init-schema, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

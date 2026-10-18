@@ -1,0 +1,4 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+echo "ink-queue 2.2.0 listening on :5672"
+exec httpd -f -p 5672 -h /tmp

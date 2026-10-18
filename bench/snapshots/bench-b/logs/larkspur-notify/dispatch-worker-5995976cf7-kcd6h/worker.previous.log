@@ -1,0 +1,8 @@
+dispatch-worker 6.0.1: queue=outbound templates=http://notify-templates:8080
+loading template order-shipped from http://notify-templates:8080/v2/templates/order-shipped (attempt 1/3)
+wget: can't connect to remote host (10.96.59.85): Connection refused
+loading template order-shipped from http://notify-templates:8080/v2/templates/order-shipped (attempt 2/3)
+wget: can't connect to remote host (10.96.59.85): Connection refused
+loading template order-shipped from http://notify-templates:8080/v2/templates/order-shipped (attempt 3/3)
+wget: can't connect to remote host (10.96.59.85): Connection refused
+FATAL: template service unavailable, cannot render notifications

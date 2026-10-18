@@ -1,0 +1,8 @@
+id: orders-pvc-storageclass
+snapshot: shop-staging
+anchor: {ns: orders, kind: PersistentVolumeClaim, name: data-orders-db-0}
+truth: "PVC asks for StorageClass fast-ssd, which doesn't exist (StorageClasses are cluster-scoped) -> ProvisioningFailed"
+cause: [["fast-ssd", "storageclass", "storage class"]]
+fix: [["storageclass", "storage class", "fast-ssd"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

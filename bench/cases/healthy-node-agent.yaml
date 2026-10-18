@@ -1,0 +1,7 @@
+id: healthy-node-agent
+snapshot: shop-staging
+anchor: {ns: monitoring, kind: DaemonSet, name: node-agent}
+healthy: true
+truth: "healthy DaemonSet — nothing to fix"
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-ops, labels: {team: print-studio}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: quill-mq, namespace: quillmoss-ops, labels: {app: quill-mq}}
+spec:
+  selector: {app: quill-mq}
+  ports: [{name: amqp, port: 5672, targetPort: 5672}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: {name: quill-mq, namespace: quillmoss-ops, labels: {app: quill-mq}}
+spec:
+  serviceName: quill-mq
+  replicas: 1
+  selector: {matchLabels: {app: quill-mq}}
+  template:
+    metadata: {labels: {app: quill-mq}}
+    spec:
+      containers:
+        - name: broker
+          image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+          ports: [{containerPort: 5672}]
+          resources: {requests: {cpu: "16", memory: 32Mi}, limits: {cpu: "16", memory: 64Mi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: plate-composer, namespace: quillmoss-ops, labels: {app: plate-composer}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: plate-composer}}
+  template:
+    metadata: {labels: {app: plate-composer}}
+    spec:
+      initContainers:
+        - name: wait-for-mq
+          image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+          args: ["quill-mq:5672", "10"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}
+      containers:
+        - name: composer
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}

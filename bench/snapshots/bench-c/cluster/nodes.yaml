@@ -1,0 +1,711 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Node
+  metadata:
+    annotations:
+      node.alpha.kubernetes.io/ttl: "0"
+      volumes.kubernetes.io/controller-managed-attach-detach: "true"
+    creationTimestamp: "2026-10-18T08:16:01Z"
+    labels:
+      beta.kubernetes.io/arch: amd64
+      beta.kubernetes.io/os: linux
+      kubernetes.io/arch: amd64
+      kubernetes.io/hostname: kh-bench-control-plane
+      kubernetes.io/os: linux
+      node-role.kubernetes.io/control-plane: ""
+      node.kubernetes.io/exclude-from-external-load-balancers: ""
+    name: kh-bench-control-plane
+    resourceVersion: "13260"
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  spec:
+    podCIDR: 10.244.0.0/24
+    podCIDRs:
+    - 10.244.0.0/24
+    providerID: kind://docker/kh-bench/kh-bench-control-plane
+    taints:
+    - effect: NoSchedule
+      key: node-role.kubernetes.io/control-plane
+  status:
+    addresses:
+    - address: 172.21.0.7
+      type: InternalIP
+    - address: kh-bench-control-plane
+      type: Hostname
+    allocatable:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    capacity:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    conditions:
+    - lastHeartbeatTime: "2026-10-18T08:46:23Z"
+      lastTransitionTime: "2026-10-18T08:16:00Z"
+      message: kubelet has sufficient memory available
+      reason: KubeletHasSufficientMemory
+      status: "False"
+      type: MemoryPressure
+    - lastHeartbeatTime: "2026-10-18T08:46:23Z"
+      lastTransitionTime: "2026-10-18T08:16:00Z"
+      message: kubelet has no disk pressure
+      reason: KubeletHasNoDiskPressure
+      status: "False"
+      type: DiskPressure
+    - lastHeartbeatTime: "2026-10-18T08:46:23Z"
+      lastTransitionTime: "2026-10-18T08:16:00Z"
+      message: kubelet has sufficient PID available
+      reason: KubeletHasSufficientPID
+      status: "False"
+      type: PIDPressure
+    - lastHeartbeatTime: "2026-10-18T08:46:23Z"
+      lastTransitionTime: "2026-10-18T08:16:20Z"
+      message: kubelet is posting ready status
+      reason: KubeletReady
+      status: "True"
+      type: Ready
+    daemonEndpoints:
+      kubeletEndpoint:
+        Port: 10250
+    declaredFeatures:
+    - ExtendWebSocketsToKubelet
+    - InPlacePodLevelResourcesVerticalScaling
+    - InPlacePodVerticalScalingInitContainers
+    - RestartAllContainersOnContainerExits
+    features:
+      supplementalGroupsPolicy: true
+    images:
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:eff360f86083f21c9ceaa64cbaa2e4d439d9e7e1d6834c21d25daac35e58015b
+      - registry.k8s.io/kube-apiserver-amd64:v1.37.0
+      - registry.k8s.io/kube-apiserver:v1.37.0
+      sizeBytes: 104328054
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:79bd77de40aa3294690796f94cdc8a08c4cf6a51a6a3500425c56c9e13622cc7
+      - registry.k8s.io/kube-controller-manager-amd64:v1.37.0
+      - registry.k8s.io/kube-controller-manager:v1.37.0
+      sizeBytes: 91037405
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:1aa5cce2a7d436c309f705cf2a32a50f8378a2b6f2e5dd4bb26f81c714dd0b86
+      - registry.k8s.io/kube-proxy-amd64:v1.37.0
+      - registry.k8s.io/kube-proxy:v1.37.0
+      sizeBytes: 82822887
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:213e68034d4be2f89076d1d446501434d1bfdff862916392708f095f5fecb6e1
+      - registry.k8s.io/kube-scheduler-amd64:v1.37.0
+      - registry.k8s.io/kube-scheduler:v1.37.0
+      sizeBytes: 62688989
+    - names:
+      - docker.io/kindest/kindnetd:v20260820-69b56db7
+      sizeBytes: 39744255
+    - names:
+      - registry.k8s.io/coredns/coredns:v1.14.6
+      sizeBytes: 23758055
+    - names:
+      - registry.k8s.io/etcd:3.7.0-0
+      sizeBytes: 22342384
+    - names:
+      - docker.io/kindest/local-path-provisioner:v20260820-69b56db7
+      sizeBytes: 15868133
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      - harbor.larkspur.internal/books/statement-backfill:1.1.0
+      sizeBytes: 4666853
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:572ed988778b9466e234e518886ac8f3ca03f239d287b53c7d011b1a88eb6310
+      - harbor.larkspur.internal/books/tally-consumer:2.7.0
+      sizeBytes: 4661404
+    - names:
+      - harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+      sizeBytes: 4660464
+    - names:
+      - harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+      sizeBytes: 4660449
+    - names:
+      - harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+      sizeBytes: 4660444
+    - names:
+      - harbor.tidepool.internal/ocean/current-mapper:2.3.0
+      sizeBytes: 4660439
+    - names:
+      - harbor.larkspur.internal/books/tally-importer:4.2.1
+      sizeBytes: 4660439
+    - names:
+      - harbor.quillmoss.internal/render/vellum-gateway:3.4.0
+      - harbor.quillmoss.internal/render/vellum-gateway:3.5.0
+      sizeBytes: 4660439
+    - names: null
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/books/redis:7.2.4
+      sizeBytes: 4660429
+    - names:
+      - harbor.tidepool.internal/ocean/swell-store:1.8.2
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/notify/sms-gateway:5.3.0
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/books/quill-reconciler:1.9.0
+      sizeBytes: 4659425
+    - names:
+      - harbor.larkspur.internal/books/balance-digest:2.0.0
+      sizeBytes: 4659415
+    - names: null
+      sizeBytes: 4659415
+    - names:
+      - harbor.larkspur.internal/books/quarter-close:2.0.3
+      sizeBytes: 4659410
+    - names:
+      - harbor.larkspur.internal/books/tally-reindex:3.0.1
+      sizeBytes: 4659410
+    - names:
+      - harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+      sizeBytes: 4659410
+    - names: null
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/render/glyph-store:1.0.6
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/books/fx-snapshot:3.1.0
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/notify/mail-relay:2.6.0
+      sizeBytes: 4659395
+    - names:
+      - harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/ink-queue:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/wait-for:1.0.0
+      sizeBytes: 4659385
+    - names:
+      - docker.io/kindest/local-path-helper:v20260131-7181c60a
+      sizeBytes: 2872608
+    - names:
+      - registry.k8s.io/pause:3.10
+      sizeBytes: 320368
+    nodeInfo:
+      architecture: amd64
+      bootID: 3d6e79bb-15fc-4ef1-9ab6-9b6bec0cfaee
+      containerRuntimeVersion: containerd://2.3.4
+      kernelVersion: 6.6.87.2-microsoft-standard-WSL2
+      kubeProxyVersion: ""
+      kubeletVersion: v1.37.0
+      machineID: e009d477e36a48df860e1e8a65fd01bb
+      operatingSystem: linux
+      osImage: Debian GNU/Linux 13 (trixie)
+      runningInUserNamespace: false
+      swap:
+        capacity: 4294967296
+      systemUUID: e009d477e36a48df860e1e8a65fd01bb
+    runtimeHandlers:
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: ""
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: runc
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: test-handler
+- apiVersion: v1
+  kind: Node
+  metadata:
+    annotations:
+      node.alpha.kubernetes.io/ttl: "0"
+      volumes.kubernetes.io/controller-managed-attach-detach: "true"
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    labels:
+      beta.kubernetes.io/arch: amd64
+      beta.kubernetes.io/os: linux
+      kubernetes.io/arch: amd64
+      kubernetes.io/hostname: kh-bench-worker
+      kubernetes.io/os: linux
+      node-pool: general
+    name: kh-bench-worker
+    resourceVersion: "13476"
+    uid: 7a9e7b8b-f3a7-4900-9c82-dafc69726851
+  spec:
+    podCIDR: 10.244.1.0/24
+    podCIDRs:
+    - 10.244.1.0/24
+    providerID: kind://docker/kh-bench/kh-bench-worker
+  status:
+    addresses:
+    - address: 172.21.0.8
+      type: InternalIP
+    - address: kh-bench-worker
+      type: Hostname
+    allocatable:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    capacity:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    conditions:
+    - lastHeartbeatTime: "2026-10-18T08:47:11Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has sufficient memory available
+      reason: KubeletHasSufficientMemory
+      status: "False"
+      type: MemoryPressure
+    - lastHeartbeatTime: "2026-10-18T08:47:11Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has no disk pressure
+      reason: KubeletHasNoDiskPressure
+      status: "False"
+      type: DiskPressure
+    - lastHeartbeatTime: "2026-10-18T08:47:11Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has sufficient PID available
+      reason: KubeletHasSufficientPID
+      status: "False"
+      type: PIDPressure
+    - lastHeartbeatTime: "2026-10-18T08:47:11Z"
+      lastTransitionTime: "2026-10-18T08:16:26Z"
+      message: kubelet is posting ready status
+      reason: KubeletReady
+      status: "True"
+      type: Ready
+    daemonEndpoints:
+      kubeletEndpoint:
+        Port: 10250
+    declaredFeatures:
+    - ExtendWebSocketsToKubelet
+    - InPlacePodLevelResourcesVerticalScaling
+    - InPlacePodVerticalScalingInitContainers
+    - RestartAllContainersOnContainerExits
+    features:
+      supplementalGroupsPolicy: true
+    images:
+    - names:
+      - docker.io/library/postgres@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+      - docker.io/library/postgres:16-alpine
+      sizeBytes: 116084812
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:eff360f86083f21c9ceaa64cbaa2e4d439d9e7e1d6834c21d25daac35e58015b
+      - registry.k8s.io/kube-apiserver-amd64:v1.37.0
+      - registry.k8s.io/kube-apiserver:v1.37.0
+      sizeBytes: 104328436
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:79bd77de40aa3294690796f94cdc8a08c4cf6a51a6a3500425c56c9e13622cc7
+      - registry.k8s.io/kube-controller-manager-amd64:v1.37.0
+      - registry.k8s.io/kube-controller-manager:v1.37.0
+      sizeBytes: 91037405
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:1aa5cce2a7d436c309f705cf2a32a50f8378a2b6f2e5dd4bb26f81c714dd0b86
+      - registry.k8s.io/kube-proxy-amd64:v1.37.0
+      - registry.k8s.io/kube-proxy:v1.37.0
+      sizeBytes: 82822887
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:213e68034d4be2f89076d1d446501434d1bfdff862916392708f095f5fecb6e1
+      - registry.k8s.io/kube-scheduler-amd64:v1.37.0
+      - registry.k8s.io/kube-scheduler:v1.37.0
+      sizeBytes: 62688989
+    - names:
+      - docker.io/kindest/kindnetd:v20260820-69b56db7
+      sizeBytes: 39744255
+    - names:
+      - registry.k8s.io/coredns/coredns:v1.14.6
+      sizeBytes: 23758055
+    - names:
+      - registry.k8s.io/etcd:3.7.0-0
+      sizeBytes: 22342384
+    - names:
+      - docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      - docker.io/library/nginx:1.27-alpine
+      sizeBytes: 20984244
+    - names:
+      - registry.k8s.io/kubectl@sha256:59bafa07ff3a6d4b417e7633ddb9d79a9606ca98bf64bac080b3e65748669250
+      - registry.k8s.io/kubectl:v1.34.1
+      sizeBytes: 19772244
+    - names:
+      - docker.io/kindest/local-path-provisioner:v20260820-69b56db7
+      sizeBytes: 15868133
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      - harbor.larkspur.internal/books/statement-backfill:1.1.0
+      sizeBytes: 4666853
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:572ed988778b9466e234e518886ac8f3ca03f239d287b53c7d011b1a88eb6310
+      - harbor.larkspur.internal/books/tally-consumer:2.7.0
+      sizeBytes: 4661404
+    - names:
+      - harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+      sizeBytes: 4660464
+    - names:
+      - harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+      sizeBytes: 4660449
+    - names:
+      - harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+      sizeBytes: 4660444
+    - names:
+      - harbor.tidepool.internal/ocean/current-mapper:2.3.0
+      sizeBytes: 4660439
+    - names:
+      - harbor.larkspur.internal/books/tally-importer:4.2.1
+      sizeBytes: 4660439
+    - names:
+      - harbor.quillmoss.internal/render/vellum-gateway:3.4.0
+      - harbor.quillmoss.internal/render/vellum-gateway:3.5.0
+      sizeBytes: 4660439
+    - names: null
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/books/redis:7.2.4
+      sizeBytes: 4660429
+    - names:
+      - harbor.tidepool.internal/ocean/swell-store:1.8.2
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/notify/sms-gateway:5.3.0
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/books/quill-reconciler:1.9.0
+      sizeBytes: 4659425
+    - names:
+      - harbor.larkspur.internal/books/balance-digest:2.0.0
+      sizeBytes: 4659415
+    - names: null
+      sizeBytes: 4659415
+    - names:
+      - harbor.larkspur.internal/books/quarter-close:2.0.3
+      sizeBytes: 4659410
+    - names:
+      - harbor.larkspur.internal/books/tally-reindex:3.0.1
+      sizeBytes: 4659410
+    - names:
+      - harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+      sizeBytes: 4659410
+    - names: null
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/render/glyph-store:1.0.6
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/books/fx-snapshot:3.1.0
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/notify/mail-relay:2.6.0
+      sizeBytes: 4659395
+    - names:
+      - harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/ink-queue:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/wait-for:1.0.0
+      sizeBytes: 4659385
+    - names:
+      - docker.io/kindest/local-path-helper:v20260131-7181c60a
+      sizeBytes: 2872608
+    - names:
+      - docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      - docker.io/library/busybox:1.36
+      sizeBytes: 2217006
+    - names:
+      - registry.k8s.io/pause:3.10
+      sizeBytes: 320368
+    nodeInfo:
+      architecture: amd64
+      bootID: 3d6e79bb-15fc-4ef1-9ab6-9b6bec0cfaee
+      containerRuntimeVersion: containerd://2.3.4
+      kernelVersion: 6.6.87.2-microsoft-standard-WSL2
+      kubeProxyVersion: ""
+      kubeletVersion: v1.37.0
+      machineID: 215cc8313ece4676aee2bd3270f4857e
+      operatingSystem: linux
+      osImage: Debian GNU/Linux 13 (trixie)
+      runningInUserNamespace: false
+      swap:
+        capacity: 4294967296
+      systemUUID: 215cc8313ece4676aee2bd3270f4857e
+    runtimeHandlers:
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: ""
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: runc
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: test-handler
+- apiVersion: v1
+  kind: Node
+  metadata:
+    annotations:
+      node.alpha.kubernetes.io/ttl: "0"
+      volumes.kubernetes.io/controller-managed-attach-detach: "true"
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    labels:
+      beta.kubernetes.io/arch: amd64
+      beta.kubernetes.io/os: linux
+      kubernetes.io/arch: amd64
+      kubernetes.io/hostname: kh-bench-worker2
+      kubernetes.io/os: linux
+      node-pool: reporting
+    name: kh-bench-worker2
+    resourceVersion: "13126"
+    uid: 536fe857-896f-44ef-a78c-411da1d95805
+  spec:
+    podCIDR: 10.244.2.0/24
+    podCIDRs:
+    - 10.244.2.0/24
+    providerID: kind://docker/kh-bench/kh-bench-worker2
+    taints:
+    - effect: NoSchedule
+      key: dedicated
+      value: reporting
+  status:
+    addresses:
+    - address: 172.21.0.6
+      type: InternalIP
+    - address: kh-bench-worker2
+      type: Hostname
+    allocatable:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    capacity:
+      cpu: "8"
+      ephemeral-storage: "1081101176832"
+      hugepages-1Gi: "0"
+      hugepages-2Mi: "0"
+      memory: 15943904Ki
+      pods: "110"
+    conditions:
+    - lastHeartbeatTime: "2026-10-18T08:45:54Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has sufficient memory available
+      reason: KubeletHasSufficientMemory
+      status: "False"
+      type: MemoryPressure
+    - lastHeartbeatTime: "2026-10-18T08:45:54Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has no disk pressure
+      reason: KubeletHasNoDiskPressure
+      status: "False"
+      type: DiskPressure
+    - lastHeartbeatTime: "2026-10-18T08:45:54Z"
+      lastTransitionTime: "2026-10-18T08:16:14Z"
+      message: kubelet has sufficient PID available
+      reason: KubeletHasSufficientPID
+      status: "False"
+      type: PIDPressure
+    - lastHeartbeatTime: "2026-10-18T08:45:54Z"
+      lastTransitionTime: "2026-10-18T08:16:27Z"
+      message: kubelet is posting ready status
+      reason: KubeletReady
+      status: "True"
+      type: Ready
+    daemonEndpoints:
+      kubeletEndpoint:
+        Port: 10250
+    declaredFeatures:
+    - ExtendWebSocketsToKubelet
+    - InPlacePodLevelResourcesVerticalScaling
+    - InPlacePodVerticalScalingInitContainers
+    - RestartAllContainersOnContainerExits
+    features:
+      supplementalGroupsPolicy: true
+    images:
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:eff360f86083f21c9ceaa64cbaa2e4d439d9e7e1d6834c21d25daac35e58015b
+      - registry.k8s.io/kube-apiserver-amd64:v1.37.0
+      - registry.k8s.io/kube-apiserver:v1.37.0
+      sizeBytes: 104328054
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:79bd77de40aa3294690796f94cdc8a08c4cf6a51a6a3500425c56c9e13622cc7
+      - registry.k8s.io/kube-controller-manager-amd64:v1.37.0
+      - registry.k8s.io/kube-controller-manager:v1.37.0
+      sizeBytes: 91037405
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:1aa5cce2a7d436c309f705cf2a32a50f8378a2b6f2e5dd4bb26f81c714dd0b86
+      - registry.k8s.io/kube-proxy-amd64:v1.37.0
+      - registry.k8s.io/kube-proxy:v1.37.0
+      sizeBytes: 82823264
+    - names:
+      - docker.io/library/import-2026-08-26@sha256:213e68034d4be2f89076d1d446501434d1bfdff862916392708f095f5fecb6e1
+      - registry.k8s.io/kube-scheduler-amd64:v1.37.0
+      - registry.k8s.io/kube-scheduler:v1.37.0
+      sizeBytes: 62688989
+    - names:
+      - docker.io/kindest/kindnetd:v20260820-69b56db7
+      sizeBytes: 39744255
+    - names:
+      - registry.k8s.io/coredns/coredns:v1.14.6
+      sizeBytes: 23758055
+    - names:
+      - registry.k8s.io/etcd:3.7.0-0
+      sizeBytes: 22342384
+    - names:
+      - docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      - docker.io/library/nginx:1.27-alpine
+      sizeBytes: 20984244
+    - names:
+      - registry.k8s.io/kubectl@sha256:59bafa07ff3a6d4b417e7633ddb9d79a9606ca98bf64bac080b3e65748669250
+      - registry.k8s.io/kubectl:v1.34.1
+      sizeBytes: 19772244
+    - names:
+      - docker.io/kindest/local-path-provisioner:v20260820-69b56db7
+      sizeBytes: 15868133
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:cc18deaebf3192eb0e56529e4cbfa86b96ac389eb839e175720054a8658acc80
+      - harbor.larkspur.internal/books/statement-backfill:1.1.0
+      sizeBytes: 4666853
+    - names:
+      - docker.io/library/import-2026-10-18@sha256:572ed988778b9466e234e518886ac8f3ca03f239d287b53c7d011b1a88eb6310
+      - harbor.larkspur.internal/books/tally-consumer:2.7.0
+      sizeBytes: 4661404
+    - names:
+      - harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+      sizeBytes: 4660464
+    - names:
+      - harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+      sizeBytes: 4660449
+    - names:
+      - harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+      sizeBytes: 4660444
+    - names:
+      - harbor.tidepool.internal/ocean/current-mapper:2.3.0
+      sizeBytes: 4660439
+    - names:
+      - harbor.larkspur.internal/books/tally-importer:4.2.1
+      sizeBytes: 4660439
+    - names:
+      - harbor.quillmoss.internal/render/vellum-gateway:3.4.0
+      - harbor.quillmoss.internal/render/vellum-gateway:3.5.0
+      sizeBytes: 4660439
+    - names: null
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/notify/digest-mailer:1.4.2
+      sizeBytes: 4660434
+    - names:
+      - harbor.larkspur.internal/books/redis:7.2.4
+      sizeBytes: 4660429
+    - names:
+      - harbor.tidepool.internal/ocean/swell-store:1.8.2
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/notify/sms-gateway:5.3.0
+      sizeBytes: 4660424
+    - names:
+      - harbor.larkspur.internal/books/quill-reconciler:1.9.0
+      sizeBytes: 4659425
+    - names:
+      - harbor.larkspur.internal/books/balance-digest:2.0.0
+      sizeBytes: 4659415
+    - names: null
+      sizeBytes: 4659415
+    - names:
+      - harbor.larkspur.internal/books/quarter-close:2.0.3
+      sizeBytes: 4659410
+    - names:
+      - harbor.larkspur.internal/books/tally-reindex:3.0.1
+      sizeBytes: 4659410
+    - names:
+      - harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+      sizeBytes: 4659410
+    - names: null
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/render/glyph-store:1.0.6
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/books/fx-snapshot:3.1.0
+      sizeBytes: 4659400
+    - names:
+      - harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+      sizeBytes: 4659400
+    - names:
+      - harbor.larkspur.internal/notify/mail-relay:2.6.0
+      sizeBytes: 4659395
+    - names:
+      - harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/ink-queue:2.2.0
+      sizeBytes: 4659390
+    - names:
+      - harbor.quillmoss.internal/ops/wait-for:1.0.0
+      sizeBytes: 4659385
+    - names:
+      - docker.io/kindest/local-path-helper:v20260131-7181c60a
+      sizeBytes: 2872608
+    - names:
+      - docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      - docker.io/library/busybox:1.36
+      sizeBytes: 2217006
+    - names:
+      - registry.k8s.io/pause:3.10
+      sizeBytes: 320368
+    nodeInfo:
+      architecture: amd64
+      bootID: 3d6e79bb-15fc-4ef1-9ab6-9b6bec0cfaee
+      containerRuntimeVersion: containerd://2.3.4
+      kernelVersion: 6.6.87.2-microsoft-standard-WSL2
+      kubeProxyVersion: ""
+      kubeletVersion: v1.37.0
+      machineID: fbffbbae963c472a942210ed2ab96a8e
+      operatingSystem: linux
+      osImage: Debian GNU/Linux 13 (trixie)
+      runningInUserNamespace: false
+      swap:
+        capacity: 4294967296
+      systemUUID: fbffbbae963c472a942210ed2ab96a8e
+    runtimeHandlers:
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: ""
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: runc
+    - features:
+        recursiveReadOnlyMounts: true
+        userNamespaces: true
+      name: test-handler
+kind: List

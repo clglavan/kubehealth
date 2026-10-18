@@ -1,0 +1,9 @@
+id: ingest-gauge-bad-tag
+snapshot: bench-a
+anchor: {ns: tidepool-ingest, kind: Deployment, name: ingest-gauge}
+truth: "image busybox:1.63 does not exist (tag typo of 1.36) -> ErrImagePull not found"
+cause: [["tag", "image"], ["1.63", "not found", "does not exist", "doesn't exist", "nonexistent", "non-existent"]]
+deep: [["1.63"]]
+fix: [["tag", "image"]]
+source: kubehealth bench incidents (bench/incidents/ingest-gauge-bad-tag, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

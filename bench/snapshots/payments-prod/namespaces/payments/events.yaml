@@ -1,0 +1,117 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 279
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scorer}
+    kind: Pod
+    name: fraud-scorer-6557556f56-5msgr
+    namespace: payments
+    resourceVersion: "575"
+    uid: 230283d5-701e-4df1-aa18-3fc03a469ca5
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:07Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: fraud-scorer-6557556f56-5msgr.18df8aa03b576ce1
+    namespace: payments
+    resourceVersion: "11610"
+    uid: 91dc6527-ac86-43ca-874d-5023f267ba17
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-payments-control-plane
+  source:
+    component: kubelet
+    host: kh-payments-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 279
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scorer}
+    kind: Pod
+    name: fraud-scorer-6557556f56-5msgr
+    namespace: payments
+    resourceVersion: "575"
+    uid: 230283d5-701e-4df1-aa18-3fc03a469ca5
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:07Z"
+  message: 'Error: configmap "fraud-rules-v7" not found'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: fraud-scorer-6557556f56-5msgr.18df8aa03b589049
+    namespace: payments
+    resourceVersion: "11611"
+    uid: 709a66be-29cc-4915-9772-4e4e7345c038
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-payments-control-plane
+  source:
+    component: kubelet
+    host: kh-payments-control-plane
+  type: Warning
+- apiVersion: v1
+  count: 278
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scorer}
+    kind: Pod
+    name: fraud-scorer-6557556f56-jkkvh
+    namespace: payments
+    resourceVersion: "588"
+    uid: 84aa26ad-9e01-4ed2-9b18-bb6976a7f30b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:04Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: fraud-scorer-6557556f56-jkkvh.18df8aa0400f6b5d
+    namespace: payments
+    resourceVersion: "11605"
+    uid: 7bbde3fc-ae59-407e-a28b-cb75fa6b2a16
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-payments-control-plane
+  source:
+    component: kubelet
+    host: kh-payments-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 279
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{scorer}
+    kind: Pod
+    name: fraud-scorer-6557556f56-jkkvh
+    namespace: payments
+    resourceVersion: "588"
+    uid: 84aa26ad-9e01-4ed2-9b18-bb6976a7f30b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:19Z"
+  message: 'Error: configmap "fraud-rules-v7" not found'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: fraud-scorer-6557556f56-jkkvh.18df8aa040215ead
+    namespace: payments
+    resourceVersion: "11628"
+    uid: cbd2486d-26cd-4a0d-b133-1cb1f4abd1e0
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-payments-control-plane
+  source:
+    component: kubelet
+    host: kh-payments-control-plane
+  type: Warning
+kind: List

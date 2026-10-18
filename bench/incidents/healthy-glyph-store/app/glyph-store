@@ -1,0 +1,6 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/render/glyph-store:1.0.6
+echo "glyph-store 1.0.6: data dir /var/lib/glyphs"
+echo "opened 12,408 glyph sets"
+mkdir -p /tmp/www && echo ok > /tmp/www/index.html
+exec httpd -f -p 7000 -h /tmp/www

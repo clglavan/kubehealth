@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-notify, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: notify-fanout, namespace: larkspur-notify, labels: {app: notify-fanout}}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: notify-fanout}}
+  template:
+    metadata: {labels: {app: notify-fanout}}
+    spec:
+      containers:
+        - name: fanout
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          readinessProbe: {httpGet: {path: /, port: 80}, periodSeconds: 10}
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}

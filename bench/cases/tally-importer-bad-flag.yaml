@@ -1,0 +1,8 @@
+id: tally-importer-bad-flag
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Deployment, name: tally-importer}
+truth: "args pass --batch-sise=500 (typo of --batch-size) -> 'unknown flag', exit 2, CrashLoopBackOff"
+cause: [["batch-sise", "batch-size"]]
+fix: [["batch-size", "batch-sise", "arg", "flag"]]
+source: kubehealth bench incidents (bench/incidents/tally-importer-bad-flag, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: close-inputs, namespace: larkspur-books}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: standard
+  resources: {requests: {storage: 1Gi}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata: {name: quarter-close-export, namespace: larkspur-books, labels: {app: quarter-close}}
+spec:
+  backoffLimit: 2
+  template:
+    metadata: {labels: {app: quarter-close}}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: export
+          image: harbor.larkspur.internal/books/quarter-close:2.0.3
+          args: ["--period=2026-Q3", "--input=/data/close/2026-09.csv", "--out=s3://larkspur-books-exports/2026-Q3/"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}
+          volumeMounts: [{name: inputs, mountPath: /data/close}]
+      volumes:
+        - name: inputs
+          persistentVolumeClaim: {claimName: close-inputs}

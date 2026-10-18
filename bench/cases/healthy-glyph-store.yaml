@@ -1,0 +1,7 @@
+id: healthy-glyph-store
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: StatefulSet, name: glyph-store}
+truth: "healthy StatefulSet with a bound volume — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-glyph-store, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

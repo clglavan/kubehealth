@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: batch/v1
+kind: Job
+metadata: {name: statement-backfill, namespace: larkspur-books, labels: {app: statement-backfill}}
+spec:
+  completions: 3
+  parallelism: 1
+  backoffLimit: 2
+  template:
+    metadata: {labels: {app: statement-backfill}}
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: backfill
+          image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

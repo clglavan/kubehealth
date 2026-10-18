@@ -1,0 +1,88 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier
+    namespace: larkspur-notify
+    resourceVersion: "10897"
+    uid: 38120411-8b7b-471c-ab13-ab8f57215246
+  spec:
+    clusterIP: 10.96.217.157
+    clusterIPs:
+    - 10.96.217.157
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: http
+    selector:
+      app: hook-courier
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    labels:
+      app: mail-relay
+    name: mail-relay
+    namespace: larkspur-notify
+    resourceVersion: "10763"
+    uid: 8e228cbc-6c17-46c0-876e-b05bfb16c6cc
+  spec:
+    clusterIP: 10.96.159.207
+    clusterIPs:
+    - 10.96.159.207
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: smtp
+      port: 2525
+      protocol: TCP
+      targetPort: 2525
+    selector:
+      app: mail-relay
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    labels:
+      app: notify-templates
+    name: notify-templates
+    namespace: larkspur-notify
+    resourceVersion: "10782"
+    uid: 117cf5ee-eebf-452f-beeb-474ea0ff3ae0
+  spec:
+    clusterIP: 10.96.59.85
+    clusterIPs:
+    - 10.96.59.85
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: notify-template
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List

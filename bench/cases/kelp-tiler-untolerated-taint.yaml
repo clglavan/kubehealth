@@ -1,0 +1,10 @@
+id: kelp-tiler-untolerated-taint
+snapshot: bench-a
+anchor: {ns: tidepool, kind: Deployment, name: kelp-tiler}
+truth: "nodeSelector node-pool=reporting matches only kh-bench-worker2, which is tainted dedicated=reporting:NoSchedule; the pods have no toleration -> Pending (the scheduler's event does not name the taint: only the Node shows it)"
+cause: [["toleration"], ["reporting", "node-pool", "nodeselector", "node selector"]]
+deep: [["dedicated"]]
+fix: [["toleration", "nodeselector", "node selector"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/kelp-tiler-untolerated-taint, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

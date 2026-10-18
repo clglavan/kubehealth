@@ -1,0 +1,8 @@
+id: glyph-preview-selector
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Service, name: glyph-preview}
+truth: "Service selector app=glyph-previewer matches no pod (pods are app=glyph-preview) -> no endpoints"
+cause: [["selector"], ["glyph-previewer", "match", "label", "typo"]]
+fix: [["selector", "label"]]
+source: kubehealth bench incidents (bench/incidents/glyph-preview-selector, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

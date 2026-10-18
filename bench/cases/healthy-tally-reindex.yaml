@@ -1,0 +1,7 @@
+id: healthy-tally-reindex
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Job, name: tally-reindex}
+truth: "Job completed after two attempts found the index lock still held (retries are what backoffLimit is for) — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-tally-reindex, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

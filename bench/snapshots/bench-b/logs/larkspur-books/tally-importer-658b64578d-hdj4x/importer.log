@@ -1,0 +1,10 @@
+tally-importer 4.2.1
+Error: unknown flag: --batch-sise
+Usage:
+  tally-importer --source=DIR [--batch-size=N] [--workers=N] [--dry-run]
+
+Flags:
+      --batch-size int   rows per insert batch (default 1000)
+      --dry-run          parse and validate only
+      --source string    inbox directory to import from
+      --workers int      parallel import workers (default 2)

@@ -1,0 +1,460 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    generation: 1
+    labels:
+      app: font-syncer
+    name: font-syncer
+    namespace: quillmoss-ops
+    resourceVersion: "13606"
+    uid: 85e61da7-8bbf-4c8f-8c9a-e47aeac3f1dd
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: font-syncer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: font-syncer
+      spec:
+        containers:
+        - args:
+          - get
+          - configmaps
+          - --namespace=quillmoss-ops
+          - --selector=quillmoss.io/font-set
+          - --output=name
+          image: registry.k8s.io/kubectl:v1.34.1
+          imagePullPolicy: IfNotPresent
+          name: syncer
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: font-syncer
+        serviceAccountName: font-syncer
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:23Z"
+      lastUpdateTime: "2026-10-18T08:37:24Z"
+      message: ReplicaSet "font-syncer-d8f4fcfc5" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:47:57Z"
+      lastUpdateTime: "2026-10-18T08:47:57Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generation: 1
+    labels:
+      app: glyph-indexer
+    name: glyph-indexer
+    namespace: quillmoss-ops
+    resourceVersion: "13514"
+    uid: aa9abc24-380a-4649-a787-0be4552cde41
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: glyph-indexer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: glyph-indexer
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: indexer
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: glyph-indexer
+        serviceAccountName: glyph-indexer
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:24Z"
+      lastUpdateTime: "2026-10-18T08:37:24Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:37:24Z"
+      lastUpdateTime: "2026-10-18T08:37:24Z"
+      message: 'pods "glyph-indexer-6d86fb6b99-" is forbidden: error looking up service
+        account quillmoss-ops/glyph-indexer: serviceaccount "glyph-indexer" not found'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    - lastTransitionTime: "2026-10-18T08:47:25Z"
+      lastUpdateTime: "2026-10-18T08:47:25Z"
+      message: ReplicaSet "glyph-indexer-6d86fb6b99" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: ink-proofer
+    name: ink-proofer
+    namespace: quillmoss-ops
+    resourceVersion: "12817"
+    uid: 19e1bd0d-9816-4273-8fa5-e1b379a23675
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: ink-proofer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: ink-proofer
+      spec:
+        containers:
+        - args:
+          - --queue=ink-queue:5672
+          - --prefetch=8
+          image: harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+          imagePullPolicy: IfNotPresent
+          name: proofer
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:28Z"
+      lastUpdateTime: "2026-10-18T08:37:28Z"
+      message: ReplicaSet "ink-proofer-864f467b57" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:44:24Z"
+      lastUpdateTime: "2026-10-18T08:44:24Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: ink-queue
+    name: ink-queue
+    namespace: quillmoss-ops
+    resourceVersion: "13524"
+    uid: 51ea4070-5d1a-4334-9584-a64e4b1a54b2
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: ink-queue
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: ink-queue
+      spec:
+        containers:
+        - image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+          imagePullPolicy: IfNotPresent
+          name: queue
+          ports:
+          - containerPort: 5672
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 20m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:28Z"
+      lastUpdateTime: "2026-10-18T08:37:28Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:37:28Z"
+      lastUpdateTime: "2026-10-18T08:37:28Z"
+      message: 'pods "ink-queue-6cb4f4d9cc-fnxjc" is forbidden: maximum memory usage
+        per Container is 256Mi, but limit is 1Gi'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    - lastTransitionTime: "2026-10-18T08:47:29Z"
+      lastUpdateTime: "2026-10-18T08:47:29Z"
+      message: ReplicaSet "ink-queue-6cb4f4d9cc" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: pigment-api
+    name: pigment-api
+    namespace: quillmoss-ops
+    resourceVersion: "13531"
+    uid: 9fd280d9-cafa-4f99-96d2-92d15840769d
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: pigment-api
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: pigment-api
+      spec:
+        containers:
+        - env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: pigment-db
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: pigment-db
+          image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: api
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:29Z"
+      lastUpdateTime: "2026-10-18T08:37:29Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:47:30Z"
+      lastUpdateTime: "2026-10-18T08:47:30Z"
+      message: ReplicaSet "pigment-api-96656bddf" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: plate-composer
+    name: plate-composer
+    namespace: quillmoss-ops
+    resourceVersion: "13530"
+    uid: 00f86dae-dc0c-4f2e-8720-9547d6813532
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: plate-composer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: plate-composer
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: composer
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - quill-mq:5672
+          - "10"
+          image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-mq
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:29Z"
+      lastUpdateTime: "2026-10-18T08:37:29Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:47:30Z"
+      lastUpdateTime: "2026-10-18T08:47:30Z"
+      message: ReplicaSet "plate-composer-84b668d4dd" has timed out progressing.
+      reason: ProgressDeadlineExceeded
+      status: "False"
+      type: Progressing
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+kind: List

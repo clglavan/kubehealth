@@ -1,0 +1,15 @@
+apiVersion: v1
+items:
+- apiVersion: storage.k8s.io/v1
+  kind: StorageClass
+  metadata:
+    annotations:
+      storageclass.kubernetes.io/is-default-class: "true"
+    creationTimestamp: "2026-10-17T20:13:41Z"
+    name: standard
+    resourceVersion: "291"
+    uid: 4a01e51f-1a61-4a4c-9214-aad55735410d
+  provisioner: rancher.io/local-path
+  reclaimPolicy: Delete
+  volumeBindingMode: WaitForFirstConsumer
+kind: List

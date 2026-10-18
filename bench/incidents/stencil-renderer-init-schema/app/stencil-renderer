@@ -1,0 +1,14 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+case "$1" in
+  check-schema)
+    echo "schema-check: connecting to catalog database stencil-catalog:5432"
+    echo "schema-check: catalog database reports schema version 39"
+    echo "schema-check: stencil-renderer 41.2.0 requires schema version 41"
+    echo "schema-check: run 'stencil-renderer migrate --to=41' against the catalog database before rolling out this release"
+    exit 1 ;;
+  serve)
+    echo "stencil-renderer 41.2.0 serving on :8080"
+    exec httpd -f -p 8080 -h /tmp ;;
+esac
+echo "usage: stencil-renderer check-schema|migrate|serve"; exit 2

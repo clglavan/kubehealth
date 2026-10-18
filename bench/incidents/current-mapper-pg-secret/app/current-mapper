@@ -1,0 +1,15 @@
+#!/bin/sh
+# image: harbor.tidepool.internal/ocean/current-mapper:2.3.0
+db="tidepool-pg.tidepool.svc:5432"
+echo "current-mapper 2.3.0 starting: grid=0.25deg region=north-atlantic"
+echo "opening database $db (db=currents, user=mapper)"
+for i in 1 2 3; do
+  if nc -z -w 3 tidepool-pg.tidepool.svc 5432 2>/dev/null; then
+    echo "connected to $db"
+    exec sleep 86400
+  fi
+  echo "postgres: dial tcp $db: connect: connection refused (attempt $i/3)"
+  sleep 2
+done
+echo "FATAL: database $db unreachable after 3 attempts, exiting"
+exit 1

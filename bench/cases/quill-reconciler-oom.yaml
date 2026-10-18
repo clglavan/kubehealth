@@ -1,0 +1,9 @@
+id: quill-reconciler-oom
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Deployment, name: quill-reconciler}
+truth: "reconciler loads a 412 MB snapshot into memory with a 64Mi limit -> OOMKilled (exit 137), CrashLoopBackOff"
+cause: [["oom", "out of memory", "memory limit", "137"]]
+deep: [["64mi", "64 mi"]]
+fix: [["memory"]]
+source: kubehealth bench incidents (bench/incidents/quill-reconciler-oom, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

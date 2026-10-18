@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool-ingest, labels: {team: ocean-data}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: ingest-gauge, namespace: tidepool-ingest, labels: {app: ingest-gauge}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: ingest-gauge}}
+  template:
+    metadata: {labels: {app: ingest-gauge}}
+    spec:
+      containers:
+        - name: gauge
+          image: busybox:1.63
+          command: ["sh", "-c", "while true; do date; sleep 60; done"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}}

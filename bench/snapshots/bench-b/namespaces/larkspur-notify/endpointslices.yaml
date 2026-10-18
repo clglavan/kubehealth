@@ -1,0 +1,105 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.155
+    conditions:
+      ready: false
+      serving: false
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: hook-courier-5d48f76745-wxl79
+      namespace: larkspur-notify
+      uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  - addresses:
+    - 10.244.1.154
+    conditions:
+      ready: false
+      serving: false
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: hook-courier-5d48f76745-b9v2c
+      namespace: larkspur-notify
+      uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: EndpointSlice
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    generateName: hook-courier-
+    generation: 3
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: hook-courier
+    name: hook-courier-75kgw
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: hook-courier
+      uid: 38120411-8b7b-471c-ab13-ab8f57215246
+    resourceVersion: "11026"
+    uid: 74de2d7a-fe0d-4f6b-9694-fd90dd9df5c5
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:39:58Z"
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: mail-relay-
+    generation: 1
+    labels:
+      app: mail-relay
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: mail-relay
+    name: mail-relay-hkjlg
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: mail-relay
+      uid: 8e228cbc-6c17-46c0-876e-b05bfb16c6cc
+    resourceVersion: "10769"
+    uid: fe0cb320-05db-4c35-96c5-b1ab179169e0
+  ports: null
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:39:58Z"
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generateName: notify-templates-
+    generation: 1
+    labels:
+      app: notify-templates
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: notify-templates
+    name: notify-templates-gs2g8
+    namespace: larkspur-notify
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: notify-templates
+      uid: 117cf5ee-eebf-452f-beeb-474ea0ff3ae0
+    resourceVersion: "10786"
+    uid: acd1524e-f848-4276-9350-b0b35eafe969
+  ports: null
+kind: List

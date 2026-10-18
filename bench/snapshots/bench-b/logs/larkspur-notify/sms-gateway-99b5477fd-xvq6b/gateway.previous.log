@@ -1,0 +1,7 @@
+sms-gateway 5.3.0 --listen=:8080 --routes=/var/lib/sms/routes
+loading carrier routing tables from /var/lib/sms/routes (38 carriers, 2.1M prefixes); this takes about 45s
+routing tables: 10% loaded
+routing tables: 20% loaded
+routing tables: 30% loaded
+routing tables: 40% loaded
+received SIGTERM, shutting down

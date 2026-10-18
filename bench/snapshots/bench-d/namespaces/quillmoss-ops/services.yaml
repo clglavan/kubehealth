@@ -1,0 +1,61 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    labels:
+      app: ink-queue
+    name: ink-queue
+    namespace: quillmoss-ops
+    resourceVersion: "9074"
+    uid: b9a25c4e-90c8-4367-ad1b-08885d257e7a
+  spec:
+    clusterIP: 10.96.4.146
+    clusterIPs:
+    - 10.96.4.146
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+    selector:
+      app: ink-queue
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    labels:
+      app: quill-mq
+    name: quill-mq
+    namespace: quillmoss-ops
+    resourceVersion: "9215"
+    uid: 8ea69e28-68a8-4bd8-a935-d9620670d1da
+  spec:
+    clusterIP: 10.96.2.119
+    clusterIPs:
+    - 10.96.2.119
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: amqp
+      port: 5672
+      protocol: TCP
+      targetPort: 5672
+    selector:
+      app: quill-mq
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List

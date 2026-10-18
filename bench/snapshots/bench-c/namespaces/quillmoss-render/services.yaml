@@ -1,0 +1,148 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    labels:
+      app: glyph-ocr-model
+    name: glyph-ocr-model
+    namespace: quillmoss-render
+    resourceVersion: "8740"
+    uid: 340e083c-cc62-43bd-8545-81f05779f9c5
+  spec:
+    clusterIP: 10.96.82.61
+    clusterIPs:
+    - 10.96.82.61
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8501
+      protocol: TCP
+      targetPort: 8501
+    selector:
+      app: glyph-ocr-model
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    labels:
+      app: glyph-preview
+    name: glyph-preview
+    namespace: quillmoss-render
+    resourceVersion: "8776"
+    uid: f0235e86-9641-48d0-aa6a-e6a64639eb68
+  spec:
+    clusterIP: 10.96.56.9
+    clusterIPs:
+    - 10.96.56.9
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: glyph-previewer
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    labels:
+      app: glyph-store
+    name: glyph-store
+    namespace: quillmoss-render
+    resourceVersion: "8814"
+    uid: 010595b4-ab5a-4b73-8175-a8c0feca433f
+  spec:
+    clusterIP: None
+    clusterIPs:
+    - None
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: store
+      port: 7000
+      protocol: TCP
+      targetPort: 7000
+    selector:
+      app: glyph-store
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    labels:
+      app: inkwell-api
+    name: inkwell-api
+    namespace: quillmoss-render
+    resourceVersion: "9110"
+    uid: 33e47c9f-0241-4252-a203-5c9a663c6bcf
+  spec:
+    clusterIP: 10.96.23.112
+    clusterIPs:
+    - 10.96.23.112
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: inkwell-api
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    labels:
+      app: vellum-docs
+    name: vellum-docs
+    namespace: quillmoss-render
+    resourceVersion: "9007"
+    uid: 7a9854ce-56d8-41fc-bacf-dc17874c7212
+  spec:
+    clusterIP: 10.96.119.0
+    clusterIPs:
+    - 10.96.119.0
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: vellum-docs
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List

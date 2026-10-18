@@ -1,0 +1,6 @@
+current-mapper 2.3.0 starting: grid=0.25deg region=north-atlantic
+opening database tidepool-pg.tidepool.svc:5432 (db=currents, user=mapper)
+postgres: dial tcp tidepool-pg.tidepool.svc:5432: connect: connection refused (attempt 1/3)
+postgres: dial tcp tidepool-pg.tidepool.svc:5432: connect: connection refused (attempt 2/3)
+postgres: dial tcp tidepool-pg.tidepool.svc:5432: connect: connection refused (attempt 3/3)
+FATAL: database tidepool-pg.tidepool.svc:5432 unreachable after 3 attempts, exiting

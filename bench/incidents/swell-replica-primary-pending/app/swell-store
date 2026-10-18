@@ -1,0 +1,23 @@
+#!/bin/sh
+# image: harbor.tidepool.internal/ocean/swell-store:1.8.2
+role=primary; primary=""
+for a in "$@"; do
+  case "$a" in
+    --role=*) role="${a#--role=}" ;;
+    --primary=*) primary="${a#--primary=}" ;;
+  esac
+done
+echo "swell-store 1.8.2 role=$role"
+if [ "$role" = primary ]; then
+  echo "accepting replication connections on :5433"
+  exec httpd -f -p 5433 -h /tmp
+fi
+host="${primary%:*}"; port="${primary##*:}"
+for i in 1 2 3 4 5; do
+  echo "replica: starting WAL streaming from primary $primary (attempt $i/5)"
+  if nc -z -w 3 "$host" "$port" 2>/dev/null; then echo "replica: streaming"; exec sleep 86400; fi
+  echo "replica: could not connect to the primary server: connection refused"
+  sleep 2
+done
+echo "FATAL: no primary reachable at $primary, shutting down"
+exit 1

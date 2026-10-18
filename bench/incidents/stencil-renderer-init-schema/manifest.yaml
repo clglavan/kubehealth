@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-render, labels: {team: print-studio}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: stencil-renderer, namespace: quillmoss-render, labels: {app: stencil-renderer}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: stencil-renderer}}
+  template:
+    metadata: {labels: {app: stencil-renderer}}
+    spec:
+      initContainers:
+        - name: schema-check
+          image: harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+          args: ["check-schema", "--want=41"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}
+      containers:
+        - name: renderer
+          image: harbor.quillmoss.internal/render/stencil-renderer:41.2.0
+          args: ["serve"]
+          ports: [{containerPort: 8080}]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

@@ -1,0 +1,12 @@
+swell-store 1.8.2 role=replica
+replica: starting WAL streaming from primary swell-primary.tidepool-ingest.svc:5433 (attempt 1/5)
+replica: could not connect to the primary server: connection refused
+replica: starting WAL streaming from primary swell-primary.tidepool-ingest.svc:5433 (attempt 2/5)
+replica: could not connect to the primary server: connection refused
+replica: starting WAL streaming from primary swell-primary.tidepool-ingest.svc:5433 (attempt 3/5)
+replica: could not connect to the primary server: connection refused
+replica: starting WAL streaming from primary swell-primary.tidepool-ingest.svc:5433 (attempt 4/5)
+replica: could not connect to the primary server: connection refused
+replica: starting WAL streaming from primary swell-primary.tidepool-ingest.svc:5433 (attempt 5/5)
+replica: could not connect to the primary server: connection refused
+FATAL: no primary reachable at swell-primary.tidepool-ingest.svc:5433, shutting down

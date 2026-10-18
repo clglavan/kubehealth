@@ -1,0 +1,4 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/notify/mail-relay:2.6.0
+echo "mail-relay 2.6.0: routes from /etc/relay/routes.yaml"
+exec httpd -f -p 2525 -h /tmp

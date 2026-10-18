@@ -1,0 +1,10 @@
+id: dispatch-worker-selector-typo
+snapshot: bench-b
+anchor: {ns: larkspur-notify, kind: Deployment, name: dispatch-worker}
+truth: "worker crash-loops on 'connection refused' to notify-templates:8080: that Service's selector is app=notify-template (typo; pods are app=notify-templates), so it has no endpoints"
+cause: [["notify-templates"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "endpoints"]]
+deep: [["selector"], ["typo", "match", "notify-template "]]
+fix: [["selector", "label"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/dispatch-worker-selector-typo, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

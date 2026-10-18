@@ -1,0 +1,11 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+target="$1"; tries="${2:-10}"
+i=1
+while [ "$i" -le "$tries" ]; do
+  if nc -z -w 2 "${target%:*}" "${target##*:}" 2>/dev/null; then echo "$target is up"; exit 0; fi
+  echo "waiting for $target ($i/$tries)"
+  i=$((i+1)); sleep 3
+done
+echo "timed out waiting for $target after $tries attempts"
+exit 1

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-notify, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mail-relay, namespace: larkspur-notify, labels: {app: mail-relay}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: mail-relay}}
+  template:
+    metadata: {labels: {app: mail-relay}}
+    spec:
+      containers:
+        - name: relay
+          image: harbor.larkspur.internal/notify/mail-relay:2.6.0
+          ports: [{containerPort: 2525}]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}
+          volumeMounts: [{name: routes, mountPath: /etc/relay, readOnly: true}]
+      volumes:
+        - name: routes
+          configMap: {name: relay-routes}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: mail-relay, namespace: larkspur-notify, labels: {app: mail-relay}}
+spec:
+  selector: {app: mail-relay}
+  ports: [{name: smtp, port: 2525, targetPort: 2525}]
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata: {name: digest-mailer, namespace: larkspur-notify, labels: {app: digest-mailer}}
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata: {labels: {app: digest-mailer}}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: mailer
+              image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+              args: ["--relay=mail-relay:2525", "--digest=daily"]
+              resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

@@ -1,0 +1,2 @@
+tally-reindex 3.0.1: rebuilding account index
+index lock is held by the previous reindex run; exiting so the Job retries

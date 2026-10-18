@@ -1,0 +1,10 @@
+id: quarter-close-missing-input
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Job, name: quarter-close-export}
+truth: "input file /data/close/2026-09.csv is not on volume close-inputs -> every attempt exits 1, BackoffLimitExceeded (the reason is only in the failed Pods' logs: their pods exit without Warning events, so KubeHealth puts no logs in the first prompt)"
+cause: [["2026-09.csv", "input"], ["no such file", "missing", "not found", "does not exist", "doesn't exist"]]
+deep: [["no such file", "is missing", "file not found", "does not exist", "doesn't exist"]]
+fix: [["2026-09.csv", "input", "file", "close-inputs"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/quarter-close-missing-input, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

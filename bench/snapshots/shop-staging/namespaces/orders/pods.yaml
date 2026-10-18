@@ -1,0 +1,918 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:25Z"
+    generateName: log-shipper-785d97bcf4-
+    generation: 1
+    labels:
+      app: log-shipper
+      pod-template-hash: 785d97bcf4
+    name: log-shipper-785d97bcf4-5tsr4
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: log-shipper-785d97bcf4
+      uid: acd88759-c65b-40ee-8760-1201261417cf
+    resourceVersion: "23198"
+    uid: 57c17153-3d28-4382-b89a-a6e098c632e7
+  spec:
+    containers:
+    - image: registry.acme-demo.internal/platform/log-shipper:3.1.0
+      imagePullPolicy: IfNotPresent
+      name: shipper
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-b9hhs
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-b9hhs
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      message: 'containers with unready status: [shipper]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      message: 'containers with unready status: [shipper]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: registry.acme-demo.internal/platform/log-shipper:3.1.0
+      imageID: ""
+      lastState: {}
+      name: shipper
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: 'Back-off pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            ErrImagePull: failed to pull and unpack image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            failed to resolve reference "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+            failed to do request: Head "https://registry.acme-demo.internal/v2/platform/log-shipper/manifests/3.1.0":
+            dial tcp: lookup registry.acme-demo.internal on 192.168.65.254:53: no
+            such host'
+          reason: ImagePullBackOff
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-b9hhs
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.2.6
+    podIPs:
+    - ip: 10.244.2.6
+    qosClass: Burstable
+    resources:
+      requests:
+        cpu: 5m
+        memory: 8Mi
+    startTime: "2026-10-17T20:14:25Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: orders-api-fd9f47564-
+    generation: 1
+    labels:
+      app: orders-api
+      pod-template-hash: fd9f47564
+    name: orders-api-fd9f47564-wv5xn
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: orders-api-fd9f47564
+      uid: b69aeeaf-7b46-4deb-ab25-9d59b9a01ffb
+    resourceVersion: "12427"
+    uid: 02220987-696d-4c57-9c59-00d431499892
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-nsl6n
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-nsl6n
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://c0f5bb3542b1bcbaf7b5b82317661a30a5fe6e5e2d0045f8ce51e57716852a3f
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://441e7a893eb2b0bc14d8f2b07a1fad655ef76c66745f784c8ae172221fa0998c
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:20Z"
+      name: api
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-nsl6n
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.2
+    hostIPs:
+    - ip: 172.21.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.10
+    podIPs:
+    - ip: 10.244.1.10
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: orders-api-fd9f47564-
+    generation: 1
+    labels:
+      app: orders-api
+      pod-template-hash: fd9f47564
+    name: orders-api-fd9f47564-xjdjf
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: orders-api-fd9f47564
+      uid: b69aeeaf-7b46-4deb-ab25-9d59b9a01ffb
+    resourceVersion: "12481"
+    uid: c6986637-86c5-4d99-afae-97da2bc5f24b
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-6pbf7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-6pbf7
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://b410d58eb1448e3ebb3276df2ae45b642a3b5a857d1afe2542a28f60bae15091
+      image: docker.io/library/nginx:1.27-alpine
+      imageID: docker.io/library/nginx@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+      lastState:
+        terminated:
+          containerID: containerd://1d88bc505ea020d7e9165f2a82f04b7066da9485ce9c8700ccae5654bd3b524c
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:18Z"
+      name: api
+      ready: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:39Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 1
+          - 2
+          - 3
+          - 4
+          - 6
+          - 10
+          - 11
+          - 20
+          - 26
+          - 27
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-6pbf7
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.10
+    podIPs:
+    - ip: 10.244.2.10
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: orders-db-
+    generation: 1
+    labels:
+      app: orders-db
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: orders-db-7d8cf957cc
+      statefulset.kubernetes.io/pod-name: orders-db-0
+    name: orders-db-0
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: orders-db
+      uid: 81256219-39c4-44f8-952e-d98741d7fed8
+    resourceVersion: "706"
+    uid: 7c434124-206e-4876-8c90-40090b4abc62
+  spec:
+    containers:
+    - image: postgres:16-alpine
+      imagePullPolicy: IfNotPresent
+      name: postgres
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: data
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-pgt7r
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: orders-db-0
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: orders-db
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: data-orders-db-0
+    - name: kube-api-access-pgt7r
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims.
+        not found'
+      observedGeneration: 1
+      reason: Unschedulable
+      status: "False"
+      type: PodScheduled
+    phase: Pending
+    qosClass: BestEffort
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: orders-worker-657b597bcf-
+    generation: 1
+    labels:
+      app: orders-worker
+      pod-template-hash: 657b597bcf
+    name: orders-worker-657b597bcf-h8zg7
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: orders-worker-657b597bcf
+      uid: 7ad6c260-eb97-405a-8f7b-1703351f1fc6
+    resourceVersion: "23131"
+    uid: 11574d65-b6fc-4ccc-b9c4-c0a999386e7b
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - |
+        echo "$(date -u +%FT%TZ) INFO  orders-worker v1.8.2 starting"
+        echo "$(date -u +%FT%TZ) INFO  loading config from /etc/orders/config.yaml"
+        echo "$(date -u +%FT%TZ) INFO  connecting to postgres at orders-db.orders.svc:5432 (db=orders)"
+        sleep 2
+        echo "$(date -u +%FT%TZ) WARN  attempt 1/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        sleep 1
+        echo "$(date -u +%FT%TZ) WARN  attempt 2/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        sleep 1
+        echo "$(date -u +%FT%TZ) ERROR attempt 3/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        echo "$(date -u +%FT%TZ) FATAL could not connect to database: giving up after 3 attempts"
+        exit 1
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: worker
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-mc79w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-mc79w
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:03:57Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:03:57Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://3a5a81d648b7359de3dd62561dfea5abee5b21ad59726e493d0a38bd171db110
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState:
+        terminated:
+          containerID: containerd://a54c46218388b5a251af4ab72b4fceecdb95f966f67c3503115a0245a47e23cb
+          exitCode: 1
+          finishedAt: "2026-10-18T06:58:47Z"
+          reason: Error
+          startedAt: "2026-10-18T06:58:43Z"
+      name: worker
+      ready: false
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 33
+      started: false
+      state:
+        terminated:
+          containerID: containerd://3a5a81d648b7359de3dd62561dfea5abee5b21ad59726e493d0a38bd171db110
+          exitCode: 1
+          finishedAt: "2026-10-18T07:03:56Z"
+          reason: Error
+          startedAt: "2026-10-18T07:03:52Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-mc79w
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.14
+    podIPs:
+    - ip: 10.244.2.14
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: orders-worker-657b597bcf-
+    generation: 1
+    labels:
+      app: orders-worker
+      pod-template-hash: 657b597bcf
+    name: orders-worker-657b597bcf-wksdm
+    namespace: orders
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: orders-worker-657b597bcf
+      uid: 7ad6c260-eb97-405a-8f7b-1703351f1fc6
+    resourceVersion: "23206"
+    uid: d2941800-2feb-4767-957c-34d842d4c5a3
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - |
+        echo "$(date -u +%FT%TZ) INFO  orders-worker v1.8.2 starting"
+        echo "$(date -u +%FT%TZ) INFO  loading config from /etc/orders/config.yaml"
+        echo "$(date -u +%FT%TZ) INFO  connecting to postgres at orders-db.orders.svc:5432 (db=orders)"
+        sleep 2
+        echo "$(date -u +%FT%TZ) WARN  attempt 1/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        sleep 1
+        echo "$(date -u +%FT%TZ) WARN  attempt 2/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        sleep 1
+        echo "$(date -u +%FT%TZ) ERROR attempt 3/3: dial tcp: lookup orders-db.orders.svc: no such host"
+        echo "$(date -u +%FT%TZ) FATAL could not connect to database: giving up after 3 attempts"
+        exit 1
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: worker
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7xr9n
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-7xr9n
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:08Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:08Z"
+      message: 'containers with unready status: [worker]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 10m
+        memory: 16Mi
+      containerID: containerd://cf642dd8df335e8fc4c1539031c14e27b466ef897ca7a2535570022dca8be358
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState:
+        terminated:
+          containerID: containerd://730b3af356116760069afb3558bd5612f0c9135e6b84a3ec002e1daafb40ebc0
+          exitCode: 1
+          finishedAt: "2026-10-18T06:59:03Z"
+          reason: Error
+          startedAt: "2026-10-18T06:58:59Z"
+      name: worker
+      ready: false
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      restartCount: 33
+      started: false
+      state:
+        terminated:
+          containerID: containerd://cf642dd8df335e8fc4c1539031c14e27b466ef897ca7a2535570022dca8be358
+          exitCode: 1
+          finishedAt: "2026-10-18T07:04:08Z"
+          reason: Error
+          startedAt: "2026-10-18T07:04:04Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7xr9n
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.2
+    hostIPs:
+    - ip: 172.21.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.6
+    podIPs:
+    - ip: 10.244.1.6
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-17T20:14:09Z"
+kind: List

@@ -1,0 +1,10 @@
+id: tally-consumer-redis-oom
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Deployment, name: tally-consumer}
+truth: "consumer crash-loops on 'connection refused' to tally-redis: the redis Deployment is OOMKilled loading its dataset with a 32Mi limit"
+cause: [["tally-redis", "redis"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "crash"]]
+deep: [["oom", "out of memory", "memory limit", "137"]]
+fix: [["tally-redis", "redis"], ["memory"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/tally-consumer-redis-oom, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

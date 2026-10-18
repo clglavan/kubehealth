@@ -1,0 +1,84 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 16934
+  eventTime: null
+  firstTimestamp: "2026-10-16T07:03:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{web}
+    kind: Pod
+    name: storefront-689c5cb9fc-q8w2d
+    namespace: frontend
+  kind: Event
+  lastTimestamp: "2026-10-18T06:13:30Z"
+  message: 'Readiness probe failed: HTTP probe failed with statuscode: 404'
+  metadata:
+    creationTimestamp: "2026-10-18T07:03:30Z"
+    name: demo-aged-storefront
+    namespace: frontend
+    resourceVersion: "23077"
+    uid: 37a75b35-257a-4ee6-a0d9-c1faf406a4c1
+  reason: Unhealthy
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: kubelet
+  type: Warning
+- apiVersion: v1
+  count: 385
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:40Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{web}
+    kind: Pod
+    name: storefront-689c5cb9fc-d9vs9
+    namespace: frontend
+    resourceVersion: "1506"
+    uid: 7e1bec89-c8aa-4aa1-a51a-5900ae28b354
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:10Z"
+  message: 'Readiness probe failed: HTTP probe failed with statuscode: 404'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:40Z"
+    name: storefront-689c5cb9fc-d9vs9.18df8aa0dd414e8a
+    namespace: frontend
+    resourceVersion: "22775"
+    uid: 59c3de1b-9b03-4e54-93a7-de9721df4446
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 381
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{web}
+    kind: Pod
+    name: storefront-689c5cb9fc-kbhhf
+    namespace: frontend
+    resourceVersion: "1496"
+    uid: 69c6c532-f436-400e-9e98-34a5ee2c1ce2
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:12Z"
+  message: 'Readiness probe failed: HTTP probe failed with statuscode: 404'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:42Z"
+    name: storefront-689c5cb9fc-kbhhf.18df8aa08fbaa346
+    namespace: frontend
+    resourceVersion: "22791"
+    uid: b6a8f537-1bba-4c59-bc3a-0a8f0a666b72
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Warning
+kind: List

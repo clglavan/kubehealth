@@ -1,0 +1,5113 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871730-566bt
+    namespace: monitoring
+    resourceVersion: "13638"
+    uid: 140b9270-276d-4dfb-901e-3d3ebbda8012
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871730-566bt to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup-29871730-566bt.18df8acf68a1e15c
+    namespace: monitoring
+    resourceVersion: "13645"
+    uid: cdea22c8-2e80-4db4-b395-4cc7f0613351
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871730-566bt
+    namespace: monitoring
+    resourceVersion: "13643"
+    uid: 140b9270-276d-4dfb-901e-3d3ebbda8012
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup-29871730-566bt.18df8acf8740047a
+    namespace: monitoring
+    resourceVersion: "13652"
+    uid: dfcaa330-f31c-4a7c-b6a5-64a354323561
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871730-566bt
+    namespace: monitoring
+    resourceVersion: "13643"
+    uid: 140b9270-276d-4dfb-901e-3d3ebbda8012
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup-29871730-566bt.18df8acf89e91b2b
+    namespace: monitoring
+    resourceVersion: "13655"
+    uid: bb12e15c-5bfb-43ec-bebc-585cff20416c
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871730-566bt
+    namespace: monitoring
+    resourceVersion: "13643"
+    uid: 140b9270-276d-4dfb-901e-3d3ebbda8012
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup-29871730-566bt.18df8acf8d8d5ded
+    namespace: monitoring
+    resourceVersion: "13658"
+    uid: b610a33e-e712-47dd-b59d-ab155d9974c7
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871730
+    namespace: monitoring
+    resourceVersion: "13632"
+    uid: 18e8d246-8ef5-4a40-8414-f14877280238
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: 'Created pod: metrics-rollup-29871730-566bt'
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup-29871730.18df8acf67ce7d0d
+    namespace: monitoring
+    resourceVersion: "13644"
+    uid: fee99205-ae20-494d-9aaf-a62c7246d50d
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871730
+    namespace: monitoring
+    resourceVersion: "13670"
+    uid: 18e8d246-8ef5-4a40-8414-f14877280238
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:03Z"
+    name: metrics-rollup-29871730.18df8ad01d3d5a93
+    namespace: monitoring
+    resourceVersion: "13673"
+    uid: e29b8aac-3ea0-4ee1-bfe4-bd93bc3aa6bf
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871732-wrkr7
+    namespace: monitoring
+    resourceVersion: "14030"
+    uid: a5c6d896-d250-45fb-8f95-fab908ce05e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871732-wrkr7 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup-29871732-wrkr7.18df8aeb599d1a60
+    namespace: monitoring
+    resourceVersion: "14038"
+    uid: 27811213-4e8c-4b28-b913-274efe0763c4
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871732-wrkr7
+    namespace: monitoring
+    resourceVersion: "14035"
+    uid: a5c6d896-d250-45fb-8f95-fab908ce05e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup-29871732-wrkr7.18df8aeb74f9dfbb
+    namespace: monitoring
+    resourceVersion: "14042"
+    uid: 40a04e24-8690-45a4-b244-3dd3246be596
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871732-wrkr7
+    namespace: monitoring
+    resourceVersion: "14035"
+    uid: a5c6d896-d250-45fb-8f95-fab908ce05e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup-29871732-wrkr7.18df8aeb76f45b7f
+    namespace: monitoring
+    resourceVersion: "14044"
+    uid: f54cbf7a-fb78-4f94-be21-2a3020963bd6
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871732-wrkr7
+    namespace: monitoring
+    resourceVersion: "14035"
+    uid: a5c6d896-d250-45fb-8f95-fab908ce05e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup-29871732-wrkr7.18df8aeb7ae31292
+    namespace: monitoring
+    resourceVersion: "14045"
+    uid: 328ec710-ea20-4048-a4f6-76925f465640
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871732
+    namespace: monitoring
+    resourceVersion: "14023"
+    uid: 6c2b1032-969a-4caa-941e-4f4be2683673
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: 'Created pod: metrics-rollup-29871732-wrkr7'
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup-29871732.18df8aeb5910513b
+    namespace: monitoring
+    resourceVersion: "14037"
+    uid: e197941b-b612-4bef-b431-421deb4e7723
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871732
+    namespace: monitoring
+    resourceVersion: "14061"
+    uid: 6c2b1032-969a-4caa-941e-4f4be2683673
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:03Z"
+    name: metrics-rollup-29871732.18df8aec12a00c3e
+    namespace: monitoring
+    resourceVersion: "14064"
+    uid: d111b616-2939-47b0-a725-86ec395b1feb
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871734-dnvbj
+    namespace: monitoring
+    resourceVersion: "14405"
+    uid: f9c7d040-c685-4d48-923c-073c0ebe70d4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871734-dnvbj to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup-29871734-dnvbj.18df8b07494d3b65
+    namespace: monitoring
+    resourceVersion: "14412"
+    uid: f55e8aeb-c7ec-4607-8a6b-6a01b38a29d7
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871734-dnvbj
+    namespace: monitoring
+    resourceVersion: "14410"
+    uid: f9c7d040-c685-4d48-923c-073c0ebe70d4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup-29871734-dnvbj.18df8b0766eadbc2
+    namespace: monitoring
+    resourceVersion: "14419"
+    uid: d59f74c4-3305-49de-a791-65f9fe9fb20f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871734-dnvbj
+    namespace: monitoring
+    resourceVersion: "14410"
+    uid: f9c7d040-c685-4d48-923c-073c0ebe70d4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup-29871734-dnvbj.18df8b0769817d1c
+    namespace: monitoring
+    resourceVersion: "14421"
+    uid: e17ba15a-50ee-4b2e-ac8b-b4fadd819fcb
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871734-dnvbj
+    namespace: monitoring
+    resourceVersion: "14410"
+    uid: f9c7d040-c685-4d48-923c-073c0ebe70d4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup-29871734-dnvbj.18df8b076f1559d4
+    namespace: monitoring
+    resourceVersion: "14424"
+    uid: 98fdced1-929b-4c3f-a2a3-a10335bc7632
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871734
+    namespace: monitoring
+    resourceVersion: "14400"
+    uid: bf7159e2-fe3b-467d-8c97-e100ee86a1b0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: 'Created pod: metrics-rollup-29871734-dnvbj'
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup-29871734.18df8b0748d83d7f
+    namespace: monitoring
+    resourceVersion: "14411"
+    uid: ec68def2-3849-407c-8ed8-0b4d65dbaca6
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871734
+    namespace: monitoring
+    resourceVersion: "14435"
+    uid: bf7159e2-fe3b-467d-8c97-e100ee86a1b0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:03Z"
+    name: metrics-rollup-29871734.18df8b07fd7b72d4
+    namespace: monitoring
+    resourceVersion: "14438"
+    uid: f0952de5-4ba4-408d-b668-37abef7f1f4b
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871736-pbw4p
+    namespace: monitoring
+    resourceVersion: "14732"
+    uid: 5ea1582a-acb1-407a-bf96-7d0042789f5c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871736-pbw4p to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup-29871736-pbw4p.18df8b233a107736
+    namespace: monitoring
+    resourceVersion: "14741"
+    uid: 5fce7990-158b-4cb8-8069-4b11b86b8862
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871736-pbw4p
+    namespace: monitoring
+    resourceVersion: "14737"
+    uid: 5ea1582a-acb1-407a-bf96-7d0042789f5c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup-29871736-pbw4p.18df8b23577dc517
+    namespace: monitoring
+    resourceVersion: "14747"
+    uid: 18b8bab0-ff95-4765-b6eb-36a156209fbe
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871736-pbw4p
+    namespace: monitoring
+    resourceVersion: "14737"
+    uid: 5ea1582a-acb1-407a-bf96-7d0042789f5c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup-29871736-pbw4p.18df8b235a9d3d2f
+    namespace: monitoring
+    resourceVersion: "14750"
+    uid: 5d102e20-c159-4ca8-89ea-03061b8b5f12
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871736-pbw4p
+    namespace: monitoring
+    resourceVersion: "14737"
+    uid: 5ea1582a-acb1-407a-bf96-7d0042789f5c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup-29871736-pbw4p.18df8b235ee4d4cd
+    namespace: monitoring
+    resourceVersion: "14753"
+    uid: 326d0f72-2115-4551-8272-d11333e90928
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871736
+    namespace: monitoring
+    resourceVersion: "14727"
+    uid: f3c70ef0-8862-4785-9267-5ad54e73ea66
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: 'Created pod: metrics-rollup-29871736-pbw4p'
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup-29871736.18df8b23399d6d0c
+    namespace: monitoring
+    resourceVersion: "14739"
+    uid: cce487d4-900b-4c75-ad03-fd0f87a5c1da
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871736
+    namespace: monitoring
+    resourceVersion: "14766"
+    uid: f3c70ef0-8862-4785-9267-5ad54e73ea66
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:03Z"
+    name: metrics-rollup-29871736.18df8b23eed267c2
+    namespace: monitoring
+    resourceVersion: "14769"
+    uid: db0668c3-bd08-49f4-82a4-850dbeb58497
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871738-xhnx7
+    namespace: monitoring
+    resourceVersion: "15110"
+    uid: 989e726d-c5af-4be1-b34b-e370a9c7009f
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871738-xhnx7 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup-29871738-xhnx7.18df8b3f2a88f4f0
+    namespace: monitoring
+    resourceVersion: "15117"
+    uid: d2620430-848b-47a6-99d2-72c995c40827
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871738-xhnx7
+    namespace: monitoring
+    resourceVersion: "15114"
+    uid: 989e726d-c5af-4be1-b34b-e370a9c7009f
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup-29871738-xhnx7.18df8b3f46ed7d46
+    namespace: monitoring
+    resourceVersion: "15123"
+    uid: 73ae2bcb-e866-437e-9bf5-aced7ce47216
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871738-xhnx7
+    namespace: monitoring
+    resourceVersion: "15114"
+    uid: 989e726d-c5af-4be1-b34b-e370a9c7009f
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup-29871738-xhnx7.18df8b3f499cfaee
+    namespace: monitoring
+    resourceVersion: "15127"
+    uid: 86ea0ca0-ca33-48c3-976e-760164c0e0b8
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871738-xhnx7
+    namespace: monitoring
+    resourceVersion: "15114"
+    uid: 989e726d-c5af-4be1-b34b-e370a9c7009f
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup-29871738-xhnx7.18df8b3f4e0be2f7
+    namespace: monitoring
+    resourceVersion: "15129"
+    uid: 037d8514-8589-4e73-ada2-a613f0753b1a
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871738
+    namespace: monitoring
+    resourceVersion: "15105"
+    uid: 47ad615d-3e5f-474c-b705-a650d4275380
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: 'Created pod: metrics-rollup-29871738-xhnx7'
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup-29871738.18df8b3f2a187315
+    namespace: monitoring
+    resourceVersion: "15112"
+    uid: c0112f80-4e2e-4a0f-b1aa-6273e1032c8c
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871738
+    namespace: monitoring
+    resourceVersion: "15142"
+    uid: 47ad615d-3e5f-474c-b705-a650d4275380
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:03Z"
+    name: metrics-rollup-29871738.18df8b3fd9b88da3
+    namespace: monitoring
+    resourceVersion: "15146"
+    uid: b5801937-cc4c-4f22-9ffa-538272c48055
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:19:58Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871740-hdcs6
+    namespace: monitoring
+    resourceVersion: "15444"
+    uid: e490aabe-09c4-482c-a435-32826f0ebd7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:19:58Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:19:58Z"
+    name: metrics-rollup-29871740-hdcs6.18df8b5acaab9cb9
+    namespace: monitoring
+    resourceVersion: "15456"
+    uid: 884b65fa-039b-4ce0-be66-dd1b580511bc
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:19:58Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871740-hdcs6
+    namespace: monitoring
+    resourceVersion: "15444"
+    uid: e490aabe-09c4-482c-a435-32826f0ebd7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:19:58Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:19:58Z"
+    name: metrics-rollup-29871740-hdcs6.18df8b5ad00d8ae3
+    namespace: monitoring
+    resourceVersion: "15459"
+    uid: 3b5b7748-63dd-4cda-939e-e1098bc43214
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871740-hdcs6
+    namespace: monitoring
+    resourceVersion: "15439"
+    uid: e490aabe-09c4-482c-a435-32826f0ebd7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871740-hdcs6 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:00Z"
+    name: metrics-rollup-29871740-hdcs6.18df8b5b1b4b8d50
+    namespace: monitoring
+    resourceVersion: "15447"
+    uid: 3dbd967f-8335-4706-9a77-23672c0aed99
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871740-hdcs6
+    namespace: monitoring
+    resourceVersion: "15444"
+    uid: e490aabe-09c4-482c-a435-32826f0ebd7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:00Z"
+    name: metrics-rollup-29871740-hdcs6.18df8b5b2a694a63
+    namespace: monitoring
+    resourceVersion: "15453"
+    uid: 4627b225-db93-412b-aea2-16b8de82b12f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871740
+    namespace: monitoring
+    resourceVersion: "15434"
+    uid: 541f68cc-5db3-4278-ad97-472884480971
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:00Z"
+  message: 'Created pod: metrics-rollup-29871740-hdcs6'
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:00Z"
+    name: metrics-rollup-29871740.18df8b5b1ab6c5d5
+    namespace: monitoring
+    resourceVersion: "15446"
+    uid: 6f454e56-990d-4bd5-b9ac-9ca7e6a3284e
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:01Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871740
+    namespace: monitoring
+    resourceVersion: "15471"
+    uid: 541f68cc-5db3-4278-ad97-472884480971
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:01Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:01Z"
+    name: metrics-rollup-29871740.18df8b5b5ec11c62
+    namespace: monitoring
+    resourceVersion: "15474"
+    uid: 3f996e4d-50e1-481a-a409-3324faa212a4
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871742-jpzpp
+    namespace: monitoring
+    resourceVersion: "15791"
+    uid: 77bbbef3-f813-4b2a-86bc-3fe43b34953e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871742-jpzpp to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup-29871742-jpzpp.18df8b770b7cfb8d
+    namespace: monitoring
+    resourceVersion: "15798"
+    uid: b0994d70-8f92-488e-9edd-19767caaad76
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871742-jpzpp
+    namespace: monitoring
+    resourceVersion: "15796"
+    uid: 77bbbef3-f813-4b2a-86bc-3fe43b34953e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup-29871742-jpzpp.18df8b772902b57c
+    namespace: monitoring
+    resourceVersion: "15805"
+    uid: 5f6f2716-9211-444e-8b87-f59d2f48e12f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871742-jpzpp
+    namespace: monitoring
+    resourceVersion: "15796"
+    uid: 77bbbef3-f813-4b2a-86bc-3fe43b34953e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup-29871742-jpzpp.18df8b772c2596ef
+    namespace: monitoring
+    resourceVersion: "15808"
+    uid: 595c17fd-5f9e-4011-8a80-6870cb3f2e89
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871742-jpzpp
+    namespace: monitoring
+    resourceVersion: "15796"
+    uid: 77bbbef3-f813-4b2a-86bc-3fe43b34953e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup-29871742-jpzpp.18df8b7731549e9f
+    namespace: monitoring
+    resourceVersion: "15810"
+    uid: 5cf23e20-c9b2-46b8-af87-d8cd9406fe8c
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871742
+    namespace: monitoring
+    resourceVersion: "15786"
+    uid: c50d7e27-c185-44ed-b4d8-049e43036af8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: 'Created pod: metrics-rollup-29871742-jpzpp'
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup-29871742.18df8b770b0c1892
+    namespace: monitoring
+    resourceVersion: "15797"
+    uid: 61f4a527-83a1-47ae-8f1f-9dd123453fc0
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871742
+    namespace: monitoring
+    resourceVersion: "15825"
+    uid: c50d7e27-c185-44ed-b4d8-049e43036af8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:03Z"
+    name: metrics-rollup-29871742.18df8b77bfd650f5
+    namespace: monitoring
+    resourceVersion: "15828"
+    uid: 8aa52414-5478-40e9-b231-d542e18572c0
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871744-4m88n
+    namespace: monitoring
+    resourceVersion: "16149"
+    uid: d8d65341-ff9f-452d-9bb0-70e4edfd10e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871744-4m88n to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:00Z"
+    name: metrics-rollup-29871744-4m88n.18df8b92fc002dc9
+    namespace: monitoring
+    resourceVersion: "16156"
+    uid: 1f858c12-43fe-499f-a726-c834c93a3893
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871744-4m88n
+    namespace: monitoring
+    resourceVersion: "16152"
+    uid: d8d65341-ff9f-452d-9bb0-70e4edfd10e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:00Z"
+    name: metrics-rollup-29871744-4m88n.18df8b9319921975
+    namespace: monitoring
+    resourceVersion: "16162"
+    uid: 8da95f9e-2197-4bc0-9d76-a1d1513db7d5
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871744-4m88n
+    namespace: monitoring
+    resourceVersion: "16152"
+    uid: d8d65341-ff9f-452d-9bb0-70e4edfd10e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:00Z"
+    name: metrics-rollup-29871744-4m88n.18df8b931c5aca73
+    namespace: monitoring
+    resourceVersion: "16166"
+    uid: 2a6bee33-5d3a-4e11-971c-6e3c15303160
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871744-4m88n
+    namespace: monitoring
+    resourceVersion: "16152"
+    uid: d8d65341-ff9f-452d-9bb0-70e4edfd10e8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:00Z"
+    name: metrics-rollup-29871744-4m88n.18df8b9320b01c8c
+    namespace: monitoring
+    resourceVersion: "16168"
+    uid: c3bec0f4-3661-4011-8c1e-f6561b92410b
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871744
+    namespace: monitoring
+    resourceVersion: "16145"
+    uid: 6fbe709e-66bb-4cbc-a31c-3d160b59943e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:00Z"
+  message: 'Created pod: metrics-rollup-29871744-4m88n'
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:00Z"
+    name: metrics-rollup-29871744.18df8b92fb8f1c0c
+    namespace: monitoring
+    resourceVersion: "16155"
+    uid: 59c19871-3a89-47dd-9f8d-1762d3a155c0
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871744
+    namespace: monitoring
+    resourceVersion: "16182"
+    uid: 6fbe709e-66bb-4cbc-a31c-3d160b59943e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:24:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:24:03Z"
+    name: metrics-rollup-29871744.18df8b93b082b3fd
+    namespace: monitoring
+    resourceVersion: "16185"
+    uid: dc70e232-f768-4a33-9630-297fe3601747
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871746-vmfhc
+    namespace: monitoring
+    resourceVersion: "16492"
+    uid: 2f6043f4-c645-4000-8987-46ba8f46c137
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871746-vmfhc to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup-29871746-vmfhc.18df8baeecd596dd
+    namespace: monitoring
+    resourceVersion: "16501"
+    uid: fb698ec0-250e-464b-8ce8-bb6e5e922ae0
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871746-vmfhc
+    namespace: monitoring
+    resourceVersion: "16497"
+    uid: 2f6043f4-c645-4000-8987-46ba8f46c137
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup-29871746-vmfhc.18df8baf0a67f437
+    namespace: monitoring
+    resourceVersion: "16508"
+    uid: c2438433-049f-4700-a778-397ebf00a1ee
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871746-vmfhc
+    namespace: monitoring
+    resourceVersion: "16497"
+    uid: 2f6043f4-c645-4000-8987-46ba8f46c137
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup-29871746-vmfhc.18df8baf0d104e3d
+    namespace: monitoring
+    resourceVersion: "16511"
+    uid: b212233b-710b-4acd-9f02-9e90a4e7ae51
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871746-vmfhc
+    namespace: monitoring
+    resourceVersion: "16497"
+    uid: 2f6043f4-c645-4000-8987-46ba8f46c137
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup-29871746-vmfhc.18df8baf12023a9a
+    namespace: monitoring
+    resourceVersion: "16514"
+    uid: 5e0b4db0-3dc7-4ce7-9cd9-d3587a83c5d9
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871746
+    namespace: monitoring
+    resourceVersion: "16487"
+    uid: e707df9a-51e9-4afe-83d2-6d9c5ff7a9dd
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:00Z"
+  message: 'Created pod: metrics-rollup-29871746-vmfhc'
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup-29871746.18df8baeec606e70
+    namespace: monitoring
+    resourceVersion: "16500"
+    uid: 02029e2b-a913-4f58-afa9-513c7f37e774
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:26:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871746
+    namespace: monitoring
+    resourceVersion: "16525"
+    uid: e707df9a-51e9-4afe-83d2-6d9c5ff7a9dd
+  kind: Event
+  lastTimestamp: "2026-10-18T06:26:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:03Z"
+    name: metrics-rollup-29871746.18df8bafa13b568e
+    namespace: monitoring
+    resourceVersion: "16528"
+    uid: 77a77ca6-929d-473e-821b-968f95a279a9
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871748-jnxsc
+    namespace: monitoring
+    resourceVersion: "16849"
+    uid: 353c4f88-97f7-443c-99a1-9817432a59be
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871748-jnxsc to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:00Z"
+    name: metrics-rollup-29871748-jnxsc.18df8bcadd54d915
+    namespace: monitoring
+    resourceVersion: "16857"
+    uid: 80d34d40-a0e4-4a5e-8823-02df1fd8e70b
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871748-jnxsc
+    namespace: monitoring
+    resourceVersion: "16853"
+    uid: 353c4f88-97f7-443c-99a1-9817432a59be
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:00Z"
+    name: metrics-rollup-29871748-jnxsc.18df8bcafabff83d
+    namespace: monitoring
+    resourceVersion: "16863"
+    uid: 70b16539-d3e7-42a6-bbfd-18fc054814a8
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871748-jnxsc
+    namespace: monitoring
+    resourceVersion: "16853"
+    uid: 353c4f88-97f7-443c-99a1-9817432a59be
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:00Z"
+    name: metrics-rollup-29871748-jnxsc.18df8bcafd9d6898
+    namespace: monitoring
+    resourceVersion: "16866"
+    uid: f0849b7c-9e60-42d3-a310-569cce2d417f
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871748-jnxsc
+    namespace: monitoring
+    resourceVersion: "16853"
+    uid: 353c4f88-97f7-443c-99a1-9817432a59be
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:00Z"
+    name: metrics-rollup-29871748-jnxsc.18df8bcb028b554e
+    namespace: monitoring
+    resourceVersion: "16869"
+    uid: 05f0fd8c-6207-4ae5-831c-ab2283b30f8f
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871748
+    namespace: monitoring
+    resourceVersion: "16844"
+    uid: 5dede619-70e8-4242-916a-0577032139e0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:00Z"
+  message: 'Created pod: metrics-rollup-29871748-jnxsc'
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:00Z"
+    name: metrics-rollup-29871748.18df8bcadce09c3d
+    namespace: monitoring
+    resourceVersion: "16856"
+    uid: e0df3f7a-e7e8-4104-a915-1f119a8aae26
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:28:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871748
+    namespace: monitoring
+    resourceVersion: "16881"
+    uid: 5dede619-70e8-4242-916a-0577032139e0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:28:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:28:03Z"
+    name: metrics-rollup-29871748.18df8bcb92392b09
+    namespace: monitoring
+    resourceVersion: "16884"
+    uid: 37506998-37ac-4f1a-9284-c7a62e7891f8
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871750-gl9cl
+    namespace: monitoring
+    resourceVersion: "17188"
+    uid: 9c10567b-ff8b-43f9-8c48-6a22432adfa6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871750-gl9cl to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:00Z"
+    name: metrics-rollup-29871750-gl9cl.18df8be6ce1b97f7
+    namespace: monitoring
+    resourceVersion: "17196"
+    uid: 2f805f4a-c4d8-4d94-8a76-ab89c9cb60d2
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871750-gl9cl
+    namespace: monitoring
+    resourceVersion: "17191"
+    uid: 9c10567b-ff8b-43f9-8c48-6a22432adfa6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:00Z"
+    name: metrics-rollup-29871750-gl9cl.18df8be6eb6a9e10
+    namespace: monitoring
+    resourceVersion: "17201"
+    uid: 4b41d14e-3fd1-44ee-9a93-1d2b556fa5c4
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871750-gl9cl
+    namespace: monitoring
+    resourceVersion: "17191"
+    uid: 9c10567b-ff8b-43f9-8c48-6a22432adfa6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:00Z"
+    name: metrics-rollup-29871750-gl9cl.18df8be6ee971097
+    namespace: monitoring
+    resourceVersion: "17204"
+    uid: 3eae2f84-31b7-41b0-ab75-4842d7d66b34
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871750-gl9cl
+    namespace: monitoring
+    resourceVersion: "17191"
+    uid: 9c10567b-ff8b-43f9-8c48-6a22432adfa6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:00Z"
+    name: metrics-rollup-29871750-gl9cl.18df8be6f3046d9f
+    namespace: monitoring
+    resourceVersion: "17207"
+    uid: ef5e9365-4956-46af-9de4-efddd6c8644a
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871750
+    namespace: monitoring
+    resourceVersion: "17183"
+    uid: c936d91a-fe8c-4a8b-bd8c-e01442b71e7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:00Z"
+  message: 'Created pod: metrics-rollup-29871750-gl9cl'
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:00Z"
+    name: metrics-rollup-29871750.18df8be6cd9f4cf8
+    namespace: monitoring
+    resourceVersion: "17195"
+    uid: a4e6357c-3f05-416f-a6a1-bc95be2b3656
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:30:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871750
+    namespace: monitoring
+    resourceVersion: "17219"
+    uid: c936d91a-fe8c-4a8b-bd8c-e01442b71e7d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:30:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:30:03Z"
+    name: metrics-rollup-29871750.18df8be7826192b9
+    namespace: monitoring
+    resourceVersion: "17222"
+    uid: 91ecfb7a-18ee-437f-9713-a6b575b57644
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871752-gbmbc
+    namespace: monitoring
+    resourceVersion: "17543"
+    uid: e60ff86a-2ea3-4ed7-b016-253f597875f0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871752-gbmbc to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:00Z"
+    name: metrics-rollup-29871752-gbmbc.18df8c02c3e76317
+    namespace: monitoring
+    resourceVersion: "17547"
+    uid: 482e24fe-9db5-4f33-ac22-f5178a5d5cab
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871752-gbmbc
+    namespace: monitoring
+    resourceVersion: "17545"
+    uid: e60ff86a-2ea3-4ed7-b016-253f597875f0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:00Z"
+    name: metrics-rollup-29871752-gbmbc.18df8c02e0198a41
+    namespace: monitoring
+    resourceVersion: "17553"
+    uid: c80f844f-3e60-4ae3-8c24-97eea92c9c71
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871752-gbmbc
+    namespace: monitoring
+    resourceVersion: "17545"
+    uid: e60ff86a-2ea3-4ed7-b016-253f597875f0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:00Z"
+    name: metrics-rollup-29871752-gbmbc.18df8c02e2923601
+    namespace: monitoring
+    resourceVersion: "17557"
+    uid: b348c0a9-7c07-494e-b152-c368c1ebd616
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871752-gbmbc
+    namespace: monitoring
+    resourceVersion: "17545"
+    uid: e60ff86a-2ea3-4ed7-b016-253f597875f0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:00Z"
+    name: metrics-rollup-29871752-gbmbc.18df8c02e7131fde
+    namespace: monitoring
+    resourceVersion: "17558"
+    uid: 9382bc94-6fba-46a1-ab18-fef917e26921
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871752
+    namespace: monitoring
+    resourceVersion: "17533"
+    uid: 33043601-5a6c-4010-9635-e6909494edaa
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:00Z"
+  message: 'Created pod: metrics-rollup-29871752-gbmbc'
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:00Z"
+    name: metrics-rollup-29871752.18df8c02c374ea50
+    namespace: monitoring
+    resourceVersion: "17544"
+    uid: 6b081384-1636-4ac7-9513-61ecf6e3aac1
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:32:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871752
+    namespace: monitoring
+    resourceVersion: "17569"
+    uid: 33043601-5a6c-4010-9635-e6909494edaa
+  kind: Event
+  lastTimestamp: "2026-10-18T06:32:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:32:03Z"
+    name: metrics-rollup-29871752.18df8c037880dc3e
+    namespace: monitoring
+    resourceVersion: "17572"
+    uid: bdf2465e-0637-4cee-a2b4-2462a30514f0
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871754-zbjqp
+    namespace: monitoring
+    resourceVersion: "17893"
+    uid: 2bd962b7-dc62-48ef-af38-ec790e09f549
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871754-zbjqp to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:00Z"
+    name: metrics-rollup-29871754-zbjqp.18df8c1eaed6c5a4
+    namespace: monitoring
+    resourceVersion: "17901"
+    uid: 4fd8c535-169c-49c8-aa97-7a00fd9d8a4f
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871754-zbjqp
+    namespace: monitoring
+    resourceVersion: "17896"
+    uid: 2bd962b7-dc62-48ef-af38-ec790e09f549
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:00Z"
+    name: metrics-rollup-29871754-zbjqp.18df8c1ecd5b8005
+    namespace: monitoring
+    resourceVersion: "17906"
+    uid: 3dd236ff-c9d8-4776-ba59-398a1f0e0ce9
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871754-zbjqp
+    namespace: monitoring
+    resourceVersion: "17896"
+    uid: 2bd962b7-dc62-48ef-af38-ec790e09f549
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:00Z"
+    name: metrics-rollup-29871754-zbjqp.18df8c1ed0ba6c67
+    namespace: monitoring
+    resourceVersion: "17909"
+    uid: 9cba3aff-7e21-41c3-8077-e9ba2523e878
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871754-zbjqp
+    namespace: monitoring
+    resourceVersion: "17896"
+    uid: 2bd962b7-dc62-48ef-af38-ec790e09f549
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:00Z"
+    name: metrics-rollup-29871754-zbjqp.18df8c1ed4fc22f4
+    namespace: monitoring
+    resourceVersion: "17913"
+    uid: fe1af702-79f4-4ff4-8cf2-791341378bf9
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871754
+    namespace: monitoring
+    resourceVersion: "17889"
+    uid: cbdc86d6-e665-47d8-b145-14bb542dd5b8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:00Z"
+  message: 'Created pod: metrics-rollup-29871754-zbjqp'
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:00Z"
+    name: metrics-rollup-29871754.18df8c1eae647079
+    namespace: monitoring
+    resourceVersion: "17900"
+    uid: 50ee9ef7-0031-4fc5-946f-77704075c202
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:34:02Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871754
+    namespace: monitoring
+    resourceVersion: "17924"
+    uid: cbdc86d6-e665-47d8-b145-14bb542dd5b8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:34:02Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:34:02Z"
+    name: metrics-rollup-29871754.18df8c1f596fcb08
+    namespace: monitoring
+    resourceVersion: "17927"
+    uid: 544dbdc6-2cd8-4e98-ad4f-c8465f971393
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871756-497dr
+    namespace: monitoring
+    resourceVersion: "18237"
+    uid: 657fa4c2-58d9-466b-80b7-e8f9c4f9cbc9
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871756-497dr to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:00Z"
+    name: metrics-rollup-29871756-497dr.18df8c3a9f95e505
+    namespace: monitoring
+    resourceVersion: "18246"
+    uid: 2059dd66-deba-4c80-ba23-d75c7bd04eb9
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871756-497dr
+    namespace: monitoring
+    resourceVersion: "18242"
+    uid: 657fa4c2-58d9-466b-80b7-e8f9c4f9cbc9
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:00Z"
+    name: metrics-rollup-29871756-497dr.18df8c3abe78c149
+    namespace: monitoring
+    resourceVersion: "18252"
+    uid: e4abf3e0-efd9-46df-ad40-189b7812e856
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871756-497dr
+    namespace: monitoring
+    resourceVersion: "18242"
+    uid: 657fa4c2-58d9-466b-80b7-e8f9c4f9cbc9
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:00Z"
+    name: metrics-rollup-29871756-497dr.18df8c3ac1f23843
+    namespace: monitoring
+    resourceVersion: "18255"
+    uid: 7cfa9e27-c4fe-44e5-bd13-b62af27e54c3
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871756-497dr
+    namespace: monitoring
+    resourceVersion: "18242"
+    uid: 657fa4c2-58d9-466b-80b7-e8f9c4f9cbc9
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:00Z"
+    name: metrics-rollup-29871756-497dr.18df8c3ac67db105
+    namespace: monitoring
+    resourceVersion: "18258"
+    uid: 35163cce-7c9d-4d8f-9289-be3be8597bbc
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871756
+    namespace: monitoring
+    resourceVersion: "18233"
+    uid: b2f0ebe2-c492-43d5-8cfa-cc5056b99894
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:00Z"
+  message: 'Created pod: metrics-rollup-29871756-497dr'
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:00Z"
+    name: metrics-rollup-29871756.18df8c3a9f1e58e2
+    namespace: monitoring
+    resourceVersion: "18245"
+    uid: 060cff27-2d5f-4763-a07b-14c164d0db29
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:36:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871756
+    namespace: monitoring
+    resourceVersion: "18269"
+    uid: b2f0ebe2-c492-43d5-8cfa-cc5056b99894
+  kind: Event
+  lastTimestamp: "2026-10-18T06:36:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:36:03Z"
+    name: metrics-rollup-29871756.18df8c3b5465f966
+    namespace: monitoring
+    resourceVersion: "18272"
+    uid: ed442e73-aff3-4b38-a44c-7d21013bbaca
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871758-9zbv8
+    namespace: monitoring
+    resourceVersion: "18581"
+    uid: f6b9b0c8-7846-4b9f-9328-d43b5d8060e1
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871758-9zbv8 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:00Z"
+    name: metrics-rollup-29871758-9zbv8.18df8c56909579e0
+    namespace: monitoring
+    resourceVersion: "18589"
+    uid: d07326c5-236b-4d4e-8745-aba2bceb84fd
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871758-9zbv8
+    namespace: monitoring
+    resourceVersion: "18584"
+    uid: f6b9b0c8-7846-4b9f-9328-d43b5d8060e1
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:00Z"
+    name: metrics-rollup-29871758-9zbv8.18df8c56ad25d048
+    namespace: monitoring
+    resourceVersion: "18595"
+    uid: 15f08c64-a593-4f03-87b8-bd7789f5dbc9
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871758-9zbv8
+    namespace: monitoring
+    resourceVersion: "18584"
+    uid: f6b9b0c8-7846-4b9f-9328-d43b5d8060e1
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:00Z"
+    name: metrics-rollup-29871758-9zbv8.18df8c56b0562afd
+    namespace: monitoring
+    resourceVersion: "18598"
+    uid: 80e03a5e-4301-4ccc-afde-1844e0c1dbe4
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871758-9zbv8
+    namespace: monitoring
+    resourceVersion: "18584"
+    uid: f6b9b0c8-7846-4b9f-9328-d43b5d8060e1
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:00Z"
+    name: metrics-rollup-29871758-9zbv8.18df8c56b4abe55e
+    namespace: monitoring
+    resourceVersion: "18600"
+    uid: ed2e8d3e-8165-498d-a2ad-0e99fe05882e
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871758
+    namespace: monitoring
+    resourceVersion: "18576"
+    uid: 494d009e-9e4d-4827-9073-b8e28e290197
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:00Z"
+  message: 'Created pod: metrics-rollup-29871758-9zbv8'
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:00Z"
+    name: metrics-rollup-29871758.18df8c569027559e
+    namespace: monitoring
+    resourceVersion: "18588"
+    uid: 71020492-937e-459c-afb3-420d42bab6a3
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:38:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871758
+    namespace: monitoring
+    resourceVersion: "18612"
+    uid: 494d009e-9e4d-4827-9073-b8e28e290197
+  kind: Event
+  lastTimestamp: "2026-10-18T06:38:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:38:03Z"
+    name: metrics-rollup-29871758.18df8c5744efe856
+    namespace: monitoring
+    resourceVersion: "18615"
+    uid: 5477efb6-732a-43ae-b5f6-3cfc92020255
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871760-rjrjt
+    namespace: monitoring
+    resourceVersion: "18940"
+    uid: 0baeae99-7149-469b-8f72-be51ac2a6a00
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871760-rjrjt to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:00Z"
+    name: metrics-rollup-29871760-rjrjt.18df8c72808599c4
+    namespace: monitoring
+    resourceVersion: "18949"
+    uid: dc4c29f2-1775-41cd-a833-3813354c19bf
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871760-rjrjt
+    namespace: monitoring
+    resourceVersion: "18944"
+    uid: 0baeae99-7149-469b-8f72-be51ac2a6a00
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:00Z"
+    name: metrics-rollup-29871760-rjrjt.18df8c729d37fdfb
+    namespace: monitoring
+    resourceVersion: "18954"
+    uid: 1d6eb57f-998e-4297-ae9e-4e4c29ce5b64
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871760-rjrjt
+    namespace: monitoring
+    resourceVersion: "18944"
+    uid: 0baeae99-7149-469b-8f72-be51ac2a6a00
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:00Z"
+    name: metrics-rollup-29871760-rjrjt.18df8c72a04a99ee
+    namespace: monitoring
+    resourceVersion: "18958"
+    uid: dcf62b0f-cfae-4f8c-aa31-dc1f8d7219c0
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871760-rjrjt
+    namespace: monitoring
+    resourceVersion: "18944"
+    uid: 0baeae99-7149-469b-8f72-be51ac2a6a00
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:00Z"
+    name: metrics-rollup-29871760-rjrjt.18df8c72a4d7aaf7
+    namespace: monitoring
+    resourceVersion: "18960"
+    uid: e1e16c34-e79b-4a76-874b-8f31707d4bba
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871760
+    namespace: monitoring
+    resourceVersion: "18935"
+    uid: a679784b-fa76-4eed-8d63-902821cba0f2
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:00Z"
+  message: 'Created pod: metrics-rollup-29871760-rjrjt'
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:00Z"
+    name: metrics-rollup-29871760.18df8c72800a4467
+    namespace: monitoring
+    resourceVersion: "18942"
+    uid: e3c59225-cdb6-491d-9bf8-633bea48f48e
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:40:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871760
+    namespace: monitoring
+    resourceVersion: "18973"
+    uid: a679784b-fa76-4eed-8d63-902821cba0f2
+  kind: Event
+  lastTimestamp: "2026-10-18T06:40:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:40:03Z"
+    name: metrics-rollup-29871760.18df8c73351122e6
+    namespace: monitoring
+    resourceVersion: "18976"
+    uid: b23492c7-1a9e-40c3-9474-02945a7e2a24
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871762-6r6rx
+    namespace: monitoring
+    resourceVersion: "19274"
+    uid: 2a051754-7130-4460-af9f-2f23c433ace8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871762-6r6rx to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:00Z"
+    name: metrics-rollup-29871762-6r6rx.18df8c8e7151e67f
+    namespace: monitoring
+    resourceVersion: "19281"
+    uid: 5996c704-42b0-4292-b004-c231913c6c93
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871762-6r6rx
+    namespace: monitoring
+    resourceVersion: "19278"
+    uid: 2a051754-7130-4460-af9f-2f23c433ace8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:00Z"
+    name: metrics-rollup-29871762-6r6rx.18df8c8e8ea7ca5f
+    namespace: monitoring
+    resourceVersion: "19287"
+    uid: 7af243d6-97e4-4e30-b158-34c80905b714
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871762-6r6rx
+    namespace: monitoring
+    resourceVersion: "19278"
+    uid: 2a051754-7130-4460-af9f-2f23c433ace8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:00Z"
+    name: metrics-rollup-29871762-6r6rx.18df8c8e91e03c25
+    namespace: monitoring
+    resourceVersion: "19290"
+    uid: a38b3f86-e3e7-4946-a068-52428cc83436
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871762-6r6rx
+    namespace: monitoring
+    resourceVersion: "19278"
+    uid: 2a051754-7130-4460-af9f-2f23c433ace8
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:00Z"
+    name: metrics-rollup-29871762-6r6rx.18df8c8e95ce7d3d
+    namespace: monitoring
+    resourceVersion: "19292"
+    uid: c4df2634-e6a5-47f1-aa08-34118467027e
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871762
+    namespace: monitoring
+    resourceVersion: "19270"
+    uid: 08a4ef92-aef5-430b-8dcb-edb4b8ebb43e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:00Z"
+  message: 'Created pod: metrics-rollup-29871762-6r6rx'
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:00Z"
+    name: metrics-rollup-29871762.18df8c8e70dc1427
+    namespace: monitoring
+    resourceVersion: "19282"
+    uid: a9b62a2a-2018-45fe-a6eb-64e932d9af82
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:42:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871762
+    namespace: monitoring
+    resourceVersion: "19305"
+    uid: 08a4ef92-aef5-430b-8dcb-edb4b8ebb43e
+  kind: Event
+  lastTimestamp: "2026-10-18T06:42:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:42:03Z"
+    name: metrics-rollup-29871762.18df8c8f25b8e5c3
+    namespace: monitoring
+    resourceVersion: "19308"
+    uid: 9e757710-2661-4a14-a667-dbcb02c6feda
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871764-hnlbg
+    namespace: monitoring
+    resourceVersion: "19628"
+    uid: 102fd8cc-c6a9-40a2-8bc8-0f927f9bc22d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871764-hnlbg to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764-hnlbg.18df8caa624d345c
+    namespace: monitoring
+    resourceVersion: "19636"
+    uid: 01026a50-207b-4f85-b123-b76c5627387b
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871764-hnlbg
+    namespace: monitoring
+    resourceVersion: "19632"
+    uid: 102fd8cc-c6a9-40a2-8bc8-0f927f9bc22d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764-hnlbg.18df8caa8064f626
+    namespace: monitoring
+    resourceVersion: "19643"
+    uid: 8d73b36c-8a3c-4bf8-9910-a97151cfcc0e
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871764-hnlbg
+    namespace: monitoring
+    resourceVersion: "19632"
+    uid: 102fd8cc-c6a9-40a2-8bc8-0f927f9bc22d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764-hnlbg.18df8caa8346eb9d
+    namespace: monitoring
+    resourceVersion: "19646"
+    uid: c07da052-39ab-4124-ab2c-c629b7f38c5c
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871764-hnlbg
+    namespace: monitoring
+    resourceVersion: "19632"
+    uid: 102fd8cc-c6a9-40a2-8bc8-0f927f9bc22d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764-hnlbg.18df8caa87ab029c
+    namespace: monitoring
+    resourceVersion: "19649"
+    uid: 1575821a-af40-4ea8-8425-0f576c5b4099
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871764
+    namespace: monitoring
+    resourceVersion: "19622"
+    uid: 9054e984-f53b-421c-8194-dcc570d6b441
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: 'Created pod: metrics-rollup-29871764-hnlbg'
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764.18df8caa61c56c17
+    namespace: monitoring
+    resourceVersion: "19634"
+    uid: 00e6d1ee-acc9-4008-8ad2-0d38f13fdbec
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:44:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871764
+    namespace: monitoring
+    resourceVersion: "19661"
+    uid: 9054e984-f53b-421c-8194-dcc570d6b441
+  kind: Event
+  lastTimestamp: "2026-10-18T06:44:00Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:44:00Z"
+    name: metrics-rollup-29871764.18df8caa886a37c1
+    namespace: monitoring
+    resourceVersion: "19665"
+    uid: 983f687d-04c1-4385-9e5a-017426123c12
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871766-5x6dr
+    namespace: monitoring
+    resourceVersion: "19969"
+    uid: 9d635c7d-5c9e-4337-8583-d6a367ceb898
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871766-5x6dr to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:00Z"
+    name: metrics-rollup-29871766-5x6dr.18df8cc652b8ae83
+    namespace: monitoring
+    resourceVersion: "19978"
+    uid: 83f013bc-85cb-485a-ae0a-20e54a3346bc
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871766-5x6dr
+    namespace: monitoring
+    resourceVersion: "19974"
+    uid: 9d635c7d-5c9e-4337-8583-d6a367ceb898
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:00Z"
+    name: metrics-rollup-29871766-5x6dr.18df8cc670f3f5da
+    namespace: monitoring
+    resourceVersion: "19985"
+    uid: beb39581-eb21-428e-b3c9-1e5264536c50
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871766-5x6dr
+    namespace: monitoring
+    resourceVersion: "19974"
+    uid: 9d635c7d-5c9e-4337-8583-d6a367ceb898
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:00Z"
+    name: metrics-rollup-29871766-5x6dr.18df8cc6739e5c76
+    namespace: monitoring
+    resourceVersion: "19988"
+    uid: b996ab57-0040-4c0f-a7d0-d84594baded8
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871766-5x6dr
+    namespace: monitoring
+    resourceVersion: "19974"
+    uid: 9d635c7d-5c9e-4337-8583-d6a367ceb898
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:00Z"
+    name: metrics-rollup-29871766-5x6dr.18df8cc678017c44
+    namespace: monitoring
+    resourceVersion: "19991"
+    uid: 60bc41de-9d0c-4d8b-b682-2b4f84ed3ec6
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871766
+    namespace: monitoring
+    resourceVersion: "19965"
+    uid: e159c269-4f35-4db9-9a6b-da83b3b31817
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:00Z"
+  message: 'Created pod: metrics-rollup-29871766-5x6dr'
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:00Z"
+    name: metrics-rollup-29871766.18df8cc65238a3ca
+    namespace: monitoring
+    resourceVersion: "19977"
+    uid: 69d9b82a-37d0-4f88-8806-906af19104a7
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:46:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871766
+    namespace: monitoring
+    resourceVersion: "20004"
+    uid: e159c269-4f35-4db9-9a6b-da83b3b31817
+  kind: Event
+  lastTimestamp: "2026-10-18T06:46:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:46:03Z"
+    name: metrics-rollup-29871766.18df8cc702a77506
+    namespace: monitoring
+    resourceVersion: "20007"
+    uid: 78c0002b-f200-483b-8d04-aa49d92effdf
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871768-lb9z6
+    namespace: monitoring
+    resourceVersion: "20297"
+    uid: 1630ff36-0b5a-41c7-8fb7-4220bb0eca65
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871768-lb9z6 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:00Z"
+    name: metrics-rollup-29871768-lb9z6.18df8ce2431250f5
+    namespace: monitoring
+    resourceVersion: "20305"
+    uid: 7b9f36f2-ac1a-4d75-9d5a-9c48c90f0e0a
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871768-lb9z6
+    namespace: monitoring
+    resourceVersion: "20300"
+    uid: 1630ff36-0b5a-41c7-8fb7-4220bb0eca65
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:00Z"
+    name: metrics-rollup-29871768-lb9z6.18df8ce271401817
+    namespace: monitoring
+    resourceVersion: "20315"
+    uid: 8d1deac9-ae9e-45e4-8477-9bc787793e42
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871768-lb9z6
+    namespace: monitoring
+    resourceVersion: "20300"
+    uid: 1630ff36-0b5a-41c7-8fb7-4220bb0eca65
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:00Z"
+    name: metrics-rollup-29871768-lb9z6.18df8ce273472174
+    namespace: monitoring
+    resourceVersion: "20317"
+    uid: e231b7f0-738c-4f64-b6c1-0a1329157d63
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871768-lb9z6
+    namespace: monitoring
+    resourceVersion: "20300"
+    uid: 1630ff36-0b5a-41c7-8fb7-4220bb0eca65
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:01Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:01Z"
+    name: metrics-rollup-29871768-lb9z6.18df8ce277286fac
+    namespace: monitoring
+    resourceVersion: "20318"
+    uid: 488d2051-cc30-4d71-8c65-7f6aac96903b
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871768
+    namespace: monitoring
+    resourceVersion: "20293"
+    uid: 6e4f22a2-1367-4297-a3f2-9109bf03f639
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:00Z"
+  message: 'Created pod: metrics-rollup-29871768-lb9z6'
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:00Z"
+    name: metrics-rollup-29871768.18df8ce2427ae521
+    namespace: monitoring
+    resourceVersion: "20304"
+    uid: 89a8848e-33a6-42e0-8af2-2e110ca5215f
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:48:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871768
+    namespace: monitoring
+    resourceVersion: "20331"
+    uid: 6e4f22a2-1367-4297-a3f2-9109bf03f639
+  kind: Event
+  lastTimestamp: "2026-10-18T06:48:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:48:03Z"
+    name: metrics-rollup-29871768.18df8ce2f76323b6
+    namespace: monitoring
+    resourceVersion: "20334"
+    uid: b1733106-99c9-4753-b6d1-8a9505a7b1e5
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871770-mzh9h
+    namespace: monitoring
+    resourceVersion: "20671"
+    uid: 8d933f6d-4560-45ee-afa3-8b425390b8c5
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871770-mzh9h to kh-shop-worker2
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:00Z"
+    name: metrics-rollup-29871770-mzh9h.18df8cfe3935362d
+    namespace: monitoring
+    resourceVersion: "20675"
+    uid: 07f7152f-bac0-4e67-bd6a-ab6872bb8ddb
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871770-mzh9h
+    namespace: monitoring
+    resourceVersion: "20674"
+    uid: 8d933f6d-4560-45ee-afa3-8b425390b8c5
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:00Z"
+    name: metrics-rollup-29871770-mzh9h.18df8cfe555916f2
+    namespace: monitoring
+    resourceVersion: "20682"
+    uid: 7d4deceb-044d-460d-8a48-a8228f035fb0
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871770-mzh9h
+    namespace: monitoring
+    resourceVersion: "20674"
+    uid: 8d933f6d-4560-45ee-afa3-8b425390b8c5
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:00Z"
+    name: metrics-rollup-29871770-mzh9h.18df8cfe5764c499
+    namespace: monitoring
+    resourceVersion: "20685"
+    uid: 9cddfdc2-5eee-4c16-a950-5c489bfcbd25
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871770-mzh9h
+    namespace: monitoring
+    resourceVersion: "20674"
+    uid: 8d933f6d-4560-45ee-afa3-8b425390b8c5
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:00Z"
+    name: metrics-rollup-29871770-mzh9h.18df8cfe5baaaf29
+    namespace: monitoring
+    resourceVersion: "20686"
+    uid: ffc7468f-615a-482b-a3e6-127b80fc7102
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker2
+  source:
+    component: kubelet
+    host: kh-shop-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871770
+    namespace: monitoring
+    resourceVersion: "20661"
+    uid: 8b8a0db4-46ad-471e-b08b-d663b8e5c7e0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:00Z"
+  message: 'Created pod: metrics-rollup-29871770-mzh9h'
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:00Z"
+    name: metrics-rollup-29871770.18df8cfe38c242dc
+    namespace: monitoring
+    resourceVersion: "20672"
+    uid: eed3af76-4fb5-4f22-b292-aa273d8c03f0
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:50:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871770
+    namespace: monitoring
+    resourceVersion: "20702"
+    uid: 8b8a0db4-46ad-471e-b08b-d663b8e5c7e0
+  kind: Event
+  lastTimestamp: "2026-10-18T06:50:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:50:03Z"
+    name: metrics-rollup-29871770.18df8cfeed8131c3
+    namespace: monitoring
+    resourceVersion: "20705"
+    uid: 7c62c099-f9bb-4d91-979c-e80d476b07ae
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871772-qm927
+    namespace: monitoring
+    resourceVersion: "20995"
+    uid: ea2414d9-0b80-4b43-86f9-7458d24efab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871772-qm927 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:00Z"
+    name: metrics-rollup-29871772-qm927.18df8d1a241db51a
+    namespace: monitoring
+    resourceVersion: "21004"
+    uid: 1dab608e-f6db-4723-87bd-c39d85d42851
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871772-qm927
+    namespace: monitoring
+    resourceVersion: "20998"
+    uid: ea2414d9-0b80-4b43-86f9-7458d24efab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:00Z"
+    name: metrics-rollup-29871772-qm927.18df8d1a4133de86
+    namespace: monitoring
+    resourceVersion: "21008"
+    uid: e23a5661-5a1a-477b-8d98-a0713aeb653a
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871772-qm927
+    namespace: monitoring
+    resourceVersion: "20998"
+    uid: ea2414d9-0b80-4b43-86f9-7458d24efab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:00Z"
+    name: metrics-rollup-29871772-qm927.18df8d1a43feb19c
+    namespace: monitoring
+    resourceVersion: "21012"
+    uid: 22d1058b-265a-4d91-a878-048df1a0ff72
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871772-qm927
+    namespace: monitoring
+    resourceVersion: "20998"
+    uid: ea2414d9-0b80-4b43-86f9-7458d24efab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:00Z"
+    name: metrics-rollup-29871772-qm927.18df8d1a49149eb0
+    namespace: monitoring
+    resourceVersion: "21016"
+    uid: 14b82e99-8500-4233-9999-1ccf4614e0fe
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871772
+    namespace: monitoring
+    resourceVersion: "20991"
+    uid: fa4a7e1d-8f68-4071-86f9-bfe9b7ebdc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:00Z"
+  message: 'Created pod: metrics-rollup-29871772-qm927'
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:00Z"
+    name: metrics-rollup-29871772.18df8d1a23a44c96
+    namespace: monitoring
+    resourceVersion: "21001"
+    uid: f2d8664d-bf91-4fc7-aa33-636ee01bbe25
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:52:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871772
+    namespace: monitoring
+    resourceVersion: "21027"
+    uid: fa4a7e1d-8f68-4071-86f9-bfe9b7ebdc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T06:52:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:52:03Z"
+    name: metrics-rollup-29871772.18df8d1adbf7e3d8
+    namespace: monitoring
+    resourceVersion: "21030"
+    uid: 4a9e641d-1261-47ec-bcea-3751caf4366f
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871774-94pzn
+    namespace: monitoring
+    resourceVersion: "21354"
+    uid: f079677c-c5cb-4904-a43e-2d1634193ed4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871774-94pzn to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:00Z"
+    name: metrics-rollup-29871774-94pzn.18df8d3614565a2b
+    namespace: monitoring
+    resourceVersion: "21364"
+    uid: bb320479-4686-4d9a-b30a-5f53f6027771
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871774-94pzn
+    namespace: monitoring
+    resourceVersion: "21359"
+    uid: f079677c-c5cb-4904-a43e-2d1634193ed4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:00Z"
+    name: metrics-rollup-29871774-94pzn.18df8d3631a4c9cd
+    namespace: monitoring
+    resourceVersion: "21368"
+    uid: e52594dc-5013-4053-bb27-f90fd09d041f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871774-94pzn
+    namespace: monitoring
+    resourceVersion: "21359"
+    uid: f079677c-c5cb-4904-a43e-2d1634193ed4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:00Z"
+    name: metrics-rollup-29871774-94pzn.18df8d36347bf577
+    namespace: monitoring
+    resourceVersion: "21373"
+    uid: 2f395fe4-22d8-4e30-b16a-4d92cc5b7a5b
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871774-94pzn
+    namespace: monitoring
+    resourceVersion: "21359"
+    uid: f079677c-c5cb-4904-a43e-2d1634193ed4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:00Z"
+    name: metrics-rollup-29871774-94pzn.18df8d3638ad7a49
+    namespace: monitoring
+    resourceVersion: "21375"
+    uid: 86efd0d6-29e3-49b5-81e8-2fcd8e8de610
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871774
+    namespace: monitoring
+    resourceVersion: "21350"
+    uid: a0b51c2c-7831-499e-9e6d-045c557e7041
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:00Z"
+  message: 'Created pod: metrics-rollup-29871774-94pzn'
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:00Z"
+    name: metrics-rollup-29871774.18df8d3613c50cfb
+    namespace: monitoring
+    resourceVersion: "21357"
+    uid: 8d108b86-cda9-4fcf-bea8-660969ee9ab6
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:54:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871774
+    namespace: monitoring
+    resourceVersion: "21389"
+    uid: a0b51c2c-7831-499e-9e6d-045c557e7041
+  kind: Event
+  lastTimestamp: "2026-10-18T06:54:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:54:03Z"
+    name: metrics-rollup-29871774.18df8d36c87ed3a8
+    namespace: monitoring
+    resourceVersion: "21392"
+    uid: ddbc6f52-c290-4489-b1ec-293e66474042
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871776-gflvz
+    namespace: monitoring
+    resourceVersion: "21694"
+    uid: dbf1de98-d2e7-43ee-86db-0a0f410bcc6c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871776-gflvz to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:00Z"
+    name: metrics-rollup-29871776-gflvz.18df8d5204fc2f38
+    namespace: monitoring
+    resourceVersion: "21700"
+    uid: 73786239-8263-4243-a460-d84d5eb443a3
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871776-gflvz
+    namespace: monitoring
+    resourceVersion: "21698"
+    uid: dbf1de98-d2e7-43ee-86db-0a0f410bcc6c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:00Z"
+    name: metrics-rollup-29871776-gflvz.18df8d5222233d81
+    namespace: monitoring
+    resourceVersion: "21709"
+    uid: a4b57cb8-efb8-41fd-ba05-ff7fd49ec99d
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871776-gflvz
+    namespace: monitoring
+    resourceVersion: "21698"
+    uid: dbf1de98-d2e7-43ee-86db-0a0f410bcc6c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:00Z"
+    name: metrics-rollup-29871776-gflvz.18df8d52267ca618
+    namespace: monitoring
+    resourceVersion: "21712"
+    uid: 80d163af-21c3-4066-8a83-16fc3da0e1b0
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871776-gflvz
+    namespace: monitoring
+    resourceVersion: "21698"
+    uid: dbf1de98-d2e7-43ee-86db-0a0f410bcc6c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:00Z"
+    name: metrics-rollup-29871776-gflvz.18df8d522a42b78c
+    namespace: monitoring
+    resourceVersion: "21715"
+    uid: f4305163-eb72-42f0-bab0-8a4440e834ca
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871776
+    namespace: monitoring
+    resourceVersion: "21690"
+    uid: d6441ca9-0b70-4ba4-a37e-1ad41f4c457c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:00Z"
+  message: 'Created pod: metrics-rollup-29871776-gflvz'
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:00Z"
+    name: metrics-rollup-29871776.18df8d5204894326
+    namespace: monitoring
+    resourceVersion: "21701"
+    uid: 2a40b260-c421-4895-bb39-abeb1e899cd2
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:56:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871776
+    namespace: monitoring
+    resourceVersion: "21727"
+    uid: d6441ca9-0b70-4ba4-a37e-1ad41f4c457c
+  kind: Event
+  lastTimestamp: "2026-10-18T06:56:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:56:03Z"
+    name: metrics-rollup-29871776.18df8d52b96efa85
+    namespace: monitoring
+    resourceVersion: "21730"
+    uid: b384a380-dff0-450e-bbf9-36aba6f6be5b
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871778-5v4gp
+    namespace: monitoring
+    resourceVersion: "22041"
+    uid: d1d7e6bf-8889-451e-b858-37d4f0b36e98
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871778-5v4gp to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:00Z"
+    name: metrics-rollup-29871778-5v4gp.18df8d6df68b439a
+    namespace: monitoring
+    resourceVersion: "22051"
+    uid: ad57b733-981b-4025-ab2e-741f2155352c
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871778-5v4gp
+    namespace: monitoring
+    resourceVersion: "22046"
+    uid: d1d7e6bf-8889-451e-b858-37d4f0b36e98
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:00Z"
+    name: metrics-rollup-29871778-5v4gp.18df8d6e1748fd1e
+    namespace: monitoring
+    resourceVersion: "22056"
+    uid: b676273b-d2a4-49f2-addd-b2d04a458c4f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871778-5v4gp
+    namespace: monitoring
+    resourceVersion: "22046"
+    uid: d1d7e6bf-8889-451e-b858-37d4f0b36e98
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:00Z"
+    name: metrics-rollup-29871778-5v4gp.18df8d6e1ab7b4b0
+    namespace: monitoring
+    resourceVersion: "22059"
+    uid: 55016a3e-65f8-4408-b2cb-02b5f9db0b44
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871778-5v4gp
+    namespace: monitoring
+    resourceVersion: "22046"
+    uid: d1d7e6bf-8889-451e-b858-37d4f0b36e98
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:00Z"
+    name: metrics-rollup-29871778-5v4gp.18df8d6e1f2be3d1
+    namespace: monitoring
+    resourceVersion: "22062"
+    uid: cd3abf16-6d36-48bf-848d-23551c0681c4
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871778
+    namespace: monitoring
+    resourceVersion: "22036"
+    uid: 0f200938-7d7e-45cc-9995-8f6824d12ab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:00Z"
+  message: 'Created pod: metrics-rollup-29871778-5v4gp'
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:00Z"
+    name: metrics-rollup-29871778.18df8d6df59b7d0c
+    namespace: monitoring
+    resourceVersion: "22048"
+    uid: 7ab64453-9603-4075-9841-d21dda0f0920
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:58:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871778
+    namespace: monitoring
+    resourceVersion: "22075"
+    uid: 0f200938-7d7e-45cc-9995-8f6824d12ab6
+  kind: Event
+  lastTimestamp: "2026-10-18T06:58:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T06:58:03Z"
+    name: metrics-rollup-29871778.18df8d6eab6ec21c
+    namespace: monitoring
+    resourceVersion: "22078"
+    uid: 12b9137c-081f-4917-8ed5-a0b687b2f378
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871780-hctd5
+    namespace: monitoring
+    resourceVersion: "22389"
+    uid: 59a312a9-2d6e-4a86-a0f7-e01d42d3eca8
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871780-hctd5 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:00Z"
+    name: metrics-rollup-29871780-hctd5.18df8d89e6bd042a
+    namespace: monitoring
+    resourceVersion: "22396"
+    uid: d759fd6d-3974-4340-8578-36c825d8d8f0
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871780-hctd5
+    namespace: monitoring
+    resourceVersion: "22392"
+    uid: 59a312a9-2d6e-4a86-a0f7-e01d42d3eca8
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:00Z"
+    name: metrics-rollup-29871780-hctd5.18df8d8a046f59e2
+    namespace: monitoring
+    resourceVersion: "22401"
+    uid: 4339b7db-dc7a-4961-a0be-9885d8a5cbe4
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871780-hctd5
+    namespace: monitoring
+    resourceVersion: "22392"
+    uid: 59a312a9-2d6e-4a86-a0f7-e01d42d3eca8
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:00Z"
+    name: metrics-rollup-29871780-hctd5.18df8d8a07c9f5d1
+    namespace: monitoring
+    resourceVersion: "22406"
+    uid: e4e06f4d-525d-4d21-b4d9-259a0f1810a3
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871780-hctd5
+    namespace: monitoring
+    resourceVersion: "22392"
+    uid: 59a312a9-2d6e-4a86-a0f7-e01d42d3eca8
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:00Z"
+    name: metrics-rollup-29871780-hctd5.18df8d8a0cc35e6b
+    namespace: monitoring
+    resourceVersion: "22408"
+    uid: 614f37bc-b566-49ff-87dc-cf309eed417d
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871780
+    namespace: monitoring
+    resourceVersion: "22385"
+    uid: 55cac7fa-8830-4e10-a6d1-9e155971634d
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:00Z"
+  message: 'Created pod: metrics-rollup-29871780-hctd5'
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:00Z"
+    name: metrics-rollup-29871780.18df8d89e608b69d
+    namespace: monitoring
+    resourceVersion: "22393"
+    uid: 817369e9-96e1-4482-b851-bf94610086c9
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:00:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871780
+    namespace: monitoring
+    resourceVersion: "22420"
+    uid: 55cac7fa-8830-4e10-a6d1-9e155971634d
+  kind: Event
+  lastTimestamp: "2026-10-18T07:00:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T07:00:03Z"
+    name: metrics-rollup-29871780.18df8d8a93325186
+    namespace: monitoring
+    resourceVersion: "22424"
+    uid: 33177615-4769-4522-a1a4-cbbe1afcf0ef
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871782-5lhx5
+    namespace: monitoring
+    resourceVersion: "22714"
+    uid: df45f9be-dabd-42d4-a2cc-a03ba12c72e3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871782-5lhx5 to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    name: metrics-rollup-29871782-5lhx5.18df8da5d697c2d1
+    namespace: monitoring
+    resourceVersion: "22719"
+    uid: f1786166-e7b0-450f-902b-b58e5e485147
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871782-5lhx5
+    namespace: monitoring
+    resourceVersion: "22717"
+    uid: df45f9be-dabd-42d4-a2cc-a03ba12c72e3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    name: metrics-rollup-29871782-5lhx5.18df8da5f32c8988
+    namespace: monitoring
+    resourceVersion: "22728"
+    uid: 82777cdc-12d2-4a37-a7b6-783bf7cff3f4
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871782-5lhx5
+    namespace: monitoring
+    resourceVersion: "22717"
+    uid: df45f9be-dabd-42d4-a2cc-a03ba12c72e3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    name: metrics-rollup-29871782-5lhx5.18df8da5f5bbbdbe
+    namespace: monitoring
+    resourceVersion: "22731"
+    uid: e0371de1-942c-43c2-9dbe-b64fc3a2ddc2
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871782-5lhx5
+    namespace: monitoring
+    resourceVersion: "22717"
+    uid: df45f9be-dabd-42d4-a2cc-a03ba12c72e3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    name: metrics-rollup-29871782-5lhx5.18df8da5f9440c8b
+    namespace: monitoring
+    resourceVersion: "22734"
+    uid: 73c965aa-4f17-48c8-a2ef-afe9bf18a23f
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871782
+    namespace: monitoring
+    resourceVersion: "22711"
+    uid: 13fd37f1-6080-4448-a4db-7112f33186b6
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:00Z"
+  message: 'Created pod: metrics-rollup-29871782-5lhx5'
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    name: metrics-rollup-29871782.18df8da5d5f912eb
+    namespace: monitoring
+    resourceVersion: "22718"
+    uid: 0f82b6bf-cf44-4c15-b9a4-64bdf27ac96b
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:02:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871782
+    namespace: monitoring
+    resourceVersion: "22749"
+    uid: 13fd37f1-6080-4448-a4db-7112f33186b6
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:03Z"
+    name: metrics-rollup-29871782.18df8da68b250e41
+    namespace: monitoring
+    resourceVersion: "22752"
+    uid: cc70ba3a-3452-489c-9815-52c4cf1c69bb
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: metrics-rollup-29871784-jmqtw
+    namespace: monitoring
+    resourceVersion: "23141"
+    uid: bb9207c7-4c00-4d28-9940-a93d26d5e2d3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: Successfully assigned monitoring/metrics-rollup-29871784-jmqtw to kh-shop-worker
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    name: metrics-rollup-29871784-jmqtw.18df8dc1c74433d3
+    namespace: monitoring
+    resourceVersion: "23151"
+    uid: 388d6f34-4c00-4d00-ba1b-bf0e8767faef
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871784-jmqtw
+    namespace: monitoring
+    resourceVersion: "23147"
+    uid: bb9207c7-4c00-4d28-9940-a93d26d5e2d3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    name: metrics-rollup-29871784-jmqtw.18df8dc1e5149047
+    namespace: monitoring
+    resourceVersion: "23156"
+    uid: 1ecfa426-8408-4cdc-96a7-09e27eea90ac
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871784-jmqtw
+    namespace: monitoring
+    resourceVersion: "23147"
+    uid: bb9207c7-4c00-4d28-9940-a93d26d5e2d3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    name: metrics-rollup-29871784-jmqtw.18df8dc1e7f9b43b
+    namespace: monitoring
+    resourceVersion: "23160"
+    uid: 1954e657-ee66-4432-86a3-897add4b3d25
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{rollup}
+    kind: Pod
+    name: metrics-rollup-29871784-jmqtw
+    namespace: monitoring
+    resourceVersion: "23147"
+    uid: bb9207c7-4c00-4d28-9940-a93d26d5e2d3
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    name: metrics-rollup-29871784-jmqtw.18df8dc1ecd0bad1
+    namespace: monitoring
+    resourceVersion: "23163"
+    uid: 3c59b559-48c1-41d6-a10e-f566ddb59c9e
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871784
+    namespace: monitoring
+    resourceVersion: "23138"
+    uid: 3d794885-6d71-4c1a-86d7-5b570649450b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: 'Created pod: metrics-rollup-29871784-jmqtw'
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    name: metrics-rollup-29871784.18df8dc1c6ca4753
+    namespace: monitoring
+    resourceVersion: "23145"
+    uid: b194a948-ac4f-4a49-ba58-525f1fe49505
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: metrics-rollup-29871784
+    namespace: monitoring
+    resourceVersion: "23177"
+    uid: 3d794885-6d71-4c1a-86d7-5b570649450b
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:03Z"
+  message: Job completed
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:03Z"
+    name: metrics-rollup-29871784.18df8dc27bcbd43a
+    namespace: monitoring
+    resourceVersion: "23181"
+    uid: d38eb352-cd6e-4497-8522-b1f33e254adf
+  reason: Completed
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "13152"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:00Z"
+  message: Created job metrics-rollup-29871730
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:00Z"
+    name: metrics-rollup.18df8acf670b9d8d
+    namespace: monitoring
+    resourceVersion: "13633"
+    uid: bfe9be0e-578c-4bb2-8dff-32674d746c86
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "13634"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:03Z"
+  message: Deleted job metrics-rollup-29871726
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:03Z"
+    name: metrics-rollup.18df8ad01d8f2ff5
+    namespace: monitoring
+    resourceVersion: "13675"
+    uid: 8a453c2a-d9a2-441f-b7ea-8324eb3a1862
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:10:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "13634"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:10:03Z"
+  message: 'Saw completed job: metrics-rollup-29871730, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:10:03Z"
+    name: metrics-rollup.18df8ad01d8f508b
+    namespace: monitoring
+    resourceVersion: "13679"
+    uid: 8310da4d-7aab-4e55-aeee-d2034aa15186
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "13676"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:00Z"
+  message: Created job metrics-rollup-29871732
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:00Z"
+    name: metrics-rollup.18df8aeb57c2af66
+    namespace: monitoring
+    resourceVersion: "14025"
+    uid: c2128ecf-c914-48d4-839d-c3f67b32bac2
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14027"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:03Z"
+  message: Deleted job metrics-rollup-29871728
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:03Z"
+    name: metrics-rollup.18df8aec136033a6
+    namespace: monitoring
+    resourceVersion: "14066"
+    uid: 56ef417d-3501-4543-935d-d3b1a6c92dd8
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:12:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14027"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:12:03Z"
+  message: 'Saw completed job: metrics-rollup-29871732, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:12:03Z"
+    name: metrics-rollup.18df8aec1360a5b6
+    namespace: monitoring
+    resourceVersion: "14068"
+    uid: 13cfac27-1a72-4711-bb50-cd6ecb805a14
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14067"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:00Z"
+  message: Created job metrics-rollup-29871734
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:00Z"
+    name: metrics-rollup.18df8b07481d4abf
+    namespace: monitoring
+    resourceVersion: "14402"
+    uid: cb9d86e0-d1b7-4b34-85fb-cbd66fb826b2
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14403"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:03Z"
+  message: Deleted job metrics-rollup-29871730
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:03Z"
+    name: metrics-rollup.18df8b07fdc08734
+    namespace: monitoring
+    resourceVersion: "14440"
+    uid: 3be77690-6472-44ce-b388-09285e377bae
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:14:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14403"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:14:03Z"
+  message: 'Saw completed job: metrics-rollup-29871734, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:14:03Z"
+    name: metrics-rollup.18df8b07fdc09ea4
+    namespace: monitoring
+    resourceVersion: "14442"
+    uid: 583bd988-244d-4ef4-a713-9f0e710b2c4e
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14441"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:00Z"
+  message: Created job metrics-rollup-29871736
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:00Z"
+    name: metrics-rollup.18df8b2338cb6c35
+    namespace: monitoring
+    resourceVersion: "14729"
+    uid: 88b80340-bfa2-498d-8939-cf9950969f36
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14730"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:03Z"
+  message: Deleted job metrics-rollup-29871732
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:03Z"
+    name: metrics-rollup.18df8b23ef3f01a6
+    namespace: monitoring
+    resourceVersion: "14771"
+    uid: 563cbfeb-c0f8-42c3-8318-b2a071d056b3
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:16:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14730"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:16:03Z"
+  message: 'Saw completed job: metrics-rollup-29871736, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:16:03Z"
+    name: metrics-rollup.18df8b23ef3f22a8
+    namespace: monitoring
+    resourceVersion: "14773"
+    uid: e833829f-4790-4635-a4ad-c753ffcd7b1c
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "14772"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:00Z"
+  message: Created job metrics-rollup-29871738
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:00Z"
+    name: metrics-rollup.18df8b3f2974c55b
+    namespace: monitoring
+    resourceVersion: "15109"
+    uid: ce5e6ebb-04f2-4326-bbb0-7d96d5b65d71
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15108"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:03Z"
+  message: Deleted job metrics-rollup-29871734
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:03Z"
+    name: metrics-rollup.18df8b3fda07caa2
+    namespace: monitoring
+    resourceVersion: "15148"
+    uid: 457cbec6-4663-4c47-bd13-3001cc8793c7
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:18:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15108"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:18:03Z"
+  message: 'Saw completed job: metrics-rollup-29871738, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:18:03Z"
+    name: metrics-rollup.18df8b3fda07eba4
+    namespace: monitoring
+    resourceVersion: "15150"
+    uid: b71ab810-6379-4507-afc7-127a8d209c7f
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15149"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:00Z"
+  message: Created job metrics-rollup-29871740
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:00Z"
+    name: metrics-rollup.18df8b5b19fc28ab
+    namespace: monitoring
+    resourceVersion: "15437"
+    uid: 183a2368-992e-4245-b66a-f21ddf5a48c6
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:01Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15436"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:01Z"
+  message: Deleted job metrics-rollup-29871736
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:01Z"
+    name: metrics-rollup.18df8b5b5f0c3c54
+    namespace: monitoring
+    resourceVersion: "15476"
+    uid: e0095b64-5d61-4de1-be63-a2ef5336a4ea
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:20:01Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15436"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:20:01Z"
+  message: 'Saw completed job: metrics-rollup-29871740, condition: Complete'
+  metadata:
+    creationTimestamp: "2026-10-18T06:20:01Z"
+    name: metrics-rollup.18df8b5b5f0c5469
+    namespace: monitoring
+    resourceVersion: "15480"
+    uid: ce233ccf-4338-47c4-bbfd-f6538e770ba0
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15477"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:00Z"
+  message: Created job metrics-rollup-29871742
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:00Z"
+    name: metrics-rollup.18df8b770a567af5
+    namespace: monitoring
+    resourceVersion: "15789"
+    uid: 36c3b934-608d-4fd7-997c-5388377c043e
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:22:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "15788"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T06:22:03Z"
+  message: Deleted job metrics-rollup-29871738
+  metadata:
+    creationTimestamp: "2026-10-18T06:22:03Z"
+    name: metrics-rollup.18df8b77c03bfb2b
+    namespace: monitoring
+    resourceVersion: "15830"
+    uid: e9899aa2-7690-4373-b0db-5dd23798cf21
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 21
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:24:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: metrics-rollup
+    namespace: monitoring
+    resourceVersion: "16187"
+    uid: a9c6e8fa-0f18-4a23-ae7c-6d6c5d735426
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:00Z"
+  message: '(combined from similar events): Created job metrics-rollup-29871784'
+  metadata:
+    creationTimestamp: "2026-10-18T06:26:00Z"
+    name: metrics-rollup.18df8b92fae903a3
+    namespace: monitoring
+    resourceVersion: "23143"
+    uid: 3edd32d8-b640-409b-badc-f35fb71dc2a6
+  reason: SuccessfulCreate
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+kind: List

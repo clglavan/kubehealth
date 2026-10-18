@@ -1,0 +1,72 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "4"
+      deployment.kubernetes.io/max-replicas: "5"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    generation: 1
+    labels:
+      app: palette-sync
+      pod-template-hash: 6b5f7cdb8
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: palette-sync
+      uid: 8454eb16-63cb-45c2-828f-ffd86c06b096
+    resourceVersion: "11094"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  spec:
+    replicas: 4
+    selector:
+      matchLabels:
+        app: palette-sync
+        pod-template-hash: 6b5f7cdb8
+    template:
+      metadata:
+        labels:
+          app: palette-sync
+          pod-template-hash: 6b5f7cdb8
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: sync
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:40:00Z"
+      message: 'pods "palette-sync-6b5f7cdb8-kp26x" is forbidden: exceeded quota:
+        sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+kind: List

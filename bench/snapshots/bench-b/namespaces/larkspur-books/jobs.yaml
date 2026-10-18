@@ -1,0 +1,715 @@
+apiVersion: v1
+items:
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:46:00Z"
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+      batch.kubernetes.io/job-name: balance-digest-29871886
+      controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+      job-name: balance-digest-29871886
+    name: balance-digest-29871886
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: balance-digest
+      uid: 5e671025-f954-4569-9ad1-ed3f05820e16
+    resourceVersion: "13200"
+    uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+  spec:
+    backoffLimit: 2
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: balance-digest
+          batch.kubernetes.io/controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+          batch.kubernetes.io/job-name: balance-digest-29871886
+          controller-uid: 9cb9fd7a-1b0c-43ad-a61e-2d99751901de
+          job-name: balance-digest-29871886
+      spec:
+        containers:
+        - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+          imagePullPolicy: IfNotPresent
+          name: digest
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2026-10-18T08:46:05Z"
+    conditions:
+    - lastProbeTime: "2026-10-18T08:46:05Z"
+      lastTransitionTime: "2026-10-18T08:46:05Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2026-10-18T08:46:05Z"
+      lastTransitionTime: "2026-10-18T08:46:05Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2026-10-18T08:46:00Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:47:00Z"
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+      batch.kubernetes.io/job-name: balance-digest-29871887
+      controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+      job-name: balance-digest-29871887
+    name: balance-digest-29871887
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: balance-digest
+      uid: 5e671025-f954-4569-9ad1-ed3f05820e16
+    resourceVersion: "13446"
+    uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+  spec:
+    backoffLimit: 2
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: balance-digest
+          batch.kubernetes.io/controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+          batch.kubernetes.io/job-name: balance-digest-29871887
+          controller-uid: fb1821eb-5d71-4b51-ab08-1ac40b9e1dfa
+          job-name: balance-digest-29871887
+      spec:
+        containers:
+        - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+          imagePullPolicy: IfNotPresent
+          name: digest
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2026-10-18T08:47:03Z"
+    conditions:
+    - lastProbeTime: "2026-10-18T08:47:03Z"
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2026-10-18T08:47:03Z"
+      lastTransitionTime: "2026-10-18T08:47:03Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2026-10-18T08:47:00Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:48:00Z"
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    generation: 1
+    labels:
+      app: balance-digest
+      batch.kubernetes.io/controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+      batch.kubernetes.io/job-name: balance-digest-29871888
+      controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+      job-name: balance-digest-29871888
+    name: balance-digest-29871888
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: balance-digest
+      uid: 5e671025-f954-4569-9ad1-ed3f05820e16
+    resourceVersion: "13694"
+    uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+  spec:
+    backoffLimit: 2
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: balance-digest
+          batch.kubernetes.io/controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+          batch.kubernetes.io/job-name: balance-digest-29871888
+          controller-uid: 963d5740-01d5-4ec3-8449-fc5d6cc6d86f
+          job-name: balance-digest-29871888
+      spec:
+        containers:
+        - image: harbor.larkspur.internal/books/balance-digest:2.0.0
+          imagePullPolicy: IfNotPresent
+          name: digest
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2026-10-18T08:48:05Z"
+    conditions:
+    - lastProbeTime: "2026-10-18T08:48:05Z"
+      lastTransitionTime: "2026-10-18T08:48:05Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2026-10-18T08:48:05Z"
+      lastTransitionTime: "2026-10-18T08:48:05Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2026-10-18T08:48:00Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:46:00Z"
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    generation: 1
+    labels:
+      app: fx-snapshot
+      batch.kubernetes.io/controller-uid: 87439427-213f-4c30-9158-ba50f08cd697
+      batch.kubernetes.io/job-name: fx-snapshot-29871886
+      controller-uid: 87439427-213f-4c30-9158-ba50f08cd697
+      job-name: fx-snapshot-29871886
+    name: fx-snapshot-29871886
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: fx-snapshot
+      uid: 3bc193fc-8d43-4deb-b35e-67861437b5bc
+    resourceVersion: "13337"
+    uid: 87439427-213f-4c30-9158-ba50f08cd697
+  spec:
+    activeDeadlineSeconds: 20
+    backoffLimit: 0
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 87439427-213f-4c30-9158-ba50f08cd697
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: fx-snapshot
+          batch.kubernetes.io/controller-uid: 87439427-213f-4c30-9158-ba50f08cd697
+          batch.kubernetes.io/job-name: fx-snapshot-29871886
+          controller-uid: 87439427-213f-4c30-9158-ba50f08cd697
+          job-name: fx-snapshot-29871886
+      spec:
+        containers:
+        - args:
+          - --providers=14
+          - --out=/tmp/rates.json
+          image: harbor.larkspur.internal/books/fx-snapshot:3.1.0
+          imagePullPolicy: IfNotPresent
+          name: snapshot
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastProbeTime: "2026-10-18T08:46:20Z"
+      lastTransitionTime: "2026-10-18T08:46:20Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: FailureTarget
+    - lastProbeTime: "2026-10-18T08:46:48Z"
+      lastTransitionTime: "2026-10-18T08:46:48Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: Failed
+    failed: 1
+    ready: 0
+    startTime: "2026-10-18T08:46:00Z"
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:47:00Z"
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    generation: 1
+    labels:
+      app: fx-snapshot
+      batch.kubernetes.io/controller-uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+      batch.kubernetes.io/job-name: fx-snapshot-29871887
+      controller-uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+      job-name: fx-snapshot-29871887
+    name: fx-snapshot-29871887
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: fx-snapshot
+      uid: 3bc193fc-8d43-4deb-b35e-67861437b5bc
+    resourceVersion: "13576"
+    uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+  spec:
+    activeDeadlineSeconds: 20
+    backoffLimit: 0
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: fx-snapshot
+          batch.kubernetes.io/controller-uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+          batch.kubernetes.io/job-name: fx-snapshot-29871887
+          controller-uid: 5b520c96-9cc7-4c86-a6cf-edc086d926bd
+          job-name: fx-snapshot-29871887
+      spec:
+        containers:
+        - args:
+          - --providers=14
+          - --out=/tmp/rates.json
+          image: harbor.larkspur.internal/books/fx-snapshot:3.1.0
+          imagePullPolicy: IfNotPresent
+          name: snapshot
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastProbeTime: "2026-10-18T08:47:20Z"
+      lastTransitionTime: "2026-10-18T08:47:20Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: FailureTarget
+    - lastProbeTime: "2026-10-18T08:47:48Z"
+      lastTransitionTime: "2026-10-18T08:47:48Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: Failed
+    failed: 1
+    ready: 0
+    startTime: "2026-10-18T08:47:00Z"
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    annotations:
+      batch.kubernetes.io/cronjob-scheduled-timestamp: "2026-10-18T08:48:00Z"
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    generation: 1
+    labels:
+      app: fx-snapshot
+      batch.kubernetes.io/controller-uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+      batch.kubernetes.io/job-name: fx-snapshot-29871888
+      controller-uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+      job-name: fx-snapshot-29871888
+    name: fx-snapshot-29871888
+    namespace: larkspur-books
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: CronJob
+      name: fx-snapshot
+      uid: 3bc193fc-8d43-4deb-b35e-67861437b5bc
+    resourceVersion: "13840"
+    uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+  spec:
+    activeDeadlineSeconds: 20
+    backoffLimit: 0
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: fx-snapshot
+          batch.kubernetes.io/controller-uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+          batch.kubernetes.io/job-name: fx-snapshot-29871888
+          controller-uid: b22d35bd-d46a-4718-b701-46d75ce36bf3
+          job-name: fx-snapshot-29871888
+      spec:
+        containers:
+        - args:
+          - --providers=14
+          - --out=/tmp/rates.json
+          image: harbor.larkspur.internal/books/fx-snapshot:3.1.0
+          imagePullPolicy: IfNotPresent
+          name: snapshot
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastProbeTime: "2026-10-18T08:48:20Z"
+      lastTransitionTime: "2026-10-18T08:48:20Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: FailureTarget
+    - lastProbeTime: "2026-10-18T08:48:48Z"
+      lastTransitionTime: "2026-10-18T08:48:48Z"
+      message: Job was active longer than specified deadline
+      reason: DeadlineExceeded
+      status: "True"
+      type: Failed
+    failed: 1
+    ready: 0
+    startTime: "2026-10-18T08:48:00Z"
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    generation: 1
+    labels:
+      app: quarter-close
+    name: quarter-close-export
+    namespace: larkspur-books
+    resourceVersion: "10137"
+    uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+  spec:
+    backoffLimit: 2
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: quarter-close
+          batch.kubernetes.io/controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+          batch.kubernetes.io/job-name: quarter-close-export
+          controller-uid: 634475fd-5f2c-48b6-a4f3-b56fef8ef73c
+          job-name: quarter-close-export
+      spec:
+        containers:
+        - args:
+          - --period=2026-Q3
+          - --input=/data/close/2026-09.csv
+          - --out=s3://larkspur-books-exports/2026-Q3/
+          image: harbor.larkspur.internal/books/quarter-close:2.0.3
+          imagePullPolicy: IfNotPresent
+          name: export
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /data/close
+            name: inputs
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: inputs
+          persistentVolumeClaim:
+            claimName: close-inputs
+  status:
+    conditions:
+    - lastProbeTime: "2026-10-18T08:38:05Z"
+      lastTransitionTime: "2026-10-18T08:38:05Z"
+      message: Job has reached the specified backoff limit
+      reason: BackoffLimitExceeded
+      status: "True"
+      type: FailureTarget
+    - lastProbeTime: "2026-10-18T08:38:05Z"
+      lastTransitionTime: "2026-10-18T08:38:05Z"
+      message: Job has reached the specified backoff limit
+      reason: BackoffLimitExceeded
+      status: "True"
+      type: Failed
+    failed: 3
+    ready: 0
+    startTime: "2026-10-18T08:37:30Z"
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    generation: 1
+    labels:
+      app: statement-backfill
+    name: statement-backfill
+    namespace: larkspur-books
+    resourceVersion: "9816"
+    uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+  spec:
+    backoffLimit: 2
+    completionMode: NonIndexed
+    completions: 3
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: statement-backfill
+          batch.kubernetes.io/controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+          batch.kubernetes.io/job-name: statement-backfill
+          controller-uid: 314a58cf-c6a7-4116-ac6a-9089859fb392
+          job-name: statement-backfill
+      spec:
+        containers:
+        - image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+          imagePullPolicy: IfNotPresent
+          name: backfill
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2026-10-18T08:37:41Z"
+    conditions:
+    - lastProbeTime: "2026-10-18T08:37:41Z"
+      lastTransitionTime: "2026-10-18T08:37:41Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2026-10-18T08:37:41Z"
+      lastTransitionTime: "2026-10-18T08:37:41Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    ready: 0
+    startTime: "2026-10-18T08:37:26Z"
+    succeeded: 3
+    terminating: 0
+    uncountedTerminatedPods: {}
+- apiVersion: batch/v1
+  kind: Job
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    generation: 1
+    labels:
+      app: tally-reindex
+    name: tally-reindex
+    namespace: larkspur-books
+    resourceVersion: "10033"
+    uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+  spec:
+    backoffLimit: 4
+    completionMode: NonIndexed
+    completions: 1
+    manualSelector: false
+    parallelism: 1
+    podReplacementPolicy: TerminatingOrFailed
+    selector:
+      matchLabels:
+        batch.kubernetes.io/controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+    suspend: false
+    template:
+      metadata:
+        labels:
+          app: tally-reindex
+          batch.kubernetes.io/controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+          batch.kubernetes.io/job-name: tally-reindex
+          controller-uid: 3af2e973-658b-43f5-ba5d-c1978e3ef2ea
+          job-name: tally-reindex
+      spec:
+        containers:
+        - env:
+          - name: LOCK_HELD_UNTIL
+          image: harbor.larkspur.internal/books/tally-reindex:3.0.1
+          imagePullPolicy: IfNotPresent
+          name: reindex
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Never
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    completionTime: "2026-10-18T08:38:00Z"
+    conditions:
+    - lastProbeTime: "2026-10-18T08:38:00Z"
+      lastTransitionTime: "2026-10-18T08:38:00Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: SuccessCriteriaMet
+    - lastProbeTime: "2026-10-18T08:38:00Z"
+      lastTransitionTime: "2026-10-18T08:38:00Z"
+      message: Reached expected number of succeeded pods
+      reason: CompletionsReached
+      status: "True"
+      type: Complete
+    failed: 2
+    ready: 0
+    startTime: "2026-10-18T08:37:27Z"
+    succeeded: 1
+    terminating: 0
+    uncountedTerminatedPods: {}
+kind: List

@@ -1,0 +1,4 @@
+digest-mailer 1.4.2: building daily digest for 1,284 subscribers
+digest rendered (1,284 messages); handing off to SMTP relay mail-relay:2525
+smtp: telnet: can't connect to remote host (10.96.159.207): Connection refused
+Error: could not hand off digest to mail-relay:2525, 1,284 messages not sent

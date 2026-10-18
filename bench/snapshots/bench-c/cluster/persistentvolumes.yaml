@@ -1,0 +1,126 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      local.path.provisioner/selected-node: kh-bench-worker
+      pv.kubernetes.io/provisioned-by: rancher.io/local-path
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: pvc-68d0653f-bbf4-4241-984b-4c6837829e40
+    resourceVersion: "11174"
+    uid: b4bc1209-042c-4ada-a1f3-8dbc436c7298
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: kelp-archive
+      namespace: tidepool-ingest
+      resourceVersion: "10825"
+      uid: 68d0653f-bbf4-4241-984b-4c6837829e40
+    hostPath:
+      path: /var/local-path-provisioner/pvc-68d0653f-bbf4-4241-984b-4c6837829e40_tidepool-ingest_kelp-archive
+      type: DirectoryOrCreate
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - kh-bench-worker
+    persistentVolumeReclaimPolicy: Delete
+    storageClassName: standard
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-10-18T08:40:01Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      local.path.provisioner/selected-node: kh-bench-worker
+      pv.kubernetes.io/provisioned-by: rancher.io/local-path
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: pvc-88936458-8ba5-4dd7-bda9-a8d078c71464
+    resourceVersion: "9537"
+    uid: 80e9cb14-da1b-43af-917d-42360205bdcb
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: close-inputs
+      namespace: larkspur-books
+      resourceVersion: "9282"
+      uid: 88936458-8ba5-4dd7-bda9-a8d078c71464
+    hostPath:
+      path: /var/local-path-provisioner/pvc-88936458-8ba5-4dd7-bda9-a8d078c71464_larkspur-books_close-inputs
+      type: DirectoryOrCreate
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - kh-bench-worker
+    persistentVolumeReclaimPolicy: Delete
+    storageClassName: standard
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-10-18T08:37:30Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      local.path.provisioner/selected-node: kh-bench-worker
+      pv.kubernetes.io/provisioned-by: rancher.io/local-path
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: pvc-f28d98d9-e77d-487f-a647-066bd9a70fdb
+    resourceVersion: "9006"
+    uid: c381232e-2f90-4dee-a2bd-7b09ee5a2365
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: glyphs-glyph-store-0
+      namespace: quillmoss-render
+      resourceVersion: "8841"
+      uid: f28d98d9-e77d-487f-a647-066bd9a70fdb
+    hostPath:
+      path: /var/local-path-provisioner/pvc-f28d98d9-e77d-487f-a647-066bd9a70fdb_quillmoss-render_glyphs-glyph-store-0
+      type: DirectoryOrCreate
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - kh-bench-worker
+    persistentVolumeReclaimPolicy: Delete
+    storageClassName: standard
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-10-18T08:37:27Z"
+    phase: Bound
+kind: List

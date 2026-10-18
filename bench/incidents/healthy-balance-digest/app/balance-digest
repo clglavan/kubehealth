@@ -1,0 +1,5 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/balance-digest:2.0.0
+echo "balance-digest 2.0.0: computing hourly balances"
+sleep 2
+echo "balances computed for 4,118 accounts; digest stored"

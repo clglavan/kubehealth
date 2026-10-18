@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool, labels: {team: ocean-data}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: tidepool-pg, namespace: tidepool, labels: {app: tidepool-pg}}
+spec:
+  selector: {app: tidepool-pg}
+  ports: [{name: postgres, port: 5432, targetPort: 5432}]
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata: {name: tidepool-pg, namespace: tidepool, labels: {app: tidepool-pg}}
+spec:
+  serviceName: tidepool-pg
+  replicas: 1
+  selector: {matchLabels: {app: tidepool-pg}}
+  template:
+    metadata: {labels: {app: tidepool-pg}}
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports: [{containerPort: 5432}]
+          env:
+            - name: POSTGRES_DB
+              value: currents
+            - name: POSTGRES_PASSWORD
+              valueFrom: {secretKeyRef: {name: tidepool-pg-superuser, key: password}}
+          resources: {requests: {cpu: 20m, memory: 64Mi}, limits: {memory: 256Mi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: current-mapper, namespace: tidepool, labels: {app: current-mapper}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: current-mapper}}
+  template:
+    metadata: {labels: {app: current-mapper}}
+    spec:
+      containers:
+        - name: mapper
+          image: harbor.tidepool.internal/ocean/current-mapper:2.3.0
+          args: ["--db=postgres://mapper@tidepool-pg.tidepool.svc:5432/currents", "--grid=0.25", "--region=north-atlantic"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

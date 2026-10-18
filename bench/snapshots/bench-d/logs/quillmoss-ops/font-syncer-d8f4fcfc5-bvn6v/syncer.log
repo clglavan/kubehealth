@@ -1,0 +1,1 @@
+Error from server (Forbidden): configmaps is forbidden: User "system:serviceaccount:quillmoss-ops:font-syncer" cannot list resource "configmaps" in API group "" in the namespace "quillmoss-ops"

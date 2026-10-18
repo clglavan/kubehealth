@@ -1,0 +1,950 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    generateName: font-syncer-d8f4fcfc5-
+    generation: 1
+    labels:
+      app: font-syncer
+      pod-template-hash: d8f4fcfc5
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: font-syncer-d8f4fcfc5
+      uid: 524c9eb2-61bb-4e81-bc96-d1f14410f568
+    resourceVersion: "13864"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  spec:
+    containers:
+    - args:
+      - get
+      - configmaps
+      - --namespace=quillmoss-ops
+      - --selector=quillmoss.io/font-set
+      - --output=name
+      image: registry.k8s.io/kubectl:v1.34.1
+      imagePullPolicy: IfNotPresent
+      name: syncer
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 5m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-b5z6g
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: font-syncer
+    serviceAccountName: font-syncer
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-b5z6g
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:24Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:23Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:57Z"
+      message: 'containers with unready status: [syncer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:47:57Z"
+      message: 'containers with unready status: [syncer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:23Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 16Mi
+      containerID: containerd://d8fba59a37569ea40f9fcfb8b525ad1a71123405fc648dbd4f897f68d60a64ac
+      image: registry.k8s.io/kubectl:v1.34.1
+      imageID: registry.k8s.io/kubectl@sha256:59bafa07ff3a6d4b417e7633ddb9d79a9606ca98bf64bac080b3e65748669250
+      lastState:
+        terminated:
+          containerID: containerd://d8fba59a37569ea40f9fcfb8b525ad1a71123405fc648dbd4f897f68d60a64ac
+          exitCode: 1
+          finishedAt: "2026-10-18T08:47:56Z"
+          reason: Error
+          startedAt: "2026-10-18T08:47:56Z"
+      name: syncer
+      ready: false
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 5m
+          memory: 16Mi
+      restartCount: 7
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=syncer pod=font-syncer-d8f4fcfc5-bvn6v_quillmoss-ops(ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-b5z6g
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.103
+    podIPs:
+    - ip: 10.244.1.103
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        memory: 16Mi
+    startTime: "2026-10-18T08:37:23Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generateName: ink-proofer-864f467b57-
+    generation: 1
+    labels:
+      app: ink-proofer
+      pod-template-hash: 864f467b57
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ink-proofer-864f467b57
+      uid: d2cffa60-3f68-4eec-aff9-df50e0262ba8
+    resourceVersion: "13068"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  spec:
+    containers:
+    - args:
+      - --queue=ink-queue:5672
+      - --prefetch=8
+      image: harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+      imagePullPolicy: IfNotPresent
+      name: proofer
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vk6f9
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-vk6f9
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:28Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:28Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:44:24Z"
+      message: 'containers with unready status: [proofer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:44:24Z"
+      message: 'containers with unready status: [proofer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:28Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://1dc0ec33fbc98006cffd820b1990f68b5a42bff81896ab2e3325798344458c43
+      image: harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+      imageID: sha256:73ed5e6eb9f54f49d28e1c34a18c91ed52128742c4f48161e60a122264357cd5
+      lastState:
+        terminated:
+          containerID: containerd://1dc0ec33fbc98006cffd820b1990f68b5a42bff81896ab2e3325798344458c43
+          exitCode: 1
+          finishedAt: "2026-10-18T08:44:23Z"
+          reason: Error
+          startedAt: "2026-10-18T08:44:14Z"
+      name: proofer
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=proofer pod=ink-proofer-864f467b57-jlsln_quillmoss-ops(9a62aac2-1228-42a3-ac33-0dc21a0387c2)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-vk6f9
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.117
+    podIPs:
+    - ip: 10.244.1.117
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:28Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generateName: pigment-api-96656bddf-
+    generation: 1
+    labels:
+      app: pigment-api
+      pod-template-hash: 96656bddf
+    name: pigment-api-96656bddf-4j798
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: pigment-api-96656bddf
+      uid: 8493d22b-1e88-4091-99d4-0bb28e6c57db
+    resourceVersion: "9277"
+    uid: ca9c680a-42fd-4ce0-b764-90ffad7cc7a2
+  spec:
+    containers:
+    - env:
+      - name: DB_USER
+        valueFrom:
+          secretKeyRef:
+            key: username
+            name: pigment-db
+      - name: DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: password
+            name: pigment-db
+      image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: api
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-4bvt9
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-4bvt9
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: 'containers with unready status: [api]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: 'containers with unready status: [api]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: nginx:1.27-alpine
+      imageID: ""
+      lastState: {}
+      name: api
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          message: couldn't find key password in Secret quillmoss-ops/pigment-db
+          reason: CreateContainerConfigError
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-4bvt9
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.1.122
+    podIPs:
+    - ip: 10.244.1.122
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 16Mi
+    startTime: "2026-10-18T08:37:29Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generateName: plate-composer-84b668d4dd-
+    generation: 1
+    labels:
+      app: plate-composer
+      pod-template-hash: 84b668d4dd
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: plate-composer-84b668d4dd
+      uid: 1c6b4155-646e-49ef-95be-e23bfb6dc589
+    resourceVersion: "13773"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  spec:
+    containers:
+    - image: nginx:1.27-alpine
+      imagePullPolicy: IfNotPresent
+      name: composer
+      ports:
+      - containerPort: 80
+        protocol: TCP
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 16Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dqmwr
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - args:
+      - quill-mq:5672
+      - "10"
+      image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+      imagePullPolicy: IfNotPresent
+      name: wait-for-mq
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dqmwr
+        readOnly: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-dqmwr
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 10m
+      memory: 16Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:30Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: 'containers with incomplete status: [wait-for-mq]'
+      observedGeneration: 1
+      reason: ContainersNotInitialized
+      status: "False"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: 'containers with unready status: [composer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: 'containers with unready status: [composer]'
+      observedGeneration: 1
+      reason: ContainersNotReady
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - image: nginx:1.27-alpine
+      imageID: ""
+      lastState: {}
+      name: composer
+      ready: false
+      restartCount: 0
+      started: false
+      state:
+        waiting:
+          reason: PodInitializing
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dqmwr
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    initContainerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://8b7c1bd8fc74b30205301f95d595045e853b779673ec9fa95c744318739cd2f4
+      image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+      imageID: sha256:2da7ad564a390cddea062dc7c88d294828839abe5f873acd4b6e52dc57dbd7ea
+      lastState:
+        terminated:
+          containerID: containerd://8b7c1bd8fc74b30205301f95d595045e853b779673ec9fa95c744318739cd2f4
+          exitCode: 1
+          finishedAt: "2026-10-18T08:47:20Z"
+          reason: Error
+          startedAt: "2026-10-18T08:46:43Z"
+      name: wait-for-mq
+      ready: false
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 6
+      started: false
+      state:
+        waiting:
+          message: back-off 5m0s restarting failed container=wait-for-mq pod=plate-composer-84b668d4dd-4sgtb_quillmoss-ops(977acecd-575f-4e30-ad1a-93ea0efc70ba)
+          reason: CrashLoopBackOff
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dqmwr
+        readOnly: true
+        recursiveReadOnly: Disabled
+    observedGeneration: 1
+    phase: Pending
+    podIP: 10.244.1.123
+    podIPs:
+    - ip: 10.244.1.123
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 64Mi
+      requests:
+        cpu: 10m
+        memory: 16Mi
+    startTime: "2026-10-18T08:37:29Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    generation: 1
+    labels:
+      app: proof-probe
+    name: proof-probe
+    namespace: quillmoss-ops
+    resourceVersion: "10295"
+    uid: cf9e938a-4c72-47e7-8011-f8cdbfe56272
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - while true; do echo "$(date -u +%H:%M:%S) proof pipeline reachable"; sleep
+        60; done
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: probe
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-58h7m
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-bench-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-58h7m
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:26Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:26Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:26Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:25Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://6fdd17a0fea2f45341ec064bc02949923b78fdcb34be286ccb617053331d9928
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState: {}
+      name: probe
+      ready: true
+      resources:
+        limits:
+          memory: 32Mi
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T08:37:26Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-58h7m
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.8
+    hostIPs:
+    - ip: 172.21.0.8
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.109
+    podIPs:
+    - ip: 10.244.1.109
+    qosClass: Burstable
+    resources:
+      limits:
+        memory: 32Mi
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T08:37:25Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generateName: quill-mq-
+    generation: 1
+    labels:
+      app: quill-mq
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: quill-mq-7dcf5bbf6d
+      statefulset.kubernetes.io/pod-name: quill-mq-0
+    name: quill-mq-0
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: quill-mq
+      uid: 1f6e082d-e4d5-49ec-8c41-3a85f2d4cadc
+    resourceVersion: "9226"
+    uid: 6ab91ca3-9e22-4acd-ae88-22d7831841aa
+  spec:
+    containers:
+    - image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+      imagePullPolicy: IfNotPresent
+      name: broker
+      ports:
+      - containerPort: 5672
+        protocol: TCP
+      resources:
+        limits:
+          cpu: "16"
+          memory: 64Mi
+        requests:
+          cpu: "16"
+          memory: 32Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-kjnk2
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: quill-mq-0
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: quill-mq
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-kjnk2
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T08:37:29Z"
+      message: '0/3 nodes are available: 1 Insufficient cpu, 2 node(s) had untolerated
+        taint(s). preemption: 0/3 nodes are available: 3 Preemption is not helpful
+        for scheduling.'
+      observedGeneration: 1
+      reason: Unschedulable
+      status: "False"
+      type: PodScheduled
+    phase: Pending
+    qosClass: Burstable
+kind: List

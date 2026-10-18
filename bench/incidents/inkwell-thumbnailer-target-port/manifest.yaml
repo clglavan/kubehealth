@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-render, labels: {team: print-studio}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: inkwell-api, namespace: quillmoss-render, labels: {app: inkwell-api}}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: inkwell-api}}
+  template:
+    metadata: {labels: {app: inkwell-api}}
+    spec:
+
+      containers:
+        - name: api
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: inkwell-api, namespace: quillmoss-render, labels: {app: inkwell-api}}
+spec:
+  selector: {app: inkwell-api}
+  ports: [{name: http, port: 80, targetPort: 8080}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: inkwell-thumbnailer, namespace: quillmoss-render, labels: {app: inkwell-thumbnailer}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: inkwell-thumbnailer}}
+  template:
+    metadata: {labels: {app: inkwell-thumbnailer}}
+    spec:
+      containers:
+        - name: thumbnailer
+          image: harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+          args: ["--assets=http://inkwell-api/v1/assets", "--sizes=64,256,1024"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

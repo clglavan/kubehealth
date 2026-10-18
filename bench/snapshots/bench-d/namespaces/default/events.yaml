@@ -1,0 +1,529 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:04Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:04Z"
+  message: Starting kubelet.
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:04Z"
+    name: kh-bench-control-plane.18df91b09a5d95d9
+    namespace: default
+    resourceVersion: "239"
+    uid: 05af468f-ae52-4743-9bc2-586f8ae33c2d
+  reason: Starting
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:04Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:04Z"
+  message: Updated Node Allocatable limit across pods
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:04Z"
+    name: kh-bench-control-plane.18df91b09d763feb
+    namespace: default
+    resourceVersion: "247"
+    uid: d1282355-c76a-4401-bfdf-02baf9feae16
+  reason: NodeAllocatableEnforced
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:04Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:04Z"
+  message: 'Node kh-bench-control-plane status is now: NodeHasSufficientMemory'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:04Z"
+    name: kh-bench-control-plane.18df91b0a351a3a1
+    namespace: default
+    resourceVersion: "253"
+    uid: b66fb759-17ce-4827-baec-735dc04b46ee
+  reason: NodeHasSufficientMemory
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:04Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:04Z"
+  message: 'Node kh-bench-control-plane status is now: NodeHasNoDiskPressure'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:04Z"
+    name: kh-bench-control-plane.18df91b0a3521b83
+    namespace: default
+    resourceVersion: "254"
+    uid: e26e7688-4f3c-4a81-96f9-f6ef527e4616
+  reason: NodeHasNoDiskPressure
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:04Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:04Z"
+  message: 'Node kh-bench-control-plane status is now: NodeHasSufficientPID'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:04Z"
+    name: kh-bench-control-plane.18df91b0a35232b7
+    namespace: default
+    resourceVersion: "255"
+    uid: a0bd9da6-fd41-4d47-a916-f8e80fed622a
+  reason: NodeHasSufficientPID
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:08Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:08Z"
+  message: 'Node kh-bench-control-plane event: Registered Node kh-bench-control-plane
+    in Controller'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:08Z"
+    name: kh-bench-control-plane.18df91b1957fe90b
+    namespace: default
+    resourceVersion: "333"
+    uid: 6caebb33-1cdb-4f95-af61-6c884ec50eb6
+  reason: RegisteredNode
+  reportingComponent: node-controller
+  reportingInstance: ""
+  source:
+    component: node-controller
+  type: Normal
+- action: StartKubeProxy
+  apiVersion: v1
+  eventTime: "2026-10-18T08:16:10.878335Z"
+  firstTimestamp: null
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+  kind: Event
+  lastTimestamp: null
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:10Z"
+    name: kh-bench-control-plane.18df91b21c18bcbd
+    namespace: default
+    resourceVersion: "418"
+    uid: 3274d0ed-683f-4dcc-b67b-de479ce325f8
+  reason: Starting
+  reportingComponent: kube-proxy
+  reportingInstance: kube-proxy-kh-bench-control-plane
+  source: {}
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:20Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-control-plane
+    uid: ef213e42-d599-483d-ab96-45d8cc7df2ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:20Z"
+  message: 'Node kh-bench-control-plane status is now: NodeReady'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:20Z"
+    name: kh-bench-control-plane.18df91b46c7a2564
+    namespace: default
+    resourceVersion: "528"
+    uid: e84de19c-a18f-4aec-91f6-b73f34b192d5
+  reason: NodeReady
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-control-plane
+  source:
+    component: kubelet
+    host: kh-bench-control-plane
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker status is now: NodeHasSufficientMemory'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker.18df91b2e9a3603c
+    namespace: default
+    resourceVersion: "449"
+    uid: 503e930f-e5c6-4b41-8215-5bf124a681a8
+  reason: NodeHasSufficientMemory
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker status is now: NodeHasNoDiskPressure'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker.18df91b2e9a374dc
+    namespace: default
+    resourceVersion: "453"
+    uid: b66c0c6f-cc36-48e6-83fa-d1ecab633afb
+  reason: NodeHasNoDiskPressure
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker status is now: NodeHasSufficientPID'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker.18df91b2e9a37f2c
+    namespace: default
+    resourceVersion: "460"
+    uid: 071dc32a-b9da-4849-81e9-73e92f64387d
+  reason: NodeHasSufficientPID
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: Updated Node Allocatable limit across pods
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker.18df91b2ef7ce848
+    namespace: default
+    resourceVersion: "446"
+    uid: 89172690-8ca3-4b8b-be4d-2873ba325cf6
+  reason: NodeAllocatableEnforced
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- action: StartKubeProxy
+  apiVersion: v1
+  eventTime: "2026-10-18T08:16:16.642704Z"
+  firstTimestamp: null
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+  kind: Event
+  lastTimestamp: null
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:16Z"
+    name: kh-bench-worker.18df91b373ae076e
+    namespace: default
+    resourceVersion: "503"
+    uid: 7d32fc8d-00c4-43a2-a9b2-85b76ddf4b13
+  reason: Starting
+  reportingComponent: kube-proxy
+  reportingInstance: kube-proxy-kh-bench-worker
+  source: {}
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:18Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+    uid: 7a9e7b8b-f3a7-4900-9c82-dafc69726851
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:18Z"
+  message: 'Node kh-bench-worker event: Registered Node kh-bench-worker in Controller'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:18Z"
+    name: kh-bench-worker.18df91b3e99fa7f2
+    namespace: default
+    resourceVersion: "521"
+    uid: 13b00b21-ff2e-4987-8ba2-602ce1371b09
+  reason: RegisteredNode
+  reportingComponent: node-controller
+  reportingInstance: ""
+  source:
+    component: node-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:26Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker
+    uid: 7a9e7b8b-f3a7-4900-9c82-dafc69726851
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:26Z"
+  message: 'Node kh-bench-worker status is now: NodeReady'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:26Z"
+    name: kh-bench-worker.18df91b5c2da7bd8
+    namespace: default
+    resourceVersion: "588"
+    uid: 241babbd-cabd-42c0-b317-09eccfcdb658
+  reason: NodeReady
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker2 status is now: NodeHasSufficientMemory'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker2.18df91b2e84dac06
+    namespace: default
+    resourceVersion: "464"
+    uid: 6371c513-3d5c-4955-8f2e-284db9037371
+  reason: NodeHasSufficientMemory
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker2 status is now: NodeHasNoDiskPressure'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker2.18df91b2e84dbfca
+    namespace: default
+    resourceVersion: "470"
+    uid: 791af67d-e068-45d8-8c42-72490d27f88b
+  reason: NodeHasNoDiskPressure
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 3
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: 'Node kh-bench-worker2 status is now: NodeHasSufficientPID'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker2.18df91b2e84de7c0
+    namespace: default
+    resourceVersion: "479"
+    uid: c9dc7d56-74cb-4fb1-b931-d37f16dc3489
+  reason: NodeHasSufficientPID
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:14Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:14Z"
+  message: Updated Node Allocatable limit across pods
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:14Z"
+    name: kh-bench-worker2.18df91b2f0e299b2
+    namespace: default
+    resourceVersion: "447"
+    uid: 5e297a08-a75b-4caa-b117-b73646842fb2
+  reason: NodeAllocatableEnforced
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+- action: StartKubeProxy
+  apiVersion: v1
+  eventTime: "2026-10-18T08:16:17.749784Z"
+  firstTimestamp: null
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+  kind: Event
+  lastTimestamp: null
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:17Z"
+    name: kh-bench-worker2.18df91b3b5aabc8e
+    namespace: default
+    resourceVersion: "518"
+    uid: 6e2efc83-b827-4033-8000-3c2060e8f75c
+  reason: Starting
+  reportingComponent: kube-proxy
+  reportingInstance: kube-proxy-kh-bench-worker2
+  source: {}
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:18Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+    uid: 536fe857-896f-44ef-a78c-411da1d95805
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:18Z"
+  message: 'Node kh-bench-worker2 event: Registered Node kh-bench-worker2 in Controller'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:18Z"
+    name: kh-bench-worker2.18df91b3e9a01cd2
+    namespace: default
+    resourceVersion: "522"
+    uid: 13864f74-7b0d-45db-83e5-0b8e53b56c97
+  reason: RegisteredNode
+  reportingComponent: node-controller
+  reportingInstance: ""
+  source:
+    component: node-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:16:27Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Node
+    name: kh-bench-worker2
+    uid: 536fe857-896f-44ef-a78c-411da1d95805
+  kind: Event
+  lastTimestamp: "2026-10-18T08:16:27Z"
+  message: 'Node kh-bench-worker2 status is now: NodeReady'
+  metadata:
+    creationTimestamp: "2026-10-18T08:16:27Z"
+    name: kh-bench-worker2.18df91b5ffb96549
+    namespace: default
+    resourceVersion: "593"
+    uid: ae78d12c-0809-4d6d-86f8-4a3cdc97295d
+  reason: NodeReady
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker2
+  source:
+    component: kubelet
+    host: kh-bench-worker2
+  type: Normal
+kind: List

@@ -1,0 +1,7 @@
+id: healthy-proof-probe
+snapshot: bench-d
+anchor: {ns: quillmoss-ops, kind: Pod, name: proof-probe}
+truth: "healthy standalone Pod — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-proof-probe, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

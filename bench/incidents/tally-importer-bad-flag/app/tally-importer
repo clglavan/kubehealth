@@ -1,0 +1,20 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/tally-importer:4.2.1
+echo "tally-importer 4.2.1"
+for a in "$@"; do
+  case "$a" in
+    --source=*|--batch-size=*|--workers=*|--dry-run) ;;
+    *)
+      echo "Error: unknown flag: ${a%%=*}"
+      echo "Usage:"
+      echo "  tally-importer --source=DIR [--batch-size=N] [--workers=N] [--dry-run]"
+      echo ""
+      echo "Flags:"
+      echo "      --batch-size int   rows per insert batch (default 1000)"
+      echo "      --dry-run          parse and validate only"
+      echo "      --source string    inbox directory to import from"
+      echo "      --workers int      parallel import workers (default 2)"
+      exit 2 ;;
+  esac
+done
+echo "importing"; exec sleep 86400

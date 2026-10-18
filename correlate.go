@@ -95,8 +95,27 @@ func buildCorrelateResponse(cl *clusterState, ns, kind, name string) CorrelateRe
 		}
 	}
 
+	// Newest first. Events seen in the same second keep one order (namespace,
+	// object, reason): they come from a map, and the RCA agent's tool result
+	// should not change between runs.
 	sort.Slice(resp.Correlated, func(i, j int) bool {
-		return resp.Correlated[i].LastTime.After(resp.Correlated[j].LastTime)
+		a, b := resp.Correlated[i], resp.Correlated[j]
+		if !a.LastTime.Equal(b.LastTime) {
+			return a.LastTime.After(b.LastTime)
+		}
+		if a.Namespace != b.Namespace {
+			return a.Namespace < b.Namespace
+		}
+		if a.Kind != b.Kind {
+			return a.Kind < b.Kind
+		}
+		if a.ObjectName != b.ObjectName {
+			return a.ObjectName < b.ObjectName
+		}
+		if a.Reason != b.Reason {
+			return a.Reason < b.Reason
+		}
+		return a.Message < b.Message
 	})
 	return resp
 }

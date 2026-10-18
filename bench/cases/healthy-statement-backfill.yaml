@@ -1,0 +1,7 @@
+id: healthy-statement-backfill
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: Job, name: statement-backfill}
+truth: "Job completed 3/3 — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-statement-backfill, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

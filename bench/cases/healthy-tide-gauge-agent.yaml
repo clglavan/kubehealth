@@ -1,0 +1,7 @@
+id: healthy-tide-gauge-agent
+snapshot: bench-a
+anchor: {ns: tidepool, kind: DaemonSet, name: tide-gauge-agent}
+truth: "healthy DaemonSet on both workers (tolerates the reporting taint) — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-tide-gauge-agent, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

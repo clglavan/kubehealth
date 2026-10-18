@@ -1,0 +1,2 @@
+vellum-gateway starting: upstreams=stencil-renderer,glyph-preview listen=:80800
+vellum-gateway: invalid listen address ":80800": port out of range

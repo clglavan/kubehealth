@@ -1,0 +1,9 @@
+id: legacy-pv-reclaim
+snapshot: shop-staging
+anchor: {ns: _cluster, kind: PersistentVolume, name: legacy-reports-nfs}
+truth: "PV released after its claim was deleted; its reclaim policy can't be carried out (VolumeFailedRecycle/Delete) -> PV Failed"
+cause: [["reclaim", "recycle", "released", "failed"]]
+fix: [["reclaim", "persistentvolume", "pv", "delete", "retain", "policy"]]
+note_target: true
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

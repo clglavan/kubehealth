@@ -1,0 +1,10 @@
+id: buoy-uplink-missing-class
+snapshot: bench-a
+anchor: {ns: tidepool-ingest, kind: Deployment, name: buoy-uplink}
+truth: "pod Pending on unbound PVC buoy-spool, whose StorageClass tidepool-nvme does not exist (ProvisioningFailed on the PVC)"
+cause: [["buoy-spool", "pvc", "persistentvolumeclaim", "claim", "unbound"]]
+deep: [["tidepool-nvme"]]
+fix: [["storageclass", "storage class", "tidepool-nvme"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/buoy-uplink-missing-class, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

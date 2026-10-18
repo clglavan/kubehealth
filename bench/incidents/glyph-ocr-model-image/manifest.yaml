@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-render, labels: {team: print-studio}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: glyph-ocr-model, namespace: quillmoss-render, labels: {app: glyph-ocr-model}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: glyph-ocr-model}}
+  template:
+    metadata: {labels: {app: glyph-ocr-model}}
+    spec:
+      containers:
+        - name: model-server
+          image: quillmoss/ocr-model:5.0.2
+          ports: [{containerPort: 8501}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: glyph-ocr-model, namespace: quillmoss-render, labels: {app: glyph-ocr-model}}
+spec:
+  selector: {app: glyph-ocr-model}
+  ports: [{name: http, port: 8501, targetPort: 8501}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: glyph-ocr, namespace: quillmoss-render, labels: {app: glyph-ocr}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: glyph-ocr}}
+  template:
+    metadata: {labels: {app: glyph-ocr}}
+    spec:
+      containers:
+        - name: ocr
+          image: harbor.quillmoss.internal/render/glyph-ocr:2.2.0
+          args: ["--model=http://glyph-ocr-model:8501/v1/models/ocr", "--workers=2"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

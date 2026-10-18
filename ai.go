@@ -28,6 +28,11 @@ type AIInsight struct {
 	Enabled   bool   `json:"enabled"`
 	Partial   bool   `json:"partial,omitempty"` // true while streaming is in progress
 	Error     string `json:"error,omitempty"`   // non-empty when the analysis failed
+	// Thinking is true while a thinking model reasons and no answer has
+	// streamed yet. The reasoning itself is never part of Content; the
+	// finished insight keeps it in Reasoning.
+	Thinking  bool   `json:"thinking,omitempty"`
+	Reasoning string `json:"reasoning,omitempty"`
 }
 
 var (
@@ -52,8 +57,12 @@ func initAI() {
 	v := os.Getenv("AI_ENABLED")
 	enabled := v != "false" && v != "0"
 	aiConfig = aiCfgT{baseURL: url, model: model, enabled: enabled}
+	initLinkFollow()
 	if enabled {
 		log.Printf("AI monitoring enabled — model: %s  url: %s", model, url)
+		if !getLinkFollow() {
+			log.Printf("AI link-following off (AI_LINK_FOLLOW)")
+		}
 	}
 }
 
@@ -168,80 +177,72 @@ func analyzeNSKey(cl *clusterState, key, ns string) error {
 				ev.Type, ev.Kind, ev.ObjectName, ev.Reason, ev.Message, ev.Count, ev.Age))
 		}
 	}
-	sb.WriteString("\nRespond exactly:\n**Summary**: <one sentence about overall namespace health>\n**Issues**:\n- <issue or 'None'>\n**Actions**:\n- <action or 'None'>\n\nBe concise and actionable.")
+	format := analysisFormat("this namespace")
+	sb.WriteString(analysisInstructions(format))
 	return storeAnalysis(key, sb.String())
 }
 
-func analyzeObjKey(cl *clusterState, key, ns, kind, name string) error {
-	var events []EventSummary
-	for _, ev := range cl.scopeEvents(ns) {
-		if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
-			events = append(events, ev)
-		}
-	}
+// analysisFormat is what the ✦ AI analysis asks for. It names no headings:
+// nothing reads the answer's structure, and a small model spends its effort
+// better on the diagnosis than on a layout.
+func analysisFormat(subject string) string {
+	return "In a few short lines: is anything wrong with " + subject + "? If so, say what, why, and what to do. If nothing is wrong, say so."
+}
 
-	var sb strings.Builder
-	fmt.Fprintf(&sb, "Analyze events for %s %q in namespace %q.\n\n", kind, name, ns)
-	if len(events) == 0 {
-		sb.WriteString("No events recorded for this object.\n")
-	} else {
-		fmt.Fprintf(&sb, "Events (%d total):\n", len(events))
-		for _, ev := range events {
-			fmt.Fprintf(&sb, "- [%s] %s: %s  (×%d, %s ago)\n",
-				ev.Type, ev.Reason, ev.Message, ev.Count, ev.Age)
-		}
+// analysisInstructions ends an analysis prompt.
+func analysisInstructions(format string) string {
+	return "\n" + format
+}
+
+func analyzeObjKey(cl *clusterState, key, ns, kind, name string) error {
+	ctxLen := modelCtxLen()
+	e := analysisEvidence(cl, ns, kind, name, ctxLen)
+	budget := promptBudget(ctxLen, estimateTokens(getSystemPrompt()))
+	return storeAnalysis(key, e.fit(budget))
+}
+
+// analysisEvidence is the ✦ AI analysis prompt of one object, untrimmed;
+// ctxLen (0: unknown) sizes the linked evidence.
+func analysisEvidence(cl *clusterState, ns, kind, name string, ctxLen int) evidence {
+	format := analysisFormat("this resource")
+	e := evidence{
+		head:   fmt.Sprintf("Analyze events for %s %q in namespace %q.\n\n", kind, name, ns),
+		events: objectEvents(cl, ns, kind, name),
+		tail:   analysisInstructions(format),
 	}
 
 	// Object describe — always included; gives the AI current spec/status/conditions
 	info := cl.fetchObjectInfo(ns, kind, name)
+	var desc strings.Builder
 	switch {
 	case info.NotFound:
-		sb.WriteString("\nNote: object no longer exists in the cluster.\n")
+		desc.WriteString("\nNote: object no longer exists in the cluster.\n")
 	case info.Error == "":
-		sb.WriteString("\nObject describe:\n")
-		if info.Age != "" {
-			fmt.Fprintf(&sb, "Age: %s\n", info.Age)
-		}
-		if len(info.Labels) > 0 {
-			sb.WriteString("Labels:")
-			for k, v := range info.Labels {
-				fmt.Fprintf(&sb, " %s=%s", k, v)
-			}
-			sb.WriteString("\n")
-		}
-		for _, sec := range info.Sections {
-			fmt.Fprintf(&sb, "%s:\n", sec.Title)
-			for _, row := range sec.Rows {
-				fmt.Fprintf(&sb, "  %s: %s\n", row.Key, row.Value)
-			}
-		}
-		if len(info.Conditions) > 0 {
-			sb.WriteString("Conditions:\n")
-			for _, c := range info.Conditions {
-				if c.Reason != "" || c.Message != "" {
-					fmt.Fprintf(&sb, "  %s: %s (%s: %s)\n", c.Type, c.Status, c.Reason, c.Message)
-				} else {
-					fmt.Fprintf(&sb, "  %s: %s\n", c.Type, c.Status)
-				}
-			}
-		}
+		desc.WriteString("\nObject describe:\n")
+		desc.WriteString(describeBody(info))
 	}
+	e.describe = desc.String()
 
-	// Pod logs — actual container output, most useful for crash diagnosis
 	if strings.EqualFold(kind, "Pod") {
+		// Pod logs — actual container output, most useful for crash diagnosis
 		logs, err := fetchLogsForAI(cl, ns, name)
 		if err == nil && strings.TrimSpace(logs) != "" {
-			fmt.Fprintf(&sb, "\nPod logs (last %d lines):\n", getLogTailLines())
-			sb.WriteString(logs)
+			e.logsHead = fmt.Sprintf("\nPod logs (last %d lines):\n", getLogTailLines())
+			e.logs = logs
 		} else if err != nil {
-			fmt.Fprintf(&sb, "\nNote: could not fetch pod logs: %v\n", err)
+			e.note = fmt.Sprintf("\nNote: could not fetch pod logs: %v\n", err)
 		}
+	} else {
+		// A workload's own events rarely say what is wrong; its Pods' do.
+		e.addWorkload(cl, ns, kind, name)
 	}
 
-	sb.WriteString("\nRespond exactly:\n**Summary**: <one sentence about this specific resource>\n**Issues**:\n- <issue or 'None'>\n**Actions**:\n- <action or 'None'>\n\nBe concise and actionable.")
-	return storeAnalysis(key, sb.String())
+	// Objects the evidence names, fetched before the model asks (linked.go).
+	e.addLinked(cl, ns, kind, name, ctxLen)
+	return e
 }
 
+// storeAnalysis streams the answer to prompt into the insight cache.
 func storeAnalysis(key, prompt string) error {
 	now := func() string { return time.Now().Format("2006-01-02 15:04:05 MST") }
 
@@ -254,15 +255,20 @@ func storeAnalysis(key, prompt string) error {
 		Enabled:   true,
 	})
 
-	content, err := streamLMStudio(prompt, func(partial string) {
+	content, reasoning, err := streamLMStudio(key, prompt, func(partial, reasoning string) {
+		answer := strings.TrimSpace(stripThink(partial))
 		aiInsightCache.Store(key, &AIInsight{
-			Content:   cleanLMResponse(partial),
+			Content:   answer,
 			Partial:   true,
+			Thinking:  answer == "" && (reasoning != "" || strings.Contains(partial, "<think>")),
 			Model:     aiConfig.model,
 			UpdatedAt: now(),
 			Enabled:   true,
 		})
 	})
+	if err == nil && cleanLMResponse(content) == "" {
+		err = fmt.Errorf("the model returned no answer, only its reasoning")
+	}
 
 	if err != nil {
 		log.Printf("AI analysis [%s]: %v", key, err)
@@ -276,6 +282,7 @@ func storeAnalysis(key, prompt string) error {
 	}
 	aiInsightCache.Store(key, &AIInsight{
 		Content:   cleanLMResponse(content),
+		Reasoning: strings.TrimSpace(reasoning + thinkText(content)),
 		Model:     aiConfig.model,
 		UpdatedAt: now(),
 		Enabled:   true,
@@ -283,12 +290,24 @@ func storeAnalysis(key, prompt string) error {
 	return nil
 }
 
+// thinkText is the reasoning inside a <think> block of an answer, for
+// servers that don't split it into reasoning_content.
+func thinkText(s string) string {
+	i := strings.Index(s, "<think>")
+	j := strings.Index(s, "</think>")
+	if i < 0 || j < i {
+		return ""
+	}
+	return strings.TrimSpace(s[i+len("<think>") : j])
+}
+
 // streamLMStudio sends a streaming chat-completion request to LM Studio and calls
-// writeFn with the accumulated content after each ~300ms batch of tokens.
+// writeFn with the accumulated answer and reasoning after each ~300ms batch
+// of tokens. It returns the answer and, apart, the reasoning_content.
 // It enforces the global concurrent LLM call limit.
-func streamLMStudio(prompt string, writeFn func(partial string)) (string, error) {
+func streamLMStudio(logKey, prompt string, writeFn func(partial, reasoning string)) (string, string, error) {
 	if !acquireLLMSlotForUser() {
-		return "", fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
+		return "", "", fmt.Errorf("too many concurrent AI requests (%d/%d active) — try again shortly",
 			getLLMActiveCalls(), getLLMMaxCalls())
 	}
 	defer releaseLLMSlot()
@@ -296,12 +315,14 @@ func streamLMStudio(prompt string, writeFn func(partial string)) (string, error)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(getLLMTimeout())*time.Minute)
 	defer cancel()
 	temp := analysisTemperature
-	return streamChat(ctx, prompt, chatOpts{Temperature: &temp}, writeFn)
+	opts := chatOpts{Temperature: &temp}
+	out, reasoning, err := streamChatMsgs(ctx, chatMessages(prompt, opts), opts, writeFn)
+	return out, reasoning, err
 }
 
-// streamChat sends one streaming chat request and returns the full answer.
-// The caller holds an LLM slot; cancelling ctx stops the request.
-func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(partial string)) (string, error) {
+// chatMessages is the system prompt (opts.System, or the AI Agent's) and the
+// user's prompt.
+func chatMessages(prompt string, opts chatOpts) []lmMsg {
 	sp := opts.System
 	if sp == "" {
 		sp = getSystemPrompt()
@@ -310,35 +331,59 @@ func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(
 	if sp != "" {
 		msgs = append([]lmMsg{{Role: "system", Content: sp}}, msgs...)
 	}
-	body, _ := json.Marshal(lmReq{
+	return msgs
+}
+
+// streamChat sends one streaming chat request and returns the full answer,
+// without the reasoning. The caller holds an LLM slot; cancelling ctx stops
+// the request.
+func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(partial, reasoning string)) (string, error) {
+	out, _, err := streamChatMsgs(ctx, chatMessages(prompt, opts), opts, writeFn)
+	return out, err
+}
+
+// streamChatMsgs sends a whole conversation and returns the answer
+// (content) and, apart, the reasoning (reasoning_content), which servers
+// such as llama-server stream before the answer. The reasoning is never
+// part of the answer; with opts.NoThink it is dropped.
+func streamChatMsgs(ctx context.Context, msgs []lmMsg, opts chatOpts, writeFn func(partial, reasoning string)) (string, string, error) {
+	r := lmReq{
 		Model:       aiConfig.model,
 		Messages:    msgs,
 		Stream:      true,
 		Temperature: opts.Temperature,
 		MaxTokens:   opts.MaxTokens,
-	})
+	}
+	if opts.NoThink {
+		r.ChatTemplateKwargs = map[string]any{"enable_thinking": false}
+	}
+	body, _ := json.Marshal(r)
 
 	req, err := http.NewRequestWithContext(ctx, "POST", aiConfig.baseURL+"/chat/completions", bytes.NewReader(body))
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return "", fmt.Errorf("LM Studio: %w", err)
+		return "", "", fmt.Errorf("LM Studio: %w", err)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		var buf [1024]byte
 		n, _ := resp.Body.Read(buf[:])
-		return "", fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, strings.TrimSpace(string(buf[:n])))
+		body := strings.TrimSpace(string(buf[:n]))
+		if isOverflowMessage(body) {
+			return "", "", &contextOverflowError{detail: body}
+		}
+		return "", "", fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, body)
 	}
 
 	scanner := bufio.NewScanner(resp.Body)
 	scanner.Buffer(make([]byte, 64*1024), 64*1024)
 
-	var full strings.Builder
+	var full, reasoning strings.Builder
 	var lastWrite time.Time
 
 	for scanner.Scan() {
@@ -362,26 +407,21 @@ func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(
 			continue
 		}
 		if len(chunk.Choices) > 0 {
-			// Some LM Studio fine-tunes (e.g. qwen3 derivatives) route the entire
-			// answer into reasoning_content instead of content. Fall back to that
-			// so the UI sees tokens.
-			tok := chunk.Choices[0].Delta.Content
-			if tok == "" {
-				tok = chunk.Choices[0].Delta.ReasoningContent
+			d := chunk.Choices[0].Delta
+			full.WriteString(d.Content)
+			if !opts.NoThink {
+				reasoning.WriteString(d.ReasoningContent)
 			}
-			if tok != "" {
-				full.WriteString(tok)
-				if writeFn != nil && time.Since(lastWrite) >= 300*time.Millisecond {
-					writeFn(full.String())
-					lastWrite = time.Now()
-				}
+			if (d.Content != "" || d.ReasoningContent != "") && writeFn != nil && time.Since(lastWrite) >= 300*time.Millisecond {
+				writeFn(full.String(), reasoning.String())
+				lastWrite = time.Now()
 			}
 		}
 	}
 	if err := scanner.Err(); err != nil {
-		return full.String(), fmt.Errorf("stream read: %w", err)
+		return full.String(), reasoning.String(), fmt.Errorf("stream read: %w", err)
 	}
-	return full.String(), nil
+	return full.String(), reasoning.String(), nil
 }
 
 type lmMsg struct {
@@ -395,6 +435,9 @@ type lmReq struct {
 	Stream      bool     `json:"stream"`
 	Temperature *float64 `json:"temperature,omitempty"`
 	MaxTokens   int      `json:"max_tokens,omitempty"`
+	// Passed to the chat template by llama-server and other OpenAI-compatible
+	// servers; servers that don't know it ignore it.
+	ChatTemplateKwargs map[string]any `json:"chat_template_kwargs,omitempty"`
 }
 
 // chatOpts tunes one request. The zero value uses the AI Agent's system
@@ -403,6 +446,9 @@ type chatOpts struct {
 	System      string // replaces the AI Agent system prompt when set
 	Temperature *float64
 	MaxTokens   int
+	// NoThink asks a thinking model (Qwen3) to answer without reasoning
+	// first, and keeps reasoning_content out of the answer.
+	NoThink bool
 }
 
 type lmResp struct {
@@ -413,9 +459,8 @@ type lmResp struct {
 
 // ── Context-overflow sentinel ─────────────────────────────────────────────────
 
-// contextOverflowError is returned when LM Studio rejects a request because the
+// contextOverflowError is returned when the server rejects a request because the
 // input tokens exceed the model's loaded context length.
-// Detection uses LM Studio's documented error substring (bug-tracker issue #237).
 type contextOverflowError struct{ detail string }
 
 func (e *contextOverflowError) Error() string {
@@ -425,6 +470,16 @@ func (e *contextOverflowError) Error() string {
 func isContextOverflow(err error) bool {
 	_, ok := err.(*contextOverflowError)
 	return ok
+}
+
+// isOverflowMessage recognises a server's context-overflow error body: LM
+// Studio's "Trying to keep the first N tokens" (bug-tracker issue #237) and
+// llama-server's exceed_context_size_error ("request (N tokens) exceeds the
+// available context size (M tokens)").
+func isOverflowMessage(body string) bool {
+	return strings.Contains(body, "Trying to keep the first") ||
+		strings.Contains(body, "exceed_context_size_error") ||
+		strings.Contains(body, "exceeds the available context size")
 }
 
 // ── Tool-calling types (RCA agent only) ───────────────────────────────────────
@@ -531,8 +586,7 @@ func callLMStudioRCA(msgs []rcaMsg, tools []rcaTool) (*rcaResponse, error) {
 		var buf [1024]byte
 		n, _ := resp.Body.Read(buf[:])
 		body := strings.TrimSpace(string(buf[:n]))
-		// LM Studio uses this specific phrase for context-window overflow (issue #237)
-		if strings.Contains(body, "Trying to keep the first") {
+		if isOverflowMessage(body) {
 			return nil, &contextOverflowError{detail: body}
 		}
 		return nil, fmt.Errorf("LM Studio returned %d: %s", resp.StatusCode, body)

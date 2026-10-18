@@ -1,0 +1,8 @@
+id: ink-queue-limitrange
+snapshot: bench-d
+anchor: {ns: quillmoss-ops, kind: Deployment, name: ink-queue}
+truth: "LimitRange ops-limits allows at most 256Mi per container; ink-queue asks for a 1Gi limit -> FailedCreate forbidden, 0 pods"
+cause: [["limitrange", "limit range", "256mi", "maximum memory"]]
+fix: [["memory"]]
+source: kubehealth bench incidents (bench/incidents/ink-queue-limitrange, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

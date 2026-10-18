@@ -31,6 +31,11 @@ type RCAState struct {
 	Error     string    `json:"error,omitempty"`
 	ErrorType string    `json:"error_type,omitempty"` // "context_overflow" | ""
 	UpdatedAt string    `json:"updated_at"`
+	// Linked names the objects the linked evidence in the first prompt lists,
+	// as rule:Kind/name (linked.go); LinkedTrimmed is how many of its lines
+	// were trimmed to fit.
+	Linked        []string `json:"linked,omitempty"`
+	LinkedTrimmed int      `json:"linked_trimmed,omitempty"`
 }
 
 var (
@@ -126,17 +131,7 @@ You have tools to gather additional evidence. Use them SELECTIVELY:
 
 Stop calling tools as soon as you have sufficient evidence. Do not call tools redundantly.
 
-When you have enough evidence, produce the final RCA in EXACTLY this format:
-
-**Root Cause**: <one specific technical sentence>
-
-**Evidence**:
-1. <key finding with its source>
-2. <key finding with its source>
-
-**Resolution**: <numbered actionable steps>
-
-**Confidence**: High / Medium / Low — <brief reason>`
+When you have enough evidence, stop calling tools and answer in short plain text: what is wrong (the specific cause), the evidence that shows it, how to fix it, and how sure you are.`
 
 // ── Tool definitions ──────────────────────────────────────────────────────────
 
@@ -284,35 +279,7 @@ func executeRCATool(cl *clusterState, tc rcaToolCall, anchorNS string) string {
 
 // rcaFormatDescribe converts ObjectInfo into a concise prompt-friendly string.
 func rcaFormatDescribe(info ObjectInfo) string {
-	var sb strings.Builder
-	fmt.Fprintf(&sb, "Describe %s/%s/%s:\n", info.Namespace, info.Kind, info.Name)
-	if info.Age != "" {
-		fmt.Fprintf(&sb, "Age: %s\n", info.Age)
-	}
-	if len(info.Labels) > 0 {
-		sb.WriteString("Labels:")
-		for k, v := range info.Labels {
-			fmt.Fprintf(&sb, " %s=%s", k, v)
-		}
-		sb.WriteString("\n")
-	}
-	for _, sec := range info.Sections {
-		fmt.Fprintf(&sb, "%s:\n", sec.Title)
-		for _, row := range sec.Rows {
-			fmt.Fprintf(&sb, "  %s: %s\n", row.Key, row.Value)
-		}
-	}
-	if len(info.Conditions) > 0 {
-		sb.WriteString("Conditions:\n")
-		for _, c := range info.Conditions {
-			if c.Reason != "" || c.Message != "" {
-				fmt.Fprintf(&sb, "  %s: %s (%s: %s)\n", c.Type, c.Status, c.Reason, c.Message)
-			} else {
-				fmt.Fprintf(&sb, "  %s: %s\n", c.Type, c.Status)
-			}
-		}
-	}
-	return sb.String()
+	return fmt.Sprintf("Describe %s/%s/%s:\n", info.Namespace, info.Kind, info.Name) + describeBody(info)
 }
 
 // ── Initial context ───────────────────────────────────────────────────────────
@@ -323,11 +290,37 @@ type rcaInitCtx struct {
 	logsPod   string // the Pod whose logs were read: the anchor itself, or a workload's newest failing Pod
 	podLogs   string // "" = not a pod or fetch returned nothing
 	podLogErr error  // non-nil = hard fetch error
+
+	linked        []linkedItem // linked evidence the prompt lists
+	linkedTrimmed int
 }
 
 // rcaMemberWarnings caps how many of a workload's member warnings go into the
 // first prompt, so a small model's context still has room for logs and tools.
 const rcaMemberWarnings = 12
+
+// promptShare is the percentage of the loaded context a first prompt (system
+// prompt, evidence and tool definitions) may use; the rest is left for tool
+// results and the answer.
+const promptShare = 60
+
+// promptBudget is how many tokens a first prompt's evidence may use once the
+// overhead (system prompt, tool definitions) is paid for, or 0 when the
+// model's context length is unknown and nothing is trimmed.
+func promptBudget(ctxLen, overhead int) int {
+	if ctxLen <= 0 {
+		return 0
+	}
+	return max(ctxLen*promptShare/100-overhead, 1)
+}
+
+// modelCtxLen is the loaded context length, or 0 when the server doesn't say.
+func modelCtxLen() int {
+	if mi := fetchLMModelInfo(); mi != nil {
+		return mi.ctxLen()
+	}
+	return 0
+}
 
 // ownedBy reports whether an owner chain (object first, root last) passes
 // through kind/name above the object itself.
@@ -344,6 +337,21 @@ func ownedBy(chain []objRef, kind, name string) bool {
 // (ReplicaSets, Jobs, Pods) and its failing Pods, newest first. A workload's
 // own events rarely say what is wrong ("ScalingReplicaSet"); its Pods' do.
 func memberEvidence(cl *clusterState, ns, kind, name string) (lines []string, pods []string) {
+	evs, pods := memberWarnings(cl, ns, kind, name)
+	for _, ev := range evs {
+		lines = append(lines, memberLine(ev))
+	}
+	return lines, pods
+}
+
+// memberLine is how a member warning is printed.
+func memberLine(ev EventSummary) string {
+	return fmt.Sprintf("- %s %s %s: %s  (×%d, %s ago)", ev.Kind, ev.ObjectName, ev.Reason, ev.Message, ev.Count, ev.Age)
+}
+
+// memberWarnings are the member warnings memberEvidence prints (at most
+// rcaMemberWarnings, one per object and reason) and the failing Pods.
+func memberWarnings(cl *clusterState, ns, kind, name string) (evs []EventSummary, pods []string) {
 	seen := map[string]bool{}
 	podLast := map[string]time.Time{}
 	for _, ev := range cl.scopeEvents(ns) {
@@ -355,10 +363,9 @@ func memberEvidence(cl *clusterState, ns, kind, name string) (lines []string, po
 			continue
 		}
 		key := ev.Kind + "/" + ev.ObjectName + "/" + ev.Reason
-		if !seen[key] && len(lines) < rcaMemberWarnings {
+		if !seen[key] && len(evs) < rcaMemberWarnings {
 			seen[key] = true
-			lines = append(lines, fmt.Sprintf("- %s %s %s: %s  (×%d, %s ago)",
-				ev.Kind, ev.ObjectName, ev.Reason, ev.Message, ev.Count, ev.Age))
+			evs = append(evs, ev)
 		}
 		if ev.Kind == "Pod" && ev.LastTime.After(podLast[ev.ObjectName]) {
 			podLast[ev.ObjectName] = ev.LastTime
@@ -367,82 +374,233 @@ func memberEvidence(cl *clusterState, ns, kind, name string) (lines []string, po
 	for p := range podLast {
 		pods = append(pods, p)
 	}
-	sort.Slice(pods, func(i, j int) bool { return podLast[pods[i]].After(podLast[pods[j]]) })
-	return lines, pods
+	// Newest first; Pods last seen in the same second go by name, so the same
+	// events always pick the same Pod.
+	sort.Slice(pods, func(i, j int) bool {
+		if !podLast[pods[i]].Equal(podLast[pods[j]]) {
+			return podLast[pods[i]].After(podLast[pods[j]])
+		}
+		return pods[i] < pods[j]
+	})
+	return evs, pods
 }
 
-func buildRCAInitialContext(cl *clusterState, ns, kind, name string) rcaInitCtx {
-	var sb strings.Builder
-	fmt.Fprintf(&sb, "Perform Root Cause Analysis for %s %q in namespace %q.\n\n", kind, name, ns)
-
-	// Events for the anchor object
+// objectEvents returns the cached events about one object.
+func objectEvents(cl *clusterState, ns, kind, name string) []EventSummary {
 	var events []EventSummary
 	for _, ev := range cl.scopeEvents(ns) {
 		if strings.EqualFold(ev.Kind, kind) && ev.ObjectName == name {
 			events = append(events, ev)
 		}
 	}
-	if len(events) == 0 {
+	return events
+}
+
+// newestEvents keeps the n most recently seen events, in their order.
+func newestEvents(evs []EventSummary, n int) []EventSummary {
+	if n >= len(evs) {
+		return evs
+	}
+	byAge := make([]int, len(evs))
+	for i := range byAge {
+		byAge[i] = i
+	}
+	sort.SliceStable(byAge, func(a, b int) bool { return evs[byAge[a]].LastTime.After(evs[byAge[b]].LastTime) })
+	keep := map[int]bool{}
+	for _, i := range byAge[:n] {
+		keep[i] = true
+	}
+	var out []EventSummary
+	for i, ev := range evs {
+		if keep[i] {
+			out = append(out, ev)
+		}
+	}
+	return out
+}
+
+// evidence is an object's evidence for a first prompt (RCA or ✦ AI
+// analysis), kept in parts so it can be trimmed to fit the model's context.
+type evidence struct {
+	head     string         // what to analyse; never trimmed
+	events   []EventSummary // the object's own events
+	describe string         // never trimmed
+	kind     string         // the workload's kind, for the members heading
+	members  []string       // warnings on the objects a workload owns
+	logsHead string         // heading over logs, e.g. "\nPod logs (last 150 lines):\n"
+	logs     string         // as fetchLogsForAI returns them
+	note     string         // instead of logs, e.g. why there are none; never trimmed
+	tail     string         // instructions; never trimmed
+
+	memberEvents  []EventSummary // the member warnings, as events (for link-following)
+	linked        string         // the linked-evidence block (linked.go); has its own budget, never trimmed here
+	linkedItems   []linkedItem   // what it lists
+	linkedTrimmed int            // lines it trimmed
+}
+
+// addWorkload adds what a workload's members say: the warnings on the
+// objects it owns and the logs of its newest failing Pod (a Pod that has
+// since been deleted has none, so the next is tried). It returns that Pod.
+func (e *evidence) addWorkload(cl *clusterState, ns, kind, name string) (logsPod string) {
+	evs, pods := memberWarnings(cl, ns, kind, name)
+	e.kind, e.memberEvents, e.members = kind, evs, nil
+	for _, ev := range evs {
+		e.members = append(e.members, memberLine(ev))
+	}
+	for i, p := range pods {
+		if i == 3 {
+			break
+		}
+		if logs, err := fetchLogsForAI(cl, ns, p); err == nil && strings.TrimSpace(logs) != "" {
+			e.logsHead = fmt.Sprintf("\nLogs from pod %s, its newest failing Pod (last %d lines):\n", p, getLogTailLines())
+			e.logs = logs
+			return p
+		}
+	}
+	return ""
+}
+
+// render writes the prompt with the newest nEvents events, the first
+// nMembers member warnings and nLogLines log lines (-1: the logs as fetched).
+func (e *evidence) render(nEvents, nMembers, nLogLines int) string {
+	trimmed := func(sb *strings.Builder, n int, what string) {
+		if n > 0 {
+			fmt.Fprintf(sb, "(%d older %s trimmed to fit the model's context)\n", n, what)
+		}
+	}
+	var sb strings.Builder
+	sb.WriteString(e.head)
+	if len(e.events) == 0 {
 		sb.WriteString("No events recorded for this object.\n")
 	} else {
-		fmt.Fprintf(&sb, "Events (%d total):\n", len(events))
-		for _, ev := range events {
+		fmt.Fprintf(&sb, "Events (%d total):\n", len(e.events))
+		for _, ev := range newestEvents(e.events, nEvents) {
 			fmt.Fprintf(&sb, "- [%s] %s: %s  (×%d, %s ago)\n",
 				ev.Type, ev.Reason, ev.Message, ev.Count, ev.Age)
 		}
+		trimmed(&sb, len(e.events)-nEvents, pluralWord("event", "events", len(e.events)-nEvents))
+	}
+	sb.WriteString(e.describe)
+	if len(e.members) > 0 {
+		fmt.Fprintf(&sb, "\nWarnings on objects this %s owns:\n", e.kind)
+		for _, l := range e.members[:nMembers] {
+			sb.WriteString(l + "\n")
+		}
+		trimmed(&sb, len(e.members)-nMembers, pluralWord("warning", "warnings", len(e.members)-nMembers))
+	}
+	if e.logs != "" {
+		sb.WriteString(e.logsHead)
+		if nLogLines < 0 {
+			sb.WriteString(e.logs)
+		} else {
+			state, lines := e.logLines()
+			if state != "" {
+				sb.WriteString(state + "\n")
+			}
+			for _, l := range pickLogLines(lines, nLogLines) {
+				sb.WriteString(l + "\n")
+			}
+			fmt.Fprintf(&sb, "(log lines trimmed to fit the model's context: %d of %d kept, error lines first)\n",
+				min(nLogLines, len(lines)), len(lines))
+		}
+	}
+	sb.WriteString(e.note)
+	sb.WriteString(e.linked)
+	sb.WriteString(e.tail)
+	return sb.String()
+}
+
+// logLines splits the logs into the containers' state line, a fact that is
+// always kept, and the log lines worth reading.
+func (e *evidence) logLines() (state string, lines []string) {
+	logs := e.logs
+	if strings.HasPrefix(logs, containerStatePrefix) {
+		state, logs, _ = strings.Cut(logs, "\n")
+	}
+	return state, readableLogLines(logs)
+}
+
+// fit renders the prompt within budget tokens (0: no limit). It trims log
+// lines first (keeping the newest and error-looking ones), then member
+// warnings, then the object's oldest events; the describe is never trimmed,
+// so the prompt can still exceed a very small budget.
+func (e *evidence) fit(budget int) string {
+	nEv, nMem := len(e.events), len(e.members)
+	full := e.render(nEv, nMem, -1)
+	if budget <= 0 || estimateTokens(full) <= budget {
+		return full
+	}
+	fits := func(ev, mem, lg int) bool { return estimateTokens(e.render(ev, mem, lg)) <= budget }
+	// most is the largest n in [0, total] for which ok(n) holds, or 0.
+	most := func(total int, ok func(n int) bool) int {
+		return max(sort.Search(total+1, func(n int) bool { return !ok(n) })-1, 0)
+	}
+	nLog := -1
+	if e.logs != "" {
+		_, lines := e.logLines()
+		nLog = most(len(lines), func(n int) bool { return fits(nEv, nMem, n) })
+		if fits(nEv, nMem, nLog) {
+			return e.render(nEv, nMem, nLog)
+		}
+	}
+	nMem = most(nMem, func(n int) bool { return fits(nEv, n, nLog) })
+	if fits(nEv, nMem, nLog) {
+		return e.render(nEv, nMem, nLog)
+	}
+	nEv = most(nEv, func(n int) bool { return fits(n, nMem, nLog) })
+	return e.render(nEv, nMem, nLog)
+}
+
+// buildRCAInitialContext is the RCA's first prompt within budget tokens
+// (0: no limit); ctxLen, the loaded context (0: unknown), sizes the linked
+// evidence.
+func buildRCAInitialContext(cl *clusterState, ns, kind, name string, budget, ctxLen int) rcaInitCtx {
+	e := evidence{
+		head:   fmt.Sprintf("Perform Root Cause Analysis for %s %q in namespace %q.\n\n", kind, name, ns),
+		events: objectEvents(cl, ns, kind, name),
+		tail:   "\nUse the available tools to gather additional evidence as needed, then provide the Root Cause Analysis.",
 	}
 
-	// Object describe — full, untruncated. If this causes context overflow, LM Studio
-	// returns a clear 400 which we surface to the user with instructions to increase
-	// their context length rather than silently hiding data.
+	// Object describe — never trimmed. If the context still overflows, the
+	// server returns a clear 400 which we surface to the user with
+	// instructions to increase their context length.
 	info := cl.fetchObjectInfo(ns, kind, name)
 	if !info.NotFound && info.Error == "" {
-		sb.WriteString("\n")
-		sb.WriteString(rcaFormatDescribe(info))
+		e.describe = "\n" + rcaFormatDescribe(info)
 	}
 
 	// A workload: what its Pods and Jobs reported, and the newest failing
-	// Pod's logs (a Pod that has since been deleted has none, so try the next).
+	// Pod's logs.
 	var logsPod, podLogs string
 	var podLogErr error
 	if !strings.EqualFold(kind, "Pod") {
-		lines, pods := memberEvidence(cl, ns, kind, name)
-		if len(lines) > 0 {
-			fmt.Fprintf(&sb, "\nWarnings on objects this %s owns:\n%s\n", kind, strings.Join(lines, "\n"))
-		}
-		for i, p := range pods {
-			if i == 3 {
-				break
-			}
-			if logs, err := fetchLogsForAI(cl, ns, p); err == nil && strings.TrimSpace(logs) != "" {
-				fmt.Fprintf(&sb, "\nLogs from pod %s, its newest failing Pod (last %d lines):\n%s", p, getLogTailLines(), logs)
-				logsPod, podLogs = p, logs
-				break
-			}
-		}
+		logsPod = e.addWorkload(cl, ns, kind, name)
+		podLogs = e.logs
 	}
 
-	// Pod logs — full output, untruncated. If the combined context is too large,
-	// LM Studio returns a specific 400 which we detect and surface as a clear
-	// "increase your context length" message instead of silently hiding data.
+	// Pod logs, including previous-run logs for crash loops.
 	if strings.EqualFold(kind, "Pod") {
 		logsPod = name
 		podLogs, podLogErr = fetchLogsForAI(cl, ns, name)
 		switch {
 		case podLogErr != nil:
-			fmt.Fprintf(&sb, "\nPod logs: could not be retrieved — %v\n"+
+			e.note = fmt.Sprintf("\nPod logs: could not be retrieved — %v\n"+
 				"(If the pod has crash events, call get_pod_logs as a tool to retry.)\n", podLogErr)
 		case strings.TrimSpace(podLogs) != "":
-			fmt.Fprintf(&sb, "\nPod logs (last %d lines):\n%s", getLogTailLines(), podLogs)
+			e.logsHead = fmt.Sprintf("\nPod logs (last %d lines):\n", getLogTailLines())
+			e.logs = podLogs
 		default:
-			sb.WriteString("\nPod logs: no output found — the pod was likely never scheduled " +
+			e.note = "\nPod logs: no output found — the pod was likely never scheduled " +
 				"or has not started a container (FailedScheduling / Pending). " +
-				"Do NOT call get_pod_logs for this pod; there is nothing to retrieve.\n")
+				"Do NOT call get_pod_logs for this pod; there is nothing to retrieve.\n"
 		}
 	}
 
-	sb.WriteString("\nUse the available tools to gather additional evidence as needed, then provide the Root Cause Analysis.")
-	return rcaInitCtx{text: sb.String(), logsPod: logsPod, podLogs: podLogs, podLogErr: podLogErr}
+	// Objects the evidence names, fetched before the model asks (linked.go).
+	e.addLinked(cl, ns, kind, name, ctxLen)
+
+	return rcaInitCtx{text: e.fit(budget), logsPod: logsPod, podLogs: podLogs, podLogErr: podLogErr,
+		linked: e.linkedItems, linkedTrimmed: e.linkedTrimmed}
 }
 
 // ── Agent loop ────────────────────────────────────────────────────────────────
@@ -471,7 +629,14 @@ func runRCAAgent(cl *clusterState, ns, kind, name string, state *RCAState) {
 	}
 	sp += rcaSystemPromptSuffix
 
-	initCtx := buildRCAInitialContext(cl, ns, kind, name)
+	tools := rcaToolDefs()
+
+	// The first prompt (system prompt, evidence, tool definitions) gets
+	// promptShare of the loaded context; the evidence is trimmed to fit.
+	ctxLen := modelCtxLen()
+	toolsJSON, _ := json.Marshal(tools)
+	budget := promptBudget(ctxLen, estimateTokens(sp)+estimateTokens(string(toolsJSON)))
+	initCtx := buildRCAInitialContext(cl, ns, kind, name, budget, ctxLen)
 
 	msgs := []rcaMsg{
 		{Role: "system", Content: sp},
@@ -499,13 +664,18 @@ func runRCAAgent(cl *clusterState, ns, kind, name string, state *RCAState) {
 		upd(func() { state.Steps = append(state.Steps, step) })
 	}
 
-	tools := rcaToolDefs()
-
-	// Estimate context budget from model info
-	ctxLen := 0
-	if mi := fetchLMModelInfo(); mi != nil {
-		ctxLen = mi.ctxLen()
+	// Each object the linked evidence lists is a step of the trail too.
+	upd(func() {
+		for _, it := range initCtx.linked {
+			state.Linked = append(state.Linked, it.tag())
+		}
+		state.LinkedTrimmed = initCtx.linkedTrimmed
+	})
+	for _, it := range initCtx.linked {
+		step := RCAStep{Iter: 0, Tool: "linked_evidence", Label: it.Kind + " " + it.Name, Status: "done", Initial: true}
+		upd(func() { state.Steps = append(state.Steps, step) })
 	}
+
 	estimatedTokens := len(sp)/4 + len(initCtx.text)/4
 
 	maxIter := state.MaxIter
@@ -536,7 +706,8 @@ func runRCAAgent(cl *clusterState, ns, kind, name string, state *RCAState) {
 						"The initial context (events + describe + logs) plus tool definitions "+
 							"exceed the model's loaded context window%s.\n\n"+
 							"Fix in LM Studio: click the ⚙ gear icon next to your loaded model, "+
-							"increase Context Length (try 8192 or 16384), then Reload.",
+							"increase Context Length (try 8192 or 16384), then Reload. "+
+							"With llama-server, restart it with a larger --ctx-size.",
 						ctxNote)
 				})
 				return

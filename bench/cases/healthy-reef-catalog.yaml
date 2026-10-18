@@ -1,0 +1,7 @@
+id: healthy-reef-catalog
+snapshot: bench-a
+anchor: {ns: tidepool, kind: Deployment, name: reef-catalog}
+truth: "healthy Deployment after a rollout restart (two readiness failures while nginx started) — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-reef-catalog, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

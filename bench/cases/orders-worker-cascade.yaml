@@ -1,0 +1,10 @@
+id: orders-worker-cascade
+snapshot: shop-staging
+anchor: {ns: orders, kind: Deployment, name: orders-worker}
+truth: "worker crash-loops: 'lookup orders-db.orders.svc: no such host' — because orders-db never started (its PVC is Pending: StorageClass fast-ssd missing)"
+cause: [["orders-db"], ["no such host", "resolve", "dns", "lookup", "not running", "pending", "unavailable", "database", "connect"]]
+deep: [["fast-ssd", "storageclass", "storage class", "pvc", "persistentvolumeclaim", "volume"]]
+fix: [["orders-db", "database", "storageclass", "fast-ssd", "volume"]]
+needs_tool: true
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

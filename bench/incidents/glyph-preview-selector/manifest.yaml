@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-render, labels: {team: print-studio}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: glyph-preview, namespace: quillmoss-render, labels: {app: glyph-preview}}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: glyph-preview}}
+  template:
+    metadata: {labels: {app: glyph-preview}}
+    spec:
+
+      containers:
+        - name: preview
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: glyph-preview, namespace: quillmoss-render, labels: {app: glyph-preview}}
+spec:
+  selector: {app: glyph-previewer}
+  ports: [{name: http, port: 80, targetPort: 80}]

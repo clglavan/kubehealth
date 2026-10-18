@@ -189,6 +189,9 @@ type SettingsPayload struct {
 	RCAMaxIter   int   `json:"rca_max_iter"`
 	LLMMaxCalls  int   `json:"llm_max_calls"`
 	LLMTimeout   int   `json:"llm_timeout_min"`
+	// LinkFollow: fetch the objects the evidence names before asking the
+	// model (linked.go). Absent in a POST: unchanged.
+	LinkFollow *bool `json:"link_follow"`
 }
 
 func handleAPISettings(w http.ResponseWriter, r *http.Request) {
@@ -200,6 +203,7 @@ func handleAPISettings(w http.ResponseWriter, r *http.Request) {
 			RCAMaxIter:   getRCAMaxIter(),
 			LLMMaxCalls:  getLLMMaxCalls(),
 			LLMTimeout:   getLLMTimeout(),
+			LinkFollow:   ptrTo(getLinkFollow()),
 		})
 
 	case http.MethodPost:
@@ -220,6 +224,9 @@ func handleAPISettings(w http.ResponseWriter, r *http.Request) {
 		if body.LLMTimeout > 0 {
 			setLLMTimeout(body.LLMTimeout)
 		}
+		if body.LinkFollow != nil {
+			setLinkFollow(*body.LinkFollow)
+		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "ok"})
 
@@ -227,3 +234,5 @@ func handleAPISettings(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
 }
+
+func ptrTo[T any](v T) *T { return &v }

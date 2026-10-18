@@ -1,0 +1,13 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/render/inkwell-thumbnailer:0.9.4
+src="http://inkwell-api/v1/assets"
+for a in "$@"; do case "$a" in --assets=*) src="${a#--assets=}" ;; esac; done
+echo "inkwell-thumbnailer 0.9.4: sizes=64,256,1024 source=$src"
+for i in 1 2 3; do
+  echo "listing pending assets: GET $src?state=pending (attempt $i/3)"
+  if out=$(wget -q -T 3 -O /dev/null "$src?state=pending" 2>&1); then echo "assets listed"; exec sleep 86400; fi
+  echo "$out"
+  sleep 2
+done
+echo "FATAL: asset API unreachable, exiting"
+exit 1

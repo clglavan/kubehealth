@@ -1,0 +1,203 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 264
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:39Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: checkout-api-67d6f549fc-cr2fw
+    namespace: checkout
+    resourceVersion: "11725"
+    uid: 9f729a45-96a1-47c6-abaa-70d54836f996
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:05Z"
+  message: Back-off pulling image "nginx:1.27.9-alpine"
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:39Z"
+    name: checkout-api-67d6f549fc-cr2fw.18df8aa0cb461e22
+    namespace: checkout
+    resourceVersion: "22768"
+    uid: 65a5ca52-a7a2-4058-9eca-287b7cdabecb
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 265
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:39Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: checkout-api-67d6f549fc-cr2fw
+    namespace: checkout
+    resourceVersion: "11725"
+    uid: 9f729a45-96a1-47c6-abaa-70d54836f996
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:16Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:39Z"
+    name: checkout-api-67d6f549fc-cr2fw.18df8aa0cb4713d6
+    namespace: checkout
+    resourceVersion: "22818"
+    uid: e3ec9ba2-808c-4e0e-99e6-13a8f08373b2
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    resourceVersion: "11663"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: Pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0"
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: log-shipper-785d97bcf4-jcsvm.18df8aa041f0f531
+    namespace: checkout
+    resourceVersion: "13518"
+    uid: 73056d4d-9179-4be1-b729-a56232dbed54
+  reason: Pulling
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    resourceVersion: "11663"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: 'Failed to pull image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to pull and unpack image "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to resolve reference "registry.acme-demo.internal/platform/log-shipper:3.1.0":
+    failed to do request: Head "https://registry.acme-demo.internal/v2/platform/log-shipper/manifests/3.1.0":
+    dial tcp: lookup registry.acme-demo.internal on 192.168.65.254:53: no such host'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:37Z"
+    name: log-shipper-785d97bcf4-jcsvm.18df8aa05540e605
+    namespace: checkout
+    resourceVersion: "13523"
+    uid: 0191d161-d44d-4b46-b6b1-055afc7d84cb
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:37Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    resourceVersion: "11663"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  kind: Event
+  lastTimestamp: "2026-10-18T06:09:30Z"
+  message: 'Error: ErrImagePull'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-jcsvm.18df8aa0554147ad
+    namespace: checkout
+    resourceVersion: "13524"
+    uid: 1fbe0789-726a-4c00-a88a-345e1c68164d
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+- apiVersion: v1
+  count: 263
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    resourceVersion: "11663"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:14Z"
+  message: Back-off pulling image "registry.acme-demo.internal/platform/log-shipper:3.1.0"
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-jcsvm.18df8aa08f580c9a
+    namespace: checkout
+    resourceVersion: "22801"
+    uid: 3bb82d6d-1d72-43eb-b6ac-eda0a49e9dee
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 263
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{shipper}
+    kind: Pod
+    name: log-shipper-785d97bcf4-jcsvm
+    namespace: checkout
+    resourceVersion: "11663"
+    uid: 966e8907-8cb4-4241-a256-8bae293e3d6d
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:14Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: log-shipper-785d97bcf4-jcsvm.18df8aa08f58e1e2
+    namespace: checkout
+    resourceVersion: "22802"
+    uid: 737fcc6c-a0a2-4f2b-8b3d-94dfcab98010
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+kind: List

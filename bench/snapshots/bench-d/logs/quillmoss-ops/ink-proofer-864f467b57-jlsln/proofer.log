@@ -1,0 +1,5 @@
+ink-proofer 1.3.1: consuming proof jobs from ink-queue:5672
+amqp ink-queue:5672: telnet: can't connect to remote host (10.96.4.146): Connection refused (attempt 1/3)
+amqp ink-queue:5672: telnet: can't connect to remote host (10.96.4.146): Connection refused (attempt 2/3)
+amqp ink-queue:5672: telnet: can't connect to remote host (10.96.4.146): Connection refused (attempt 3/3)
+Error: proof queue ink-queue:5672 unavailable, giving up

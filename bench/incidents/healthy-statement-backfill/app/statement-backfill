@@ -1,0 +1,5 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/statement-backfill:1.1.0
+echo "statement-backfill 1.1.0: backfilling statements for 2026-09"
+sleep 3
+echo "backfilled 18,212 statements"

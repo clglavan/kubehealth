@@ -1,0 +1,4132 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871880-nspqs
+    namespace: larkspur-notify
+    resourceVersion: "10989"
+    uid: 4056a7cf-146d-405d-bf07-de7c09cf2ada
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871880-nspqs to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: digest-mailer-29871880-nspqs.18df92fee4322f49
+    namespace: larkspur-notify
+    resourceVersion: "11002"
+    uid: 6ecca4f0-6ca7-4c02-9473-e51524e7aedf
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871880-nspqs
+    namespace: larkspur-notify
+    resourceVersion: "10998"
+    uid: 4056a7cf-146d-405d-bf07-de7c09cf2ada
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: digest-mailer-29871880-nspqs.18df92ff09baf65b
+    namespace: larkspur-notify
+    resourceVersion: "11064"
+    uid: e2fa690f-a305-456e-845d-564a6ca3c40f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871880-nspqs
+    namespace: larkspur-notify
+    resourceVersion: "10998"
+    uid: 4056a7cf-146d-405d-bf07-de7c09cf2ada
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: digest-mailer-29871880-nspqs.18df92ff1243c389
+    namespace: larkspur-notify
+    resourceVersion: "11076"
+    uid: 22bedd60-9e14-4a7d-a563-b6a19fd16a16
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871880-nspqs
+    namespace: larkspur-notify
+    resourceVersion: "10998"
+    uid: 4056a7cf-146d-405d-bf07-de7c09cf2ada
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: digest-mailer-29871880-nspqs.18df92ff1c4f63c9
+    namespace: larkspur-notify
+    resourceVersion: "11099"
+    uid: b7b268d5-9d2a-4a53-a662-073be50868a0
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871880
+    namespace: larkspur-notify
+    resourceVersion: "10983"
+    uid: 773c8cc6-7de9-4597-a40c-600a4b6f996b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Created pod: digest-mailer-29871880-nspqs'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: digest-mailer-29871880.18df92fee280b657
+    namespace: larkspur-notify
+    resourceVersion: "10997"
+    uid: 06f59895-293c-47d0-942b-c3bfcae989c5
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871880
+    namespace: larkspur-notify
+    resourceVersion: "11251"
+    uid: 773c8cc6-7de9-4597-a40c-600a4b6f996b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:05Z"
+    name: digest-mailer-29871880.18df93003c7a98d9
+    namespace: larkspur-notify
+    resourceVersion: "11258"
+    uid: 6f3725d3-5713-483f-9806-0de02bc36e64
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871881-8kv9v
+    namespace: larkspur-notify
+    resourceVersion: "11651"
+    uid: ab4bc6b4-8a41-4471-9d6a-6682a5e0b6fd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871881-8kv9v to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer-29871881-8kv9v.18df930cdb5dd44c
+    namespace: larkspur-notify
+    resourceVersion: "11664"
+    uid: 4de0a78f-ed2d-44a3-838d-10c8782bfc04
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871881-8kv9v
+    namespace: larkspur-notify
+    resourceVersion: "11658"
+    uid: ab4bc6b4-8a41-4471-9d6a-6682a5e0b6fd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer-29871881-8kv9v.18df930cfdc35dd6
+    namespace: larkspur-notify
+    resourceVersion: "11677"
+    uid: 40057a29-6a2e-4d6b-b44e-d3119bf8298f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871881-8kv9v
+    namespace: larkspur-notify
+    resourceVersion: "11658"
+    uid: ab4bc6b4-8a41-4471-9d6a-6682a5e0b6fd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer-29871881-8kv9v.18df930d01464644
+    namespace: larkspur-notify
+    resourceVersion: "11682"
+    uid: f6d4d664-ad7e-4728-81c1-05d5cd9cdee2
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871881-8kv9v
+    namespace: larkspur-notify
+    resourceVersion: "11658"
+    uid: ab4bc6b4-8a41-4471-9d6a-6682a5e0b6fd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer-29871881-8kv9v.18df930d053036a2
+    namespace: larkspur-notify
+    resourceVersion: "11687"
+    uid: 53315e1c-4b59-4a59-a7f4-20d896c22207
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871881
+    namespace: larkspur-notify
+    resourceVersion: "11641"
+    uid: 1bc8574e-5de5-4cf5-8d13-0784a7ea32bc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: 'Created pod: digest-mailer-29871881-8kv9v'
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer-29871881.18df930cda5a154c
+    namespace: larkspur-notify
+    resourceVersion: "11663"
+    uid: e21c0bb6-7c5f-49f8-9b29-937f1417ccaf
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871881
+    namespace: larkspur-notify
+    resourceVersion: "11731"
+    uid: 1bc8574e-5de5-4cf5-8d13-0784a7ea32bc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:05Z"
+    name: digest-mailer-29871881.18df930e29a3c427
+    namespace: larkspur-notify
+    resourceVersion: "11739"
+    uid: 4003d289-6b3b-4ace-bb70-9debba7a3de0
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871882-f4vcw
+    namespace: larkspur-notify
+    resourceVersion: "12026"
+    uid: c3f69df3-39e4-4a86-ae6e-1b4598bc0238
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871882-f4vcw to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer-29871882-f4vcw.18df931ad3689abb
+    namespace: larkspur-notify
+    resourceVersion: "12038"
+    uid: 5e38cb68-4aa9-4407-aa12-ff3c311d5737
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871882-f4vcw
+    namespace: larkspur-notify
+    resourceVersion: "12032"
+    uid: c3f69df3-39e4-4a86-ae6e-1b4598bc0238
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer-29871882-f4vcw.18df931af6c9fd97
+    namespace: larkspur-notify
+    resourceVersion: "12050"
+    uid: afa0ba6b-420b-4974-93ae-e224f2280a78
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871882-f4vcw
+    namespace: larkspur-notify
+    resourceVersion: "12032"
+    uid: c3f69df3-39e4-4a86-ae6e-1b4598bc0238
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer-29871882-f4vcw.18df931afc538c51
+    namespace: larkspur-notify
+    resourceVersion: "12054"
+    uid: 49e27319-3289-4a93-8933-5e9ec6fd9944
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871882-f4vcw
+    namespace: larkspur-notify
+    resourceVersion: "12032"
+    uid: c3f69df3-39e4-4a86-ae6e-1b4598bc0238
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer-29871882-f4vcw.18df931b018c85bf
+    namespace: larkspur-notify
+    resourceVersion: "12059"
+    uid: 55208a00-4d39-4659-a29a-679778222e9b
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871882
+    namespace: larkspur-notify
+    resourceVersion: "12019"
+    uid: f77db24e-5c9c-441f-bf97-729943b4c041
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: 'Created pod: digest-mailer-29871882-f4vcw'
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer-29871882.18df931ad291fee3
+    namespace: larkspur-notify
+    resourceVersion: "12039"
+    uid: 119c1ef4-43ac-44c6-968b-bcc7b9c5b929
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:02Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871882
+    namespace: larkspur-notify
+    resourceVersion: "12095"
+    uid: f77db24e-5c9c-441f-bf97-729943b4c041
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:02Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:02Z"
+    name: digest-mailer-29871882.18df931b72c42536
+    namespace: larkspur-notify
+    resourceVersion: "12104"
+    uid: ff6f2664-0c5d-4db5-8131-fc495aec8ff7
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871883-cb8xs
+    namespace: larkspur-notify
+    resourceVersion: "12349"
+    uid: 49c46529-1638-4209-8230-236761425338
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871883-cb8xs to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer-29871883-cb8xs.18df9328cb9c1835
+    namespace: larkspur-notify
+    resourceVersion: "12357"
+    uid: d8e4396f-7f80-4c2c-8935-4054dc67b574
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871883-cb8xs
+    namespace: larkspur-notify
+    resourceVersion: "12353"
+    uid: 49c46529-1638-4209-8230-236761425338
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer-29871883-cb8xs.18df9328e936e1e5
+    namespace: larkspur-notify
+    resourceVersion: "12375"
+    uid: 56fb748b-67ad-4a70-9191-98df39426bcf
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871883-cb8xs
+    namespace: larkspur-notify
+    resourceVersion: "12353"
+    uid: 49c46529-1638-4209-8230-236761425338
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer-29871883-cb8xs.18df9328eea896c3
+    namespace: larkspur-notify
+    resourceVersion: "12379"
+    uid: cc1d5c37-f5be-45cb-9610-ff7af172fc8c
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871883-cb8xs
+    namespace: larkspur-notify
+    resourceVersion: "12353"
+    uid: 49c46529-1638-4209-8230-236761425338
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer-29871883-cb8xs.18df9328f2e69807
+    namespace: larkspur-notify
+    resourceVersion: "12380"
+    uid: 29084c41-9c6e-462a-86e3-bc64621134b2
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871883
+    namespace: larkspur-notify
+    resourceVersion: "12344"
+    uid: c13b2baa-fc3a-4990-bd32-b186324d382d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: 'Created pod: digest-mailer-29871883-cb8xs'
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer-29871883.18df9328cad33aa5
+    namespace: larkspur-notify
+    resourceVersion: "12354"
+    uid: 40e65b69-7f6f-4cdd-b54e-8a7831dde6ad
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871883
+    namespace: larkspur-notify
+    resourceVersion: "12437"
+    uid: c13b2baa-fc3a-4990-bd32-b186324d382d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:05Z"
+    name: digest-mailer-29871883.18df932a140d9e5e
+    namespace: larkspur-notify
+    resourceVersion: "12445"
+    uid: 493d0659-4e8a-4696-b8ec-94e5dc4e93de
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871884-snv8t
+    namespace: larkspur-notify
+    resourceVersion: "12663"
+    uid: aef245f0-2e0d-444c-9090-49de3e132496
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871884-snv8t to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer-29871884-snv8t.18df9336c41d7c11
+    namespace: larkspur-notify
+    resourceVersion: "12675"
+    uid: 2ae37f97-f2b0-477e-a215-13c1dc4835f6
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871884-snv8t
+    namespace: larkspur-notify
+    resourceVersion: "12669"
+    uid: aef245f0-2e0d-444c-9090-49de3e132496
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer-29871884-snv8t.18df9336e5c76345
+    namespace: larkspur-notify
+    resourceVersion: "12685"
+    uid: 8c59c712-fd45-4da9-84b8-836ae1082a21
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871884-snv8t
+    namespace: larkspur-notify
+    resourceVersion: "12669"
+    uid: aef245f0-2e0d-444c-9090-49de3e132496
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer-29871884-snv8t.18df9336eae826e3
+    namespace: larkspur-notify
+    resourceVersion: "12690"
+    uid: dfdb42c4-dbb9-4148-a89a-65dbb4afa446
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871884-snv8t
+    namespace: larkspur-notify
+    resourceVersion: "12669"
+    uid: aef245f0-2e0d-444c-9090-49de3e132496
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer-29871884-snv8t.18df9336f265b6f1
+    namespace: larkspur-notify
+    resourceVersion: "12694"
+    uid: 1439182e-72ff-48a9-931c-e45b905d954d
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871884
+    namespace: larkspur-notify
+    resourceVersion: "12657"
+    uid: d7634170-0066-4b1c-9959-4ed4e7d0470a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: 'Created pod: digest-mailer-29871884-snv8t'
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer-29871884.18df9336c324893f
+    namespace: larkspur-notify
+    resourceVersion: "12667"
+    uid: d9b8eb24-ddb9-47b8-998b-a64d2a6a49a5
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871884
+    namespace: larkspur-notify
+    resourceVersion: "12718"
+    uid: d7634170-0066-4b1c-9959-4ed4e7d0470a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:05Z"
+    name: digest-mailer-29871884.18df933803199d77
+    namespace: larkspur-notify
+    resourceVersion: "12726"
+    uid: 1c5bdd52-2b48-4967-a097-d17137e16a95
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871885-pt2nz
+    namespace: larkspur-notify
+    resourceVersion: "12920"
+    uid: 350c03d0-a791-4b67-b473-4f61c0d428e5
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871885-pt2nz to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer-29871885-pt2nz.18df9344bc6fc7c8
+    namespace: larkspur-notify
+    resourceVersion: "12934"
+    uid: 6c7ccecd-34b8-42c7-80ee-8e9bd8912f8a
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871885-pt2nz
+    namespace: larkspur-notify
+    resourceVersion: "12928"
+    uid: 350c03d0-a791-4b67-b473-4f61c0d428e5
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer-29871885-pt2nz.18df9344dbe7bb2e
+    namespace: larkspur-notify
+    resourceVersion: "12944"
+    uid: 514498d3-9028-4441-ad4b-8acac20b38e9
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871885-pt2nz
+    namespace: larkspur-notify
+    resourceVersion: "12928"
+    uid: 350c03d0-a791-4b67-b473-4f61c0d428e5
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer-29871885-pt2nz.18df9344e04fc58a
+    namespace: larkspur-notify
+    resourceVersion: "12950"
+    uid: 21104526-dcf2-4a64-b0f2-042868334c48
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871885-pt2nz
+    namespace: larkspur-notify
+    resourceVersion: "12928"
+    uid: 350c03d0-a791-4b67-b473-4f61c0d428e5
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer-29871885-pt2nz.18df9344e59dd2fc
+    namespace: larkspur-notify
+    resourceVersion: "12953"
+    uid: be0774e6-7222-4ddf-9cb4-89c75e68cd1e
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871885
+    namespace: larkspur-notify
+    resourceVersion: "12915"
+    uid: 27e00d52-5268-4c2c-b206-7be8eaa3c23f
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: 'Created pod: digest-mailer-29871885-pt2nz'
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer-29871885.18df9344bb6964e2
+    namespace: larkspur-notify
+    resourceVersion: "12926"
+    uid: 620009c5-2e42-4f43-8189-70e2e31df4a9
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871885
+    namespace: larkspur-notify
+    resourceVersion: "12977"
+    uid: 27e00d52-5268-4c2c-b206-7be8eaa3c23f
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:05Z"
+    name: digest-mailer-29871885.18df9345ef02da32
+    namespace: larkspur-notify
+    resourceVersion: "12985"
+    uid: 1b2433d5-69af-4d09-80e7-977e11f83ab1
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871886-gd5tj
+    namespace: larkspur-notify
+    resourceVersion: "13141"
+    uid: bcd7705f-27a3-43f8-925a-64e316bb32e6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871886-gd5tj to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer-29871886-gd5tj.18df9352b4ae4b2d
+    namespace: larkspur-notify
+    resourceVersion: "13155"
+    uid: 509f2a61-bf3b-4f59-b48a-d28cd3823b43
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871886-gd5tj
+    namespace: larkspur-notify
+    resourceVersion: "13146"
+    uid: bcd7705f-27a3-43f8-925a-64e316bb32e6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer-29871886-gd5tj.18df9352d6241571
+    namespace: larkspur-notify
+    resourceVersion: "13163"
+    uid: d89c79f7-2ae1-4e81-9d88-980b4ad35b7a
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871886-gd5tj
+    namespace: larkspur-notify
+    resourceVersion: "13146"
+    uid: bcd7705f-27a3-43f8-925a-64e316bb32e6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer-29871886-gd5tj.18df9352d9e627df
+    namespace: larkspur-notify
+    resourceVersion: "13167"
+    uid: 41e7d6be-1459-4f0a-b00b-6dfb7f8f0747
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871886-gd5tj
+    namespace: larkspur-notify
+    resourceVersion: "13146"
+    uid: bcd7705f-27a3-43f8-925a-64e316bb32e6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer-29871886-gd5tj.18df9352e0028e3d
+    namespace: larkspur-notify
+    resourceVersion: "13172"
+    uid: 67ac652b-25a0-47a8-a396-8e620455f0cb
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871886
+    namespace: larkspur-notify
+    resourceVersion: "13136"
+    uid: 5277abec-e236-4e0d-a045-3415d735e7d8
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: 'Created pod: digest-mailer-29871886-gd5tj'
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer-29871886.18df9352b3a4e86d
+    namespace: larkspur-notify
+    resourceVersion: "13147"
+    uid: 2928bdc6-548f-4285-af3a-68cf0a11de84
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871886
+    namespace: larkspur-notify
+    resourceVersion: "13195"
+    uid: 5277abec-e236-4e0d-a045-3415d735e7d8
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:05Z"
+    name: digest-mailer-29871886.18df9353d9dfffad
+    namespace: larkspur-notify
+    resourceVersion: "13201"
+    uid: 58abec71-f50f-4347-a113-8f0dee37f453
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871887-mzbq9
+    namespace: larkspur-notify
+    resourceVersion: "13379"
+    uid: 09095ce7-1baf-4a40-891b-028269e24e50
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871887-mzbq9 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer-29871887-mzbq9.18df9360ad127f8c
+    namespace: larkspur-notify
+    resourceVersion: "13393"
+    uid: a1bee6c8-6e58-41b3-a0af-86f73a1b5530
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871887-mzbq9
+    namespace: larkspur-notify
+    resourceVersion: "13387"
+    uid: 09095ce7-1baf-4a40-891b-028269e24e50
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer-29871887-mzbq9.18df9360cbb3b14a
+    namespace: larkspur-notify
+    resourceVersion: "13401"
+    uid: f72c9900-6b5d-498d-b099-554d4accaf9b
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871887-mzbq9
+    namespace: larkspur-notify
+    resourceVersion: "13387"
+    uid: 09095ce7-1baf-4a40-891b-028269e24e50
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer-29871887-mzbq9.18df9360ce39d4ee
+    namespace: larkspur-notify
+    resourceVersion: "13405"
+    uid: 8540e4cc-ea91-4cc9-991c-d6ded4537501
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871887-mzbq9
+    namespace: larkspur-notify
+    resourceVersion: "13387"
+    uid: 09095ce7-1baf-4a40-891b-028269e24e50
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer-29871887-mzbq9.18df9360d27d178c
+    namespace: larkspur-notify
+    resourceVersion: "13410"
+    uid: f19afe5c-41aa-4811-ac79-5a4c777e894f
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871887
+    namespace: larkspur-notify
+    resourceVersion: "13374"
+    uid: 1d35abca-9cf9-4898-8f0a-e77c8332e8a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: 'Created pod: digest-mailer-29871887-mzbq9'
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer-29871887.18df9360abf04792
+    namespace: larkspur-notify
+    resourceVersion: "13385"
+    uid: d36cbc2c-87d2-40fb-85bb-ffdd18aecbf7
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871887
+    namespace: larkspur-notify
+    resourceVersion: "13441"
+    uid: 1d35abca-9cf9-4898-8f0a-e77c8332e8a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:03Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:03Z"
+    name: digest-mailer-29871887.18df93615f36061b
+    namespace: larkspur-notify
+    resourceVersion: "13447"
+    uid: 1d03b80b-e3dd-4ccb-aa7e-81adafa3c43c
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871888-f5glq
+    namespace: larkspur-notify
+    resourceVersion: "13635"
+    uid: 4c453cc6-c5b1-42b4-b249-c2480f2f187a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871888-f5glq to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer-29871888-f5glq.18df936ea5e9d51c
+    namespace: larkspur-notify
+    resourceVersion: "13645"
+    uid: 30d4360e-fe62-4dd7-be0f-f6db7227a941
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871888-f5glq
+    namespace: larkspur-notify
+    resourceVersion: "13642"
+    uid: 4c453cc6-c5b1-42b4-b249-c2480f2f187a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer-29871888-f5glq.18df936ec8850b32
+    namespace: larkspur-notify
+    resourceVersion: "13658"
+    uid: 5e8588ec-6331-4650-8e0f-b1a4c0f722ed
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871888-f5glq
+    namespace: larkspur-notify
+    resourceVersion: "13642"
+    uid: 4c453cc6-c5b1-42b4-b249-c2480f2f187a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer-29871888-f5glq.18df936ecd721ab8
+    namespace: larkspur-notify
+    resourceVersion: "13662"
+    uid: e875face-ce2c-4824-aaa1-828d1692032d
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871888-f5glq
+    namespace: larkspur-notify
+    resourceVersion: "13642"
+    uid: 4c453cc6-c5b1-42b4-b249-c2480f2f187a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer-29871888-f5glq.18df936ed302abd2
+    namespace: larkspur-notify
+    resourceVersion: "13666"
+    uid: 0bfad86e-8895-4b49-b5cc-a5e3f8a9cbf3
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871888
+    namespace: larkspur-notify
+    resourceVersion: "13627"
+    uid: 383fd91d-46bc-4206-ae6d-9928fc3868e4
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: 'Created pod: digest-mailer-29871888-f5glq'
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer-29871888.18df936ea4dbceb4
+    namespace: larkspur-notify
+    resourceVersion: "13646"
+    uid: d86d68dd-4da9-4943-8ab0-cc633bc05255
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871888
+    namespace: larkspur-notify
+    resourceVersion: "13691"
+    uid: 383fd91d-46bc-4206-ae6d-9928fc3868e4
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:05Z"
+  message: Job has reached the specified backoff limit
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:05Z"
+    name: digest-mailer-29871888.18df936ffe2b7874
+    namespace: larkspur-notify
+    resourceVersion: "13701"
+    uid: 57d395a5-cbe4-46db-9cbb-c408d9be4aee
+  reason: BackoffLimitExceeded
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:49:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: digest-mailer-29871889-jlzwl
+    namespace: larkspur-notify
+    resourceVersion: "13889"
+    uid: ebffbb37-13e0-45fd-b059-3ad9d3ded475
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:00Z"
+  message: Successfully assigned larkspur-notify/digest-mailer-29871889-jlzwl to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:49:00Z"
+    name: digest-mailer-29871889-jlzwl.18df937c9d7fa600
+    namespace: larkspur-notify
+    resourceVersion: "13900"
+    uid: 00116c53-710e-41a7-80b8-fc4773f2a67f
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:49:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871889-jlzwl
+    namespace: larkspur-notify
+    resourceVersion: "13893"
+    uid: ebffbb37-13e0-45fd-b059-3ad9d3ded475
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:00Z"
+  message: Container image "harbor.larkspur.internal/notify/digest-mailer:1.4.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:49:00Z"
+    name: digest-mailer-29871889-jlzwl.18df937cbc83f5c0
+    namespace: larkspur-notify
+    resourceVersion: "13907"
+    uid: 2a1240cf-a1ba-4e50-a714-7a4e84a717e5
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:49:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871889-jlzwl
+    namespace: larkspur-notify
+    resourceVersion: "13893"
+    uid: ebffbb37-13e0-45fd-b059-3ad9d3ded475
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:49:00Z"
+    name: digest-mailer-29871889-jlzwl.18df937cc0c1af11
+    namespace: larkspur-notify
+    resourceVersion: "13916"
+    uid: 3ac0e14d-1a2e-4fc3-8fb0-32d559acc756
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:49:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{mailer}
+    kind: Pod
+    name: digest-mailer-29871889-jlzwl
+    namespace: larkspur-notify
+    resourceVersion: "13893"
+    uid: ebffbb37-13e0-45fd-b059-3ad9d3ded475
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:49:00Z"
+    name: digest-mailer-29871889-jlzwl.18df937cc6ba2437
+    namespace: larkspur-notify
+    resourceVersion: "13920"
+    uid: 1f3c9d06-8397-4db9-a3b8-3a1edc36b2a3
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:49:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: Job
+    name: digest-mailer-29871889
+    namespace: larkspur-notify
+    resourceVersion: "13883"
+    uid: 7b7d7418-43b7-4e2c-985d-898385813311
+  kind: Event
+  lastTimestamp: "2026-10-18T08:49:00Z"
+  message: 'Created pod: digest-mailer-29871889-jlzwl'
+  metadata:
+    creationTimestamp: "2026-10-18T08:49:00Z"
+    name: digest-mailer-29871889.18df937c9c88c169
+    namespace: larkspur-notify
+    resourceVersion: "13892"
+    uid: 40e1d0d9-98d0-4e11-b0d8-28a804246054
+  reason: SuccessfulCreate
+  reportingComponent: job-controller
+  reportingInstance: ""
+  source:
+    component: job-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "10770"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Created job digest-mailer-29871880
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: digest-mailer.18df92fee173895b
+    namespace: larkspur-notify
+    resourceVersion: "11003"
+    uid: c6c953d4-909a-4012-b8d0-a4a6bfe3c9fa
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "10992"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:05Z"
+  message: 'Saw completed job: digest-mailer-29871880, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:05Z"
+    name: digest-mailer.18df93003c7b7a6f
+    namespace: larkspur-notify
+    resourceVersion: "11259"
+    uid: ccdd6aee-18fa-4524-9823-91c697046e9c
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "11260"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:00Z"
+  message: Created job digest-mailer-29871881
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:00Z"
+    name: digest-mailer.18df930cd920392c
+    namespace: larkspur-notify
+    resourceVersion: "11644"
+    uid: c591c099-5896-47b8-9d16-1abbbd6155c5
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:41:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "11645"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:05Z"
+  message: 'Saw completed job: digest-mailer-29871881, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:41:05Z"
+    name: digest-mailer.18df930e29a4d871
+    namespace: larkspur-notify
+    resourceVersion: "11746"
+    uid: 8f69475d-63a4-4a31-91aa-cd94d54b7799
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "11742"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:00Z"
+  message: Created job digest-mailer-29871882
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:00Z"
+    name: digest-mailer.18df931ad1bbb3d3
+    namespace: larkspur-notify
+    resourceVersion: "12034"
+    uid: 70e23547-3ed5-4411-9d51-2ce41ad4051f
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:42:02Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12025"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:02Z"
+  message: 'Saw completed job: digest-mailer-29871882, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:42:02Z"
+    name: digest-mailer.18df931b72c46b40
+    namespace: larkspur-notify
+    resourceVersion: "12108"
+    uid: 8c86a323-0666-4ac7-8cfc-8936a030d8d9
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12105"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:00Z"
+  message: Created job digest-mailer-29871883
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:00Z"
+    name: digest-mailer.18df9328c9cab60b
+    namespace: larkspur-notify
+    resourceVersion: "12347"
+    uid: 2771594d-893c-4691-85f6-2a0fcec5dba7
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12348"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:05Z"
+  message: Deleted job digest-mailer-29871880
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:05Z"
+    name: digest-mailer.18df932a14926cf6
+    namespace: larkspur-notify
+    resourceVersion: "12453"
+    uid: b3dd55ba-9eec-4265-a8aa-fd272c01c2ba
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:43:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12348"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:43:05Z"
+  message: 'Saw completed job: digest-mailer-29871883, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:43:05Z"
+    name: digest-mailer.18df932a149283bc
+    namespace: larkspur-notify
+    resourceVersion: "12456"
+    uid: ba2bcf53-8c0b-477a-a944-c60284a76633
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12450"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:00Z"
+  message: Created job digest-mailer-29871884
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:00Z"
+    name: digest-mailer.18df9336c2055043
+    namespace: larkspur-notify
+    resourceVersion: "12659"
+    uid: bf88ca79-577f-4dde-bf8a-4314a1a35a2e
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12662"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:05Z"
+  message: Deleted job digest-mailer-29871881
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:05Z"
+    name: digest-mailer.18df933803b766ab
+    namespace: larkspur-notify
+    resourceVersion: "12731"
+    uid: cf59fdc5-d4ea-48b6-a2d5-66a0f532ca83
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:44:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12662"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:05Z"
+  message: 'Saw completed job: digest-mailer-29871884, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:44:05Z"
+    name: digest-mailer.18df933803b78073
+    namespace: larkspur-notify
+    resourceVersion: "12737"
+    uid: a3c0d107-937e-46ab-9a12-230d3e9e31e0
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12732"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:00Z"
+  message: Created job digest-mailer-29871885
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:00Z"
+    name: digest-mailer.18df9344ba29a56a
+    namespace: larkspur-notify
+    resourceVersion: "12918"
+    uid: c9296185-b42b-40b8-bfa4-053e90cdc501
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12919"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:05Z"
+  message: Deleted job digest-mailer-29871882
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:05Z"
+    name: digest-mailer.18df9345f03bada2
+    namespace: larkspur-notify
+    resourceVersion: "12993"
+    uid: 5dd8675b-fb36-4c50-9850-53191dec81b1
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:45:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12919"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:05Z"
+  message: 'Saw completed job: digest-mailer-29871885, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:45:05Z"
+    name: digest-mailer.18df9345f03c24a8
+    namespace: larkspur-notify
+    resourceVersion: "12997"
+    uid: 351f74dd-2556-4916-8bda-85d8d3a1a79e
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "12988"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:00Z"
+  message: Created job digest-mailer-29871886
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:00Z"
+    name: digest-mailer.18df9352b2af501f
+    namespace: larkspur-notify
+    resourceVersion: "13143"
+    uid: 90a4598b-976c-4f71-848f-6d30ee8bfaf9
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13139"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:05Z"
+  message: Deleted job digest-mailer-29871883
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:05Z"
+    name: digest-mailer.18df9353da52ff49
+    namespace: larkspur-notify
+    resourceVersion: "13205"
+    uid: 8a2e6b48-ff8d-41a9-ae10-e9c9fd6bb3cb
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:46:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13139"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:05Z"
+  message: 'Saw completed job: digest-mailer-29871886, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:46:05Z"
+    name: digest-mailer.18df9353da532361
+    namespace: larkspur-notify
+    resourceVersion: "13208"
+    uid: bf4dfccf-b0c5-41c4-8f79-24a9d716335f
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13206"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:00Z"
+  message: Created job digest-mailer-29871887
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:00Z"
+    name: digest-mailer.18df9360aac271ba
+    namespace: larkspur-notify
+    resourceVersion: "13376"
+    uid: 9f9fc175-92a2-406f-9320-a71d70ed2f7a
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13378"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:03Z"
+  message: Deleted job digest-mailer-29871884
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:03Z"
+    name: digest-mailer.18df93615fa3ed2f
+    namespace: larkspur-notify
+    resourceVersion: "13451"
+    uid: 66bc32ea-b55a-4bd2-aa24-387223b9d718
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:47:03Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13378"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:03Z"
+  message: 'Saw completed job: digest-mailer-29871887, condition: Failed'
+  metadata:
+    creationTimestamp: "2026-10-18T08:47:03Z"
+    name: digest-mailer.18df93615fa4514d
+    namespace: larkspur-notify
+    resourceVersion: "13454"
+    uid: b68bbffe-1b57-4f8b-b924-09b9d5de2db7
+  reason: SawCompletedJob
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:00Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13452"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:00Z"
+  message: Created job digest-mailer-29871888
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:00Z"
+    name: digest-mailer.18df936ea36aa762
+    namespace: larkspur-notify
+    resourceVersion: "13636"
+    uid: b5662653-79f0-43ca-8322-75914b824151
+  reason: SuccessfulCreate
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:48:05Z"
+  involvedObject:
+    apiVersion: batch/v1
+    kind: CronJob
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13632"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:05Z"
+  message: Deleted job digest-mailer-29871885
+  metadata:
+    creationTimestamp: "2026-10-18T08:48:05Z"
+    name: digest-mailer.18df936ffe95c3b4
+    namespace: larkspur-notify
+    resourceVersion: "13702"
+    uid: 83cdc195-4a16-4b5f-be40-78f36e824e92
+  reason: SuccessfulDelete
+  reportingComponent: cronjob-controller
+  reportingInstance: ""
+  source:
+    component: cronjob-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    resourceVersion: "10799"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Successfully assigned larkspur-notify/dispatch-worker-5995976cf7-kcd6h
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: dispatch-worker-5995976cf7-kcd6h.18df92fe804da3eb
+    namespace: larkspur-notify
+    resourceVersion: "10808"
+    uid: ed24edde-ac66-4d9b-80f0-6b19cf68c343
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    resourceVersion: "10803"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:39Z"
+  message: Container image "harbor.larkspur.internal/notify/dispatch-worker:6.0.1"
+    already present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: dispatch-worker-5995976cf7-kcd6h.18df92fe9ff34165
+    namespace: larkspur-notify
+    resourceVersion: "13303"
+    uid: 5fd08b43-ebb5-4ca0-9418-72f62fe8fcd9
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    resourceVersion: "10803"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:39Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: dispatch-worker-5995976cf7-kcd6h.18df92fea504922b
+    namespace: larkspur-notify
+    resourceVersion: "13305"
+    uid: 884a852c-b5db-4ad7-a8f7-5dfa14755636
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    resourceVersion: "10803"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:39Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: dispatch-worker-5995976cf7-kcd6h.18df92feac5685a7
+    namespace: larkspur-notify
+    resourceVersion: "13306"
+    uid: 25b3b55e-566c-431f-8dca-ab4383504020
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 10
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:16Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{worker}
+    kind: Pod
+    name: dispatch-worker-5995976cf7-kcd6h
+    namespace: larkspur-notify
+    resourceVersion: "10803"
+    uid: 58dfecc2-19c5-49f4-a814-a024389b377a
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:01Z"
+  message: Back-off restarting failed container worker in pod dispatch-worker-5995976cf7-kcd6h_larkspur-notify(58dfecc2-19c5-49f4-a814-a024389b377a)
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:16Z"
+    name: dispatch-worker-5995976cf7-kcd6h.18df9302a0cf31f1
+    namespace: larkspur-notify
+    resourceVersion: "13676"
+    uid: 11293437-35a2-433d-9f0e-29264bfc207d
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: dispatch-worker-5995976cf7
+    namespace: larkspur-notify
+    resourceVersion: "10796"
+    uid: 29801733-c1be-4475-9ae5-2b9e2da7212d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: 'Created pod: dispatch-worker-5995976cf7-kcd6h'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: dispatch-worker-5995976cf7.18df92fe7fe01b5f
+    namespace: larkspur-notify
+    resourceVersion: "10804"
+    uid: 35c18a92-9b1d-42ab-bd28-d39bc7719c86
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: dispatch-worker
+    namespace: larkspur-notify
+    resourceVersion: "10793"
+    uid: 771aac14-950f-49bf-84a5-14d15977cad1
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Scaled up replica set dispatch-worker-5995976cf7 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: dispatch-worker.18df92fe7f7284a5
+    namespace: larkspur-notify
+    resourceVersion: "10798"
+    uid: e33a44a9-d471-4350-b1ad-032648637aa4
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    resourceVersion: "10890"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned larkspur-notify/hook-courier-5d48f76745-b9v2c to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier-5d48f76745-b9v2c.18df92feb8eb3457
+    namespace: larkspur-notify
+    resourceVersion: "10898"
+    uid: 113fb37f-e327-41d3-acda-9abe128d2828
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    resourceVersion: "10896"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier-5d48f76745-b9v2c.18df92fed99fb5f1
+    namespace: larkspur-notify
+    resourceVersion: "10954"
+    uid: ccdeac05-b519-49e2-af12-bdae0ee606a2
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    resourceVersion: "10896"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-b9v2c.18df92fedd085509
+    namespace: larkspur-notify
+    resourceVersion: "10963"
+    uid: 77bab9b9-33e1-4ea9-9eb9-25c98b62308a
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    resourceVersion: "10896"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-b9v2c.18df92fee4642ed1
+    namespace: larkspur-notify
+    resourceVersion: "11008"
+    uid: 26f6cba3-bfef-4d6e-b69e-5a04130dac09
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 64
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-b9v2c
+    namespace: larkspur-notify
+    resourceVersion: "10896"
+    uid: 8a666ba3-b7f5-4a8c-972e-60067d9a8865
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:37Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.154:8080/": dial tcp 10.244.1.154:8080:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-b9v2c.18df92fee4f0d40d
+    namespace: larkspur-notify
+    resourceVersion: "12846"
+    uid: adf7f568-1344-473c-bb47-c96272f32865
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    resourceVersion: "10894"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned larkspur-notify/hook-courier-5d48f76745-wxl79 to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier-5d48f76745-wxl79.18df92feb9beaa17
+    namespace: larkspur-notify
+    resourceVersion: "10905"
+    uid: 402ff633-50e0-4ad2-9698-07b2db6b1efa
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    resourceVersion: "10901"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-wxl79.18df92feda84749d
+    namespace: larkspur-notify
+    resourceVersion: "10956"
+    uid: 6dc0ce8b-3b25-4805-9ab1-f4bb54b7c7af
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    resourceVersion: "10901"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-wxl79.18df92fedd99977b
+    namespace: larkspur-notify
+    resourceVersion: "10965"
+    uid: 219b3768-7408-4d95-86a3-03182125a5e4
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    resourceVersion: "10901"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-wxl79.18df92fee45d2523
+    namespace: larkspur-notify
+    resourceVersion: "11005"
+    uid: ed4c044c-be98-4006-97d7-814ddd5992ea
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 64
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{courier}
+    kind: Pod
+    name: hook-courier-5d48f76745-wxl79
+    namespace: larkspur-notify
+    resourceVersion: "10901"
+    uid: e95d2651-f4fa-45be-981a-f3887b3c2d08
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:35Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.155:8080/": dial tcp 10.244.1.155:8080:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: hook-courier-5d48f76745-wxl79.18df92fee4e39487
+    namespace: larkspur-notify
+    resourceVersion: "12843"
+    uid: 9552550b-b04a-4ccb-855f-cdd80c546cbe
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: hook-courier-5d48f76745
+    namespace: larkspur-notify
+    resourceVersion: "10889"
+    uid: dda229d5-2d47-4284-99f2-f5d38ee83774
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: hook-courier-5d48f76745-b9v2c'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier-5d48f76745.18df92feb807e053
+    namespace: larkspur-notify
+    resourceVersion: "10895"
+    uid: ba4a72ae-2cdc-490c-bea9-c1e73d9a16a9
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: hook-courier-5d48f76745
+    namespace: larkspur-notify
+    resourceVersion: "10889"
+    uid: dda229d5-2d47-4284-99f2-f5d38ee83774
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: hook-courier-5d48f76745-wxl79'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier-5d48f76745.18df92feb8e656ad
+    namespace: larkspur-notify
+    resourceVersion: "10899"
+    uid: 6e88339a-79da-4f47-b876-38b571464b25
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hook-courier
+    namespace: larkspur-notify
+    resourceVersion: "10888"
+    uid: 7b4b42cb-8bad-4689-9399-569da3a319f3
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Scaled up replica set hook-courier-5d48f76745 from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: hook-courier.18df92feb7a4bbf9
+    namespace: larkspur-notify
+    resourceVersion: "10893"
+    uid: 0a947240-78e4-4332-af0d-da609eb05ec6
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: mail-relay-579f9fbd7d-gdzgg
+    namespace: larkspur-notify
+    resourceVersion: "10762"
+    uid: 436870fb-ad87-42a3-9e2a-0e40537d1eff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Successfully assigned larkspur-notify/mail-relay-579f9fbd7d-gdzgg to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: mail-relay-579f9fbd7d-gdzgg.18df92fe6bb9f78b
+    namespace: larkspur-notify
+    resourceVersion: "10771"
+    uid: a3583067-801a-4b19-a8a6-e6917e1c4ae1
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 12
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: mail-relay-579f9fbd7d-gdzgg
+    namespace: larkspur-notify
+    resourceVersion: "10768"
+    uid: 436870fb-ad87-42a3-9e2a-0e40537d1eff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:28Z"
+  message: 'MountVolume.SetUp failed for volume "routes" : configmap "relay-routes"
+    not found'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: mail-relay-579f9fbd7d-gdzgg.18df92fe745a5665
+    namespace: larkspur-notify
+    resourceVersion: "13523"
+    uid: f3025dbf-70d1-482d-aead-4957a3cf0dec
+  reason: FailedMount
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: mail-relay-579f9fbd7d
+    namespace: larkspur-notify
+    resourceVersion: "10758"
+    uid: fd5937d6-aa64-4153-9de8-43ee4a5b1203
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: 'Created pod: mail-relay-579f9fbd7d-gdzgg'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: mail-relay-579f9fbd7d.18df92fe6b18fb5b
+    namespace: larkspur-notify
+    resourceVersion: "10764"
+    uid: 63c43229-2eb2-4823-b295-b4ad8dd1f458
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: mail-relay
+    namespace: larkspur-notify
+    resourceVersion: "10757"
+    uid: 7b088446-be30-4c46-a398-9e65bacf0621
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Scaled up replica set mail-relay-579f9fbd7d from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: mail-relay.18df92fe6a641637
+    namespace: larkspur-notify
+    resourceVersion: "10759"
+    uid: 3aed1f80-086d-434d-b05e-17447c2b83ff
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10851"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned larkspur-notify/notify-fanout-5ddf8747f-9dt4m to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92fea49357e1
+    namespace: larkspur-notify
+    resourceVersion: "10860"
+    uid: 0ba88f61-3628-4b98-9138-fa9259c8a8db
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10856"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92fec73732db
+    namespace: larkspur-notify
+    resourceVersion: "10917"
+    uid: fa1f800c-2279-466b-be89-ba138effe1bb
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10856"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92fecaa73a97
+    namespace: larkspur-notify
+    resourceVersion: "10920"
+    uid: 815d6ec7-4bcb-470f-9393-36bc6e464a20
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10856"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92fed1c26aa9
+    namespace: larkspur-notify
+    resourceVersion: "10941"
+    uid: 451a7501-a903-4c4e-92c7-4edbe8d2a6e5
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10856"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.153:80/": dial tcp 10.244.1.153:80:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92fed1e0e2c7
+    namespace: larkspur-notify
+    resourceVersion: "10942"
+    uid: c1cfa4fd-ac83-46a4-af12-2b62356d720c
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:02Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-9dt4m
+    namespace: larkspur-notify
+    resourceVersion: "10856"
+    uid: 79b1726e-3933-42f5-b0aa-81a063e91dff
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:02Z"
+  message: Stopping container fanout
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:02Z"
+    name: notify-fanout-5ddf8747f-9dt4m.18df92ff8509b6e9
+    namespace: larkspur-notify
+    resourceVersion: "11198"
+    uid: 5dfe99b3-646c-4339-b3e5-62cf2e552a90
+  reason: Killing
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10852"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned larkspur-notify/notify-fanout-5ddf8747f-h59lh to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92fea49a2d91
+    namespace: larkspur-notify
+    resourceVersion: "10865"
+    uid: 4b3b1af1-9cbb-48a9-8c78-77523f3b8e3b
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10857"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92fec66d4697
+    namespace: larkspur-notify
+    resourceVersion: "10914"
+    uid: 3a4a619e-02a2-4339-a3ef-ec0b8175ebc1
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10857"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92fec9ca310b
+    namespace: larkspur-notify
+    resourceVersion: "10919"
+    uid: edd39ced-9c6d-4c39-b47d-01d3bca48bd5
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10857"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92fed0ad55d9
+    namespace: larkspur-notify
+    resourceVersion: "10938"
+    uid: 9114fbb6-1d62-4938-9008-a79ebfd55351
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10857"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.152:80/": dial tcp 10.244.1.152:80:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92fed124f7d3
+    namespace: larkspur-notify
+    resourceVersion: "10939"
+    uid: 71dbc4cb-98e5-42b7-afe3-9da2b400bcc7
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:02Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-h59lh
+    namespace: larkspur-notify
+    resourceVersion: "10857"
+    uid: 0d9f83b6-35ba-4207-80e5-d07411a571cc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:02Z"
+  message: Stopping container fanout
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:02Z"
+    name: notify-fanout-5ddf8747f-h59lh.18df92ff8508d69d
+    namespace: larkspur-notify
+    resourceVersion: "11196"
+    uid: 328bfbab-ecd8-4898-b929-82beb890e907
+  reason: Killing
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    resourceVersion: "10846"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned larkspur-notify/notify-fanout-5ddf8747f-vf27m to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-vf27m.18df92fea38ced3f
+    namespace: larkspur-notify
+    resourceVersion: "10853"
+    uid: ce1e6621-f422-4983-af9f-d69b1adda2d5
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    resourceVersion: "10850"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-vf27m.18df92fec46e3c11
+    namespace: larkspur-notify
+    resourceVersion: "10912"
+    uid: 96c6f8b6-be8d-45be-bf1a-abcac6c59c74
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    resourceVersion: "10850"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-vf27m.18df92fec6fa66b7
+    namespace: larkspur-notify
+    resourceVersion: "10916"
+    uid: e4a2e784-4fc1-4167-b91e-99b1ddef0836
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    resourceVersion: "10850"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-vf27m.18df92fecc90c98b
+    namespace: larkspur-notify
+    resourceVersion: "10926"
+    uid: d8fb83b4-05b3-466e-abdb-4b40eec282c1
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{fanout}
+    kind: Pod
+    name: notify-fanout-5ddf8747f-vf27m
+    namespace: larkspur-notify
+    resourceVersion: "10850"
+    uid: 24f07e46-3ec6-46b0-a388-6bab9e85de10
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.151:80/": dial tcp 10.244.1.151:80:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f-vf27m.18df92fecd0b7f91
+    namespace: larkspur-notify
+    resourceVersion: "10929"
+    uid: 3a351e47-23c4-4fa2-aff5-3b74e2d275b4
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    resourceVersion: "10844"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: notify-fanout-5ddf8747f-vf27m'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f.18df92fea2ec0f23
+    namespace: larkspur-notify
+    resourceVersion: "10849"
+    uid: 511d9522-0f27-4d8b-a151-9d8e37222594
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    resourceVersion: "10844"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: notify-fanout-5ddf8747f-h59lh'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f.18df92fea3d6eb29
+    namespace: larkspur-notify
+    resourceVersion: "10855"
+    uid: 5e441fc0-c2fa-4811-8feb-e976fc6accdc
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    resourceVersion: "10844"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: notify-fanout-5ddf8747f-9dt4m'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout-5ddf8747f.18df92fea3d7818d
+    namespace: larkspur-notify
+    resourceVersion: "10863"
+    uid: 876c7687-bce8-49d3-8f26-3488ae11d909
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    resourceVersion: "11144"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: 'Deleted pod: notify-fanout-5ddf8747f-9dt4m'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: notify-fanout-5ddf8747f.18df92ff35bd7747
+    namespace: larkspur-notify
+    resourceVersion: "11149"
+    uid: ee2a28a6-889b-4534-a526-044577f84129
+  reason: SuccessfulDelete
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-fanout-5ddf8747f
+    namespace: larkspur-notify
+    resourceVersion: "11144"
+    uid: be55ec8c-af05-4640-ab4a-e158610151ab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: 'Deleted pod: notify-fanout-5ddf8747f-h59lh'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: notify-fanout-5ddf8747f.18df92ff35c0ed4b
+    namespace: larkspur-notify
+    resourceVersion: "11151"
+    uid: bbb6d3e7-c321-4093-a069-897051be5c09
+  reason: SuccessfulDelete
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notify-fanout
+    namespace: larkspur-notify
+    resourceVersion: "10843"
+    uid: 4df82cac-f23c-4340-b1fa-a949d4adc221
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Scaled up replica set notify-fanout-5ddf8747f from 0 to 3
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-fanout.18df92fea208e7cf
+    namespace: larkspur-notify
+    resourceVersion: "10845"
+    uid: bd4039c4-f52e-486c-8a5d-6bdf186ad6e3
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notify-fanout
+    namespace: larkspur-notify
+    resourceVersion: "11143"
+    uid: 4df82cac-f23c-4340-b1fa-a949d4adc221
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Scaled down replica set notify-fanout-5ddf8747f from 3 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: notify-fanout.18df92ff35015b57
+    namespace: larkspur-notify
+    resourceVersion: "11145"
+    uid: 76336beb-b63c-414d-81f2-055fad2a5692
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    resourceVersion: "10780"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Successfully assigned larkspur-notify/notify-templates-8597fbb5dc-jfc5t
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc-jfc5t.18df92fe7dcb644b
+    namespace: larkspur-notify
+    resourceVersion: "10790"
+    uid: 6e4f8e67-a62c-4efb-a5c1-3e42f0494b46
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    resourceVersion: "10784"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc-jfc5t.18df92fe9d3df389
+    namespace: larkspur-notify
+    resourceVersion: "10836"
+    uid: 290f6d0c-518b-4843-9884-ed85139b6d1a
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    resourceVersion: "10784"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-jfc5t.18df92fea2924a97
+    namespace: larkspur-notify
+    resourceVersion: "10848"
+    uid: edcaee84-7919-440a-8012-d94e27c7498d
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    resourceVersion: "10784"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-jfc5t.18df92fea861a9bd
+    namespace: larkspur-notify
+    resourceVersion: "10873"
+    uid: 0cc3a202-932a-43eb-8be5-743fd52113b0
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-jfc5t
+    namespace: larkspur-notify
+    resourceVersion: "10784"
+    uid: 91c5eaf4-32fc-4aa5-b22b-4c031722d9cb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.147:80/": dial tcp 10.244.1.147:80:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-jfc5t.18df92fea89a2225
+    namespace: larkspur-notify
+    resourceVersion: "10874"
+    uid: 9a6a178a-838b-4fe9-bac8-109d488d9928
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    resourceVersion: "10785"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Successfully assigned larkspur-notify/notify-templates-8597fbb5dc-nxxk8
+    to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc-nxxk8.18df92fe7e6bcc3d
+    namespace: larkspur-notify
+    resourceVersion: "10794"
+    uid: c391f016-c357-4c1b-b386-f3d98396594b
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    resourceVersion: "10791"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc-nxxk8.18df92fe9e94d865
+    namespace: larkspur-notify
+    resourceVersion: "10838"
+    uid: 0500de29-21e5-4f37-8642-5d3ba39bac31
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    resourceVersion: "10791"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-nxxk8.18df92fea40eef8d
+    namespace: larkspur-notify
+    resourceVersion: "10859"
+    uid: a7d54d1e-8a3e-4fb5-b73d-0a4152fc0d49
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    resourceVersion: "10791"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-nxxk8.18df92feaba45e9f
+    namespace: larkspur-notify
+    resourceVersion: "10876"
+    uid: 061cbfbb-8fc3-4216-9170-08f3498ead85
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{templates}
+    kind: Pod
+    name: notify-templates-8597fbb5dc-nxxk8
+    namespace: larkspur-notify
+    resourceVersion: "10791"
+    uid: 029ecfed-b3fe-41c4-8e29-82ea8104a1bb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Readiness probe failed: Get "http://10.244.1.148:80/": dial tcp 10.244.1.148:80:
+    connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: notify-templates-8597fbb5dc-nxxk8.18df92feabe27c7f
+    namespace: larkspur-notify
+    resourceVersion: "10877"
+    uid: a44876da-762f-44c4-a2d8-c08330d1f1c8
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-templates-8597fbb5dc
+    namespace: larkspur-notify
+    resourceVersion: "10777"
+    uid: 397874ae-7db6-41d5-9fba-66f4adee1868
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: 'Created pod: notify-templates-8597fbb5dc-jfc5t'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc.18df92fe7d50d63b
+    namespace: larkspur-notify
+    resourceVersion: "10783"
+    uid: 4749b943-3ee6-4bc2-8aa6-81be968febde
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: notify-templates-8597fbb5dc
+    namespace: larkspur-notify
+    resourceVersion: "10777"
+    uid: 397874ae-7db6-41d5-9fba-66f4adee1868
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: 'Created pod: notify-templates-8597fbb5dc-nxxk8'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates-8597fbb5dc.18df92fe7dcbe8a3
+    namespace: larkspur-notify
+    resourceVersion: "10789"
+    uid: ed893b15-9a5a-4f39-bca5-dbfb853e397f
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notify-templates
+    namespace: larkspur-notify
+    resourceVersion: "10776"
+    uid: 99af7cd8-78ea-4522-a077-ac14730f427d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Scaled up replica set notify-templates-8597fbb5dc from 0 to 2
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: notify-templates.18df92fe7ce1779b
+    namespace: larkspur-notify
+    resourceVersion: "10778"
+    uid: b4bf1033-66f9-41c4-a239-8d60436c36a8
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11053"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Successfully assigned larkspur-notify/sms-gateway-99b5477fd-xvq6b to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df92ff080f6eef
+    namespace: larkspur-notify
+    resourceVersion: "11062"
+    uid: ba71766f-7f62-40ea-a607-d4d646429452
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:03Z"
+  message: Container image "harbor.larkspur.internal/notify/sms-gateway:5.3.0" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df92ff29a22abb
+    namespace: larkspur-notify
+    resourceVersion: "13428"
+    uid: 57d6e76e-3435-49d2-981c-4210e878ea52
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 6
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:29Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df92ff2beca6d9
+    namespace: larkspur-notify
+    resourceVersion: "12197"
+    uid: 5b8e2927-0613-4d1c-8ec9-254420ac0488
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 6
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:29Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df92ff315671bd
+    namespace: larkspur-notify
+    resourceVersion: "12198"
+    uid: 89a89365-7704-416a-b682-87fcaff67cfc
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 18
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:06Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:44Z"
+  message: 'Liveness probe failed: Get "http://10.244.1.163:8080/livez": dial tcp
+    10.244.1.163:8080: connect: connection refused'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:06Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df9300464e6d6d
+    namespace: larkspur-notify
+    resourceVersion: "12261"
+    uid: a87776e9-a0bc-4ae5-8d8c-b4b9858c6eab
+  reason: Unhealthy
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 6
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:13Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:44Z"
+  message: Container gateway failed liveness probe, will be restarted
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:13Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df9301f7c5de6b
+    namespace: larkspur-notify
+    resourceVersion: "12262"
+    uid: 9b714cd2-ca9f-4a01-9034-cfe5c7985bf8
+  reason: Killing
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 10
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:55Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gateway}
+    kind: Pod
+    name: sms-gateway-99b5477fd-xvq6b
+    namespace: larkspur-notify
+    resourceVersion: "11059"
+    uid: f7891fce-a87d-4a0f-b127-41dabf9bf8f7
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:23Z"
+  message: Back-off restarting failed container gateway in pod sms-gateway-99b5477fd-xvq6b_larkspur-notify(f7891fce-a87d-4a0f-b127-41dabf9bf8f7)
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:55Z"
+    name: sms-gateway-99b5477fd-xvq6b.18df930bd3d81152
+    namespace: larkspur-notify
+    resourceVersion: "13045"
+    uid: 916cd50e-da21-428c-95cc-764e9f03cada
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: sms-gateway-99b5477fd
+    namespace: larkspur-notify
+    resourceVersion: "11051"
+    uid: e530c6ba-a497-445d-b3aa-46e142256aab
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Created pod: sms-gateway-99b5477fd-xvq6b'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: sms-gateway-99b5477fd.18df92ff06a5a583
+    namespace: larkspur-notify
+    resourceVersion: "11058"
+    uid: c15dd4f6-1f4b-4401-8b5b-6ded78146fb5
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: sms-gateway
+    namespace: larkspur-notify
+    resourceVersion: "11049"
+    uid: b9717b57-2053-49b4-973c-ad6fb8603472
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Scaled up replica set sms-gateway-99b5477fd from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: sms-gateway.18df92ff04d2e4b9
+    namespace: larkspur-notify
+    resourceVersion: "11054"
+    uid: 5e4fa0fa-b7cc-4108-af22-bce43c187c6b
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+kind: List

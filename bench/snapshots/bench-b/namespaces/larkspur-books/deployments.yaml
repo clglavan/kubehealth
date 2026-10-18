@@ -1,0 +1,286 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    generation: 1
+    labels:
+      app: quill-reconciler
+    name: quill-reconciler
+    namespace: larkspur-books
+    resourceVersion: "13728"
+    uid: 754ac669-d386-42f0-867c-f2177283fe8e
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: quill-reconciler
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: quill-reconciler
+      spec:
+        containers:
+        - args:
+          - --period=2026-10
+          - --accounts=all
+          image: harbor.larkspur.internal/books/quill-reconciler:1.9.0
+          imagePullPolicy: IfNotPresent
+          name: reconciler
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:30Z"
+      lastUpdateTime: "2026-10-18T08:37:31Z"
+      message: ReplicaSet "quill-reconciler-b95dd9b7f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:48:08Z"
+      lastUpdateTime: "2026-10-18T08:48:08Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generation: 1
+    labels:
+      app: tally-consumer
+    name: tally-consumer
+    namespace: larkspur-books
+    resourceVersion: "12811"
+    uid: a2861b5f-7335-4ea5-bad5-3df6276d92de
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: tally-consumer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tally-consumer
+      spec:
+        containers:
+        - args:
+          - --redis=tally-redis:6379
+          - --stream=tally-events
+          - --group=reconcilers
+          image: harbor.larkspur.internal/books/tally-consumer:2.7.0
+          imagePullPolicy: IfNotPresent
+          name: consumer
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:31Z"
+      lastUpdateTime: "2026-10-18T08:37:29Z"
+      message: ReplicaSet "tally-consumer-7f7f6fb7b8" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:44:23Z"
+      lastUpdateTime: "2026-10-18T08:44:23Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:32Z"
+    generation: 1
+    labels:
+      app: tally-importer
+    name: tally-importer
+    namespace: larkspur-books
+    resourceVersion: "13620"
+    uid: 0014765b-7c55-495f-8690-6d5a5d89f4ad
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: tally-importer
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tally-importer
+      spec:
+        containers:
+        - args:
+          - --source=/data/inbox
+          - --batch-sise=500
+          - --workers=4
+          image: harbor.larkspur.internal/books/tally-importer:4.2.1
+          imagePullPolicy: IfNotPresent
+          name: importer
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:32Z"
+      lastUpdateTime: "2026-10-18T08:37:30Z"
+      message: ReplicaSet "tally-importer-658b64578d" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:47:57Z"
+      lastUpdateTime: "2026-10-18T08:47:57Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    generation: 1
+    labels:
+      app: tally-redis
+    name: tally-redis
+    namespace: larkspur-books
+    resourceVersion: "13791"
+    uid: aa805f12-5131-41a7-813c-0ca31fb3b1b1
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: tally-redis
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: tally-redis
+      spec:
+        containers:
+        - args:
+          - --appendonly
+          - "no"
+          - --dir
+          - /data
+          image: harbor.larkspur.internal/books/redis:7.2.4
+          imagePullPolicy: IfNotPresent
+          name: redis
+          ports:
+          - containerPort: 6379
+            protocol: TCP
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:31Z"
+      lastUpdateTime: "2026-10-18T08:37:29Z"
+      message: ReplicaSet "tally-redis-5cb7c8b88d" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-10-18T08:48:25Z"
+      lastUpdateTime: "2026-10-18T08:48:25Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+    unavailableReplicas: 1
+    updatedReplicas: 1
+kind: List

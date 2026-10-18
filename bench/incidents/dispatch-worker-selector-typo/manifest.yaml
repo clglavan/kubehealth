@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-notify, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: notify-templates, namespace: larkspur-notify, labels: {app: notify-templates}}
+spec:
+  replicas: 2
+  selector: {matchLabels: {app: notify-templates}}
+  template:
+    metadata: {labels: {app: notify-templates}}
+    spec:
+      containers:
+        - name: templates
+          image: nginx:1.27-alpine
+          ports: [{containerPort: 80}]
+          readinessProbe: {httpGet: {path: /, port: 80}, periodSeconds: 10}
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: notify-templates, namespace: larkspur-notify, labels: {app: notify-templates}}
+spec:
+  selector: {app: notify-template}
+  ports: [{name: http, port: 8080, targetPort: 80}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: dispatch-worker, namespace: larkspur-notify, labels: {app: dispatch-worker}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: dispatch-worker}}
+  template:
+    metadata: {labels: {app: dispatch-worker}}
+    spec:
+      containers:
+        - name: worker
+          image: harbor.larkspur.internal/notify/dispatch-worker:6.0.1
+          args: ["--templates=http://notify-templates:8080", "--queue=outbound"]
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

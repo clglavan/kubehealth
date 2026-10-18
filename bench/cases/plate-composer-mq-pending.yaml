@@ -1,0 +1,10 @@
+id: plate-composer-mq-pending
+snapshot: bench-d
+anchor: {ns: quillmoss-ops, kind: Deployment, name: plate-composer}
+truth: "init container wait-for-mq times out on quill-mq:5672: StatefulSet quill-mq is Pending because it requests 16 CPUs (Insufficient cpu)"
+cause: [["quill-mq"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "pending", "timed out", "timeout", "not up"]]
+deep: [["insufficient cpu", "not enough cpu", "cpu request", "requests 16", "16 cpu", "16 cores", "16 vcpu"]]
+fix: [["quill-mq"], ["cpu"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/plate-composer-mq-pending, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

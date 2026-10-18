@@ -1,0 +1,8 @@
+id: sms-gateway-liveness-slow-start
+snapshot: bench-b
+anchor: {ns: larkspur-notify, kind: Deployment, name: sms-gateway}
+truth: "gateway needs ~50s to load routing tables before listening; the liveness probe (delay 5s, period 5s, 3 failures) kills it first -> restart loop"
+cause: [["liveness"], ["slow", "start", "warm", "loading", "45", "initialdelay", "initial delay", "before", "routing tables"]]
+fix: [["startupprobe", "startup probe", "initialdelayseconds", "initial delay", "failurethreshold", "failure threshold"]]
+source: kubehealth bench incidents (bench/incidents/sms-gateway-liveness-slow-start, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

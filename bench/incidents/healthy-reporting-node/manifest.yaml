@@ -1,0 +1,2 @@
+# Node kh-bench-worker2 is labelled node-pool=reporting and tainted
+# dedicated=reporting:NoSchedule by setup.sh (kubectl label/taint); nothing to apply.

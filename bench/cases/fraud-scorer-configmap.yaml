@@ -1,0 +1,10 @@
+id: fraud-scorer-configmap
+snapshot: payments-prod
+anchor: {ns: payments, kind: Deployment, name: fraud-scorer}
+truth: "envFrom references ConfigMap fraud-rules-v7, which was never created -> CreateContainerConfigError"
+cause: [["fraud-rules-v7", "configmap"]]
+deep: [["fraud-rules-v7"]]
+fix: [["configmap", "fraud-rules-v7", "create"]]
+note_target: true
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

@@ -1,0 +1,866 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T07:02:00Z"
+    generateName: metrics-rollup-29871782-
+    generation: 1
+    labels:
+      batch.kubernetes.io/controller-uid: 13fd37f1-6080-4448-a4db-7112f33186b6
+      batch.kubernetes.io/job-name: metrics-rollup-29871782
+      controller-uid: 13fd37f1-6080-4448-a4db-7112f33186b6
+      job-name: metrics-rollup-29871782
+    name: metrics-rollup-29871782-5lhx5
+    namespace: monitoring
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: metrics-rollup-29871782
+      uid: 13fd37f1-6080-4448-a4db-7112f33186b6
+    resourceVersion: "22750"
+    uid: df45f9be-dabd-42d4-a2cc-a03ba12c72e3
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - echo rolled up 1440 samples
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: rollup
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tjpct
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-tjpct
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:02:02Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:02:00Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:02:01Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:02:01Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:02:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://2174a77739f5540ca70b6ee72557c3213ae3765080703d2d40e862e058d3b3b3
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState: {}
+      name: rollup
+      ready: false
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://2174a77739f5540ca70b6ee72557c3213ae3765080703d2d40e862e058d3b3b3
+          exitCode: 0
+          finishedAt: "2026-10-18T07:02:00Z"
+          reason: Completed
+          startedAt: "2026-10-18T07:02:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-tjpct
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.2.152
+    podIPs:
+    - ip: 10.244.2.152
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T07:02:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:00Z"
+    generateName: metrics-rollup-29871784-
+    generation: 1
+    labels:
+      batch.kubernetes.io/controller-uid: 3d794885-6d71-4c1a-86d7-5b570649450b
+      batch.kubernetes.io/job-name: metrics-rollup-29871784
+      controller-uid: 3d794885-6d71-4c1a-86d7-5b570649450b
+      job-name: metrics-rollup-29871784
+    name: metrics-rollup-29871784-jmqtw
+    namespace: monitoring
+    ownerReferences:
+    - apiVersion: batch/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Job
+      name: metrics-rollup-29871784
+      uid: 3d794885-6d71-4c1a-86d7-5b570649450b
+    resourceVersion: "23179"
+    uid: bb9207c7-4c00-4d28-9940-a93d26d5e2d3
+  spec:
+    containers:
+    - command:
+      - sh
+      - -c
+      - echo rolled up 1440 samples
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: rollup
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ls4tb
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Never
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-ls4tb
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:02Z"
+      message: pod sandbox is not ready
+      observedGeneration: 1
+      reason: PodSandboxNotReady
+      status: "False"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:00Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:01Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:01Z"
+      observedGeneration: 1
+      reason: PodCompleted
+      status: "False"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T07:04:00Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://8d52150a1776b706e8a2e6c3572ce7aa4a8546e977888639c18bfaff41504c6e
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState: {}
+      name: rollup
+      ready: false
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://8d52150a1776b706e8a2e6c3572ce7aa4a8546e977888639c18bfaff41504c6e
+          exitCode: 0
+          finishedAt: "2026-10-18T07:04:00Z"
+          reason: Completed
+          startedAt: "2026-10-18T07:04:00Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-ls4tb
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Succeeded
+    podIP: 10.244.2.157
+    podIPs:
+    - ip: 10.244.2.157
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-18T07:04:00Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: node-agent-
+    generation: 1
+    labels:
+      app: node-agent
+      controller-revision-hash: fdb45459d
+      pod-template-generation: "1"
+    name: node-agent-b94jd
+    namespace: monitoring
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: node-agent
+      uid: d3168f63-501d-440c-98c3-3231b56b19aa
+    resourceVersion: "12387"
+    uid: 6cfdc447-60ab-4859-9378-6b8f17ea951b
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - kh-shop-worker2
+    containers:
+    - command:
+      - sh
+      - -c
+      - while true; do sleep 3600; done
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: agent
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-fjprv
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker2
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    volumes:
+    - name: kube-api-access-fjprv
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://f958961376b4299b6db93d716fa3d2c13e6c6b9c5d05091cbe525c5e4e7939ab
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState:
+        terminated:
+          containerID: containerd://ab11e14d3ec332eb66ba3d77a4b13b2cf9ddd33f8704360a096a0fac31ba1cbd
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:19Z"
+      name: agent
+      ready: true
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:37Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-fjprv
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.2
+    hostIPs:
+    - ip: 172.21.0.2
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.1.5
+    podIPs:
+    - ip: 10.244.1.5
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: node-agent-
+    generation: 1
+    labels:
+      app: node-agent
+      controller-revision-hash: fdb45459d
+      pod-template-generation: "1"
+    name: node-agent-bz2p9
+    namespace: monitoring
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: node-agent
+      uid: d3168f63-501d-440c-98c3-3231b56b19aa
+    resourceVersion: "12422"
+    uid: 55f7efb3-28dd-4aea-966b-8967821c18f2
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - kh-shop-control-plane
+    containers:
+    - command:
+      - sh
+      - -c
+      - while true; do sleep 3600; done
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: agent
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-lb2g7
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-control-plane
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    volumes:
+    - name: kube-api-access-lb2g7
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:37Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://bb37304c048a6f938c50d33d781837cf3557398e7cca7f8999bf0bbf82eb1b17
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState:
+        terminated:
+          containerID: containerd://092cbb3479d01aa846b9d0f15a0d8b2f97abdc3db6e0cc518a87fb6c85854718
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:14Z"
+      name: agent
+      ready: true
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:38Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-lb2g7
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.4
+    hostIPs:
+    - ip: 172.21.0.4
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.0.5
+    podIPs:
+    - ip: 10.244.0.5
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-17T20:14:09Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: node-agent-
+    generation: 1
+    labels:
+      app: node-agent
+      controller-revision-hash: fdb45459d
+      pod-template-generation: "1"
+    name: node-agent-qvq5p
+    namespace: monitoring
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: DaemonSet
+      name: node-agent
+      uid: d3168f63-501d-440c-98c3-3231b56b19aa
+    resourceVersion: "12477"
+    uid: 72b19712-4e35-4c53-91b8-95dcc8e7db11
+  spec:
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchFields:
+            - key: metadata.name
+              operator: In
+              values:
+              - kh-shop-worker
+    containers:
+    - command:
+      - sh
+      - -c
+      - while true; do sleep 3600; done
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: agent
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-6l8hj
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: kh-shop-worker
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/disk-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/memory-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/pid-pressure
+      operator: Exists
+    - effect: NoSchedule
+      key: node.kubernetes.io/unschedulable
+      operator: Exists
+    volumes:
+    - name: kube-api-access-6l8hj
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    allocatedResources:
+      cpu: 5m
+      memory: 8Mi
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:38Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-18T06:06:39Z"
+      observedGeneration: 1
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-10-17T20:14:09Z"
+      observedGeneration: 1
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - allocatedResources:
+        cpu: 5m
+        memory: 8Mi
+      containerID: containerd://533cae79dc19bfa38cb06ff89c2c051a1d6e7798882157ba518889f5cfc0c751
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+      lastState:
+        terminated:
+          containerID: containerd://538e25599aedec04f83f54718b63e021e672672aee5dcc80b7150111591d219d
+          exitCode: 255
+          finishedAt: "2026-10-18T06:06:29Z"
+          reason: Unknown
+          startedAt: "2026-10-17T20:14:22Z"
+      name: agent
+      ready: true
+      resources:
+        requests:
+          cpu: 5m
+          memory: 8Mi
+      restartCount: 1
+      started: true
+      state:
+        running:
+          startedAt: "2026-10-18T06:06:39Z"
+      user:
+        linux:
+          gid: 0
+          supplementalGroups:
+          - 0
+          - 10
+          uid: 0
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-6l8hj
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 172.21.0.3
+    hostIPs:
+    - ip: 172.21.0.3
+    observedGeneration: 1
+    phase: Running
+    podIP: 10.244.2.12
+    podIPs:
+    - ip: 10.244.2.12
+    qosClass: Burstable
+    resources:
+      requests:
+        memory: 8Mi
+    startTime: "2026-10-17T20:14:09Z"
+kind: List

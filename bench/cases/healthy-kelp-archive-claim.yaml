@@ -1,0 +1,7 @@
+id: healthy-kelp-archive-claim
+snapshot: bench-a
+anchor: {ns: tidepool-ingest, kind: PersistentVolumeClaim, name: kelp-archive}
+truth: "healthy PVC, Bound and mounted — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-kelp-archive-claim, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

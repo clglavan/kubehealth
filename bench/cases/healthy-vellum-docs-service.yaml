@@ -1,0 +1,7 @@
+id: healthy-vellum-docs-service
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Service, name: vellum-docs}
+truth: "Service with 2 ready endpoints — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-vellum-docs-service, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

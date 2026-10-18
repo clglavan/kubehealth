@@ -1,0 +1,219 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.104
+    conditions:
+      ready: false
+      serving: false
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: glyph-ocr-model-6578b5984d-zhqqt
+      namespace: quillmoss-render
+      uid: 69ab97ed-fd8c-41cf-8ffe-6807be539f46
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:24Z"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generateName: glyph-ocr-model-
+    generation: 2
+    labels:
+      app: glyph-ocr-model
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: glyph-ocr-model
+    name: glyph-ocr-model-gw7s8
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: glyph-ocr-model
+      uid: 340e083c-cc62-43bd-8545-81f05779f9c5
+    resourceVersion: "8891"
+    uid: bbfd36dc-119a-4031-aced-2c1f4706135e
+  ports:
+  - name: http
+    port: 8501
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints: null
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:24Z"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generateName: glyph-preview-
+    generation: 1
+    labels:
+      app: glyph-preview
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: glyph-preview
+    name: glyph-preview-6kqg7
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: glyph-preview
+      uid: f0235e86-9641-48d0-aa6a-e6a64639eb68
+    resourceVersion: "8784"
+    uid: 3d936e5e-5645-4650-9fda-7b9267cb4ae5
+  ports: null
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.118
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    hostname: glyph-store-0
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: glyph-store-0
+      namespace: quillmoss-render
+      uid: 52271e86-d76f-41cd-ac24-7de7afe2277d
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:29Z"
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    generateName: glyph-store-
+    generation: 3
+    labels:
+      app: glyph-store
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: glyph-store
+      service.kubernetes.io/headless: ""
+    name: glyph-store-88sq5
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: glyph-store
+      uid: 010595b4-ab5a-4b73-8175-a8c0feca433f
+    resourceVersion: "9169"
+    uid: 62947394-11da-4a43-bfb7-2aca832f2a01
+  ports:
+  - name: store
+    port: 7000
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.119
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: inkwell-api-bc6ccb7bc-p8jlf
+      namespace: quillmoss-render
+      uid: 787ed142-8bed-4395-9c55-1d1fc1fb391c
+  - addresses:
+    - 10.244.1.120
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: inkwell-api-bc6ccb7bc-r8pck
+      namespace: quillmoss-render
+      uid: 26cdefa7-1280-4af6-bf59-e9ed5a40f2d1
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:29Z"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generateName: inkwell-api-
+    generation: 3
+    labels:
+      app: inkwell-api
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: inkwell-api
+    name: inkwell-api-2xvvx
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: inkwell-api
+      uid: 33e47c9f-0241-4252-a203-5c9a663c6bcf
+    resourceVersion: "9209"
+    uid: a424ed5b-0886-42f9-a448-e2cadc133f67
+  ports:
+  - name: http
+    port: 8080
+    protocol: TCP
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.1.115
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: vellum-docs-648796bfd8-q6jbp
+      namespace: quillmoss-render
+      uid: abfc06ed-a2d0-4f68-bf33-91ecfee5170e
+  - addresses:
+    - 10.244.1.116
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-bench-worker
+    targetRef:
+      kind: Pod
+      name: vellum-docs-648796bfd8-ww745
+      namespace: quillmoss-render
+      uid: c4d0d515-764b-454e-b428-e30ead921056
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-18T08:37:28Z"
+    creationTimestamp: "2026-10-18T08:37:27Z"
+    generateName: vellum-docs-
+    generation: 3
+    labels:
+      app: vellum-docs
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: vellum-docs
+    name: vellum-docs-2sf92
+    namespace: quillmoss-render
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: vellum-docs
+      uid: 7a9854ce-56d8-41fc-bacf-dc17874c7212
+    resourceVersion: "9087"
+    uid: e41ce36d-88d2-4a52-be3d-0d937374abdc
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+kind: List

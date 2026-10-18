@@ -113,6 +113,22 @@
       </div>
     </div>
 
+    <div>
+      <div class="aim-section-title">Linked evidence</div>
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.45rem">
+        <input id="stg-link-follow" type="checkbox" checked style="accent-color:var(--accent)">
+        <label for="stg-link-follow"
+               style="font-size:0.82rem;color:var(--text)">Follow what the evidence names</label>
+      </div>
+      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+        Before asking the model, KubeHealth reads the objects the evidence clearly names — a claim and its StorageClass,
+        a Service a log line can't reach and the Pods behind it, a missing ConfigMap or Secret key, the nodes of a
+        scheduling failure, image pull secrets — and adds a short block about them to the
+        <strong style="color:var(--text)">AI analysis</strong> and <strong style="color:var(--text)">RCA</strong> prompts.
+        Uses at most 15% of the model's context. Startup default: <code style="font-family:monospace">AI_LINK_FOLLOW</code>.
+      </div>
+    </div>
+
   </div>
 
   <!-- footer -->
@@ -183,6 +199,7 @@
         document.getElementById('stg-rca-iter').value  = d.rca_max_iter   || 5;
         document.getElementById('stg-llm-max').value     = d.llm_max_calls   || 3;
         document.getElementById('stg-llm-timeout').value = d.llm_timeout_min || 10;
+        document.getElementById('stg-link-follow').checked = d.link_follow !== false;
         window.llmTimeoutMs = (d.llm_timeout_min || 10) * 60 * 1000;
       })
       .catch(function() {});
@@ -214,7 +231,8 @@
     fetch('/api/settings', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ log_tail_lines: raw, rca_max_iter: iter, llm_max_calls: maxLLM, llm_timeout_min: timeout })
+      body: JSON.stringify({ log_tail_lines: raw, rca_max_iter: iter, llm_max_calls: maxLLM, llm_timeout_min: timeout,
+                             link_follow: document.getElementById('stg-link-follow').checked })
     })
     .then(saveEnv)
     .then(function(envChanged) {

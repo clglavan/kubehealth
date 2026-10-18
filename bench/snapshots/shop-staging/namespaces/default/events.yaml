@@ -1,0 +1,29 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T07:04:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolume
+    name: legacy-reports-nfs
+    resourceVersion: "23288"
+    uid: e480d6a0-988a-4e64-a504-4260bb4d2cb0
+  kind: Event
+  lastTimestamp: "2026-10-18T07:04:28Z"
+  message: 'error getting deleter volume plugin for volume "legacy-reports-nfs": no
+    deletable volume plugin matched'
+  metadata:
+    creationTimestamp: "2026-10-18T07:04:28Z"
+    name: legacy-reports-nfs.18df8dc8500f6fd1
+    namespace: default
+    resourceVersion: "23290"
+    uid: 4e516681-d824-4381-82f1-088f4a8f5bd5
+  reason: VolumeFailedDelete
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Warning
+kind: List

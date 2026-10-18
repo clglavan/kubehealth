@@ -1,0 +1,9 @@
+id: vellum-gateway-stuck-rollout
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: vellum-gateway}
+truth: "release 3.5.0 sets --listen=:80800 (port out of range): the new ReplicaSet's pod crash-loops while the old 2 pods keep serving; rollout past its progress deadline"
+cause: [["80800", "port out of range", "listen"]]
+deep: [["3.5.0", "new replicaset", "new revision", "rollout", "revision", "new version", "release"]]
+fix: [["rollout undo", "roll back", "rollback", "undo", "80800", "listen", "8080"]]
+source: kubehealth bench incidents (bench/incidents/vellum-gateway-stuck-rollout, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

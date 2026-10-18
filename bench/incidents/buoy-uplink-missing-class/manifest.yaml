@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool-ingest, labels: {team: ocean-data}}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: buoy-spool, namespace: tidepool-ingest}
+spec:
+  accessModes: [ReadWriteOnce]
+  storageClassName: tidepool-nvme
+  resources: {requests: {storage: 5Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: buoy-uplink, namespace: tidepool-ingest, labels: {app: buoy-uplink}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: buoy-uplink}}
+  template:
+    metadata: {labels: {app: buoy-uplink}}
+    spec:
+      containers:
+        - name: uplink
+          image: nginx:1.27-alpine
+          resources: {requests: {cpu: 10m, memory: 16Mi}, limits: {memory: 64Mi}}
+          volumeMounts: [{name: spool, mountPath: /var/spool/buoy}]
+      volumes:
+        - name: spool
+          persistentVolumeClaim: {claimName: buoy-spool}

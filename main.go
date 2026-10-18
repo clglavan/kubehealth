@@ -458,7 +458,7 @@ func groupByObject(events []EventSummary) []ObjectEvents {
 	out := make([]ObjectEvents, 0, len(order))
 	for _, k := range order {
 		o := *index[k]
-		o.Idle = o.HasWarning && time.Since(o.LastWarning) >= idleAfter
+		o.Idle = o.HasWarning && clock().Sub(o.LastWarning) >= idleAfter
 		out = append(out, o)
 	}
 
@@ -495,6 +495,12 @@ var cfg Config
 var version = "dev"
 
 func main() {
+	// `kubehealth bench …` replays recorded incidents through the AI code
+	// paths; see bench.go.
+	if len(os.Args) > 1 && os.Args[1] == "bench" {
+		os.Exit(benchMain(os.Args[2:]))
+	}
+
 	var namespaceList string
 	var showVersion bool
 	flag.StringVar(&namespaceList, "namespaces", "", "Comma-separated list of namespaces (empty = all)")
@@ -757,10 +763,7 @@ func (c *clusterState) fetchEvents(ctx context.Context, namespace string) (summa
 	for _, e := range eventList.Items {
 		summaries = append(summaries, toSummary(e))
 	}
-	// Sort by last timestamp desc
-	sort.Slice(summaries, func(i, j int) bool {
-		return summaries[i].LastTime.After(summaries[j].LastTime)
-	})
+	sortNewestFirst(summaries)
 	return summaries, eventList.Continue != "", nil
 }
 
@@ -793,7 +796,7 @@ func toSummary(e corev1.Event) EventSummary {
 
 	age := "unknown"
 	if !last.IsZero() {
-		d := time.Since(last)
+		d := clock().Sub(last)
 		age = formatDuration(d)
 	}
 
@@ -813,6 +816,11 @@ func toSummary(e corev1.Event) EventSummary {
 		Age:             age,
 	}
 }
+
+// clock is the time that event and object ages are measured against. It is
+// time.Now except in `kubehealth bench run`, which holds it still so that a
+// recorded snapshot shows the same ages for the whole run.
+var clock = time.Now
 
 func formatDuration(d time.Duration) string {
 	d = d.Round(time.Second)
@@ -1053,6 +1061,11 @@ var staticGVR = map[string]schema.GroupVersionResource{
 	"ingress":               {Group: "networking.k8s.io", Version: "v1", Resource: "ingresses"},
 	"node":                  {Group: "", Version: "v1", Resource: "nodes"},
 	"nodes":                 {Group: "", Version: "v1", Resource: "nodes"},
+	"secret":                {Group: "", Version: "v1", Resource: "secrets"},
+	"serviceaccount":        {Group: "", Version: "v1", Resource: "serviceaccounts"},
+	"persistentvolume":      {Group: "", Version: "v1", Resource: "persistentvolumes"},
+	// v2: v1 has no metrics list.
+	"horizontalpodautoscaler": {Group: "autoscaling", Version: "v2", Resource: "horizontalpodautoscalers"},
 }
 
 // kindToGVR resolves a Kubernetes kind to its GroupVersionResource.
@@ -1229,186 +1242,11 @@ func (c *clusterState) fetchObjectInfo(namespace, kind, name string) ObjectInfo 
 		raw = o.Object
 	}
 
-	meta := nmMap(raw, "metadata")
-	info.Labels = toStrMap(meta["labels"])
-	if ct := nmStr(meta, "creationTimestamp"); ct != "" {
-		if t, err := time.Parse(time.RFC3339, ct); err == nil {
-			info.Age = formatDuration(time.Since(t))
-		}
+	endpoints := ""
+	if strings.EqualFold(kind, "Service") {
+		endpoints = c.serviceEndpoints(namespace, name)
 	}
-	if ann := toStrMap(meta["annotations"]); ann != nil {
-		filtered := make(map[string]string)
-		for k, v := range ann {
-			if strings.Contains(k, "last-applied-configuration") || len(v) > 200 {
-				continue
-			}
-			filtered[k] = v
-		}
-		if len(filtered) > 0 {
-			info.Annotations = filtered
-		}
-	}
-
-	spec := nmMap(raw, "spec")
-	status := nmMap(raw, "status")
-	switch strings.ToLower(kind) {
-	case "pod":
-		info.Sections, info.Conditions = infoForPod(spec, status)
-	case "deployment":
-		info.Sections, info.Conditions = infoForDeployment(spec, status)
-	case "replicaset":
-		info.Sections, info.Conditions = infoForReplicaSet(spec, status)
-	case "statefulset":
-		info.Sections, info.Conditions = infoForStatefulSet(spec, status)
-	case "daemonset":
-		info.Sections, info.Conditions = infoForDaemonSet(spec, status)
-	case "job":
-		info.Sections, info.Conditions = infoForJob(spec, status)
-	case "cronjob":
-		info.Sections, _ = infoForCronJob(spec, status)
-	case "service":
-		info.Sections, _ = infoForService(spec, status)
-	}
-	return info
-}
-
-func infoForPod(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var sections []InfoSection
-	var rows []InfoRow
-	rows = rowIf(rows, "Phase", nmStr(status, "phase"))
-	rows = rowIf(rows, "Pod IP", nmStr(status, "podIP"))
-	rows = rowIf(rows, "Node", nmStr(spec, "nodeName"))
-	rows = rowIf(rows, "Host IP", nmStr(status, "hostIP"))
-	rows = rowIf(rows, "QoS Class", nmStr(status, "qosClass"))
-	rows = rowIf(rows, "Service Account", nmStr(spec, "serviceAccountName"))
-	if len(rows) > 0 {
-		sections = append(sections, InfoSection{"Runtime", rows})
-	}
-	for _, raw := range nmSlice(spec, "containers") {
-		c, _ := raw.(map[string]interface{})
-		if c == nil {
-			continue
-		}
-		var cr []InfoRow
-		cr = rowIf(cr, "Image", nmStr(c, "image"))
-		if res := nmMap(c, "resources"); res != nil {
-			if req := nmMap(res, "requests"); req != nil {
-				cr = rowIf(cr, "CPU Request", nmStr(req, "cpu"))
-				cr = rowIf(cr, "Memory Request", nmStr(req, "memory"))
-			}
-			if lim := nmMap(res, "limits"); lim != nil {
-				cr = rowIf(cr, "CPU Limit", nmStr(lim, "cpu"))
-				cr = rowIf(cr, "Memory Limit", nmStr(lim, "memory"))
-			}
-		}
-		sections = append(sections, InfoSection{"Container: " + nmStr(c, "name"), cr})
-	}
-	var csRows []InfoRow
-	for _, raw := range nmSlice(status, "containerStatuses") {
-		cs, _ := raw.(map[string]interface{})
-		if cs == nil {
-			continue
-		}
-		csRows = append(csRows, InfoRow{
-			nmStr(cs, "name"),
-			fmt.Sprintf("ready=%v  restarts=%d", nmStr(cs, "ready"), nmInt(cs, "restartCount")),
-		})
-	}
-	if len(csRows) > 0 {
-		sections = append(sections, InfoSection{"Container Status", csRows})
-	}
-	return sections, extractConditions(status)
-}
-
-func infoForDeployment(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Replicas (desired)", fmt.Sprintf("%d", nmInt(spec, "replicas")))
-	rows = rowIf(rows, "Ready", fmt.Sprintf("%d", nmInt(status, "readyReplicas")))
-	rows = rowIf(rows, "Available", fmt.Sprintf("%d", nmInt(status, "availableReplicas")))
-	rows = rowIf(rows, "Unavailable", fmt.Sprintf("%d", nmInt(status, "unavailableReplicas")))
-	rows = rowIf(rows, "Updated", fmt.Sprintf("%d", nmInt(status, "updatedReplicas")))
-	if strat := nmMap(spec, "strategy"); strat != nil {
-		rows = rowIf(rows, "Strategy", nmStr(strat, "type"))
-	}
-	return []InfoSection{{"Replicas", rows}}, extractConditions(status)
-}
-
-func infoForReplicaSet(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Replicas (desired)", fmt.Sprintf("%d", nmInt(spec, "replicas")))
-	rows = rowIf(rows, "Ready", fmt.Sprintf("%d", nmInt(status, "readyReplicas")))
-	rows = rowIf(rows, "Available", fmt.Sprintf("%d", nmInt(status, "availableReplicas")))
-	return []InfoSection{{"Replicas", rows}}, extractConditions(status)
-}
-
-func infoForStatefulSet(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Replicas (desired)", fmt.Sprintf("%d", nmInt(spec, "replicas")))
-	rows = rowIf(rows, "Ready", fmt.Sprintf("%d", nmInt(status, "readyReplicas")))
-	rows = rowIf(rows, "Current", fmt.Sprintf("%d", nmInt(status, "currentReplicas")))
-	rows = rowIf(rows, "Updated", fmt.Sprintf("%d", nmInt(status, "updatedReplicas")))
-	rows = rowIf(rows, "Service Name", nmStr(spec, "serviceName"))
-	return []InfoSection{{"Replicas", rows}}, extractConditions(status)
-}
-
-func infoForDaemonSet(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Desired", fmt.Sprintf("%d", nmInt(status, "desiredNumberScheduled")))
-	rows = rowIf(rows, "Current", fmt.Sprintf("%d", nmInt(status, "currentNumberScheduled")))
-	rows = rowIf(rows, "Ready", fmt.Sprintf("%d", nmInt(status, "numberReady")))
-	rows = rowIf(rows, "Available", fmt.Sprintf("%d", nmInt(status, "numberAvailable")))
-	rows = rowIf(rows, "Unavailable", fmt.Sprintf("%d", nmInt(status, "numberUnavailable")))
-	return []InfoSection{{"Node Schedule", rows}}, extractConditions(status)
-}
-
-func infoForJob(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	if comp := spec["completions"]; comp != nil {
-		rows = rowIf(rows, "Completions", fmt.Sprintf("%v", comp))
-	}
-	rows = rowIf(rows, "Active", fmt.Sprintf("%d", nmInt(status, "active")))
-	rows = rowIf(rows, "Succeeded", fmt.Sprintf("%d", nmInt(status, "succeeded")))
-	rows = rowIf(rows, "Failed", fmt.Sprintf("%d", nmInt(status, "failed")))
-	rows = rowIf(rows, "Start Time", nmStr(status, "startTime"))
-	rows = rowIf(rows, "Completion Time", nmStr(status, "completionTime"))
-	return []InfoSection{{"Status", rows}}, extractConditions(status)
-}
-
-func infoForCronJob(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Schedule", nmStr(spec, "schedule"))
-	rows = rowIf(rows, "Suspend", nmStr(spec, "suspend"))
-	rows = rowIf(rows, "Last Schedule", nmStr(status, "lastScheduleTime"))
-	rows = rowIf(rows, "Last Successful", nmStr(status, "lastSuccessfulTime"))
-	rows = rowIf(rows, "Active Jobs", fmt.Sprintf("%d", len(nmSlice(status, "active"))))
-	return []InfoSection{{"CronJob", rows}}, nil
-}
-
-func infoForService(spec, status map[string]interface{}) ([]InfoSection, []InfoCondition) {
-	var rows []InfoRow
-	rows = rowIf(rows, "Type", nmStr(spec, "type"))
-	rows = rowIf(rows, "Cluster IP", nmStr(spec, "clusterIP"))
-	if eips := nmSlice(spec, "externalIPs"); len(eips) > 0 {
-		var ips []string
-		for _, ip := range eips {
-			ips = append(ips, fmt.Sprintf("%v", ip))
-		}
-		rows = rowIf(rows, "External IPs", strings.Join(ips, ", "))
-	}
-	var portStrs []string
-	for _, raw := range nmSlice(spec, "ports") {
-		p, _ := raw.(map[string]interface{})
-		if p == nil {
-			continue
-		}
-		portStrs = append(portStrs, fmt.Sprintf("%s:%v→%v/%s",
-			nmStr(p, "name"), nmStr(p, "port"), nmStr(p, "targetPort"), nmStr(p, "protocol")))
-	}
-	if len(portStrs) > 0 {
-		rows = rowIf(rows, "Ports", strings.Join(portStrs, "  "))
-	}
-	rows = rowIf(rows, "Session Affinity", nmStr(spec, "sessionAffinity"))
-	return []InfoSection{{"Service", rows}}, nil
+	return describeObject(info, raw, endpoints, clock())
 }
 
 func handleAPIObject(w http.ResponseWriter, r *http.Request) {

@@ -1,0 +1,9 @@
+id: search-indexer-oom
+snapshot: shop-staging
+anchor: {ns: search, kind: Deployment, name: search-indexer}
+truth: "container exceeds its 48Mi memory limit -> OOMKilled (exit 137)"
+cause: [["oom", "out of memory", "memory limit", "137", "48mi"]]
+deep: [["48mi", "48 mi"]]
+fix: [["limit", "memory"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

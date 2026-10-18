@@ -1,0 +1,7 @@
+id: healthy-reporting-node
+snapshot: bench-a
+anchor: {ns: _cluster, kind: Node, name: kh-bench-worker2}
+truth: "healthy Node, tainted dedicated=reporting:NoSchedule on purpose — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-reporting-node, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

@@ -1,0 +1,8 @@
+id: storefront-readiness-path
+snapshot: shop-staging
+anchor: {ns: frontend, kind: Deployment, name: storefront}
+truth: "readinessProbe httpGet /healthz returns 404 (nginx doesn't serve it) -> 0/2 ready"
+cause: [["readiness", "probe"], ["/healthz", "healthz", "404", "path"]]
+fix: [["path", "probe", "healthz", "readiness"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata: {name: balance-digest, namespace: larkspur-books, labels: {app: balance-digest}}
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata: {labels: {app: balance-digest}}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: digest
+              image: harbor.larkspur.internal/books/balance-digest:2.0.0
+              resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

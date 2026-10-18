@@ -1,0 +1,14 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/quarter-close:2.0.3
+input=""; period=""
+for a in "$@"; do
+  case "$a" in --input=*) input="${a#--input=}" ;; --period=*) period="${a#--period=}" ;; esac
+done
+echo "quarter-close 2.0.3: closing period $period"
+echo "reading trial balance from $input"
+if [ ! -f "$input" ]; then
+  echo "Error: open $input: no such file or directory"
+  echo "quarter-close: aborted, nothing exported"
+  exit 1
+fi
+echo "export done"

@@ -30,6 +30,10 @@ type clusterState struct {
 	client  kubernetes.Interface
 	dynamic dynamic.Interface
 
+	// podLogs, when set, answers container log requests instead of the API
+	// server. Only `kubehealth bench run` sets it, to serve recorded logs.
+	podLogs func(ns, pod, container string, tail int64, previous bool) (string, error)
+
 	nsCache sync.Map // namespace → *nsEntry
 
 	dashboard struct {

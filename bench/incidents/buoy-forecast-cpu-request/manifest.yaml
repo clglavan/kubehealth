@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: tidepool, labels: {team: ocean-data}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: buoy-forecast, namespace: tidepool, labels: {app: buoy-forecast}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: buoy-forecast}}
+  template:
+    metadata: {labels: {app: buoy-forecast}}
+    spec:
+      containers:
+        - name: forecast
+          image: nginx:1.27-alpine
+          resources: {requests: {cpu: "24", memory: 512Mi}, limits: {cpu: "24", memory: 1Gi}}

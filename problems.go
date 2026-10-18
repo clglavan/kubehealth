@@ -280,7 +280,10 @@ func (c *clusterState) groupProblem(g *problemGroup, now time.Time) Problem {
 
 	var newestPod time.Time
 	for ref, m := range g.members {
-		if ref.Kind == "Pod" && m.warn && m.last.After(newestPod) {
+		// Ties go by name: members is a map, and the same events should
+		// always pick the same Pod.
+		newer := m.last.After(newestPod) || (m.last.Equal(newestPod) && p.Pod != "" && ref.Name < p.Pod)
+		if ref.Kind == "Pod" && m.warn && newer {
 			p.Pod, newestPod = ref.Name, m.last
 		}
 	}
@@ -491,7 +494,12 @@ func groupPatterns(problems []Problem, now time.Time) []Problem {
 }
 
 func makePattern(ps []Problem, now time.Time) Problem {
-	sort.Slice(ps, func(i, j int) bool { return ps[i].Occurrences > ps[j].Occurrences })
+	sort.Slice(ps, func(i, j int) bool {
+		if ps[i].Occurrences != ps[j].Occurrences {
+			return ps[i].Occurrences > ps[j].Occurrences
+		}
+		return ps[i].Key < ps[j].Key
+	})
 	p := Problem{Scope: "pattern"}
 	counts := map[string]int64{}
 	nsSet := map[string]bool{}

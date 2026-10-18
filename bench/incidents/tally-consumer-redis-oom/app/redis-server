@@ -1,0 +1,9 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/redis:7.2.4
+echo "1:C 18 Oct 2026 08:00:00.000 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo"
+echo "1:C 18 Oct 2026 08:00:00.000 * Redis version=7.2.4, bits=64, commit=00000000, modified=0, pid=1, just started"
+echo "1:M 18 Oct 2026 08:00:00.001 * Server initialized"
+echo "1:M 18 Oct 2026 08:00:00.001 * Loading RDB produced by version 7.2.4"
+echo "1:M 18 Oct 2026 08:00:00.001 * RDB age 412 seconds"
+echo "1:M 18 Oct 2026 08:00:00.001 * RDB memory usage when created 1.84 Gb"
+exec tail /dev/zero

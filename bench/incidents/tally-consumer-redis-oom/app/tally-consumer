@@ -1,0 +1,12 @@
+#!/bin/sh
+# image: harbor.larkspur.internal/books/tally-consumer:2.7.0
+addr="tally-redis:6379"
+for a in "$@"; do case "$a" in --redis=*) addr="${a#--redis=}" ;; esac; done
+echo "tally-consumer 2.7.0: stream=tally-events group=reconcilers redis=$addr"
+for i in 1 2 3; do
+  if nc -z -w 3 "${addr%:*}" "${addr##*:}" 2>/dev/null; then echo "subscribed"; exec sleep 86400; fi
+  echo "redis $addr: $(telnet "${addr%:*}" "${addr##*:}" </dev/null 2>&1 | head -1) (attempt $i/3)"
+  sleep 2
+done
+echo "Error: redis $addr unavailable, giving up"
+exit 1

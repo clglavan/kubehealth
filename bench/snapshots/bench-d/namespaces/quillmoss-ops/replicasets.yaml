@@ -1,0 +1,408 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    generation: 1
+    labels:
+      app: font-syncer
+      pod-template-hash: d8f4fcfc5
+    name: font-syncer-d8f4fcfc5
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: font-syncer
+      uid: 85e61da7-8bbf-4c8f-8c9a-e47aeac3f1dd
+    resourceVersion: "13605"
+    uid: 524c9eb2-61bb-4e81-bc96-d1f14410f568
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: font-syncer
+        pod-template-hash: d8f4fcfc5
+    template:
+      metadata:
+        labels:
+          app: font-syncer
+          pod-template-hash: d8f4fcfc5
+      spec:
+        containers:
+        - args:
+          - get
+          - configmaps
+          - --namespace=quillmoss-ops
+          - --selector=quillmoss.io/font-set
+          - --output=name
+          image: registry.k8s.io/kubectl:v1.34.1
+          imagePullPolicy: IfNotPresent
+          name: syncer
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 5m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: font-syncer
+        serviceAccountName: font-syncer
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    generation: 1
+    labels:
+      app: glyph-indexer
+      pod-template-hash: 6d86fb6b99
+    name: glyph-indexer-6d86fb6b99
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: glyph-indexer
+      uid: aa9abc24-380a-4649-a787-0be4552cde41
+    resourceVersion: "8712"
+    uid: 10b1f300-7995-4791-8e74-bcc1821d0434
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: glyph-indexer
+        pod-template-hash: 6d86fb6b99
+    template:
+      metadata:
+        labels:
+          app: glyph-indexer
+          pod-template-hash: 6d86fb6b99
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: indexer
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: glyph-indexer
+        serviceAccountName: glyph-indexer
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:24Z"
+      message: 'pods "glyph-indexer-6d86fb6b99-" is forbidden: error looking up service
+        account quillmoss-ops/glyph-indexer: serviceaccount "glyph-indexer" not found'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    observedGeneration: 1
+    replicas: 0
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: ink-proofer
+      pod-template-hash: 864f467b57
+    name: ink-proofer-864f467b57
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: ink-proofer
+      uid: 19e1bd0d-9816-4273-8fa5-e1b379a23675
+    resourceVersion: "12816"
+    uid: d2cffa60-3f68-4eec-aff9-df50e0262ba8
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ink-proofer
+        pod-template-hash: 864f467b57
+    template:
+      metadata:
+        labels:
+          app: ink-proofer
+          pod-template-hash: 864f467b57
+      spec:
+        containers:
+        - args:
+          - --queue=ink-queue:5672
+          - --prefetch=8
+          image: harbor.quillmoss.internal/ops/ink-proofer:1.3.1
+          imagePullPolicy: IfNotPresent
+          name: proofer
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    generation: 1
+    labels:
+      app: ink-queue
+      pod-template-hash: 6cb4f4d9cc
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: ink-queue
+      uid: 51ea4070-5d1a-4334-9584-a64e4b1a54b2
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ink-queue
+        pod-template-hash: 6cb4f4d9cc
+    template:
+      metadata:
+        labels:
+          app: ink-queue
+          pod-template-hash: 6cb4f4d9cc
+      spec:
+        containers:
+        - image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+          imagePullPolicy: IfNotPresent
+          name: queue
+          ports:
+          - containerPort: 5672
+            protocol: TCP
+          resources:
+            limits:
+              memory: 1Gi
+            requests:
+              cpu: 20m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:37:28Z"
+      message: 'pods "ink-queue-6cb4f4d9cc-fnxjc" is forbidden: maximum memory usage
+        per Container is 256Mi, but limit is 1Gi'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    observedGeneration: 1
+    replicas: 0
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: pigment-api
+      pod-template-hash: 96656bddf
+    name: pigment-api-96656bddf
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: pigment-api
+      uid: 9fd280d9-cafa-4f99-96d2-92d15840769d
+    resourceVersion: "9190"
+    uid: 8493d22b-1e88-4091-99d4-0bb28e6c57db
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: pigment-api
+        pod-template-hash: 96656bddf
+    template:
+      metadata:
+        labels:
+          app: pigment-api
+          pod-template-hash: 96656bddf
+      spec:
+        containers:
+        - env:
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: pigment-db
+          - name: DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: pigment-db
+          image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: api
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    generation: 1
+    labels:
+      app: plate-composer
+      pod-template-hash: 84b668d4dd
+    name: plate-composer-84b668d4dd
+    namespace: quillmoss-ops
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: plate-composer
+      uid: 00f86dae-dc0c-4f2e-8720-9547d6813532
+    resourceVersion: "9236"
+    uid: 1c6b4155-646e-49ef-95be-e23bfb6dc589
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: plate-composer
+        pod-template-hash: 84b668d4dd
+    template:
+      metadata:
+        labels:
+          app: plate-composer
+          pod-template-hash: 84b668d4dd
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: composer
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - args:
+          - quill-mq:5672
+          - "10"
+          image: harbor.quillmoss.internal/ops/wait-for:1.0.0
+          imagePullPolicy: IfNotPresent
+          name: wait-for-mq
+          resources:
+            limits:
+              memory: 32Mi
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+kind: List

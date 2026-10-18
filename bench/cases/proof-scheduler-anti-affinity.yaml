@@ -1,0 +1,8 @@
+id: proof-scheduler-anti-affinity
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: proof-scheduler}
+truth: "3 replicas with required podAntiAffinity per hostname, but only one schedulable node (worker2 is tainted) -> 2 pods Pending"
+cause: [["anti-affinity", "antiaffinity", "anti affinity"]]
+fix: [["affinity", "preferred", "replicas", "toleration"]]
+source: kubehealth bench incidents (bench/incidents/proof-scheduler-anti-affinity, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

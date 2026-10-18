@@ -1,0 +1,10 @@
+id: digest-mailer-relay-mount
+snapshot: bench-b
+anchor: {ns: larkspur-notify, kind: CronJob, name: digest-mailer}
+truth: "every run fails 'connection refused' to mail-relay:2525: mail-relay's pod is stuck ContainerCreating because ConfigMap relay-routes (a volume) does not exist"
+cause: [["mail-relay"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect"]]
+deep: [["relay-routes", "configmap", "config map"]]
+fix: [["relay-routes", "configmap", "config map"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/digest-mailer-relay-mount, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

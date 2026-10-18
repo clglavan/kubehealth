@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-books, labels: {team: finance-platform}}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata: {name: fx-snapshot, namespace: larkspur-books, labels: {app: fx-snapshot}}
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 20
+      template:
+        metadata: {labels: {app: fx-snapshot}}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: snapshot
+              image: harbor.larkspur.internal/books/fx-snapshot:3.1.0
+              args: ["--providers=14", "--out=/tmp/rates.json"]
+              resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

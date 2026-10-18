@@ -1,0 +1,115 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "2"
+      deployment.kubernetes.io/max-replicas: "3"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generation: 1
+    labels:
+      app: catalog-api
+      pod-template-hash: 9897f769d
+    name: catalog-api-9897f769d
+    namespace: catalog
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: catalog-api
+      uid: 71299ed8-8f24-487d-806f-8958ca106354
+    resourceVersion: "964"
+    uid: bfb244ea-02d5-4fc0-995b-87f1b20163d1
+  spec:
+    replicas: 2
+    selector:
+      matchLabels:
+        app: catalog-api
+        pod-template-hash: 9897f769d
+    template:
+      metadata:
+        labels:
+          app: catalog-api
+          pod-template-hash: 9897f769d
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: api
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    fullyLabeledReplicas: 2
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "1"
+      deployment.kubernetes.io/max-replicas: "2"
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-17T20:14:25Z"
+    generation: 1
+    labels:
+      app: log-shipper
+      pod-template-hash: 785d97bcf4
+    name: log-shipper-785d97bcf4
+    namespace: catalog
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: log-shipper
+      uid: 9c7debd1-e5c8-47f8-9729-1de3d3d753fe
+    resourceVersion: "1065"
+    uid: 6a46b535-f730-4256-8679-2b3704f99767
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: log-shipper
+        pod-template-hash: 785d97bcf4
+    template:
+      metadata:
+        labels:
+          app: log-shipper
+          pod-template-hash: 785d97bcf4
+      spec:
+        containers:
+        - image: registry.acme-demo.internal/platform/log-shipper:3.1.0
+          imagePullPolicy: IfNotPresent
+          name: shipper
+          resources:
+            requests:
+              cpu: 5m
+              memory: 8Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    fullyLabeledReplicas: 1
+    observedGeneration: 1
+    replicas: 1
+    terminatingReplicas: 0
+kind: List

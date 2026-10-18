@@ -1,0 +1,4 @@
+#!/bin/sh
+# image: harbor.tidepool.internal/ocean/kelp-archiver:1.2.0
+echo "kelp-archiver 1.2.0: archive dir /archive"
+while true; do echo "archived $(date -u +%H:%M) survey batch"; sleep 300; done

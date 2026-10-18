@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-ops, labels: {team: print-studio}}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: proof-probe, namespace: quillmoss-ops, labels: {app: proof-probe}}
+spec:
+  containers:
+    - name: probe
+      image: busybox:1.36
+      command: ["sh", "-c", "while true; do echo \"$(date -u +%H:%M:%S) proof pipeline reachable\"; sleep 60; done"]
+      resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

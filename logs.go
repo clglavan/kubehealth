@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"slices"
 	"strings"
 
 	corev1 "k8s.io/api/core/v1"
@@ -137,7 +138,7 @@ func containerStateLine(p *corev1.Pod) string {
 		return r
 	}
 	memLimit := map[string]string{}
-	for _, c := range p.Spec.Containers {
+	for _, c := range slices.Concat(p.Spec.InitContainers, p.Spec.Containers) {
 		if q, ok := c.Resources.Limits[corev1.ResourceMemory]; ok {
 			memLimit[c.Name] = q.String()
 		}
@@ -164,7 +165,18 @@ func containerStateLine(p *corev1.Pod) string {
 		return s + ")"
 	}
 	var parts []string
+	// Failing init containers first: until they succeed, no other container
+	// starts, so they are the reason the Pod isn't running.
+	statuses := failingInitStatuses(p)
+	names := make([]string, 0, len(statuses)+len(p.Status.ContainerStatuses))
+	for _, cs := range statuses {
+		names = append(names, cs.Name+" (init)")
+	}
 	for _, cs := range p.Status.ContainerStatuses {
+		statuses = append(statuses, cs)
+		names = append(names, cs.Name)
+	}
+	for i, cs := range statuses {
 		var bits []string
 		if cs.RestartCount > 0 {
 			bits = append(bits, fmt.Sprintf("restarted %d times", cs.RestartCount))
@@ -185,13 +197,30 @@ func containerStateLine(p *corev1.Pod) string {
 			bits = append(bits, "now stopped: "+ended(cs.Name, cs.State.Terminated))
 		}
 		if len(bits) > 0 {
-			parts = append(parts, cs.Name+" "+strings.Join(bits, ", "))
+			parts = append(parts, names[i]+" "+strings.Join(bits, ", "))
 		}
 	}
 	if len(parts) == 0 {
 		return ""
 	}
 	return containerStatePrefix + strings.Join(parts, "; ") + "."
+}
+
+// failingInitStatuses are the statuses of a Pod's init containers that are
+// failing: waiting for a reason other than their turn (PodInitializing,
+// ContainerCreating), or last ended with a non-zero exit code.
+func failingInitStatuses(p *corev1.Pod) []corev1.ContainerStatus {
+	var out []corev1.ContainerStatus
+	for _, cs := range p.Status.InitContainerStatuses {
+		w, t, last := cs.State.Waiting, cs.State.Terminated, cs.LastTerminationState.Terminated
+		switch {
+		case w != nil && w.Reason != "" && w.Reason != "PodInitializing" && w.Reason != "ContainerCreating",
+			t != nil && t.ExitCode != 0,
+			last != nil && last.ExitCode != 0:
+			out = append(out, cs)
+		}
+	}
+	return out
 }
 
 // fetchLogsForAI fetches pod logs and returns them as a plain string for
@@ -233,31 +262,56 @@ func fetchLogsForAI(cl *clusterState, ns, pod string) (string, error) {
 	if state := containerStateLine(podObj); state != "" {
 		sb.WriteString(state + "\n")
 	}
-	for _, cName := range containers {
-		content := streamPodLogs(ctx, cl, ns, pod, cName, tail, false)
-		if strings.TrimSpace(content) == "" {
-			// Fallback: previous terminated container — critical for CrashLoopBackOff pods
-			prev := streamPodLogs(ctx, cl, ns, pod, cName, tail, true)
-			if strings.TrimSpace(prev) != "" {
-				content = "[previous container run]\n" + prev
-			}
+	// A failing init container's logs say why the Pod never starts.
+	wroteInit := false
+	for _, cs := range failingInitStatuses(podObj) {
+		if content := containerLogs(ctx, cl, ns, pod, cs.Name, tail); content != "" {
+			fmt.Fprintf(&sb, "=== init container: %s ===\n", cs.Name)
+			writeLogBlock(&sb, content)
+			wroteInit = true
 		}
+	}
+	for _, cName := range containers {
+		content := containerLogs(ctx, cl, ns, pod, cName, tail)
 		if content == "" {
 			continue
 		}
-		if len(containers) > 1 {
+		if len(containers) > 1 || wroteInit {
 			fmt.Fprintf(&sb, "=== container: %s ===\n", cName)
 		}
-		sb.WriteString(content)
-		if !strings.HasSuffix(sb.String(), "\n") {
-			sb.WriteByte('\n')
-		}
+		writeLogBlock(&sb, content)
 	}
 	return sb.String(), nil
 }
 
+// containerLogs is a container's logs, or its previous run's when the
+// current run printed nothing (critical for CrashLoopBackOff Pods).
+func containerLogs(ctx context.Context, cl *clusterState, ns, pod, container string, tail int64) string {
+	content := streamPodLogs(ctx, cl, ns, pod, container, tail, false)
+	if strings.TrimSpace(content) == "" {
+		if prev := streamPodLogs(ctx, cl, ns, pod, container, tail, true); strings.TrimSpace(prev) != "" {
+			content = "[previous container run]\n" + prev
+		}
+	}
+	return content
+}
+
+func writeLogBlock(sb *strings.Builder, content string) {
+	sb.WriteString(content)
+	if !strings.HasSuffix(content, "\n") {
+		sb.WriteByte('\n')
+	}
+}
+
 // streamPodLogs reads logs for one container; returns empty string on any error.
 func streamPodLogs(ctx context.Context, cl *clusterState, ns, pod, container string, tail int64, previous bool) string {
+	if cl.podLogs != nil {
+		out, err := cl.podLogs(ns, pod, container, tail, previous)
+		if err != nil {
+			return ""
+		}
+		return out
+	}
 	stream, err := cl.client.CoreV1().Pods(ns).GetLogs(pod, &corev1.PodLogOptions{
 		Container: container,
 		TailLines: &tail,

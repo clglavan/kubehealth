@@ -1,0 +1,1227 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:23Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    resourceVersion: "8684"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:23Z"
+  message: Successfully assigned quillmoss-ops/font-syncer-d8f4fcfc5-bvn6v to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    name: font-syncer-d8f4fcfc5-bvn6v.18df92da80c5211c
+    namespace: quillmoss-ops
+    resourceVersion: "8689"
+    uid: 9a2abd50-dcfe-4da7-8c9f-762ea7bab6d2
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{syncer}
+    kind: Pod
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    resourceVersion: "8687"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:56Z"
+  message: Container image "registry.k8s.io/kubectl:v1.34.1" already present on machine
+    and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: font-syncer-d8f4fcfc5-bvn6v.18df92da9e06278a
+    namespace: quillmoss-ops
+    resourceVersion: "13596"
+    uid: 7afa8e82-e1c3-4878-8a9e-140b1e5dba17
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{syncer}
+    kind: Pod
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    resourceVersion: "8687"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:56Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: font-syncer-d8f4fcfc5-bvn6v.18df92daa09857e8
+    namespace: quillmoss-ops
+    resourceVersion: "13597"
+    uid: a4798ff4-bf2a-48d2-8be6-c3e39ab377d1
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 8
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{syncer}
+    kind: Pod
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    resourceVersion: "8687"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:56Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: font-syncer-d8f4fcfc5-bvn6v.18df92daa53572d6
+    namespace: quillmoss-ops
+    resourceVersion: "13599"
+    uid: 156f1a8e-b13b-4e3b-bb48-56f668a7e8ba
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 18
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{syncer}
+    kind: Pod
+    name: font-syncer-d8f4fcfc5-bvn6v
+    namespace: quillmoss-ops
+    resourceVersion: "8687"
+    uid: ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:52Z"
+  message: Back-off restarting failed container syncer in pod font-syncer-d8f4fcfc5-bvn6v_quillmoss-ops(ea0afe53-8a45-4d14-8ed7-bf8dad17dc5b)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: font-syncer-d8f4fcfc5-bvn6v.18df92db1a912d17
+    namespace: quillmoss-ops
+    resourceVersion: "13863"
+    uid: bd8944f1-bbdd-4870-8e1a-96c8530be71e
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:23Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: font-syncer-d8f4fcfc5
+    namespace: quillmoss-ops
+    resourceVersion: "8681"
+    uid: 524c9eb2-61bb-4e81-bc96-d1f14410f568
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:23Z"
+  message: 'Created pod: font-syncer-d8f4fcfc5-bvn6v'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    name: font-syncer-d8f4fcfc5.18df92da80189eb0
+    namespace: quillmoss-ops
+    resourceVersion: "8685"
+    uid: 16f596d9-ca85-4f93-bb58-4f5e68f1d1ba
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:23Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: font-syncer
+    namespace: quillmoss-ops
+    resourceVersion: "8680"
+    uid: 85e61da7-8bbf-4c8f-8c9a-e47aeac3f1dd
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:23Z"
+  message: Scaled up replica set font-syncer-d8f4fcfc5 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:23Z"
+    name: font-syncer.18df92da7f933266
+    namespace: quillmoss-ops
+    resourceVersion: "8682"
+    uid: 44f87712-979b-46fa-b485-8af9565e966f
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 18
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: glyph-indexer-6d86fb6b99
+    namespace: quillmoss-ops
+    resourceVersion: "8708"
+    uid: 10b1f300-7995-4791-8e74-bcc1821d0434
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:19Z"
+  message: 'Error creating: pods "glyph-indexer-6d86fb6b99-" is forbidden: error looking
+    up service account quillmoss-ops/glyph-indexer: serviceaccount "glyph-indexer"
+    not found'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-indexer-6d86fb6b99.18df92da9d452c38
+    namespace: quillmoss-ops
+    resourceVersion: "13494"
+    uid: 4b0f05cf-047f-494a-9277-5e234cc22e37
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:24Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: glyph-indexer
+    namespace: quillmoss-ops
+    resourceVersion: "8707"
+    uid: aa9abc24-380a-4649-a787-0be4552cde41
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:24Z"
+  message: Scaled up replica set glyph-indexer-6d86fb6b99 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:24Z"
+    name: glyph-indexer.18df92da9d081ec4
+    namespace: quillmoss-ops
+    resourceVersion: "8709"
+    uid: 36fad273-cf46-43ce-a997-63ca2f3401ef
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    resourceVersion: "9036"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Successfully assigned quillmoss-ops/ink-proofer-864f467b57-jlsln to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer-864f467b57-jlsln.18df92db7f19b8cb
+    namespace: quillmoss-ops
+    resourceVersion: "9047"
+    uid: dc8cd54e-42c4-4f55-93d4-ff708ccce205
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{proofer}
+    kind: Pod
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    resourceVersion: "9042"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:14Z"
+  message: Container image "harbor.quillmoss.internal/ops/ink-proofer:1.3.1" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer-864f467b57-jlsln.18df92db9e348b69
+    namespace: quillmoss-ops
+    resourceVersion: "12763"
+    uid: a0c2504d-d8f6-48cd-b992-ed37f55dd03f
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{proofer}
+    kind: Pod
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    resourceVersion: "9042"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:14Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer-864f467b57-jlsln.18df92dba089c05f
+    namespace: quillmoss-ops
+    resourceVersion: "12767"
+    uid: 865dfaad-27f5-49df-ab23-d133f3952f12
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{proofer}
+    kind: Pod
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    resourceVersion: "9042"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:14Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer-864f467b57-jlsln.18df92dba5997bf3
+    namespace: quillmoss-ops
+    resourceVersion: "12768"
+    uid: f80012b2-2027-4aeb-ab1f-b6fe0a83f37c
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 13
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:51Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{proofer}
+    kind: Pod
+    name: ink-proofer-864f467b57-jlsln
+    namespace: quillmoss-ops
+    resourceVersion: "9042"
+    uid: 9a62aac2-1228-42a3-ac33-0dc21a0387c2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:04Z"
+  message: Back-off restarting failed container proofer in pod ink-proofer-864f467b57-jlsln_quillmoss-ops(9a62aac2-1228-42a3-ac33-0dc21a0387c2)
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:51Z"
+    name: ink-proofer-864f467b57-jlsln.18df92e109bd6830
+    namespace: quillmoss-ops
+    resourceVersion: "13685"
+    uid: 42e32bab-1159-44fa-a6fc-a7d5584379bb
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-proofer-864f467b57
+    namespace: quillmoss-ops
+    resourceVersion: "9035"
+    uid: d2cffa60-3f68-4eec-aff9-df50e0262ba8
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Created pod: ink-proofer-864f467b57-jlsln'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer-864f467b57.18df92db7dfa7bf1
+    namespace: quillmoss-ops
+    resourceVersion: "9041"
+    uid: 37849960-1263-4cbb-b08a-bbce00c3c575
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ink-proofer
+    namespace: quillmoss-ops
+    resourceVersion: "9034"
+    uid: 19e1bd0d-9816-4273-8fa5-e1b379a23675
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Scaled up replica set ink-proofer-864f467b57 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-proofer.18df92db7d8eb08d
+    namespace: quillmoss-ops
+    resourceVersion: "9037"
+    uid: 09c7d2dd-9831-4510-8e5c-362ae7e91b50
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9067"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-fnxjc" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db95d70ae1
+    namespace: quillmoss-ops
+    resourceVersion: "9071"
+    uid: 3d7f75d7-7625-4338-9f2b-66f9fa9276c6
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-krvvr" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db96c698bd
+    namespace: quillmoss-ops
+    resourceVersion: "9077"
+    uid: 9ee51c50-fdb8-48c5-9fd8-605b543ad7e5
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-77hjf" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db97168305
+    namespace: quillmoss-ops
+    resourceVersion: "9080"
+    uid: f0934173-ec08-4096-8ec0-bf7145a3bf2a
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-zsfvg" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db9879e1bf
+    namespace: quillmoss-ops
+    resourceVersion: "9085"
+    uid: 8860f618-34b2-44b7-84da-2f73df6706ce
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-8kxsw" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db9af5b1f3
+    namespace: quillmoss-ops
+    resourceVersion: "9091"
+    uid: ebcb6435-2759-4eac-9a53-89e51e50005a
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-wxrdx" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92db9fdc6185
+    namespace: quillmoss-ops
+    resourceVersion: "9095"
+    uid: 2dbc41d8-4b8a-4bc2-9584-7fa52347dbbb
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-6tkrd" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue-6cb4f4d9cc.18df92dba97cd715
+    namespace: quillmoss-ops
+    resourceVersion: "9109"
+    uid: e290e0f5-db5a-479a-8e12-3927a5366320
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-sv4w6" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: ink-queue-6cb4f4d9cc.18df92dbbca78add
+    namespace: quillmoss-ops
+    resourceVersion: "9148"
+    uid: 63e5c922-adda-4513-9f50-46abffaba6dc
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Error creating: pods "ink-queue-6cb4f4d9cc-4w4rh" is forbidden: maximum
+    memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: ink-queue-6cb4f4d9cc.18df92dbe2fe819b
+    namespace: quillmoss-ops
+    resourceVersion: "9213"
+    uid: f95f385d-4e70-4253-b526-974c0f144786
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 9
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:31Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ink-queue-6cb4f4d9cc
+    namespace: quillmoss-ops
+    resourceVersion: "9073"
+    uid: 807f45af-bf13-4bb6-b0d5-65c0fa3716a9
+  kind: Event
+  lastTimestamp: "2026-10-18T08:47:24Z"
+  message: '(combined from similar events): Error creating: pods "ink-queue-6cb4f4d9cc-km4ff"
+    is forbidden: maximum memory usage per Container is 256Mi, but limit is 1Gi'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:31Z"
+    name: ink-queue-6cb4f4d9cc.18df92dc2f788247
+    namespace: quillmoss-ops
+    resourceVersion: "13513"
+    uid: d5addc0d-2345-4951-9abc-7463d0d5b4fd
+  reason: FailedCreate
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:28Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ink-queue
+    namespace: quillmoss-ops
+    resourceVersion: "9066"
+    uid: 51ea4070-5d1a-4334-9584-a64e4b1a54b2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:28Z"
+  message: Scaled up replica set ink-queue-6cb4f4d9cc from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:28Z"
+    name: ink-queue.18df92db95d93c7b
+    namespace: quillmoss-ops
+    resourceVersion: "9072"
+    uid: 169e3529-7ebf-4103-ac5b-21122119f083
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: pigment-api-96656bddf-4j798
+    namespace: quillmoss-ops
+    resourceVersion: "9184"
+    uid: ca9c680a-42fd-4ce0-b764-90ffad7cc7a2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Successfully assigned quillmoss-ops/pigment-api-96656bddf-4j798 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: pigment-api-96656bddf-4j798.18df92dbd33924e1
+    namespace: quillmoss-ops
+    resourceVersion: "9191"
+    uid: 65c4b9f5-dc46-4e2f-ac5f-c2e2c98fabed
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 49
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: pigment-api-96656bddf-4j798
+    namespace: quillmoss-ops
+    resourceVersion: "9189"
+    uid: ca9c680a-42fd-4ce0-b764-90ffad7cc7a2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:39Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: pigment-api-96656bddf-4j798.18df92dbf3ac559f
+    namespace: quillmoss-ops
+    resourceVersion: "13302"
+    uid: 828b80f1-1c26-4db7-8825-d5e9d4441875
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 49
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{api}
+    kind: Pod
+    name: pigment-api-96656bddf-4j798
+    namespace: quillmoss-ops
+    resourceVersion: "9189"
+    uid: ca9c680a-42fd-4ce0-b764-90ffad7cc7a2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:39Z"
+  message: 'Error: couldn''t find key password in Secret quillmoss-ops/pigment-db'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: pigment-api-96656bddf-4j798.18df92dbf3ae7753
+    namespace: quillmoss-ops
+    resourceVersion: "13304"
+    uid: 0b0efe08-ab6d-4c69-8f62-25ecf5a3b599
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: pigment-api-96656bddf
+    namespace: quillmoss-ops
+    resourceVersion: "9182"
+    uid: 8493d22b-1e88-4091-99d4-0bb28e6c57db
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Created pod: pigment-api-96656bddf-4j798'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: pigment-api-96656bddf.18df92dbd23ddda7
+    namespace: quillmoss-ops
+    resourceVersion: "9187"
+    uid: 67f2ca4c-b191-454f-8a81-a33a4fd7e26f
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: pigment-api
+    namespace: quillmoss-ops
+    resourceVersion: "9181"
+    uid: 9fd280d9-cafa-4f99-96d2-92d15840769d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Scaled up replica set pigment-api-96656bddf from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: pigment-api.18df92dbd208d3f5
+    namespace: quillmoss-ops
+    resourceVersion: "9185"
+    uid: 6416dc79-bb76-453d-b4fa-48480ea407cc
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    resourceVersion: "9228"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Successfully assigned quillmoss-ops/plate-composer-84b668d4dd-4sgtb to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: plate-composer-84b668d4dd-4sgtb.18df92dbea6a14b3
+    namespace: quillmoss-ops
+    resourceVersion: "9235"
+    uid: 128128ec-3bd1-4ae8-b921-868b8162a00e
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{wait-for-mq}
+    kind: Pod
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    resourceVersion: "9232"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:43Z"
+  message: Container image "harbor.quillmoss.internal/ops/wait-for:1.0.0" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: plate-composer-84b668d4dd-4sgtb.18df92dc0688434f
+    namespace: quillmoss-ops
+    resourceVersion: "13317"
+    uid: f9c60076-6e41-40b6-ba87-59a701a60c13
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{wait-for-mq}
+    kind: Pod
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    resourceVersion: "9232"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:43Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: plate-composer-84b668d4dd-4sgtb.18df92dc0911f507
+    namespace: quillmoss-ops
+    resourceVersion: "13318"
+    uid: dec251d8-541f-4b9f-867e-ae33c13e0849
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:30Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{wait-for-mq}
+    kind: Pod
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    resourceVersion: "9232"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:43Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:30Z"
+    name: plate-composer-84b668d4dd-4sgtb.18df92dc11762c4f
+    namespace: quillmoss-ops
+    resourceVersion: "13319"
+    uid: bb1b9c29-77a8-45f0-affc-487b48f4c133
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 11
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:38:44Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.initContainers{wait-for-mq}
+    kind: Pod
+    name: plate-composer-84b668d4dd-4sgtb
+    namespace: quillmoss-ops
+    resourceVersion: "9232"
+    uid: 977acecd-575f-4e30-ad1a-93ea0efc70ba
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:25Z"
+  message: Back-off restarting failed container wait-for-mq in pod plate-composer-84b668d4dd-4sgtb_quillmoss-ops(977acecd-575f-4e30-ad1a-93ea0efc70ba)
+  metadata:
+    creationTimestamp: "2026-10-18T08:38:44Z"
+    name: plate-composer-84b668d4dd-4sgtb.18df92ed543b53ae
+    namespace: quillmoss-ops
+    resourceVersion: "13772"
+    uid: c134c8ad-e08d-4de4-9253-73ccdfecf155
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: plate-composer-84b668d4dd
+    namespace: quillmoss-ops
+    resourceVersion: "9222"
+    uid: 1c6b4155-646e-49ef-95be-e23bfb6dc589
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: 'Created pod: plate-composer-84b668d4dd-4sgtb'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: plate-composer-84b668d4dd.18df92dbe9bee327
+    namespace: quillmoss-ops
+    resourceVersion: "9231"
+    uid: c1dcf1fc-2b4c-405b-809c-76627e309615
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: plate-composer
+    namespace: quillmoss-ops
+    resourceVersion: "9220"
+    uid: 00f86dae-dc0c-4f2e-8720-9547d6813532
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Scaled up replica set plate-composer-84b668d4dd from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: plate-composer.18df92dbe8f35b3f
+    namespace: quillmoss-ops
+    resourceVersion: "9229"
+    uid: 06f535a6-f3f3-4ec5-b482-2b27b4a6fed6
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:25Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: proof-probe
+    namespace: quillmoss-ops
+    resourceVersion: "8849"
+    uid: cf9e938a-4c72-47e7-8011-f8cdbfe56272
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:25Z"
+  message: Successfully assigned quillmoss-ops/proof-probe to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:25Z"
+    name: proof-probe.18df92dafb13afb9
+    namespace: quillmoss-ops
+    resourceVersion: "8851"
+    uid: da2b6431-d34f-45e8-bfce-5462f2cab1f8
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{probe}
+    kind: Pod
+    name: proof-probe
+    namespace: quillmoss-ops
+    resourceVersion: "8850"
+    uid: cf9e938a-4c72-47e7-8011-f8cdbfe56272
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: proof-probe.18df92db17f715c1
+    namespace: quillmoss-ops
+    resourceVersion: "8880"
+    uid: 174b7cf0-54e6-4541-b9f5-484ed72be6f9
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{probe}
+    kind: Pod
+    name: proof-probe
+    namespace: quillmoss-ops
+    resourceVersion: "8850"
+    uid: cf9e938a-4c72-47e7-8011-f8cdbfe56272
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: proof-probe.18df92db1a507ea7
+    namespace: quillmoss-ops
+    resourceVersion: "8882"
+    uid: a8e9503e-0211-4eb9-abcb-bb4b8c7cea0a
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:26Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{probe}
+    kind: Pod
+    name: proof-probe
+    namespace: quillmoss-ops
+    resourceVersion: "8850"
+    uid: cf9e938a-4c72-47e7-8011-f8cdbfe56272
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:26Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:26Z"
+    name: proof-probe.18df92db1edf6447
+    namespace: quillmoss-ops
+    resourceVersion: "8893"
+    uid: 38774813-6052-4084-abe4-895aefa8f119
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 40
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: quill-mq-0
+    namespace: quillmoss-ops
+    resourceVersion: "9221"
+    uid: 6ab91ca3-9e22-4acd-ae88-22d7831841aa
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:36Z"
+  message: '0/3 nodes are available: 1 Insufficient cpu, 2 node(s) had untolerated
+    taint(s). preemption: 0/3 nodes are available: 3 Preemption is not helpful for
+    scheduling.'
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: quill-mq-0.18df92dbe88f5f9f
+    namespace: quillmoss-ops
+    resourceVersion: "13291"
+    uid: 56da7ccc-b66a-4379-b801-c5df7e0011b4
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:37:29Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: quill-mq
+    namespace: quillmoss-ops
+    resourceVersion: "9218"
+    uid: 1f6e082d-e4d5-49ec-8c41-3a85f2d4cadc
+  kind: Event
+  lastTimestamp: "2026-10-18T08:37:29Z"
+  message: Create Pod quill-mq-0 in StatefulSet quill-mq successful
+  metadata:
+    creationTimestamp: "2026-10-18T08:37:29Z"
+    name: quill-mq.18df92dbe888a56f
+    namespace: quillmoss-ops
+    resourceVersion: "9223"
+    uid: 4ec5acbd-e655-4855-b980-32d7353f30f0
+  reason: SuccessfulCreate
+  reportingComponent: statefulset-controller
+  reportingInstance: ""
+  source:
+    component: statefulset-controller
+  type: Normal
+kind: List

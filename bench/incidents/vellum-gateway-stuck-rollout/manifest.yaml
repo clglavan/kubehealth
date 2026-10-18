@@ -1,0 +1,24 @@
+# Applied twice by setup.sh: first as is (3.4.0, --listen=:8080), then with
+# @VERSION@=3.5.0 and @LISTEN@=:80800 once the first rollout is complete.
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-render, labels: {team: print-studio}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: vellum-gateway, namespace: quillmoss-render, labels: {app: vellum-gateway}}
+spec:
+  replicas: 2
+  progressDeadlineSeconds: 120
+  strategy: {type: RollingUpdate, rollingUpdate: {maxUnavailable: 0, maxSurge: 1}}
+  selector: {matchLabels: {app: vellum-gateway}}
+  template:
+    metadata: {labels: {app: vellum-gateway}}
+    spec:
+      containers:
+        - name: gateway
+          image: harbor.quillmoss.internal/render/vellum-gateway:@VERSION@
+          args: ["--listen=@LISTEN@", "--upstreams=stencil-renderer,glyph-preview"]
+          ports: [{containerPort: 8080}]
+          readinessProbe: {tcpSocket: {port: 8080}, periodSeconds: 5}
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

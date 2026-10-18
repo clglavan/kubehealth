@@ -1,0 +1,10 @@
+id: fx-snapshot-deadline
+snapshot: bench-b
+anchor: {ns: larkspur-books, kind: CronJob, name: fx-snapshot}
+truth: "each run polls 14 providers (~70s) but the Job's activeDeadlineSeconds is 20 -> DeadlineExceeded every minute"
+cause: [["deadline", "activedeadlineseconds"]]
+deep: [["20s", "20 s", "20 seconds"]]
+fix: [["deadline", "activedeadlineseconds", "timeout", "providers"]]
+note_target: true
+source: kubehealth bench incidents (bench/incidents/fx-snapshot-deadline, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

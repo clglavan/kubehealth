@@ -1,0 +1,576 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-j68hg
+    namespace: quillmoss-sandbox
+    resourceVersion: "10970"
+    uid: 47832c27-a647-4c1e-83af-bdfdf198a229
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Successfully assigned quillmoss-sandbox/palette-sync-6b5f7cdb8-j68hg to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-j68hg.18df92fedfbd218f
+    namespace: quillmoss-sandbox
+    resourceVersion: "10977"
+    uid: c0699b34-1508-47ee-b8f0-55f2155c4178
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-j68hg
+    namespace: quillmoss-sandbox
+    resourceVersion: "10972"
+    uid: 47832c27-a647-4c1e-83af-bdfdf198a229
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-j68hg.18df92ff00f7d1ab
+    namespace: quillmoss-sandbox
+    resourceVersion: "11045"
+    uid: 24969a2b-b0c4-4b50-91b2-e5273d55da1b
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-j68hg
+    namespace: quillmoss-sandbox
+    resourceVersion: "10972"
+    uid: 47832c27-a647-4c1e-83af-bdfdf198a229
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-j68hg.18df92ff0dfc5895
+    namespace: quillmoss-sandbox
+    resourceVersion: "11073"
+    uid: 5c80eb0c-a640-46ef-9a9d-d1c20087698f
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-j68hg
+    namespace: quillmoss-sandbox
+    resourceVersion: "10972"
+    uid: 47832c27-a647-4c1e-83af-bdfdf198a229
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: palette-sync-6b5f7cdb8-j68hg.18df92ff167ef8f1
+    namespace: quillmoss-sandbox
+    resourceVersion: "11084"
+    uid: 53c06674-97e7-4fc0-aa59-cf79022ffb83
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-s5sgl
+    namespace: quillmoss-sandbox
+    resourceVersion: "10975"
+    uid: 3797f586-8323-4d52-b3ef-c64d1f2376e2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Successfully assigned quillmoss-sandbox/palette-sync-6b5f7cdb8-s5sgl to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-s5sgl.18df92fee0ed191b
+    namespace: quillmoss-sandbox
+    resourceVersion: "10987"
+    uid: e23fad0f-d809-4244-95aa-b59f141fd7b2
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-s5sgl
+    namespace: quillmoss-sandbox
+    resourceVersion: "10979"
+    uid: 3797f586-8323-4d52-b3ef-c64d1f2376e2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container image "nginx:1.27-alpine" already present on machine and can
+    be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-s5sgl.18df92ff03f6159d
+    namespace: quillmoss-sandbox
+    resourceVersion: "11050"
+    uid: 4945a127-0d6c-4db0-919b-e67c051e0387
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-s5sgl
+    namespace: quillmoss-sandbox
+    resourceVersion: "10979"
+    uid: 3797f586-8323-4d52-b3ef-c64d1f2376e2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8-s5sgl.18df92ff0eced365
+    namespace: quillmoss-sandbox
+    resourceVersion: "11074"
+    uid: fa4f261e-fd0a-4c3e-b177-c84918d08052
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{sync}
+    kind: Pod
+    name: palette-sync-6b5f7cdb8-s5sgl
+    namespace: quillmoss-sandbox
+    resourceVersion: "10979"
+    uid: 3797f586-8323-4d52-b3ef-c64d1f2376e2
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: palette-sync-6b5f7cdb8-s5sgl.18df92ff17b0e059
+    namespace: quillmoss-sandbox
+    resourceVersion: "11086"
+    uid: b22a7b0e-ee1f-4451-afd9-8a4d19e3f11f
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10966"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Created pod: palette-sync-6b5f7cdb8-j68hg'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fedf431f25
+    namespace: quillmoss-sandbox
+    resourceVersion: "10973"
+    uid: 506ae779-46ec-4b4f-9e86-c8f6576c2f95
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10966"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-kp26x" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fedfb834db
+    namespace: quillmoss-sandbox
+    resourceVersion: "10976"
+    uid: bc238b07-efc4-46db-b1cc-1947de25382a
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10966"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Created pod: palette-sync-6b5f7cdb8-s5sgl'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee02dcf57
+    namespace: quillmoss-sandbox
+    resourceVersion: "10980"
+    uid: b7aae2ab-ffa4-45f2-8f9a-aab4839ab8f0
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10978"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-wff2c" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee0ce4d33
+    namespace: quillmoss-sandbox
+    resourceVersion: "10986"
+    uid: 05fcf5d7-708d-4772-9df8-c58f77150915
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-zm6mv" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee24f3523
+    namespace: quillmoss-sandbox
+    resourceVersion: "10996"
+    uid: c3c612b6-0eaf-4239-94f7-aabe1ec46a9e
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-wd6tp" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee3042b77
+    namespace: quillmoss-sandbox
+    resourceVersion: "11001"
+    uid: 87049048-7389-4654-8a68-545e9d01f519
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-txmqb" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee3586151
+    namespace: quillmoss-sandbox
+    resourceVersion: "11004"
+    uid: 3572e950-e103-48d7-9414-98366d895c4a
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-glrw2" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92fee59946a1
+    namespace: quillmoss-sandbox
+    resourceVersion: "11016"
+    uid: 88345df3-67de-44ba-88b1-9549c03c6baf
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-v6xvq" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92feef4ac73d
+    namespace: quillmoss-sandbox
+    resourceVersion: "11031"
+    uid: 293b7bf3-a40f-491b-8e5e-27e01e5cc147
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-v28p7" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92ff0232f5a5
+    namespace: quillmoss-sandbox
+    resourceVersion: "11047"
+    uid: c75b55a4-af49-47d8-ad75-ccff1702fd43
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Error creating: pods "palette-sync-6b5f7cdb8-4ffdq" is forbidden: exceeded
+    quota: sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92ff027a58af
+    namespace: quillmoss-sandbox
+    resourceVersion: "11048"
+    uid: d8ba2050-7afc-4f64-88ce-8f154a7b7814
+  reason: FailedCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 10
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: palette-sync-6b5f7cdb8
+    namespace: quillmoss-sandbox
+    resourceVersion: "10988"
+    uid: 69548e3d-ce67-40b2-809a-7d3f9d263815
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:13Z"
+  message: '(combined from similar events): Error creating: pods "palette-sync-6b5f7cdb8-9nn5h"
+    is forbidden: exceeded quota: sandbox-quota, requested: pods=1, used: pods=2,
+    limited: pods=2'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync-6b5f7cdb8.18df92ff05ee9c85
+    namespace: quillmoss-sandbox
+    resourceVersion: "13236"
+    uid: 4766a60f-ad82-485e-8e9f-05595dab6d34
+  reason: FailedCreate
+  reportingComponent: ""
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: palette-sync
+    namespace: quillmoss-sandbox
+    resourceVersion: "10964"
+    uid: 8454eb16-63cb-45c2-828f-ffd86c06b096
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Scaled up replica set palette-sync-6b5f7cdb8 from 0 to 4
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: palette-sync.18df92fede8230b7
+    namespace: quillmoss-sandbox
+    resourceVersion: "10967"
+    uid: 22c7ca9a-5da2-49e8-9225-6916066d519e
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+kind: List

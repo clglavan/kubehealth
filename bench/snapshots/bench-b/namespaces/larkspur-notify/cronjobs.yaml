@@ -1,0 +1,58 @@
+apiVersion: v1
+items:
+- apiVersion: batch/v1
+  kind: CronJob
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    generation: 1
+    labels:
+      app: digest-mailer
+    name: digest-mailer
+    namespace: larkspur-notify
+    resourceVersion: "13886"
+    uid: 9106ad44-94cf-4e97-9426-10c2774f4d05
+  spec:
+    concurrencyPolicy: Forbid
+    failedJobsHistoryLimit: 3
+    jobTemplate:
+      metadata: {}
+      spec:
+        backoffLimit: 0
+        template:
+          metadata:
+            labels:
+              app: digest-mailer
+          spec:
+            containers:
+            - args:
+              - --relay=mail-relay:2525
+              - --digest=daily
+              image: harbor.larkspur.internal/notify/digest-mailer:1.4.2
+              imagePullPolicy: IfNotPresent
+              name: mailer
+              resources:
+                limits:
+                  memory: 32Mi
+                requests:
+                  cpu: 5m
+                  memory: 8Mi
+              terminationMessagePath: /dev/termination-log
+              terminationMessagePolicy: File
+            dnsPolicy: ClusterFirst
+            restartPolicy: Never
+            schedulerName: default-scheduler
+            securityContext: {}
+            terminationGracePeriodSeconds: 30
+    schedule: '*/1 * * * *'
+    successfulJobsHistoryLimit: 3
+    suspend: false
+  status:
+    active:
+    - apiVersion: batch/v1
+      kind: Job
+      name: digest-mailer-29871889
+      namespace: larkspur-notify
+      resourceVersion: "13883"
+      uid: 7b7d7418-43b7-4e2c-985d-898385813311
+    lastScheduleTime: "2026-10-18T08:49:00Z"
+kind: List

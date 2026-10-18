@@ -1,0 +1,81 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    generation: 1
+    labels:
+      app: palette-sync
+    name: palette-sync
+    namespace: quillmoss-sandbox
+    resourceVersion: "11096"
+    uid: 8454eb16-63cb-45c2-828f-ffd86c06b096
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 4
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: palette-sync
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        labels:
+          app: palette-sync
+      spec:
+        containers:
+        - image: nginx:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          name: sync
+          ports:
+          - containerPort: 80
+            protocol: TCP
+          resources:
+            limits:
+              memory: 64Mi
+            requests:
+              cpu: 10m
+              memory: 16Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2026-10-18T08:40:00Z"
+      lastUpdateTime: "2026-10-18T08:40:00Z"
+      message: Deployment does not have minimum availability.
+      reason: MinimumReplicasUnavailable
+      status: "False"
+      type: Available
+    - lastTransitionTime: "2026-10-18T08:40:00Z"
+      lastUpdateTime: "2026-10-18T08:40:00Z"
+      message: 'pods "palette-sync-6b5f7cdb8-kp26x" is forbidden: exceeded quota:
+        sandbox-quota, requested: pods=1, used: pods=2, limited: pods=2'
+      reason: FailedCreate
+      status: "True"
+      type: ReplicaFailure
+    - lastTransitionTime: "2026-10-18T08:40:00Z"
+      lastUpdateTime: "2026-10-18T08:40:01Z"
+      message: ReplicaSet "palette-sync-6b5f7cdb8" is progressing.
+      reason: ReplicaSetUpdated
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 2
+    replicas: 2
+    terminatingReplicas: 0
+    unavailableReplicas: 2
+    updatedReplicas: 2
+kind: List

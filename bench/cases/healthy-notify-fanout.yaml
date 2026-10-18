@@ -1,0 +1,7 @@
+id: healthy-notify-fanout
+snapshot: bench-b
+anchor: {ns: larkspur-notify, kind: Deployment, name: notify-fanout}
+truth: "healthy Deployment scaled down from 3 to 1 replica on purpose (readiness failed once per pod while nginx started) — nothing to fix"
+healthy: true
+source: kubehealth bench incidents (bench/incidents/healthy-notify-fanout, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

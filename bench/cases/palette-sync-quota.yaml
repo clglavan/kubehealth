@@ -1,0 +1,9 @@
+id: palette-sync-quota
+snapshot: bench-c
+anchor: {ns: quillmoss-sandbox, kind: Deployment, name: palette-sync}
+truth: "ResourceQuota sandbox-quota allows 2 pods; 4 replicas -> FailedCreate exceeded quota, 2/4 running"
+cause: [["quota"]]
+deep: [["sandbox-quota", "pods=2", "2 pods"]]
+fix: [["quota", "replicas"]]
+source: kubehealth bench incidents (bench/incidents/palette-sync-quota, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

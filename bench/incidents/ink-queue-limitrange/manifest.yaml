@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: quillmoss-ops, labels: {team: print-studio}}
+---
+apiVersion: v1
+kind: LimitRange
+metadata: {name: ops-limits, namespace: quillmoss-ops}
+spec:
+  limits:
+    - type: Container
+      max: {memory: 256Mi}
+      default: {memory: 128Mi}
+      defaultRequest: {memory: 16Mi}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: ink-queue, namespace: quillmoss-ops, labels: {app: ink-queue}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: ink-queue}}
+  template:
+    metadata: {labels: {app: ink-queue}}
+    spec:
+      containers:
+        - name: queue
+          image: harbor.quillmoss.internal/ops/ink-queue:2.2.0
+          ports: [{containerPort: 5672}]
+          resources: {requests: {cpu: 20m, memory: 512Mi}, limits: {memory: 1Gi}}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: ink-queue, namespace: quillmoss-ops, labels: {app: ink-queue}}
+spec:
+  selector: {app: ink-queue}
+  ports: [{name: amqp, port: 5672, targetPort: 5672}]

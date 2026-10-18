@@ -1,0 +1,1070 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 26
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:57Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: buoy-spool
+    namespace: tidepool-ingest
+    resourceVersion: "10740"
+    uid: ea45c25d-c606-442f-a87d-460d8eec1976
+  kind: Event
+  lastTimestamp: "2026-10-18T08:45:29Z"
+  message: storageclass.storage.k8s.io "tidepool-nvme" not found
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:57Z"
+    name: buoy-spool.18df92fe5a5847b0
+    namespace: tidepool-ingest
+    resourceVersion: "13058"
+    uid: 71c1699c-505e-4e6e-a618-be4591b40682
+  reason: ProvisioningFailed
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Warning
+- apiVersion: v1
+  count: 4
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:57Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: buoy-uplink-868b8cf6b-rbxbt
+    namespace: tidepool-ingest
+    resourceVersion: "10746"
+    uid: cfa6c81f-03a9-411e-b3c0-eb01884800cf
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:44Z"
+  message: '0/3 nodes are available: pod has unbound immediate PersistentVolumeClaims.
+    not found'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:57Z"
+    name: buoy-uplink-868b8cf6b-rbxbt.18df92fe5bd2ee2e
+    namespace: tidepool-ingest
+    resourceVersion: "12866"
+    uid: 6ab70b51-5480-47ee-94bf-6e9ed84f9ef5
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:57Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: buoy-uplink-868b8cf6b
+    namespace: tidepool-ingest
+    resourceVersion: "10743"
+    uid: 41e2a78a-4679-48d0-a8a4-b15b2f47238e
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:57Z"
+  message: 'Created pod: buoy-uplink-868b8cf6b-rbxbt'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:57Z"
+    name: buoy-uplink-868b8cf6b.18df92fe5bc3d7b8
+    namespace: tidepool-ingest
+    resourceVersion: "10747"
+    uid: 45ad33bb-a56f-4703-af01-3bd74fd6b55b
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:57Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: buoy-uplink
+    namespace: tidepool-ingest
+    resourceVersion: "10742"
+    uid: 99252ef1-cef1-4a0f-a22d-a3ba57a39a21
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:57Z"
+  message: Scaled up replica set buoy-uplink-868b8cf6b from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:57Z"
+    name: buoy-uplink.18df92fe5b53ad6c
+    namespace: tidepool-ingest
+    resourceVersion: "10744"
+    uid: 5ff67b75-8a58-4706-a2d0-11b416f86131
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10924"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Successfully assigned tidepool-ingest/ingest-gauge-95865f5c5-gcg62 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92fece19cf05
+    namespace: tidepool-ingest
+    resourceVersion: "10934"
+    uid: 4f77b37b-127a-405a-be8b-ab6699590064
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gauge}
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10930"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:39Z"
+  message: Pulling image "busybox:1.63"
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92fef0608937
+    namespace: tidepool-ingest
+    resourceVersion: "12235"
+    uid: 6c15cfea-475c-4064-9f88-15c33c12a167
+  reason: Pulling
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gauge}
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10930"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:40Z"
+  message: 'Failed to pull image "busybox:1.63": rpc error: code = NotFound desc =
+    failed to pull and unpack image "docker.io/library/busybox:1.63": failed to resolve
+    reference "docker.io/library/busybox:1.63": docker.io/library/busybox:1.63: not
+    found'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92ff1f6564cd
+    namespace: tidepool-ingest
+    resourceVersion: "12237"
+    uid: 1befe9c4-f7d9-4c38-bc5c-7d3e80b33f09
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gauge}
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10930"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:40Z"
+  message: 'Error: ErrImagePull'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92ff1f6715ed
+    namespace: tidepool-ingest
+    resourceVersion: "12238"
+    uid: e043ba22-6e49-406a-9a3c-c817af0e11df
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 21
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gauge}
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10930"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:47Z"
+  message: Back-off pulling image "busybox:1.63"
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92ff4941f379
+    namespace: tidepool-ingest
+    resourceVersion: "12874"
+    uid: 1071f3e3-b3e1-4321-bd6c-c88756ee8b06
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 20
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{gauge}
+    kind: Pod
+    name: ingest-gauge-95865f5c5-gcg62
+    namespace: tidepool-ingest
+    resourceVersion: "10930"
+    uid: e9ed2524-5520-48fe-840c-82bbb2bcf2fb
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:34Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: ingest-gauge-95865f5c5-gcg62.18df92ff4942a25b
+    namespace: tidepool-ingest
+    resourceVersion: "12839"
+    uid: e2016834-39d5-4d32-9664-f5445650efd8
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: ingest-gauge-95865f5c5
+    namespace: tidepool-ingest
+    resourceVersion: "10922"
+    uid: c3626137-7b1b-48e6-a99b-37b13bb9aa70
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: 'Created pod: ingest-gauge-95865f5c5-gcg62'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: ingest-gauge-95865f5c5.18df92fecd50ff35
+    namespace: tidepool-ingest
+    resourceVersion: "10928"
+    uid: 4fd98dbd-d9f0-4002-a228-b9d9076173dd
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:59Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ingest-gauge
+    namespace: tidepool-ingest
+    resourceVersion: "10921"
+    uid: 138e5144-5077-4dfa-9cf9-08f6592690be
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:59Z"
+  message: Scaled up replica set ingest-gauge-95865f5c5 from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:59Z"
+    name: ingest-gauge.18df92fecc22fcad
+    namespace: tidepool-ingest
+    resourceVersion: "10923"
+    uid: ff23375b-c14b-4775-ac2e-2c274d567970
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: kelp-archive
+    namespace: tidepool-ingest
+    resourceVersion: "10811"
+    uid: 68d0653f-bbf4-4241-984b-4c6837829e40
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: waiting for first consumer to be created before binding
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: kelp-archive.18df92fe8fb5a26b
+    namespace: tidepool-ingest
+    resourceVersion: "10812"
+    uid: 7f028e1e-0704-4e9f-8453-89ae097b6a0c
+  reason: WaitForFirstConsumer
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: kelp-archive
+    namespace: tidepool-ingest
+    resourceVersion: "10825"
+    uid: 68d0653f-bbf4-4241-984b-4c6837829e40
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Waiting for a volume to be created either by the external provisioner 'rancher.io/local-path'
+    or manually by the system administrator. If volume creation is delayed, please
+    verify that the provisioner is running and correctly registered.
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: kelp-archive.18df92fe9350780b
+    namespace: tidepool-ingest
+    resourceVersion: "10829"
+    uid: 9d42123a-01a7-4c9d-9a8f-6b5823b1c869
+  reason: ExternalProvisioning
+  reportingComponent: persistentvolume-controller
+  reportingInstance: ""
+  source:
+    component: persistentvolume-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: kelp-archive
+    namespace: tidepool-ingest
+    resourceVersion: "10825"
+    uid: 68d0653f-bbf4-4241-984b-4c6837829e40
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: External provisioner is provisioning volume for claim "tidepool-ingest/kelp-archive"
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: kelp-archive.18df92fe936d05e3
+    namespace: tidepool-ingest
+    resourceVersion: "10828"
+    uid: 9e0fa782-2f6f-4533-b6e9-9fdbeeed1bcd
+  reason: Provisioning
+  reportingComponent: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  reportingInstance: ""
+  source:
+    component: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: kelp-archive
+    namespace: tidepool-ingest
+    resourceVersion: "10825"
+    uid: 68d0653f-bbf4-4241-984b-4c6837829e40
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Successfully provisioned volume pvc-68d0653f-bbf4-4241-984b-4c6837829e40
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: kelp-archive.18df92ff4b3e3b97
+    namespace: tidepool-ingest
+    resourceVersion: "11171"
+    uid: 9fb67998-7d9c-46da-84c5-e9ae78b57920
+  reason: ProvisioningSucceeded
+  reportingComponent: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  reportingInstance: ""
+  source:
+    component: rancher.io/local-path_local-path-provisioner-75f7fc7dc5-rhmrv_734cce37-d863-4b88-b749-da621f29fc41
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:02Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: kelp-archiver-6485ccf74d-pvj7k
+    namespace: tidepool-ingest
+    resourceVersion: "10816"
+    uid: 87a3a593-933f-4ef8-85b5-6bcdf82b256d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:02Z"
+  message: Successfully assigned tidepool-ingest/kelp-archiver-6485ccf74d-pvj7k to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:02Z"
+    name: kelp-archiver-6485ccf74d-pvj7k.18df92ff81a05071
+    namespace: tidepool-ingest
+    resourceVersion: "11194"
+    uid: 6ef19b3c-b696-4593-9791-3e0ebf185b21
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:03Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{archiver}
+    kind: Pod
+    name: kelp-archiver-6485ccf74d-pvj7k
+    namespace: tidepool-ingest
+    resourceVersion: "11193"
+    uid: 87a3a593-933f-4ef8-85b5-6bcdf82b256d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:03Z"
+  message: Container image "harbor.tidepool.internal/ocean/kelp-archiver:1.2.0" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:03Z"
+    name: kelp-archiver-6485ccf74d-pvj7k.18df92ffa146a71d
+    namespace: tidepool-ingest
+    resourceVersion: "11218"
+    uid: 005ae365-73ae-44d3-875d-272d46576693
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:03Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{archiver}
+    kind: Pod
+    name: kelp-archiver-6485ccf74d-pvj7k
+    namespace: tidepool-ingest
+    resourceVersion: "11193"
+    uid: 87a3a593-933f-4ef8-85b5-6bcdf82b256d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:03Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:03Z"
+    name: kelp-archiver-6485ccf74d-pvj7k.18df92ffa3406db5
+    namespace: tidepool-ingest
+    resourceVersion: "11220"
+    uid: 377ac741-c7f0-4d32-9d90-09c9f1318c09
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:03Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{archiver}
+    kind: Pod
+    name: kelp-archiver-6485ccf74d-pvj7k
+    namespace: tidepool-ingest
+    resourceVersion: "11193"
+    uid: 87a3a593-933f-4ef8-85b5-6bcdf82b256d
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:03Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:03Z"
+    name: kelp-archiver-6485ccf74d-pvj7k.18df92ffa7d8c3e5
+    namespace: tidepool-ingest
+    resourceVersion: "11221"
+    uid: d8a8def3-158a-41f8-839c-87c11bd0daa7
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: kelp-archiver-6485ccf74d
+    namespace: tidepool-ingest
+    resourceVersion: "10814"
+    uid: 7d504aea-98ea-4c03-91f1-9901a98ccd5b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: 'Created pod: kelp-archiver-6485ccf74d-pvj7k'
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: kelp-archiver-6485ccf74d.18df92fe9123ea8b
+    namespace: tidepool-ingest
+    resourceVersion: "10818"
+    uid: f17f56be-a38c-437d-985c-f56bdccc53bb
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:39:58Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: kelp-archiver
+    namespace: tidepool-ingest
+    resourceVersion: "10813"
+    uid: 1ecb8cea-4d6c-4234-a759-9801dc4f1d3b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:39:58Z"
+  message: Scaled up replica set kelp-archiver-6485ccf74d from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:39:58Z"
+    name: kelp-archiver.18df92fe908584ef
+    namespace: tidepool-ingest
+    resourceVersion: "10815"
+    uid: 5335fb8d-09ca-417d-a00d-6bef2e605c3e
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11032"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Successfully assigned tidepool-ingest/salinity-model-564c99d44c-qdfgs to
+    kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92fef0f2acd1
+    namespace: tidepool-ingest
+    resourceVersion: "11041"
+    uid: e64daf90-e03b-48ed-ade5-aa0d2da672cd
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model}
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:41Z"
+  message: Pulling image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1"
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff2000561d
+    namespace: tidepool-ingest
+    resourceVersion: "12243"
+    uid: 6f8b5994-d2e7-40f9-8b3b-9278c5ac92b0
+  reason: Pulling
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model}
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:42Z"
+  message: 'Failed to pull image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+    failed to pull and unpack image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+    failed to resolve reference "ghcr.io/tidepool-oceanics/salinity-model:2.4.1":
+    failed to authorize: failed to fetch anonymous token: unexpected status from GET
+    request to https://ghcr.io/token?scope=repository%3Atidepool-oceanics%2Fsalinity-model%3Apull&service=ghcr.io:
+    403 Forbidden'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff39f0a735
+    namespace: tidepool-ingest
+    resourceVersion: "12244"
+    uid: a8258790-e822-4584-8e84-03f39336a6b2
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 5
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model}
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:42:42Z"
+  message: 'Error: ErrImagePull'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff39f2bd4f
+    namespace: tidepool-ingest
+    resourceVersion: "12245"
+    uid: ba9b2ec0-b56b-49f7-8b87-21c21edb8c87
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 4
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:41:22Z"
+  message: Unable to retrieve some image pull secrets (tidepool-ghcr); attempting
+    to pull the image may not succeed.
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff39f3c9dd
+    namespace: tidepool-ingest
+    resourceVersion: "11850"
+    uid: c44917a1-e010-4e96-ae1c-e81b37c3212c
+  reason: FailedToRetrieveImagePullSecret
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 21
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model}
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:38Z"
+  message: Back-off pulling image "ghcr.io/tidepool-oceanics/salinity-model:2.4.1"
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff49297cc7
+    namespace: tidepool-ingest
+    resourceVersion: "12849"
+    uid: f5ac8a21-9a95-4d9d-ab0d-7ddc244d2282
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 21
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{model}
+    kind: Pod
+    name: salinity-model-564c99d44c-qdfgs
+    namespace: tidepool-ingest
+    resourceVersion: "11036"
+    uid: b2724cf0-b523-413f-ad0d-d032f07d4a24
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:38Z"
+  message: 'Error: ImagePullBackOff'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: salinity-model-564c99d44c-qdfgs.18df92ff492a7221
+    namespace: tidepool-ingest
+    resourceVersion: "12850"
+    uid: 60f2e821-4531-48ed-9655-2b39c128eb5d
+  reason: Failed
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: ReplicaSet
+    name: salinity-model-564c99d44c
+    namespace: tidepool-ingest
+    resourceVersion: "11030"
+    uid: 6b52caa7-20ee-412a-bf09-0ed091be23b0
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: 'Created pod: salinity-model-564c99d44c-qdfgs'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: salinity-model-564c99d44c.18df92feefc64737
+    namespace: tidepool-ingest
+    resourceVersion: "11035"
+    uid: a458fea2-b726-4558-b024-3c47820a7474
+  reason: SuccessfulCreate
+  reportingComponent: replicaset-controller
+  reportingInstance: ""
+  source:
+    component: replicaset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:00Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: salinity-model
+    namespace: tidepool-ingest
+    resourceVersion: "11029"
+    uid: 77c6bf09-26f4-4e09-9d55-7643351cdae0
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:00Z"
+  message: Scaled up replica set salinity-model-564c99d44c from 0 to 1
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: salinity-model.18df92feef690ca7
+    namespace: tidepool-ingest
+    resourceVersion: "11033"
+    uid: b546ccce-6032-4e40-8ec2-54b93655c245
+  reason: ScalingReplicaSet
+  reportingComponent: deployment-controller
+  reportingInstance: ""
+  source:
+    component: deployment-controller
+  type: Normal
+- apiVersion: v1
+  count: 2
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: swell-primary-0
+    namespace: tidepool-ingest
+    resourceVersion: "11115"
+    uid: 4ac6ecdf-2991-4419-a940-5a10e6ac2ae0
+  kind: Event
+  lastTimestamp: "2026-10-18T08:44:44Z"
+  message: '0/3 nodes are available: 1 node(s) didn''t match Pod''s node affinity/selector,
+    2 node(s) had untolerated taint(s). preemption: 0/3 nodes are available: 3 Preemption
+    is not helpful for scheduling.'
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-primary-0.18df92ff20d24ddf
+    namespace: tidepool-ingest
+    resourceVersion: "12865"
+    uid: a9019a80-dc24-4a5b-9a8f-8d1f2204dcd2
+  reason: FailedScheduling
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: swell-primary
+    namespace: tidepool-ingest
+    resourceVersion: "11110"
+    uid: 6f29b0af-199b-4fe7-bde3-da975c61eee5
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Create Pod swell-primary-0 in StatefulSet swell-primary successful
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-primary.18df92ff20c9a0d1
+    namespace: tidepool-ingest
+    resourceVersion: "11119"
+    uid: 8415d5de-e4a1-4a24-8242-941b33df751b
+  reason: SuccessfulCreate
+  reportingComponent: statefulset-controller
+  reportingInstance: ""
+  source:
+    component: statefulset-controller
+  type: Normal
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    kind: Pod
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    resourceVersion: "11127"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Successfully assigned tidepool-ingest/swell-replica-0 to kh-bench-worker
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-replica-0.18df92ff235d5fef
+    namespace: tidepool-ingest
+    resourceVersion: "11133"
+    uid: f3c91345-9390-42e3-bd55-8277e4b5ed34
+  reason: Scheduled
+  reportingComponent: default-scheduler
+  reportingInstance: ""
+  source:
+    component: default-scheduler
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    resourceVersion: "11129"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:54Z"
+  message: Container image "harbor.tidepool.internal/ocean/swell-store:1.8.2" already
+    present on machine and can be accessed by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-replica-0.18df92ff419fdf91
+    namespace: tidepool-ingest
+    resourceVersion: "13357"
+    uid: 01fc5c1e-dba0-48e9-a7ef-0666fcc7b374
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    resourceVersion: "11129"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:54Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-replica-0.18df92ff43b7e66b
+    namespace: tidepool-ingest
+    resourceVersion: "13358"
+    uid: ecf74c62-5ae2-4690-b9f3-40721c300e16
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 7
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    resourceVersion: "11129"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:46:54Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-replica-0.18df92ff49005621
+    namespace: tidepool-ingest
+    resourceVersion: "13359"
+    uid: 110e4511-8b3c-456d-9c5a-a4a14fa4bcba
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Normal
+- apiVersion: v1
+  count: 11
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:31Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{store}
+    kind: Pod
+    name: swell-replica-0
+    namespace: tidepool-ingest
+    resourceVersion: "11129"
+    uid: 33fe1b1d-eb53-4558-9fc2-9965a1e8b79b
+  kind: Event
+  lastTimestamp: "2026-10-18T08:48:11Z"
+  message: Back-off restarting failed container store in pod swell-replica-0_tidepool-ingest(33fe1b1d-eb53-4558-9fc2-9965a1e8b79b)
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:31Z"
+    name: swell-replica-0.18df9306225d9e74
+    namespace: tidepool-ingest
+    resourceVersion: "13733"
+    uid: 7a9337da-0b90-46f5-9bd3-e06f363dbd83
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-bench-worker
+  source:
+    component: kubelet
+    host: kh-bench-worker
+  type: Warning
+- apiVersion: v1
+  count: 1
+  eventTime: null
+  firstTimestamp: "2026-10-18T08:40:01Z"
+  involvedObject:
+    apiVersion: apps/v1
+    kind: StatefulSet
+    name: swell-replica
+    namespace: tidepool-ingest
+    resourceVersion: "11117"
+    uid: e377e0ca-1718-4576-9a98-00973380dbb6
+  kind: Event
+  lastTimestamp: "2026-10-18T08:40:01Z"
+  message: Create Pod swell-replica-0 in StatefulSet swell-replica successful
+  metadata:
+    creationTimestamp: "2026-10-18T08:40:01Z"
+    name: swell-replica.18df92ff22e3aebb
+    namespace: tidepool-ingest
+    resourceVersion: "11130"
+    uid: 89943ce3-1993-4f08-980a-fb63200e3a26
+  reason: SuccessfulCreate
+  reportingComponent: statefulset-controller
+  reportingInstance: ""
+  source:
+    component: statefulset-controller
+  type: Normal
+kind: List

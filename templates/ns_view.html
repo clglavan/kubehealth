@@ -1170,11 +1170,18 @@ function aiStreamingFrame(d) {
   h += '<span class="result-toggle-meta">✦ ' + esc(d.model || '') + ' · <span class="ai-stream-ts">generating…</span></span>';
   h += '</div>';
   h += '<div class="result-toggle-body ai-stream-body">';
-  h += d.content
-    ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
-    : '<div class="ai-loading" style="padding:0.25rem 0"><div class="ai-spinner"></div>Processing prompt…</div>';
+  h += aiStreamBody(d);
   h += '</div>';
   return h;
+}
+
+// aiStreamBody is the body of a streaming analysis: the answer so far, or a
+// spinner while the prompt is processed or the model thinks. The model's
+// reasoning is not shown; only its answer is.
+function aiStreamBody(d) {
+  if (d.content) return '<div class="ai-content">' + renderMD(d.content) + '</div>';
+  return '<div class="ai-loading" style="padding:0.25rem 0"><div class="ai-spinner"></div>' +
+    (d.thinking ? 'Thinking…' : 'Processing prompt…') + '</div>';
 }
 
 function toggleResultPanel(hdr) {
@@ -1204,9 +1211,7 @@ function pollAI(url, resultDiv, btn, btnLabel, attempts, collapsible, streamStar
           resultDiv.innerHTML = collapsible ? aiStreamingFrame(d) : aiResultHTML(d);
         } else {
           // Subsequent chunks: update body only — toggle state and header stay intact.
-          streamBody.innerHTML = d.content
-            ? '<div class="ai-content">' + renderMD(d.content) + '</div>'
-            : '<div class="ai-loading" style="padding:0.25rem 0"><div class="ai-spinner"></div>Processing prompt…</div>';
+          streamBody.innerHTML = aiStreamBody(d);
         }
         // Use wall-clock time vs the configured backend timeout (+1 min margin).
         var maxMs = (window.llmTimeoutMs || 10 * 60 * 1000) + 60 * 1000;
@@ -1252,7 +1257,8 @@ var rcaToolLabels = {
   get_pod_logs:           'Pod logs',
   get_object_describe:    'Describe',
   get_object_events:      'Events',
-  get_correlated_events:  'Correlated events'
+  get_correlated_events:  'Correlated events',
+  linked_evidence:        'Linked'
 };
 
 function rcaFindResultDiv(btn) {

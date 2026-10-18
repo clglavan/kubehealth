@@ -1,0 +1,79 @@
+apiVersion: v1
+items:
+- addressType: IPv4
+  apiVersion: discovery.k8s.io/v1
+  endpoints:
+  - addresses:
+    - 10.244.2.11
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-shop-worker
+    targetRef:
+      kind: Pod
+      name: checkout-api-574ccd5ccb-zbt6t
+      namespace: checkout
+      uid: a285ceb9-5ecd-4d27-989e-8af91b8abb99
+  - addresses:
+    - 10.244.2.9
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-shop-worker
+    targetRef:
+      kind: Pod
+      name: checkout-api-574ccd5ccb-2dtjc
+      namespace: checkout
+      uid: 657a12b1-2db6-45db-b248-0a449056f59f
+  - addresses:
+    - 10.244.1.9
+    conditions:
+      ready: true
+      serving: true
+      terminating: false
+    nodeName: kh-shop-worker2
+    targetRef:
+      kind: Pod
+      name: checkout-api-574ccd5ccb-wg8f5
+      namespace: checkout
+      uid: efcebb9a-a203-4da7-87aa-e5752d93f0e4
+  - addresses:
+    - 10.244.2.4
+    conditions:
+      ready: false
+      serving: false
+      terminating: false
+    nodeName: kh-shop-worker
+    targetRef:
+      kind: Pod
+      name: checkout-api-67d6f549fc-cr2fw
+      namespace: checkout
+      uid: 9f729a45-96a1-47c6-abaa-70d54836f996
+  kind: EndpointSlice
+  metadata:
+    annotations:
+      endpoints.kubernetes.io/last-change-trigger-time: "2026-10-17T20:14:09Z"
+    creationTimestamp: "2026-10-17T20:14:09Z"
+    generateName: checkout-api-
+    generation: 6
+    labels:
+      endpointslice.kubernetes.io/managed-by: endpointslice-controller.k8s.io
+      kubernetes.io/service-name: checkout-api
+    name: checkout-api-vh6xk
+    namespace: checkout
+    ownerReferences:
+    - apiVersion: v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Service
+      name: checkout-api
+      uid: 2cc90306-46c1-42ed-848b-7aca19a6c9b2
+    resourceVersion: "12720"
+    uid: cb93edd9-7e4b-40cb-93a1-f631aefc64ac
+  ports:
+  - name: ""
+    port: 80
+    protocol: TCP
+kind: List

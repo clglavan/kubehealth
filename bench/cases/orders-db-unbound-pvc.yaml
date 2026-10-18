@@ -1,0 +1,9 @@
+id: orders-db-unbound-pvc
+snapshot: shop-staging
+anchor: {ns: orders, kind: StatefulSet, name: orders-db}
+truth: "pod orders-db-0 can't schedule: unbound immediate PVC data-orders-db-0, because StorageClass fast-ssd doesn't exist"
+cause: [["pvc", "persistentvolumeclaim", "volume", "unbound", "storageclass", "storage class", "fast-ssd"]]
+deep: [["fast-ssd", "storageclass", "storage class"]]
+fix: [["storageclass", "storage class", "fast-ssd", "pvc", "volume"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

@@ -1,0 +1,9 @@
+id: font-syncer-rbac
+snapshot: bench-d
+anchor: {ns: quillmoss-ops, kind: Deployment, name: font-syncer}
+truth: "ServiceAccount font-syncer has no Role allowing list configmaps -> kubectl gets 403 Forbidden, exits 1, CrashLoopBackOff"
+cause: [["rbac", "role", "permission", "forbidden", "not allowed"], ["configmap", "list"]]
+fix: [["role", "rolebinding", "rbac"]]
+note_target: true
+source: kubehealth bench incidents (bench/incidents/font-syncer-rbac, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

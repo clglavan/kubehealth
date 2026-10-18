@@ -1,0 +1,10 @@
+id: inkwell-thumbnailer-target-port
+snapshot: bench-c
+anchor: {ns: quillmoss-render, kind: Deployment, name: inkwell-thumbnailer}
+truth: "thumbnailer crash-loops on 'connection refused' to inkwell-api: the Service sends port 80 to targetPort 8080, but nginx listens on 80"
+cause: [["inkwell-api"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "port"]]
+deep: [["targetport", "target port", "8080"]]
+fix: [["targetport", "target port", "port"]]
+needs_tool: true
+source: kubehealth bench incidents (bench/incidents/inkwell-thumbnailer-target-port, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

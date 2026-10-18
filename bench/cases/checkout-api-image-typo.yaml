@@ -1,0 +1,9 @@
+id: checkout-api-image-typo
+snapshot: shop-staging
+anchor: {ns: checkout, kind: Deployment, name: checkout-api}
+truth: "new ReplicaSet uses image nginx:1.27.9-alpine (tag typo) -> ImagePullBackOff; old pods keep serving"
+cause: [["image", "tag", "pull"]]
+deep: [["1.27.9", "typo", "not found", "manifest unknown", "does not exist"]]
+fix: [["image", "tag", "rollback", "rollout undo", "undo"]]
+source: kubehealth demo (demo/setup.sh)
+license: kubehealth's own (scenario written for its demo)

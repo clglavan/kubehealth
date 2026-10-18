@@ -1,0 +1,11 @@
+id: swell-replica-primary-pending
+snapshot: bench-a
+anchor: {ns: tidepool-ingest, kind: StatefulSet, name: swell-replica}
+truth: "replica crash-loops: can't connect to swell-primary, whose pod is Pending because its nodeSelector disktype=nvme matches no node"
+cause: [["swell-primary"], ["refused", "unreachable", "unavailable", "not running", "not ready", "down", "no endpoints", "connect", "pending"]]
+deep: [["disktype", "nvme", "nodeselector", "node selector"]]
+fix: [["nodeselector", "node selector", "disktype", "nvme", "label"]]
+needs_tool: true
+note_target: true
+source: kubehealth bench incidents (bench/incidents/swell-replica-primary-pending, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

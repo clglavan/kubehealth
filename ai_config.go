@@ -103,28 +103,64 @@ func fetchLMModelInfo() *LMModelInfo {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
 	defer cancel()
-	req, err := http.NewRequestWithContext(ctx, "GET", lmStudioRoot()+"/api/v0/models", nil)
-	if err != nil {
-		return nil
-	}
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil || resp.StatusCode != http.StatusOK {
-		return nil
-	}
-	defer resp.Body.Close()
 	var result struct {
 		Data []LMModelInfo `json:"data"`
 	}
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+	if getModelsJSON(ctx, lmStudioRoot()+"/api/v0/models", &result) {
+		return pickModel(result.Data)
+	}
+	return fetchLlamaServerModelInfo(ctx)
+}
+
+// fetchLlamaServerModelInfo reads the context length llama-server reports for
+// each slot in its /v1/models entries (meta.n_ctx). It returns nil for servers
+// that don't report one.
+func fetchLlamaServerModelInfo(ctx context.Context) *LMModelInfo {
+	var result struct {
+		Data []struct {
+			ID   string `json:"id"`
+			Meta struct {
+				NCtx int `json:"n_ctx"`
+			} `json:"meta"`
+		} `json:"data"`
+	}
+	if !getModelsJSON(ctx, aiConfig.baseURL+"/models", &result) {
 		return nil
 	}
-	for i := range result.Data {
-		if result.Data[i].ID == aiConfig.model {
-			return &result.Data[i]
+	var models []LMModelInfo
+	for _, d := range result.Data {
+		models = append(models, LMModelInfo{ID: d.ID, State: "loaded", LoadedContextLength: d.Meta.NCtx})
+	}
+	m := pickModel(models)
+	if m == nil || m.LoadedContextLength <= 0 {
+		return nil
+	}
+	return m
+}
+
+// getModelsJSON GETs url and decodes a 200 answer into out.
+func getModelsJSON(ctx context.Context, url string, out any) bool {
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return false
+	}
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return false
+	}
+	defer resp.Body.Close()
+	return resp.StatusCode == http.StatusOK && json.NewDecoder(resp.Body).Decode(out) == nil
+}
+
+// pickModel returns the configured model's entry, or the only one.
+func pickModel(models []LMModelInfo) *LMModelInfo {
+	for i := range models {
+		if models[i].ID == aiConfig.model {
+			return &models[i]
 		}
 	}
-	if len(result.Data) == 1 {
-		return &result.Data[0]
+	if len(models) == 1 {
+		return &models[0]
 	}
 	return nil
 }

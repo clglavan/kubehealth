@@ -1,0 +1,18 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    ca.crt: ""
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-10-18T08:40:00Z"
+    name: kube-root-ca.crt
+    namespace: quillmoss-sandbox
+    resourceVersion: "10960"
+    uid: 8ccfa0df-2f73-4c9e-a6ea-9d8773d157fa
+kind: List

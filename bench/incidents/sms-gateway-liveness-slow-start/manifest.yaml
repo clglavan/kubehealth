@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Namespace
+metadata: {name: larkspur-notify, labels: {team: finance-platform}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: sms-gateway, namespace: larkspur-notify, labels: {app: sms-gateway}}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: sms-gateway}}
+  template:
+    metadata: {labels: {app: sms-gateway}}
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: gateway
+          image: harbor.larkspur.internal/notify/sms-gateway:5.3.0
+          args: ["--listen=:8080", "--routes=/var/lib/sms/routes"]
+          ports: [{containerPort: 8080}]
+          livenessProbe: {httpGet: {path: /livez, port: 8080}, initialDelaySeconds: 5, periodSeconds: 5, failureThreshold: 3}
+          resources: {requests: {cpu: 5m, memory: 8Mi}, limits: {memory: 32Mi}}

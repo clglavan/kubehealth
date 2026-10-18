@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode"
 )
 
 // The cluster brief sits at the top of the home page. It has two parts:
@@ -342,9 +343,11 @@ func (c *clusterState) runBrief(ctx context.Context, cancel context.CancelFunc, 
 	b.runEvidence = evidence
 	b.Unlock()
 
+	// A thinking model would spend briefMaxOutput inside <think> and show
+	// its reasoning as the note, so the note is asked for without it.
 	temp := briefTemperature
-	opts := chatOpts{System: briefSystemPrompt, Temperature: &temp, MaxTokens: briefMaxOutput}
-	out, err := streamChat(ctx, prompt, opts, func(partial string) {
+	opts := chatOpts{System: briefSystemPrompt, Temperature: &temp, MaxTokens: briefMaxOutput, NoThink: true}
+	out, err := streamChat(ctx, prompt, opts, func(partial, _ string) {
 		b.Lock()
 		b.partial = partial
 		b.Unlock()
@@ -426,11 +429,15 @@ func buildNotePrompt(p Problem, logs string, budget int) (prompt, evidence strin
 	question := "\nIn one or two sentences, what should the engineer check first?"
 	lines := interestingLogLines(logs)
 	head := facts.String()
-	for len(lines) > 0 && estimateTokens(head+strings.Join(lines, "\n")+question) > budget {
+	logBlock := func(ls []string) string {
+		return fmt.Sprintf("Last log lines from pod %s:\n%s\n", p.Pod, strings.Join(ls, "\n"))
+	}
+	// Measure the exact prompt, header included, so the budget holds.
+	for len(lines) > 0 && estimateTokens(head+logBlock(lines)+question) > budget {
 		lines = lines[1:]
 	}
 	if len(lines) > 0 {
-		head += fmt.Sprintf("Last log lines from pod %s:\n%s\n", p.Pod, strings.Join(lines, "\n"))
+		head += logBlock(lines)
 		n := fmt.Sprintf("%d log lines", len(lines))
 		if len(lines) == 1 {
 			n = "1 log line"
@@ -448,6 +455,12 @@ func buildNotePrompt(p Problem, logs string, budget int) (prompt, evidence strin
 // blank lines are dropped, and when the tail is long, lines that look like
 // errors are kept ahead of the rest.
 func interestingLogLines(logs string) []string {
+	return pickLogLines(readableLogLines(logs), briefLogLines)
+}
+
+// readableLogLines drops blank lines, stack frames and the markers
+// fetchLogsForAI adds, and shortens very long lines.
+func readableLogLines(logs string) []string {
 	var kept []string
 	for _, l := range strings.Split(logs, "\n") {
 		if strings.TrimSpace(l) == "" || stackFrameRe.MatchString(l) || strings.HasPrefix(l, "===") || strings.HasPrefix(l, "[previous container run]") {
@@ -455,11 +468,15 @@ func interestingLogLines(logs string) []string {
 		}
 		kept = append(kept, truncate(strings.TrimRight(l, " \t"), 200))
 	}
-	if len(kept) <= briefLogLines {
+	return kept
+}
+
+// pickLogLines keeps at most limit lines, in their order: error-looking lines
+// first (up to two thirds of limit), then the most recent others.
+func pickLogLines(kept []string, limit int) []string {
+	if len(kept) <= limit {
 		return kept
 	}
-	// Too many: keep error-looking lines (in their order), then fill up with
-	// the most recent others.
 	var errs []int
 	for i, l := range kept {
 		if logErrorRe.MatchString(l) {
@@ -467,10 +484,10 @@ func interestingLogLines(logs string) []string {
 		}
 	}
 	pick := map[int]bool{}
-	for i := len(errs) - 1; i >= 0 && len(pick) < briefLogLines*2/3; i-- {
+	for i := len(errs) - 1; i >= 0 && len(pick) < limit*2/3; i-- {
 		pick[errs[i]] = true
 	}
-	for i := len(kept) - 1; i >= 0 && len(pick) < briefLogLines; i-- {
+	for i := len(kept) - 1; i >= 0 && len(pick) < limit; i-- {
 		pick[i] = true
 	}
 	var out []string
@@ -550,7 +567,27 @@ func stripThink(s string) string {
 
 // estimateTokens is a rough count: about 3.5 characters per token for this
 // mix of English, identifiers and log text.
-func estimateTokens(s string) int { return int(float64(len([]rune(s)))/3.5) + 1 }
+// estimateTokens is a cheap, slightly high token count for Qwen-family
+// tokenizers: digits and punctuation cost far more than letters, so a flat
+// characters-per-token ratio undercounts logs, IPs and hashes by up to 2.4×.
+// Weights fitted on 501 real kubehealth prompts and tool results (never below
+// 0.96 of the real count, median 1.13).
+func estimateTokens(s string) int {
+	var letters, digits, spaces, other int
+	for _, r := range s {
+		switch {
+		case unicode.IsLetter(r):
+			letters++
+		case unicode.IsDigit(r):
+			digits++
+		case unicode.IsSpace(r):
+			spaces++
+		default:
+			other++
+		}
+	}
+	return int(0.23*float64(letters)+1.36*float64(digits)+0.52*float64(other)+0.55*float64(spaces)) + 1
+}
 
 // ---- Payload --------------------------------------------------------------
 
@@ -634,11 +671,18 @@ func handleAPIBrief(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	now := time.Now()
+	problems := c.regenerateBrief(now)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(c.briefPayload(problems, now))
+}
+
+// regenerateBrief starts a new note on the most urgent problem now, as the
+// Regenerate button does, and returns the problem list it ranked.
+func (c *clusterState) regenerateBrief(now time.Time) []Problem {
 	problems := c.buildProblems(c.allNamespaceEvents(), now)
 	c.brief.Lock()
 	c.brief.force = true
 	c.brief.Unlock()
 	c.maybeStartBrief(problems, now)
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(c.briefPayload(problems, now))
+	return problems
 }

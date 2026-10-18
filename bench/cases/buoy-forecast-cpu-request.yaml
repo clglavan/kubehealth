@@ -1,0 +1,8 @@
+id: buoy-forecast-cpu-request
+snapshot: bench-a
+anchor: {ns: tidepool, kind: Deployment, name: buoy-forecast}
+truth: "the container requests 24 CPUs; no node has more than 8 allocatable -> Insufficient cpu, Pending"
+cause: [["cpu"], ["24", "request", "insufficient"]]
+fix: [["cpu"]]
+source: kubehealth bench incidents (bench/incidents/buoy-forecast-cpu-request, kind cluster kh-bench)
+license: kubehealth's own (scenario written for its benchmark)

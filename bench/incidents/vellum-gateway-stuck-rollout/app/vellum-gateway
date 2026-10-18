@@ -1,0 +1,12 @@
+#!/bin/sh
+# image: harbor.quillmoss.internal/render/vellum-gateway:3.4.0 harbor.quillmoss.internal/render/vellum-gateway:3.5.0
+listen=":8080"
+for a in "$@"; do case "$a" in --listen=*) listen="${a#--listen=}" ;; esac; done
+echo "vellum-gateway starting: upstreams=stencil-renderer,glyph-preview listen=$listen"
+port="${listen##*:}"
+if [ "$port" -gt 65535 ] 2>/dev/null || [ "$port" -lt 1 ] 2>/dev/null; then
+  echo "vellum-gateway: invalid listen address \"$listen\": port out of range"
+  exit 1
+fi
+mkdir -p /tmp/www && echo ok > /tmp/www/index.html
+exec httpd -f -p "$port" -h /tmp/www

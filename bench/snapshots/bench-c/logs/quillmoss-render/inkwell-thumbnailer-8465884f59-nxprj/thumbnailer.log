@@ -1,0 +1,8 @@
+inkwell-thumbnailer 0.9.4: sizes=64,256,1024 source=http://inkwell-api/v1/assets
+listing pending assets: GET http://inkwell-api/v1/assets?state=pending (attempt 1/3)
+wget: can't connect to remote host (10.96.23.112): Connection refused
+listing pending assets: GET http://inkwell-api/v1/assets?state=pending (attempt 2/3)
+wget: can't connect to remote host (10.96.23.112): Connection refused
+listing pending assets: GET http://inkwell-api/v1/assets?state=pending (attempt 3/3)
+wget: can't connect to remote host (10.96.23.112): Connection refused
+FATAL: asset API unreachable, exiting

@@ -1,0 +1,116 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  count: 16
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{indexer}
+    kind: Pod
+    name: search-indexer-6bb9c44bdb-flgl6
+    namespace: search
+    resourceVersion: "12150"
+    uid: 5bdcb474-4b1b-4b25-a9c7-5248a05634c4
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:51Z"
+  message: Container image "busybox:1.36" already present on machine and can be accessed
+    by the pod
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: search-indexer-6bb9c44bdb-flgl6.18df8aa0706172d6
+    namespace: search
+    resourceVersion: "22892"
+    uid: b05f1160-2cd3-4a09-85ff-25efc53cf7dd
+  reason: Pulled
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 15
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{indexer}
+    kind: Pod
+    name: search-indexer-6bb9c44bdb-flgl6
+    namespace: search
+    resourceVersion: "12150"
+    uid: 5bdcb474-4b1b-4b25-a9c7-5248a05634c4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:57:50Z"
+  message: Container created
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: search-indexer-6bb9c44bdb-flgl6.18df8aa07f0ac666
+    namespace: search
+    resourceVersion: "22012"
+    uid: 34a54fd9-b620-4279-a5d4-cff5729d8c7c
+  reason: Created
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 9
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:38Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{indexer}
+    kind: Pod
+    name: search-indexer-6bb9c44bdb-flgl6
+    namespace: search
+    resourceVersion: "12150"
+    uid: 5bdcb474-4b1b-4b25-a9c7-5248a05634c4
+  kind: Event
+  lastTimestamp: "2026-10-18T06:27:35Z"
+  message: Container started
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:38Z"
+    name: search-indexer-6bb9c44bdb-flgl6.18df8aa08a55847a
+    namespace: search
+    resourceVersion: "16782"
+    uid: dc9d9de6-3933-40e0-989b-360a3636aa64
+  reason: Started
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Normal
+- apiVersion: v1
+  count: 60
+  eventTime: null
+  firstTimestamp: "2026-10-18T06:06:39Z"
+  involvedObject:
+    apiVersion: v1
+    fieldPath: spec.containers{indexer}
+    kind: Pod
+    name: search-indexer-6bb9c44bdb-flgl6
+    namespace: search
+    resourceVersion: "12150"
+    uid: 5bdcb474-4b1b-4b25-a9c7-5248a05634c4
+  kind: Event
+  lastTimestamp: "2026-10-18T07:02:15Z"
+  message: Back-off restarting failed container indexer in pod search-indexer-6bb9c44bdb-flgl6_search(5bdcb474-4b1b-4b25-a9c7-5248a05634c4)
+  metadata:
+    creationTimestamp: "2026-10-18T06:06:39Z"
+    name: search-indexer-6bb9c44bdb-flgl6.18df8aa0cb42b002
+    namespace: search
+    resourceVersion: "22815"
+    uid: b7748336-9ce1-4cc2-b198-5f26c3e242a6
+  reason: BackOff
+  reportingComponent: kubelet
+  reportingInstance: kh-shop-worker
+  source:
+    component: kubelet
+    host: kh-shop-worker
+  type: Warning
+kind: List
