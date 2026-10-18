@@ -1,0 +1,56 @@
+# Builds the project site (site/ plus the bench as JSON, see `make site`) and
+# deploys it to GitHub Pages.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site/**'
+      - 'bench/**'
+      - 'docs/images/**'
+      - 'docs/demo.mp4'
+      - '**.go'
+      - 'go.mod'
+      - 'go.sum'
+      - 'Makefile'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0 # tags, for the version in the bench data
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Test the bench export
+        run: go test -run 'TestBenchExport|TestParseResultsTable' ./...
+      - name: Build the site
+        run: make site
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

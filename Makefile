@@ -1,4 +1,4 @@
-.PHONY: help build build-embed embed fetch-assets fetch-model fetch-runtime clean clean-assets run release release-embed
+.PHONY: help build build-embed embed fetch-assets fetch-model fetch-runtime clean clean-assets run release release-embed site
 
 # ---- Configuration --------------------------------------------------------
 
@@ -51,6 +51,7 @@ help:
 	@echo "  make run           go run the regular binary"
 	@echo "  make release       Cross-compile the regular binary for every platform  →  dist/"
 	@echo "  make release-embed Package this platform's embedded binary  →  dist/"
+	@echo "  make site          Build the project site (GitHub Pages) into _site/"
 	@echo "  make clean         Remove built binaries"
 	@echo "  make clean-assets  Remove embedded/ assets (forces re-fetch)"
 	@echo ""
@@ -140,9 +141,17 @@ release-embed:
 		tar -C dist -czf "dist/$$dir.tar.gz" "$$dir" && rm -rf "dist/$$dir" && \
 		cd dist && shasum -a 256 "$$dir.tar.gz" | tee -a checksums-$(VERSION).txt
 
+# The project site (GitHub Pages): site/ plus the screenshots, the video and
+# the bench as JSON. Preview: make site && python3 -m http.server -d _site
+site:
+	rm -rf _site && mkdir -p _site/assets _site/data
+	cp -R site/. _site/
+	cp docs/images/*.png docs/demo.mp4 _site/assets/
+	go run -ldflags "-X main.version=$(VERSION)" . bench export -cases bench/cases -out _site/data/bench.json
+
 clean:
 	rm -f kubehealth kubehealth-embed
-	rm -rf dist
+	rm -rf dist _site
 
 clean-assets:
 	rm -rf embedded/model.gguf embedded/runtime

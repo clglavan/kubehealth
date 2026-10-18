@@ -38,6 +38,8 @@ func benchMain(args []string) int {
 		err = benchScoreCmd(args[1:])
 	case "inspect":
 		err = benchInspectCmd(args[1:])
+	case "export":
+		err = benchExportCmd(args[1:])
 	case "-h", "-help", "--help", "help":
 		benchUsage()
 		return 0
@@ -59,6 +61,7 @@ func benchUsage() {
   kubehealth bench run     -cases bench/cases -llm <OpenAI-compatible base URL> -model <name> -out <results.json> [-seeds 1,2,3]
   kubehealth bench score   -results a.json,b.json [-out scorecard.md]
   kubehealth bench inspect -snapshot bench/snapshots/<name> [-cases bench/cases]
+  kubehealth bench export  -cases bench/cases -out site.json   (the bench as JSON, for the project site)
 
 Run a command with -h for its flags.
 `)

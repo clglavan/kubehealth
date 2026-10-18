@@ -2,6 +2,7 @@
 /kubehealth
 /kubehealth-embed
 /dist/
+/_site/
 
 # Model and llama.cpp runtime for the embedded build (see embedded/README.md)
 *.gguf

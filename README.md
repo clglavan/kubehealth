@@ -4,7 +4,7 @@ Local, read-only k8s triage. One binary on your laptop, pointed at your kubeconf
 
 [![demo](docs/demo.gif)](docs/demo.mp4)
 
-[Full-quality video](docs/demo.mp4) · [Releases](https://github.com/clglavan/kubehealth/releases) · [Try it on kind](demo/README.md)
+[Website & benchmark explorer](https://clglavan.github.io/kubehealth/) · [Full-quality video](docs/demo.mp4) · [Releases](https://github.com/clglavan/kubehealth/releases) · [Try it on kind](demo/README.md)
 
 ## Screenshots
 

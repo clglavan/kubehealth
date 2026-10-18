@@ -1,0 +1,874 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>KubeHealth · local Kubernetes triage and its benchmark</title>
+<meta name="description" content="KubeHealth: local, read-only Kubernetes triage with an optional small local model. KubeHealth-Bench: 54 frozen incidents that test the model through KubeHealth itself.">
+<meta property="og:title" content="KubeHealth">
+<meta property="og:description" content="Local, read-only k8s triage. Shows what's broken, not a wall of events. Plus a benchmark of 54 frozen incidents.">
+<meta property="og:image" content="https://clglavan.github.io/kubehealth/assets/01-overview.png">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0d12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%236366f1'/%3E%3Cpath d='M6 17h5l3-7 4 13 3-6h5' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #0b0d12; --bg2: #0f1117; --surface: #151924; --raised: #1c2130; --sunk: #0d1016;
+    --border: #262b3a; --border2: #323849;
+    --text: #e5e9f0; --muted: #8f99ab; --faint: #5b6577;
+    --accent: #6366f1; --accent-text: #8b93fb; --accent-bg: rgba(99,102,241,0.13);
+    --ok: #34d399; --ok-bg: rgba(52,211,153,0.11);
+    --warn: #f5a524; --warn-bg: rgba(245,165,36,0.11);
+    --crit: #f87171; --crit-bg: rgba(248,113,113,0.12);
+    --teal: #2dd4bf;
+    --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, 'Helvetica Neue', sans-serif;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 var(--sans); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+  a { color: var(--accent-text); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  code, kbd { font: 0.88em var(--mono); background: var(--raised); border: 1px solid var(--border); border-radius: 5px; padding: 0.08em 0.35em; }
+  img, video { max-width: 100%; display: block; }
+  button { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--accent-text); outline-offset: 2px; border-radius: 4px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  @media (max-width: 640px) { .wrap { padding: 0 16px; } }
+
+  /* ── Nav ── */
+  .nav { position: sticky; top: 0; z-index: 50; background: rgba(11,13,18,0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .nav .wrap { display: flex; align-items: center; gap: 22px; height: 58px; }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 700; letter-spacing: -0.01em; color: var(--text); }
+  .brand:hover { text-decoration: none; }
+  .brand svg { width: 24px; height: 24px; }
+  .nav-links { display: flex; gap: 20px; margin-left: auto; font-size: 14.5px; }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover, .nav-links a.on { color: var(--text); text-decoration: none; }
+  .gh { display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border: 1px solid var(--border2); border-radius: 8px; color: var(--text) !important; font-size: 14px; }
+  .gh:hover { border-color: var(--muted); text-decoration: none; }
+  @media (max-width: 760px) { .nav-links a:not(.gh) { display: none; } }
+
+  /* ── Buttons ── */
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 9px; font-weight: 600; font-size: 15px; border: 1px solid var(--border2); background: var(--raised); color: var(--text); cursor: pointer; }
+  .btn:hover { border-color: var(--muted); text-decoration: none; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .btn.primary:hover { background: #5458e8; }
+
+  /* ── Hero ── */
+  .hero { padding: 72px 0 40px; position: relative; }
+  .hero::before { content: ''; position: absolute; inset: -120px 0 auto; height: 560px; background: radial-gradient(60% 60% at 70% 30%, rgba(99,102,241,0.18), transparent 70%); pointer-events: none; }
+  .hero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 48px; align-items: center; position: relative; }
+  @media (max-width: 960px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; } .hero { padding-top: 44px; } }
+  .eyebrow { font: 600 12.5px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-text); }
+  h1 { font-size: clamp(36px, 5vw, 56px); line-height: 1.04; letter-spacing: -0.035em; margin: 14px 0 18px; }
+  h1 em { font-style: normal; color: var(--accent-text); }
+  .lede { font-size: 18.5px; color: #c3cad6; max-width: 34em; margin: 0 0 26px; }
+  .cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 26px; font-size: 14px; color: var(--muted); }
+  .facts span::before { content: '✓'; color: var(--ok); margin-right: 7px; font-weight: 700; }
+  .shot { border-radius: var(--radius); border: 1px solid var(--border2); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02); background: var(--bg2); }
+  .shot video { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+
+  /* ── Sections ── */
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--border); }
+  h2 { font-size: clamp(28px, 3.4vw, 38px); letter-spacing: -0.025em; line-height: 1.12; margin: 10px 0 14px; }
+  h3 { font-size: 18px; letter-spacing: -0.01em; margin: 0 0 6px; }
+  .sub { color: #b4bccb; font-size: 17.5px; max-width: 46em; margin: 0 0 36px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 13.5px; }
+
+  /* ── Feature gallery ── */
+  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  @media (max-width: 760px) { .gallery { grid-template-columns: minmax(0, 1fr); } }
+  .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+  .tile button { padding: 0; border: 0; background: none; cursor: zoom-in; display: block; }
+  .tile img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top left; border-bottom: 1px solid var(--border); }
+  .tile .cap { padding: 16px 18px 18px; }
+  .tile .cap p { margin: 0; color: var(--muted); font-size: 14.5px; }
+
+  /* ── Pipeline ── */
+  .pipe { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; position: relative; }
+  @media (max-width: 960px) { .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .stage { text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 14px 13px; cursor: pointer; position: relative; transition: border-color .15s, background .15s, transform .15s; }
+  .stage:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .stage[aria-selected="true"] { border-color: var(--accent); background: linear-gradient(180deg, rgba(99,102,241,0.14), rgba(99,102,241,0.04)); }
+  .stage .n { font: 600 11.5px/1 var(--mono); color: var(--faint); }
+  .stage[aria-selected="true"] .n { color: var(--accent-text); }
+  .stage .k { font-weight: 700; margin: 8px 0 3px; font-size: 15.5px; }
+  .stage .t { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
+  .stage-detail { margin-top: 14px; background: var(--sunk); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; min-height: 92px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
+  .stage-detail .big { font: 700 32px/1 var(--mono); color: var(--accent-text); }
+  .stage-detail p { margin: 0; color: #cdd3de; }
+  .stage-detail .tree { font: 13px/1.55 var(--mono); color: var(--muted); margin-top: 8px; white-space: pre; overflow-x: auto; }
+  .actions { margin-top: 26px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 960px) { .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .act { border: 1px dashed var(--border2); border-radius: 10px; padding: 12px 14px; }
+  .act b { display: block; font-size: 14.5px; }
+  .act span { font-size: 13px; color: var(--muted); }
+
+  /* ── Install ── */
+  .install { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
+  @media (max-width: 860px) { .install { grid-template-columns: minmax(0, 1fr); } }
+  .term { background: var(--sunk); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .term-h { display: flex; align-items: center; gap: 8px; padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+  .term-h b { color: var(--text); font-weight: 600; }
+  .term-h button { margin-left: auto; font-size: 12px; padding: 4px 9px; border-radius: 6px; border: 1px solid var(--border2); background: var(--raised); cursor: pointer; }
+  .term pre { margin: 0; padding: 14px 16px; font: 13px/1.65 var(--mono); overflow-x: auto; color: #d6dbe4; }
+  .term .c { color: var(--faint); }
+
+  /* ── Bench: jobs & strengths ── */
+  .jobs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  @media (max-width: 860px) { .jobs { grid-template-columns: minmax(0, 1fr); } }
+  .job { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .job .tag { font: 600 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
+  .job h3 { margin: 10px 0 8px; }
+  .job p { margin: 0 0 10px; color: #c0c7d4; font-size: 14.5px; }
+  .job ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .strengths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 44px; }
+  @media (max-width: 960px) { .strengths { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .strengths { grid-template-columns: minmax(0, 1fr); } }
+  .str { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; background: linear-gradient(180deg, var(--surface), var(--bg2)); position: relative; overflow: hidden; }
+  .str .num { font: 700 40px/1 var(--sans); letter-spacing: -0.04em; color: var(--text); }
+  .str .num small { font-size: 16px; color: var(--muted); font-weight: 600; letter-spacing: 0; margin-left: 4px; }
+  .str h3 { margin: 12px 0 6px; font-size: 16.5px; }
+  .str p { margin: 0; color: var(--muted); font-size: 14px; }
+  .str .viz { margin-top: 14px; }
+  .flow { display: flex; align-items: center; gap: 8px; font: 12px var(--mono); flex-wrap: wrap; }
+  .flow .box { border: 1px solid var(--border2); border-radius: 6px; padding: 5px 8px; background: var(--sunk); color: var(--muted); }
+  .flow .box.sym { border-color: rgba(245,165,36,0.5); color: var(--warn); }
+  .flow .box.cause { border-color: rgba(248,113,113,0.55); color: var(--crit); }
+  .flow .arr { color: var(--faint); }
+  .kw { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 12px var(--mono); }
+  .kw .grp { border: 1px solid var(--border2); border-radius: 7px; padding: 4px 6px; display: inline-flex; gap: 4px; flex-wrap: wrap; align-items: center; background: var(--sunk); }
+  .kw .w { color: var(--text); background: var(--raised); border-radius: 4px; padding: 1px 6px; }
+  .kw .or { color: var(--faint); font-size: 10.5px; }
+  .kw .and { color: var(--accent-text); font-weight: 700; font-size: 11px; letter-spacing: .05em; }
+
+  /* ── Results chart ── */
+  .results { margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .results-head { display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; }
+  .lg { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border: 1px solid var(--border2); border-radius: 999px; background: transparent; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .lg[aria-pressed="true"] { color: var(--text); border-color: var(--muted); }
+  .lg i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
+  .lg[aria-pressed="false"] i { opacity: .25; }
+  .chart { display: grid; gap: 18px; }
+  .crow .lbl { font-size: 14px; margin-bottom: 7px; color: #cdd3de; }
+  .bars { display: grid; gap: 4px; }
+  .bar { display: grid; grid-template-columns: minmax(0, 1fr) 46px; gap: 10px; align-items: center; }
+  .bar .track { height: 16px; background: var(--sunk); border-radius: 4px; overflow: hidden; position: relative; }
+  .bar .fill { height: 100%; border-radius: 4px; width: 0; transition: width .7s cubic-bezier(.2,.8,.2,1); }
+  .bar .fill.ref { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 3px, transparent 3px 7px); }
+  .bar .v { font: 600 13px var(--mono); text-align: right; color: var(--muted); }
+  .bar.top .v { color: var(--text); }
+  .callouts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+  @media (max-width: 760px) { .callouts { grid-template-columns: minmax(0, 1fr); } }
+  .callout { border-radius: 10px; padding: 14px 16px; font-size: 14.5px; border: 1px solid var(--border); background: var(--sunk); }
+  .callout b { display: block; margin-bottom: 3px; }
+  .callout.win { border-color: rgba(52,211,153,0.35); }
+  .callout.win b { color: var(--ok); }
+  .callout.gap b { color: var(--warn); }
+  .notes { color: var(--muted); font-size: 13.5px; margin-top: 16px; }
+
+  /* ── Case explorer ── */
+  .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-bottom: 28px; }
+  @media (max-width: 860px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .stat { border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; background: var(--surface); }
+  .stat b { display: block; font-size: 28px; letter-spacing: -0.03em; line-height: 1.1; }
+  .stat span { font-size: 13px; color: var(--muted); }
+  .coverage { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 22px; margin-bottom: 24px; }
+  .coverage-h { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+  .cov-legend { display: flex; gap: 14px; font-size: 12.5px; color: var(--muted); }
+  .cov-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .cov { display: grid; gap: 7px; }
+  .cov-row { display: grid; grid-template-columns: 150px minmax(0, 1fr) 30px; gap: 12px; align-items: center; background: none; border: 0; padding: 3px 4px; border-radius: 6px; cursor: pointer; text-align: left; }
+  .cov-row:hover, .cov-row[aria-pressed="true"] { background: var(--raised); }
+  .cov-row .nm { font-size: 13.5px; }
+  .cov-row .segs { display: flex; height: 14px; gap: 2px; }
+  .cov-row .seg { border-radius: 3px; }
+  .cov-row .ct { font: 600 12.5px var(--mono); color: var(--muted); text-align: right; }
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 18px; }
+  .search { flex: 1 1 260px; min-width: 0; background: var(--sunk); border: 1px solid var(--border2); border-radius: 9px; padding: 9px 12px; color: var(--text); font-size: 14.5px; }
+  .seg-ctl { display: inline-flex; border: 1px solid var(--border2); border-radius: 9px; overflow: hidden; }
+  .seg-ctl button { border: 0; background: transparent; padding: 8px 12px; font-size: 13.5px; color: var(--muted); cursor: pointer; }
+  .seg-ctl button + button { border-left: 1px solid var(--border2); }
+  .seg-ctl button[aria-pressed="true"] { background: var(--accent-bg); color: var(--text); }
+  select { background: var(--sunk); border: 1px solid var(--border2); border-radius: 9px; padding: 8px 10px; color: var(--text); font-size: 13.5px; }
+  .count-line { font-size: 13.5px; color: var(--muted); margin: 0 0 12px; }
+  .cases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  @media (max-width: 1040px) { .cases { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .cases { grid-template-columns: minmax(0, 1fr); } }
+  .card { text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: 11px; padding: 15px 16px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 9px; transition: border-color .15s, transform .15s; min-width: 0; }
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+  .card-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .kind { font: 700 10.5px/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--accent-text); background: var(--accent-bg); padding: 4px 6px; border-radius: 4px; flex: none; }
+  .nm2 { font: 600 14px var(--mono); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .truth { font-size: 13.5px; color: #b7bfcd; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.5; }
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+  .b { font-size: 11.5px; padding: 3px 8px; border-radius: 999px; border: 1px solid var(--border2); color: var(--muted); white-space: nowrap; }
+  .b.cross { color: var(--crit); border-color: rgba(248,113,113,0.4); background: var(--crit-bg); }
+  .b.healthy { color: var(--ok); border-color: rgba(52,211,153,0.35); background: var(--ok-bg); }
+  .b.silent { color: var(--warn); border-color: rgba(245,165,36,0.4); background: var(--warn-bg); }
+  .b.note { color: var(--accent-text); border-color: rgba(139,147,251,0.4); background: var(--accent-bg); }
+  .empty { padding: 40px; text-align: center; color: var(--muted); border: 1px dashed var(--border2); border-radius: 12px; }
+
+  /* ── Snapshots ── */
+  .snaps { display: grid; gap: 10px; margin-top: 40px; }
+  details.snap { background: var(--surface); border: 1px solid var(--border); border-radius: 11px; }
+  details.snap summary { list-style: none; cursor: pointer; padding: 14px 18px; display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 0.6fr)) 20px; gap: 12px; align-items: center; font-size: 14px; }
+  details.snap summary::-webkit-details-marker { display: none; }
+  details.snap summary::after { content: '▸'; color: var(--faint); text-align: right; }
+  details.snap[open] summary::after { content: '▾'; }
+  @media (max-width: 760px) { details.snap summary { grid-template-columns: minmax(0, 1fr) 20px; } details.snap summary .hide-sm { display: none; } }
+  .snap-body { padding: 4px 18px 18px; }
+  .rank { display: grid; gap: 4px; margin: 8px 0 14px; }
+  .rk { display: grid; grid-template-columns: 30px 82px minmax(0, 1fr) auto; gap: 10px; align-items: center; font-size: 13.5px; padding: 6px 8px; border-radius: 7px; background: var(--sunk); }
+  .rk .i { font: 600 12px var(--mono); color: var(--faint); text-align: right; }
+  .tier { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 3px 6px; border-radius: 4px; text-align: center; }
+  .tier.new { color: var(--crit); background: var(--crit-bg); }
+  .tier.ongoing { color: var(--warn); background: var(--warn-bg); }
+  .tier.chronic { color: var(--muted); background: var(--raised); }
+  .rk .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rk .cl { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+  .rk .cl a { font: 11.5px var(--mono); padding: 2px 7px; border-radius: 999px; background: var(--accent-bg); }
+
+  /* ── Detail panel ── */
+  .scrim { position: fixed; inset: 0; background: rgba(4,6,10,0.6); z-index: 80; opacity: 0; transition: opacity .2s; }
+  .scrim.open { opacity: 1; }
+  .panel { position: fixed; top: 0; right: 0; bottom: 0; z-index: 81; width: min(920px, 96vw); background: var(--bg2); border-left: 1px solid var(--border2); box-shadow: -30px 0 80px rgba(0,0,0,0.5); display: flex; flex-direction: column; transform: translateX(102%); transition: transform .24s cubic-bezier(.2,.8,.2,1); outline: none; }
+  .panel.open { transform: none; }
+  .panel[hidden], .scrim[hidden] { display: none; }
+  .p-head { padding: 18px 22px 14px; border-bottom: 1px solid var(--border); display: grid; gap: 10px; }
+  .p-title { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .p-title h3 { margin: 0; font: 700 18px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .p-nav { margin-left: auto; display: flex; gap: 6px; flex: none; }
+  .icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border2); background: var(--raised); cursor: pointer; color: var(--muted); font-size: 15px; display: inline-flex; align-items: center; justify-content: center; }
+  .icon-btn:hover:not(:disabled) { color: var(--text); border-color: var(--muted); }
+  .icon-btn:disabled { opacity: .35; cursor: default; }
+  .p-meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--muted); }
+  .p-meta b { color: var(--text); font-weight: 600; }
+  .p-body { flex: 1; overflow-y: auto; padding: 8px 22px 40px; overscroll-behavior: contain; }
+  .blk { margin-top: 22px; }
+  .blk > h4 { font: 700 11.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; display: flex; gap: 10px; align-items: center; }
+  .blk > h4 .hint { text-transform: none; letter-spacing: 0; font: 12.5px var(--sans); color: var(--faint); }
+  .truth-box { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--crit); border-radius: 8px; padding: 13px 15px; font-size: 15px; }
+  .truth-box.healthy { border-left-color: var(--ok); }
+  .must { display: grid; gap: 10px; }
+  .must-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: start; }
+  .must-row .lbl { font-size: 13px; color: var(--muted); padding-top: 4px; }
+  .must-row .lbl b { display: block; color: var(--text); font-size: 13.5px; }
+  .row-card { display: grid; grid-template-columns: auto auto minmax(0, 1fr); gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 14px; }
+  .row-card .rnum { font: 700 20px var(--mono); color: var(--accent-text); }
+  .row-card .rs { color: var(--muted); font-size: 13px; }
+  table.ev { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.ev th { text-align: left; font-weight: 600; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--border); font-size: 12px; }
+  table.ev td { padding: 7px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  table.ev td.r { font-family: var(--mono); white-space: nowrap; }
+  table.ev .Warning { color: var(--warn); }
+  table.ev .Normal { color: var(--ok); }
+  table.ev td.m { color: #c3cad6; word-break: break-word; }
+  .lines { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .lines li { font: 12.5px/1.5 var(--mono); background: var(--surface); border: 1px solid var(--border); border-radius: 7px; padding: 8px 10px; color: #c3cad6; word-break: break-word; }
+  pre.code { margin: 0; background: var(--sunk); border: 1px solid var(--border); border-radius: 9px; padding: 12px 14px; font: 12.5px/1.6 var(--mono); color: #d3d9e3; overflow: auto; max-height: 460px; white-space: pre; }
+  pre.code.wrap { white-space: pre-wrap; word-break: break-word; }
+  .linked { display: grid; gap: 10px; }
+  .lk { border: 1px solid rgba(248,113,113,0.35); background: linear-gradient(180deg, rgba(248,113,113,0.07), transparent); border-radius: 9px; padding: 11px 13px; }
+  .lk.plain { border-color: var(--border); background: var(--surface); }
+  .lk-h { display: flex; gap: 8px; align-items: center; font-size: 13.5px; flex-wrap: wrap; }
+  .lk-h .rule { font: 600 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .lk-h b { font-family: var(--mono); }
+  .lk .facts { font: 12.5px/1.5 var(--mono); color: #c3cad6; margin-top: 6px; word-break: break-word; }
+  .lk ul { margin: 6px 0 0; padding-left: 16px; font: 12px/1.5 var(--mono); color: var(--muted); }
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 10px; flex-wrap: wrap; }
+  .tabs button { border: 0; background: none; padding: 8px 12px; font-size: 13.5px; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+  .tabs .meta { margin-left: auto; font: 12px var(--mono); color: var(--faint); align-self: center; }
+  .note-callout { font-size: 13.5px; color: #c3cad6; background: var(--accent-bg); border: 1px solid rgba(139,147,251,0.3); border-radius: 8px; padding: 10px 12px; }
+  /* YAML colours, as in the app */
+  .yk { color: #7cc4fa; } .yp { color: var(--muted); } .ys { color: #b5e3a0; } .yb { color: #c9d1dc; } .yv { color: #f7b267; } .yo { color: #c4a1ff; } .yc { color: var(--faint); font-style: italic; }
+
+  /* ── Lightbox ── */
+  dialog.lb { border: 0; padding: 0; background: transparent; max-width: min(1400px, 96vw); max-height: 94vh; }
+  dialog.lb::backdrop { background: rgba(4,6,10,0.85); }
+  dialog.lb img { max-height: 90vh; border-radius: 10px; border: 1px solid var(--border2); cursor: zoom-out; }
+
+  footer { border-top: 1px solid var(--border); padding: 36px 0 60px; color: var(--muted); font-size: 14px; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 14px 28px; justify-content: space-between; }
+  .loading { color: var(--muted); padding: 20px 0; }
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="KubeHealth, back to top">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="#6366f1"/><path d="M6 17h5l3-7 4 13 3-6h5" fill="none" stroke="white" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      KubeHealth
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#bench">Bench</a>
+      <a href="#cases">Cases</a>
+      <a class="gh" href="https://github.com/clglavan/kubehealth">
+        <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.72 1.22 1.88.87 2.34.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+        GitHub
+      </a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">Kubernetes triage · local · read-only</div>
+      <h1>See what's <em>broken</em>, not a wall of events.</h1>
+      <p class="lede">KubeHealth is one binary you point at your kubeconfig. It groups warnings into one row per broken workload, ranks them by how new they are, and, if you want, asks a small model running on your laptop what to check first.</p>
+      <div class="cta">
+        <a class="btn primary" href="https://github.com/clglavan/kubehealth/releases/latest">Download</a>
+        <a class="btn" href="#bench">See the benchmark</a>
+        <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b">magos-k8s-0.6b ↗</a>
+      </div>
+      <div class="facts"><span>Nothing installed in the cluster</span><span>Only reads</span><span>AI optional, offline with the bundled model</span></div>
+    </div>
+    <div class="shot">
+      <video src="assets/demo.mp4" poster="assets/01-overview.png" autoplay muted loop playsinline aria-label="A two-minute walkthrough of KubeHealth on two demo clusters"></video>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="eyebrow">What you get</div>
+    <h2>Triage first, details one click away.</h2>
+    <p class="sub">The namespace list never leaves the screen. Pick a namespace for its live status, pick an object for its ownership chain and full timeline, ask for logs or a root cause without changing pages.</p>
+    <div class="gallery" id="gallery"></div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow">How it handles events</div>
+    <h2>From thousands of events to a ranked list.</h2>
+    <p class="sub">One background worker reads the cluster gently; everything else is computed from that cache. Pick a step.</p>
+    <div class="pipe" role="tablist" aria-label="Event pipeline" id="pipe"></div>
+    <div class="stage-detail" id="stage-detail" role="tabpanel" aria-live="polite"></div>
+    <div class="actions" id="actions"></div>
+
+    <div class="install">
+      <div class="term">
+        <div class="term-h"><b>Regular build</b> macOS, Linux, Windows <button type="button" data-copy="t1">Copy</button></div>
+        <pre id="t1">tar -xzf kubehealth_*_darwin_arm64.tar.gz
+cd kubehealth_*_darwin_arm64
+xattr -d com.apple.quarantine kubehealth  <span class="c"># macOS</span>
+./kubehealth                    <span class="c"># localhost:8080</span></pre>
+      </div>
+      <div class="term">
+        <div class="term-h"><b>Embed build</b> model bundled, AI offline <button type="button" data-copy="t2">Copy</button></div>
+        <pre id="t2">tar -xzf kubehealth-embed_*_darwin_arm64.tar.gz
+cd kubehealth-embed_*_darwin_arm64
+xattr -d com.apple.quarantine kubehealth-embed
+./kubehealth-embed              <span class="c"># + local model</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="bench">
+  <div class="wrap">
+    <div class="eyebrow">KubeHealth-Bench</div>
+    <h2>Does the model actually help? Measured through KubeHealth itself.</h2>
+    <p class="sub">The bench replays frozen incidents through the same prompts, evidence, context budget and read-only tools the UI uses, and scores the three things KubeHealth asks a model to do. No cluster needed to run it.</p>
+    <div class="jobs">
+      <div class="job"><span class="tag">RCA</span><h3>Find out why it's broken</h3><p>An agent with four read-only tools and up to five rounds.</p><ul><li>right root cause and decisive detail</li><li>right fix, stated as an action</li><li>investigates when the cause is elsewhere</li><li>how many lookups, and whether it finishes</li></ul></div>
+      <div class="job"><span class="tag">✦ Analysis</span><h3>Is anything wrong here?</h3><p>One answer: what, why, what to do.</p><ul><li>the right issue and the right action</li><li>on healthy objects: no invented fault</li></ul></div>
+      <div class="job"><span class="tag">Note</span><h3>What to check first</h3><p>One or two sentences on the overview's top problem.</p><ul><li>about the right problem</li><li>an answer, not leaked reasoning</li></ul></div>
+    </div>
+    <div class="strengths" id="strengths"><div class="loading">Loading the bench…</div></div>
+    <div class="results" id="results" hidden>
+      <div class="results-head">
+        <div><h3>Results so far</h3><span class="muted small">Mean of 3 seeds · higher is better · striped bars are much larger hosted reference models</span></div>
+        <div class="legend" id="legend" role="group" aria-label="Models"></div>
+      </div>
+      <div class="chart" id="chart"></div>
+      <div class="callouts" id="callouts"></div>
+      <div class="notes" id="results-notes"></div>
+    </div>
+  </div>
+</section>
+
+<section id="cases">
+  <div class="wrap">
+    <div class="eyebrow">Every case</div>
+    <h2>Inspect all the incidents.</h2>
+    <p class="sub">Each case is one object in a recorded cluster, what is really wrong with it, and the words a right answer has to contain. Open one to see exactly what KubeHealth puts in front of the model.</p>
+    <div class="stats" id="stats"></div>
+    <div class="coverage">
+      <div class="coverage-h"><h3>Failure coverage</h3><div class="cov-legend"><span><i style="background:var(--accent)"></i>cause in the object's own evidence</span><span><i style="background:var(--crit)"></i>cause in another object</span></div></div>
+      <div class="cov" id="cov"></div>
+    </div>
+    <div class="filters">
+      <input class="search" id="q" type="search" placeholder="Search cases: oom, secret, storageclass…" aria-label="Search cases">
+      <div class="seg-ctl" role="group" aria-label="Kind of case" id="kindf">
+        <button type="button" data-k="all" aria-pressed="true">All</button>
+        <button type="button" data-k="fault" aria-pressed="false">Faults</button>
+        <button type="button" data-k="cross" aria-pressed="false">Cause elsewhere</button>
+        <button type="button" data-k="healthy" aria-pressed="false">Healthy</button>
+      </div>
+      <select id="snapf" aria-label="Snapshot"><option value="">All snapshots</option></select>
+    </div>
+    <p class="count-line" id="count-line"></p>
+    <div class="cases" id="grid"></div>
+
+    <h3 style="margin-top:56px">The snapshots</h3>
+    <p class="muted small" style="margin:0">Each one is a cluster frozen at its recording time: objects, events and container logs, no values. This is how KubeHealth's overview ranks its problems.</p>
+    <div class="snaps" id="snaps"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>KubeHealth · <a href="https://github.com/clglavan/kubehealth">GitHub</a> · <a href="https://github.com/clglavan/kubehealth/releases">Releases</a> · <a href="https://github.com/clglavan/kubehealth/tree/main/bench">Bench</a> · <a href="https://huggingface.co/clglavan/magos-k8s-0.6b">magos on HuggingFace</a></div>
+    <div id="built"></div>
+  </div>
+</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="p-name" tabindex="-1" hidden>
+  <div class="p-head">
+    <div class="p-title">
+      <span class="kind" id="p-kind"></span><h3 id="p-name"></h3>
+      <div class="p-nav">
+        <button class="icon-btn" type="button" id="p-prev" aria-label="Previous case">↑</button>
+        <button class="icon-btn" type="button" id="p-next" aria-label="Next case">↓</button>
+        <button class="icon-btn" type="button" id="p-close" aria-label="Close">✕</button>
+      </div>
+    </div>
+    <div class="p-meta" id="p-meta"></div>
+  </div>
+  <div class="p-body" id="p-body"></div>
+</aside>
+
+<dialog class="lb" id="lb"><img id="lb-img" alt=""></dialog>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  // ── Static content ─────────────────────────────────────────────────────────
+  var SHOTS = [
+    ['01-overview.png', 'Overview', 'One row per broken workload, ranked new / ongoing / chronic. A computed brief says where to start; the model adds one note.'],
+    ['02-namespace-status.png', 'Namespace status', 'Live counts of workloads, pods and claims, and what needs attention, without leaving the page.'],
+    ['05-rca.png', 'Root cause analysis', 'The model reads the evidence and calls read-only tools for more: logs, describe, events, correlated events.'],
+    ['08-prod.png', 'Many clusters, clearly labelled', 'Every kubeconfig context, switched in place. Production gets a red stripe on every page.']
+  ];
+  var STAGES = [
+    ['Fetch', '≤ 1 call / 2 s', '2s', 'One worker, at most one list call every 2 seconds. Every 10 s it lists Warning events cluster-wide (fieldSelector=type=Warning); the other ticks refresh the stalest namespace. The client is capped at QPS 5, burst 10.'],
+    ['Group', 'one row per workload', '1', 'Each warning is walked up to its owner, so fifty failing pods become one problem.', 'Pod → ReplicaSet → Deployment\nPod → Job → CronJob\nPod → StatefulSet / DaemonSet / operator CR\nnames give a free first guess; ownerReferences confirm it (≤ 2 GET/s, cached 30 min)'],
+    ['Age', 'new · ongoing · chronic', '2h', 'First seen under 2 h → new, 2–24 h → ongoing, older → chronic, so an old failure never hides a fresh one. Idle after 15 min without a new occurrence. CronJobs use status.lastSuccessfulTime, because run events expire after about an hour.'],
+    ['Merge', 'patterns', '10s', 'Problems in different namespaces become one pattern when they started within 10 s of each other, share a workload and reason, or share an infrastructure reason (pull secrets, scheduling, mounts…) in three or more namespaces. Never across tiers.'],
+    ['Cascade', '▲ whole chain', '▲', 'Warnings at two or more levels of the chain and every leaf failing: the chain is marked as a cascade.'],
+    ['Brief', 'computed, no model', '0', 'A few sentences above the list: start here, what is new, what looks linked, what is old. Computed from the problem list, so it is instant, always accurate, and works with AI turned off.'],
+    ['AI note', 'one suggestion', '30', 'The model gets the top problem\'s events, its container state and up to 30 log lines, and says what to check first. Rewritten only when the top problem changes; it gives up its model slot the moment you start an analysis.']
+  ];
+  var ACTIONS = [
+    ['Logs', 'current and previous run, inline'], ['Correlate', 'events ±5 min across namespaces, from the cache'],
+    ['✦ AI', 'events, describe, container state, logs → one answer'], ['RCA', 'the same, plus four tools the model can call'],
+    ['YAML', 'the live object, noise hidden']
+  ];
+  var CATS = {
+    scheduling: 'Scheduling', storage: 'Storage', images: 'Images', config: 'Config & Secrets', runtime: 'Runtime',
+    probes: 'Probes', services: 'Services', policy: 'Policy & access', jobs: 'Jobs & CronJobs', healthy: 'Healthy'
+  };
+  var MODEL_COLORS = ['#6b7385', '#8b93fb', '#6366f1', '#f5a524', '#2dd4bf', '#f87171', '#a78bfa'];
+
+  $('gallery').innerHTML = SHOTS.map(function (s) {
+    return '<figure class="tile" style="margin:0"><button type="button" data-zoom="assets/' + s[0] + '" aria-label="Enlarge: ' + esc(s[1]) + '"><img src="assets/' + s[0] + '" alt="' + esc(s[1]) + '" loading="lazy"></button>' +
+      '<figcaption class="cap"><h3>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></figcaption></figure>';
+  }).join('');
+
+  $('pipe').innerHTML = STAGES.map(function (s, i) {
+    return '<button type="button" class="stage" role="tab" id="st' + i + '" aria-controls="stage-detail" aria-selected="' + (i === 0) + '" data-i="' + i + '">' +
+      '<div class="n">0' + (i + 1) + '</div><div class="k">' + esc(s[0]) + '</div><div class="t">' + esc(s[1]) + '</div></button>';
+  }).join('');
+  function showStage(i) {
+    var s = STAGES[i];
+    [].forEach.call(document.querySelectorAll('.stage'), function (b) { b.setAttribute('aria-selected', String(+b.dataset.i === i)); });
+    $('stage-detail').innerHTML = '<div class="big">' + esc(s[2]) + '</div><div><p>' + esc(s[3]) + '</p>' + (s[4] ? '<div class="tree">' + esc(s[4]) + '</div>' : '') + '</div>';
+  }
+  showStage(0);
+  $('pipe').addEventListener('click', function (e) { var b = e.target.closest('.stage'); if (b) showStage(+b.dataset.i); });
+  $('pipe').addEventListener('keydown', function (e) {
+    var cur = +(document.activeElement.dataset.i || 0), n = STAGES.length;
+    var to = e.key === 'ArrowRight' ? (cur + 1) % n : e.key === 'ArrowLeft' ? (cur + n - 1) % n : -1;
+    if (to < 0) return;
+    e.preventDefault(); $('st' + to).focus(); showStage(to);
+  });
+  $('actions').innerHTML = ACTIONS.map(function (a) { return '<div class="act"><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></div>'; }).join('');
+
+  document.addEventListener('click', function (e) {
+    var z = e.target.closest('[data-zoom]');
+    if (z) { $('lb-img').src = z.dataset.zoom; $('lb-img').alt = z.getAttribute('aria-label') || ''; $('lb').showModal(); return; }
+    var c = e.target.closest('[data-copy]');
+    if (c) {
+      var t = $(c.dataset.copy).textContent;
+      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () {
+        c.textContent = 'Copied'; setTimeout(function () { c.textContent = 'Copy'; }, 1400);
+      }, function () {});
+    }
+  });
+  $('lb').addEventListener('click', function () { $('lb').close(); });
+
+  // ── Bench data ─────────────────────────────────────────────────────────────
+  var D = null, VIEW = [], CUR = -1;
+  var F = { q: '', kind: 'all', cat: '', snap: '' };
+
+  fetch('data/bench.json').then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (d) { D = d; boot(); })
+    .catch(function (e) { $('strengths').innerHTML = '<div class="loading">Could not load the bench data (' + esc(e.message) + ').</div>'; });
+
+  function isSilent(c) { return !c.healthy && !(c.events || []).length && !(c.members || []).length && !c.rank; }
+  function snapOf(name) { for (var i = 0; i < D.snapshots.length; i++) if (D.snapshots[i].name === name) return D.snapshots[i]; return null; }
+  function tokens(s) { return Math.round((s || '').length / 4); }
+
+  function boot() {
+    var cs = D.cases, faults = cs.filter(function (c) { return !c.healthy; });
+    var cross = cs.filter(function (c) { return c.needs_tool; }), healthy = cs.filter(function (c) { return c.healthy; });
+    var noisy = healthy.filter(function (c) { return (c.events || []).some(function (e) { return e.type === 'Warning'; }) || /once|blip|restart|retr|scaled|attempt|taint/i.test(c.truth); });
+    var objects = D.snapshots.reduce(function (n, s) { return n + s.objects; }, 0);
+    var logs = D.snapshots.reduce(function (n, s) { return n + s.logs; }, 0);
+    var cats = Object.keys(CATS).filter(function (k) { return k !== 'healthy' && faults.some(function (c) { return c.category === k; }); });
+    var linkedHelps = cross.filter(function (c) { return (c.linked || []).length; }).length;
+    var ex = cross.filter(function (c) { return c.id === 'current-mapper-pg-secret'; })[0] || cross[0];
+
+    // Strengths: why the bench is hard to game.
+    var S = [
+      ['<span class="num">1<small>code path</small></span>', 'Same code path as the UI',
+        'Prompts, evidence, the ' + (D.ctx_len / 1024) + 'k context budget and the ' + D.tools.length + ' read-only tools are KubeHealth\'s own, so a score is what users would see.',
+        '<div class="flow"><span class="box">snapshot</span><span class="arr">→</span><span class="box">KubeHealth</span><span class="arr">→</span><span class="box">model</span><span class="arr">→</span><span class="box">score</span></div>'],
+      ['<span class="num">' + cross.length + '<small>/ ' + faults.length + ' faults</small></span>', 'The cause is often somewhere else',
+        'The symptom is on one workload, the cause in a dependency. The first prompt is not enough: the model has to go and look. Link-following pre-fetches the named objects in ' + linkedHelps + ' of them.',
+        ex ? '<div class="flow"><span class="box sym">' + esc(ex.anchor.name) + '</span><span class="arr">→</span><span class="box">' + esc((ex.linked && ex.linked[0] ? ex.linked[0].name : 'dependency')) + '</span><span class="arr">→</span><span class="box cause">missing secret</span></div>' : ''],
+      ['<span class="num">' + healthy.length + '<small>healthy</small></span>', 'Healthy controls, with noise',
+        'Objects with nothing to fix, ' + noisy.length + ' of them next to harmless noise: a readiness blip at start-up, a Job that retried, a scale-down. Saying "nothing is wrong" is a real test.', ''],
+      ['<span class="num">' + D.snapshots.length + '<small>clusters</small></span>', 'Frozen, deterministic, offline',
+        objects.toLocaleString() + ' objects and ' + logs + ' container logs, replayed at their recording time, so every run sends identical prompts. Run several seeds to see the spread.', ''],
+      ['<span class="num">AND<small>/ OR</small></span>', 'Scored on meaning, not layout',
+        'Every keyword group must match somewhere in the whole answer. A fix only counts when the answer says what to do. Headings neither help nor hurt.',
+        '<div class="kw"><span class="grp"><span class="w">tidepool-pg</span></span><span class="and">AND</span><span class="grp"><span class="w">refused</span><span class="or">or</span><span class="w">no endpoints</span><span class="or">or</span><span class="w">down</span></span></div>'],
+      ['<span class="num">' + cats.length + '<small>areas</small></span>', 'Broad and private',
+        'Scheduling to RBAC, probes to quotas. Snapshots keep no values: ConfigMaps and Secrets keep key names only, env values and last-applied annotations are dropped.', '']
+    ];
+    $('strengths').innerHTML = S.map(function (s) {
+      return '<div class="str">' + s[0] + '<h3>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p>' + (s[3] ? '<div class="viz">' + s[3] + '</div>' : '') + '</div>';
+    }).join('');
+
+    drawResults();
+
+    $('stats').innerHTML = [
+      [cs.length, 'cases'], [faults.length, 'faults'], [cross.length, 'cause in another object'], [healthy.length, 'healthy controls'], [D.snapshots.length, 'recorded clusters']
+    ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + esc(s[1]) + '</span></div>'; }).join('');
+
+    var max = 0, rows = cats.map(function (k) {
+      var all = faults.filter(function (c) { return c.category === k; });
+      var x = all.filter(function (c) { return c.needs_tool; }).length;
+      max = Math.max(max, all.length);
+      return [k, all.length - x, x];
+    });
+    rows.push(['healthy', healthy.length, 0]); max = Math.max(max, healthy.length);
+    $('cov').innerHTML = rows.map(function (r) {
+      var own = r[1] / max * 100, x = r[2] / max * 100;
+      return '<button type="button" class="cov-row" data-cat="' + r[0] + '" aria-pressed="false"><span class="nm">' + esc(CATS[r[0]]) + '</span>' +
+        '<span class="segs">' + (r[1] ? '<span class="seg" style="width:' + own + '%;background:' + (r[0] === 'healthy' ? 'var(--ok)' : 'var(--accent)') + '"></span>' : '') +
+        (r[2] ? '<span class="seg" style="width:' + x + '%;background:var(--crit)"></span>' : '') + '</span><span class="ct">' + (r[1] + r[2]) + '</span></button>';
+    }).join('');
+
+    $('snapf').innerHTML += D.snapshots.map(function (s) { return '<option value="' + esc(s.name) + '">' + esc(s.name) + '</option>'; }).join('');
+    drawGrid();
+    drawSnaps();
+    $('built').textContent = 'Bench data built by kubehealth ' + D.kubehealth + ' from bench/cases.';
+    openFromHash();
+  }
+
+  function drawResults() {
+    var R = D.results;
+    if (!R) return;
+    $('results').hidden = false;
+    var on = R.models.map(function () { return true; });
+    function draw() {
+      $('legend').innerHTML = R.models.map(function (m, i) {
+        return '<button type="button" class="lg" data-m="' + i + '" aria-pressed="' + on[i] + '"><i style="background:' + MODEL_COLORS[i % MODEL_COLORS.length] + (m.reference ? ';background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 2px,transparent 2px 4px)' : '') + '"></i>' + esc(m.name) + '</button>';
+      }).join('');
+      $('chart').innerHTML = R.rows.map(function (row) {
+        var best = Math.max.apply(null, row.values.map(function (v, i) { return on[i] && v != null ? v : -1; }));
+        return '<div class="crow"><div class="lbl">' + esc(row.check) + '</div><div class="bars">' + row.values.map(function (v, i) {
+          if (!on[i]) return '';
+          var m = R.models[i];
+          return '<div class="bar' + (v === best ? ' top' : '') + '" title="' + esc(m.name) + '"><div class="track"><div class="fill' + (m.reference ? ' ref' : '') + '" data-w="' + (v == null ? 0 : v) + '" style="background-color:' + MODEL_COLORS[i % MODEL_COLORS.length] + '"></div></div><span class="v">' + (v == null ? '–' : v + '%') + '</span></div>';
+        }).join('') + '</div></div>';
+      }).join('');
+      requestAnimationFrame(function () { [].forEach.call(document.querySelectorAll('#chart .fill'), function (f) { f.style.width = f.dataset.w + '%'; }); });
+    }
+    draw();
+    $('legend').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-m]'); if (!b) return;
+      var i = +b.dataset.m;
+      if (on.filter(Boolean).length === 1 && on[i]) return;
+      on[i] = !on[i]; draw();
+    });
+
+    // Callouts, computed from the table: where the small model wins, and where it still trails.
+    var refs = R.models.map(function (m, i) { return m.reference ? i : -1; }).filter(function (i) { return i >= 0; });
+    var best = -1;
+    R.models.forEach(function (m, i) { if (/link-following/i.test(m.name)) best = i; });
+    if (best < 0) R.models.forEach(function (m, i) { if (!m.reference) best = i; });
+    var out = [];
+    if (best >= 0 && refs.length) {
+      var wins = [], gaps = [];
+      R.rows.forEach(function (row) {
+        var v = row.values[best];
+        if (v == null) return;
+        var rv = refs.map(function (i) { return row.values[i]; }).filter(function (x) { return x != null; });
+        if (rv.length && v > Math.max.apply(null, rv)) wins.push([row, v, rv]);
+        if (rv.length && v < Math.min.apply(null, rv) - 5) gaps.push([row, v, rv]);
+      });
+      wins.forEach(function (w) {
+        out.push('<div class="callout win"><b>' + esc(R.models[best].name) + ' leads: ' + esc(w[0].check) + '</b>' + w[1] + '% against ' +
+          refs.map(function (i) { return esc(R.models[i].name) + ' ' + w[0].values[i] + '%'; }).join(' and ') + ', with a 0.6B model running on a laptop.</div>');
+      });
+      gaps.slice(0, 2).forEach(function (g) {
+        out.push('<div class="callout gap"><b>Still behind: ' + esc(g[0].check) + '</b>' + g[1] + '% against ' +
+          refs.map(function (i) { return esc(R.models[i].name) + ' ' + g[0].values[i] + '%'; }).join(' and ') + '. The bench shows where to work next.</div>');
+      });
+    }
+    $('callouts').innerHTML = out.join('');
+    $('results-notes').innerHTML = (R.notes || []).map(function (n) {
+      return '<p style="margin:6px 0">' + esc(n).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>') + '</p>';
+    }).join('');
+  }
+
+  // ── Case grid ──────────────────────────────────────────────────────────────
+  function matches(c) {
+    if (F.kind === 'fault' && c.healthy) return false;
+    if (F.kind === 'healthy' && !c.healthy) return false;
+    if (F.kind === 'cross' && !c.needs_tool) return false;
+    if (F.cat && c.category !== F.cat) return false;
+    if (F.snap && c.snapshot !== F.snap) return false;
+    if (F.q) {
+      var hay = (c.id + ' ' + c.truth + ' ' + c.anchor.kind + ' ' + c.anchor.name + ' ' + c.anchor.ns + ' ' + c.category).toLowerCase();
+      return F.q.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
+    }
+    return true;
+  }
+  function badges(c) {
+    var b = '<span class="b">' + esc(CATS[c.category] || c.category) + '</span>';
+    if (c.needs_tool) b += '<span class="b cross">cause in another object</span>';
+    if (c.healthy) b += '<span class="b healthy">healthy control</span>';
+    if (isSilent(c)) b += '<span class="b silent">no warning events</span>';
+    if (c.note_target) b += '<span class="b note">overview\'s top problem</span>';
+    return b;
+  }
+  function drawGrid() {
+    VIEW = D.cases.filter(matches);
+    $('count-line').textContent = VIEW.length === D.cases.length ? 'All ' + VIEW.length + ' cases' : VIEW.length + ' of ' + D.cases.length + ' cases';
+    $('grid').innerHTML = VIEW.length ? VIEW.map(function (c, i) {
+      return '<button type="button" class="card" data-i="' + i + '"><div class="card-top"><span class="kind">' + esc(c.anchor.kind) + '</span><span class="nm2">' + esc(c.anchor.name) + '</span></div>' +
+        '<div class="truth">' + esc(c.truth) + '</div><div class="badges">' + badges(c) + '</div></button>';
+    }).join('') : '<div class="empty" style="grid-column:1/-1">No case matches. <a href="#" id="reset">Clear the filters</a></div>';
+    [].forEach.call(document.querySelectorAll('.cov-row'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.cat === F.cat)); });
+  }
+  $('grid').addEventListener('click', function (e) {
+    if (e.target.id === 'reset') { e.preventDefault(); F = { q: '', kind: 'all', cat: '', snap: '' }; $('q').value = ''; $('snapf').value = ''; setKind('all'); drawGrid(); return; }
+    var b = e.target.closest('.card'); if (b) openCase(+b.dataset.i, b);
+  });
+  $('q').addEventListener('input', function () { F.q = this.value.trim(); drawGrid(); });
+  $('snapf').addEventListener('change', function () { F.snap = this.value; drawGrid(); });
+  function setKind(k) { F.kind = k; [].forEach.call(document.querySelectorAll('#kindf button'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.k === k)); }); }
+  $('kindf').addEventListener('click', function (e) { var b = e.target.closest('[data-k]'); if (!b) return; setKind(b.dataset.k); drawGrid(); });
+  $('cov').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-cat]'); if (!b) return;
+    F.cat = F.cat === b.dataset.cat ? '' : b.dataset.cat;
+    drawGrid();
+    $('grid').scrollIntoView({ block: 'start' });
+  });
+
+  // ── Snapshots ──────────────────────────────────────────────────────────────
+  function drawSnaps() {
+    $('snaps').innerHTML = D.snapshots.map(function (s) {
+      var rows = (s.problems || []).map(function (p, i) {
+        var linked = D.cases.filter(function (c) { return c.snapshot === s.name && c.row_key === p.key; });
+        var reasons = (p.reasons || []).map(function (r) { return r.reason; }).join(', ');
+        return '<div class="rk"><span class="i">' + (i + 1) + '</span><span class="tier ' + esc(p.tier) + '">' + esc(p.tier) + '</span>' +
+          '<span class="t" title="' + esc(p.title + ' · ' + reasons) + '"><b>' + esc(p.title) + '</b> <span class="muted">' + esc(p.kind || '') + ' · ' + esc(reasons) + '</span></span>' +
+          '<span class="cl">' + linked.map(function (c) { return '<a href="#case=' + esc(c.id) + '">' + esc(c.id) + '</a>'; }).join('') + '</span></div>';
+      }).join('');
+      var target = D.cases.filter(function (c) { return c.snapshot === s.name && c.note_target; })[0];
+      return '<details class="snap"><summary><span><b>' + esc(s.name) + '</b> <span class="muted small">' + esc(s.context) + '</span></span>' +
+        '<span class="hide-sm muted">' + s.objects + ' objects</span><span class="hide-sm muted">' + s.logs + ' logs</span><span class="hide-sm muted">' + (s.problems || []).length + ' problems</span></summary>' +
+        '<div class="snap-body"><div class="muted small">Recorded ' + esc((s.recorded_at || '').replace('T', ' ').replace('Z', ' UTC')) + ' · namespaces: ' + esc((s.namespaces || []).join(', ')) + '</div>' +
+        '<div class="rank">' + (rows || '<div class="muted small">No problems.</div>') + '</div>' +
+        (s.note_prompt ? '<details><summary class="small" style="cursor:pointer;color:var(--accent-text)">The overview note\'s prompt' + (target ? ' (target: ' + esc(target.id) + ')' : '') + ' · ' + tokens(s.note_prompt) + ' tokens</summary><pre class="code wrap" style="margin-top:8px">' + esc(s.note_prompt) + '</pre></details>' : '') +
+        '</div></details>';
+    }).join('');
+  }
+
+  // ── Case detail ────────────────────────────────────────────────────────────
+  function groupsHTML(groups) {
+    return '<div class="kw">' + groups.map(function (g, i) {
+      return (i ? '<span class="and">AND</span>' : '') + '<span class="grp">' + g.map(function (w, j) {
+        return (j ? '<span class="or">or</span>' : '') + '<span class="w">' + esc(w) + '</span>';
+      }).join('') + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function yamlHTML(text) {
+    return text.replace(/\n+$/, '').split('\n').map(function (raw) {
+      var ind = raw.length - raw.replace(/^ +/, '').length, rest = raw.slice(ind), h = raw.slice(0, ind);
+      if (/^#/.test(rest)) return h + '<span class="yc">' + esc(rest) + '</span>';
+      if (rest === '---') return h + '<span class="yp">---</span>';
+      while (/^- /.test(rest)) { h += '<span class="yp">-</span> '; rest = rest.slice(2); }
+      var m = rest.match(/^("[^"]*"|'[^']*'|[^\s#'"{}\[\],][^:]*?):( |$)(.*)$/);
+      if (m) return h + '<span class="yk">' + esc(m[1]) + '</span><span class="yp">:</span>' + m[2] + val(m[3]);
+      return h + val(rest);
+    }).join('\n');
+    function val(v) {
+      if (!v) return '';
+      var cm = v.match(/^(.*?)(\s+#.*)$/), c = '';
+      if (cm && !/^["']/.test(v)) { v = cm[1]; c = '<span class="yc">' + esc(cm[2]) + '</span>'; }
+      var cls = /^[|>][-+0-9]*$/.test(v) ? 'yo' : /^["']/.test(v) ? 'ys' : /^(true|false|null|~)$/.test(v) ? 'yo' : /^-?\d+(\.\d+)?$/.test(v) ? 'yv' : /^[{\[]/.test(v) ? 'yb' : 'ys';
+      return '<span class="' + cls + '">' + esc(v) + '</span>' + c;
+    }
+  }
+
+  function openCase(i, opener) {
+    if (i < 0 || i >= VIEW.length) return;
+    CUR = i;
+    var c = VIEW[i], s = snapOf(c.snapshot), a = c.anchor;
+    $('p-kind').textContent = a.kind;
+    $('p-name').textContent = a.name;
+    $('p-meta').innerHTML = '<span>case <b>' + esc(c.id) + '</b></span><span>namespace <b>' + esc(a.ns === '_cluster' ? 'cluster-wide' : a.ns) + '</b></span><span>snapshot <b>' + esc(c.snapshot) + '</b></span>' + '<span class="badges" style="margin:0">' + badges(c) + '</span>';
+    $('p-prev').disabled = i === 0; $('p-next').disabled = i === VIEW.length - 1;
+
+    var h = '';
+    h += '<div class="blk"><h4>What is really wrong</h4><div class="truth-box' + (c.healthy ? ' healthy' : '') + '">' + esc(c.truth) + '</div></div>';
+
+    h += '<div class="blk"><h4>A right answer must contain <span class="hint">case-insensitive, anywhere in the answer</span></h4><div class="must">';
+    if (c.healthy) {
+      h += '<div class="note-callout">Pass when the analysis says nothing is wrong. Any invented fault counts against the model.</div>';
+    } else {
+      if (c.cause) h += '<div class="must-row"><div class="lbl"><b>Root cause</b>RCA and analysis</div>' + groupsHTML(c.cause) + '</div>';
+      if (c.deep) h += '<div class="must-row"><div class="lbl"><b>' + (c.needs_tool ? 'Cause elsewhere' : 'Decisive detail') + '</b>' + (c.needs_tool ? 'only another object shows it' : 'the specific value') + '</div>' + groupsHTML(c.deep) + '</div>';
+      if (c.fix) h += '<div class="must-row"><div class="lbl"><b>Fix</b>plus an action verb</div>' + groupsHTML(c.fix) + '</div>';
+    }
+    h += '</div></div>';
+
+    // Its row on the overview.
+    var p = null;
+    if (s && c.row_key) (s.problems || []).forEach(function (x) { if (x.key === c.row_key) p = x; });
+    h += '<div class="blk"><h4>On KubeHealth\'s overview</h4>';
+    if (p) {
+      h += '<div class="row-card"><span class="rnum">#' + c.rank + '</span><span class="tier ' + esc(p.tier) + '">' + esc(p.tier) + '</span><span><b>' + esc(p.title) + '</b> <span class="rs">' +
+        esc((p.reasons || []).map(function (r) { return r.reason + ' ×' + r.count; }).join(', ')) + (p.members ? ' · ' + esc(p.members) : '') + ' · since ' + esc(p.since) + '</span></span></div>' +
+        '<p class="muted small" style="margin:6px 0 0">Row ' + c.rank + ' of ' + s.problems.length + ' in ' + esc(c.snapshot) + '.</p>';
+    } else {
+      h += '<div class="note-callout">' + (c.healthy ? 'No row: nothing about this object is failing.' : 'No row: this fault raises no warning events, so only the object\'s state shows it.') + '</div>';
+    }
+    h += '</div>';
+
+    if ((c.events || []).length) {
+      h += '<div class="blk"><h4>Its events</h4><table class="ev"><thead><tr><th>Reason</th><th>Message</th><th>×</th><th>Age</th></tr></thead><tbody>' +
+        c.events.map(function (e) { return '<tr><td class="r ' + esc(e.type) + '">' + esc(e.reason) + '</td><td class="m">' + esc(e.message) + '</td><td class="r">' + e.count + '</td><td class="r">' + esc(e.age) + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    }
+    if ((c.members || []).length) {
+      h += '<div class="blk"><h4>Warnings on what it owns <span class="hint">ReplicaSets, Jobs, Pods</span></h4><ul class="lines">' +
+        c.members.map(function (m) { return '<li>' + esc(m.replace(/^- /, '')) + '</li>'; }).join('') + '</ul></div>';
+    }
+    if (c.logs) {
+      h += '<div class="blk"><h4>Container state and logs <span class="hint">' + esc(c.logs_pod || '') + '</span></h4><pre class="code">' + esc(c.logs) + '</pre></div>';
+    }
+    if (c.needs_tool || (c.linked || []).length) {
+      h += '<div class="blk"><h4>' + (c.needs_tool ? 'Where the cause lives' : 'Linked objects') + ' <span class="hint">what link-following fetches before the model asks</span></h4>';
+      if ((c.linked || []).length) {
+        h += '<div class="linked">' + c.linked.map(function (l) {
+          return '<div class="lk' + (c.needs_tool ? '' : ' plain') + '"><div class="lk-h"><span class="rule">' + esc(l.rule) + '</span><b>' + esc(l.kind) + '/' + esc(l.name) + '</b>' + (l.ns ? '<span class="muted small">' + esc(l.ns) + '</span>' : '') + '</div>' +
+            '<div class="facts">' + esc(l.facts) + '</div>' + ((l.lines || []).length ? '<ul>' + l.lines.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '') + '</div>';
+        }).join('') + '</div>';
+      } else {
+        h += '<div class="note-callout">Link-following finds nothing to fetch here: the model has to call a tool to find the cause.</div>';
+      }
+      h += '</div>';
+    }
+
+    var tabs = [['rca', 'RCA first prompt', c.rca_prompt], ['an', '✦ Analysis prompt', c.analysis_prompt], ['sys', 'RCA system prompt', D.rca_system_prompt]];
+    h += '<div class="blk"><h4>Exactly what the model reads <span class="hint">built by KubeHealth for an ' + (D.ctx_len / 1024) + 'k context</span></h4><div class="tabs" role="tablist">' +
+      tabs.map(function (t, j) { return '<button type="button" role="tab" data-tab="' + t[0] + '" aria-selected="' + (j === 0) + '">' + esc(t[1]) + '</button>'; }).join('') +
+      '<span class="meta" id="tab-meta"></span></div><pre class="code wrap" id="tab-body"></pre>' +
+      '<p class="muted small" style="margin:8px 0 0">RCA tools: ' + D.tools.map(function (t) { return '<code>' + esc(t.name) + '</code>'; }).join(' ') + '</p></div>';
+
+    h += '<div class="blk"><h4>How the incident was built</h4>' + (c.manifest
+      ? '<pre class="code">' + yamlHTML(c.manifest) + '</pre>'
+      : '<div class="note-callout">' + esc(c.source || '') + '</div>') + '</div>';
+
+    $('p-body').innerHTML = h;
+    $('p-body').scrollTop = 0;
+    function tab(k) {
+      tabs.forEach(function (t) { if (t[0] === k) { $('tab-body').textContent = t[2] || ''; $('tab-meta').textContent = '~' + tokens(t[2]) + ' tokens'; } });
+      [].forEach.call(document.querySelectorAll('[data-tab]'), function (b) { b.setAttribute('aria-selected', String(b.dataset.tab === k)); });
+    }
+    tab('rca');
+    $('p-body').querySelector('.tabs').addEventListener('click', function (e) { var b = e.target.closest('[data-tab]'); if (b) tab(b.dataset.tab); });
+
+    var panel = $('panel'), scrim = $('scrim');
+    if (panel.hidden) {
+      panelOpener = opener || document.activeElement;
+      panel.hidden = false; scrim.hidden = false;
+      requestAnimationFrame(function () { panel.classList.add('open'); scrim.classList.add('open'); });
+      document.body.style.overflow = 'hidden';
+    }
+    history.replaceState(null, '', '#case=' + encodeURIComponent(c.id));
+    $('p-close').focus({ preventScroll: true });
+  }
+  var panelOpener = null;
+  function closeCase() {
+    var panel = $('panel'), scrim = $('scrim');
+    if (panel.hidden) return;
+    panel.classList.remove('open'); scrim.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(function () { if (!panel.classList.contains('open')) { panel.hidden = true; scrim.hidden = true; } }, 260);
+    history.replaceState(null, '', '#cases');
+    if (panelOpener && document.contains(panelOpener)) panelOpener.focus({ preventScroll: true });
+  }
+  $('scrim').addEventListener('click', closeCase);
+  $('p-close').addEventListener('click', closeCase);
+  $('p-prev').addEventListener('click', function () { openCase(CUR - 1); });
+  $('p-next').addEventListener('click', function () { openCase(CUR + 1); });
+  $('panel').addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { e.preventDefault(); closeCase(); return; }
+    if ((e.key === 'ArrowDown' || e.key === 'j') && e.target.tagName !== 'PRE') { if (CUR < VIEW.length - 1) { e.preventDefault(); openCase(CUR + 1); } }
+    if ((e.key === 'ArrowUp' || e.key === 'k') && e.target.tagName !== 'PRE') { if (CUR > 0) { e.preventDefault(); openCase(CUR - 1); } }
+    if (e.key === 'Tab') {
+      var f = [].slice.call($('panel').querySelectorAll('button:not(:disabled), a[href], [tabindex="0"]'));
+      if (!f.length) return;
+      if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+      else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+    }
+  });
+
+  function openFromHash() {
+    var m = location.hash.match(/^#case=(.+)$/);
+    if (!m) return;
+    var id = decodeURIComponent(m[1]);
+    F = { q: '', kind: 'all', cat: '', snap: '' }; drawGrid();
+    for (var i = 0; i < VIEW.length; i++) if (VIEW[i].id === id) { openCase(i); return; }
+  }
+  window.addEventListener('hashchange', function () { if (D && /^#case=/.test(location.hash)) openFromHash(); });
+})();
+</script>
+</body>
+</html>
