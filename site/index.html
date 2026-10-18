@@ -176,28 +176,6 @@
   .term pre { margin: 0; padding: 14px 16px; font: 13px/1.65 var(--mono); overflow-x: auto; color: #d6dbe4; }
   .term .c { color: var(--faint); }
 
-  /* ── Bench: jobs & strengths ── */
-  .jobs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-  @media (max-width: 860px) { .jobs { grid-template-columns: minmax(0, 1fr); } }
-  .job { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
-  .job .tag { font: 600 11.5px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent-text); }
-  .job h3 { margin: 10px 0 8px; }
-  .job p { margin: 0 0 10px; color: #c0c7d4; font-size: 14.5px; }
-  .job ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
-  .strengths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 44px; }
-  @media (max-width: 960px) { .strengths { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 640px) { .strengths { grid-template-columns: minmax(0, 1fr); } }
-  .str { border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; background: linear-gradient(180deg, var(--surface), var(--bg2)); position: relative; overflow: hidden; }
-  .str .num { font: 700 40px/1 var(--sans); letter-spacing: -0.04em; color: var(--text); }
-  .str .num small { font-size: 16px; color: var(--muted); font-weight: 600; letter-spacing: 0; margin-left: 4px; }
-  .str h3 { margin: 12px 0 6px; font-size: 16.5px; }
-  .str p { margin: 0; color: var(--muted); font-size: 14px; }
-  .str .viz { margin-top: 14px; }
-  .flow { display: flex; align-items: center; gap: 8px; font: 12px var(--mono); flex-wrap: wrap; }
-  .flow .box { border: 1px solid var(--border2); border-radius: 6px; padding: 5px 8px; background: var(--sunk); color: var(--muted); }
-  .flow .box.sym { border-color: rgba(245,165,36,0.5); color: var(--warn); }
-  .flow .box.cause { border-color: rgba(248,113,113,0.55); color: var(--crit); }
-  .flow .arr { color: var(--faint); }
   .kw { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 12px var(--mono); }
   .kw .grp { border: 1px solid var(--border2); border-radius: 7px; padding: 4px 6px; display: inline-flex; gap: 4px; flex-wrap: wrap; align-items: center; background: var(--sunk); }
   .kw .w { color: var(--text); background: var(--raised); border-radius: 4px; padding: 1px 6px; }
@@ -205,7 +183,7 @@
   .kw .and { color: var(--accent-text); font-weight: 700; font-size: 11px; letter-spacing: .05em; }
 
   /* ── Results scorecard ── */
-  .results { margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+  .results { margin-top: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
   .results h3 { margin-bottom: 6px; }
   .results .intro { color: var(--muted); font-size: 14px; max-width: 72em; margin: 0 0 18px; }
   .sc-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg2); }
@@ -478,17 +456,9 @@ xattr -d com.apple.quarantine kubehealth-embed
 <section id="bench">
   <div class="wrap">
     <div class="eyebrow">KubeHealth-Bench</div>
-    <h2>Does the model actually help? Measured through KubeHealth itself.</h2>
-    <p class="sub">The bench replays frozen incidents through the same prompts, evidence, context budget and read-only tools the UI uses, and scores the three things KubeHealth asks a model to do. No cluster needed to run it.</p>
-    <div class="jobs">
-      <div class="job"><span class="tag">RCA</span><h3>Find out why it's broken</h3><p>An agent with four read-only tools and up to five rounds.</p><ul><li>right root cause and decisive detail</li><li>right fix, stated as an action</li><li>investigates when the cause is elsewhere</li><li>how many lookups, and whether it finishes</li></ul></div>
-      <div class="job"><span class="tag">✦ Analysis</span><h3>Is anything wrong here?</h3><p>One answer: what, why, what to do.</p><ul><li>the right issue and the right action</li><li>on healthy objects: no invented fault</li></ul></div>
-      <div class="job"><span class="tag">Note</span><h3>What to check first</h3><p>One or two sentences on the overview's top problem.</p><ul><li>about the right problem</li><li>an answer, not leaked reasoning</li></ul></div>
-    </div>
-    <div class="strengths" id="strengths"><div class="loading">Loading the bench…</div></div>
+    <h2>Scorecard</h2>
+    <p class="sub" id="bench-sub">Each model diagnoses 54 incidents recorded from real clusters, through KubeHealth's own prompts and tools; the table shows how often its answer names the real cause and the right fix.</p>
     <div class="results" id="results" hidden>
-      <h3>Scorecard</h3>
-      <div class="intro" id="results-intro"></div>
       <div class="sc-wrap"><table class="sc" id="scorecard"></table></div>
       <div class="callouts" id="callouts"></div>
       <div class="notes" id="results-notes"></div>
@@ -698,7 +668,7 @@ xattr -d com.apple.quarantine kubehealth-embed
 
   fetch('data/bench.json').then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (d) { D = d; boot(); })
-    .catch(function (e) { $('strengths').innerHTML = '<div class="loading">Could not load the bench data (' + esc(e.message) + ').</div>'; });
+    .catch(function (e) { $('bench-sub').textContent = 'Could not load the bench data (' + e.message + ').'; });
 
   function isSilent(c) { return !c.healthy && !(c.events || []).length && !(c.members || []).length && !c.rank; }
   function snapOf(name) { for (var i = 0; i < D.snapshots.length; i++) if (D.snapshots[i].name === name) return D.snapshots[i]; return null; }
@@ -707,34 +677,9 @@ xattr -d com.apple.quarantine kubehealth-embed
   function boot() {
     var cs = D.cases, faults = cs.filter(function (c) { return !c.healthy; });
     var cross = cs.filter(function (c) { return c.needs_tool; }), healthy = cs.filter(function (c) { return c.healthy; });
-    var noisy = healthy.filter(function (c) { return (c.events || []).some(function (e) { return e.type === 'Warning'; }) || /once|blip|restart|retr|scaled|attempt|taint/i.test(c.truth); });
-    var objects = D.snapshots.reduce(function (n, s) { return n + s.objects; }, 0);
-    var logs = D.snapshots.reduce(function (n, s) { return n + s.logs; }, 0);
     var cats = Object.keys(CATS).filter(function (k) { return k !== 'healthy' && faults.some(function (c) { return c.category === k; }); });
-    var linkedHelps = cross.filter(function (c) { return (c.linked || []).length; }).length;
-    var ex = cross.filter(function (c) { return c.id === 'current-mapper-pg-secret'; })[0] || cross[0];
-
-    // Strengths: why the bench is hard to game.
-    var S = [
-      ['<span class="num">1<small>code path</small></span>', 'Same code path as the UI',
-        'Prompts, evidence, the ' + (D.ctx_len / 1024) + 'k context budget and the ' + D.tools.length + ' read-only tools are KubeHealth\'s own, so a score is what users would see.',
-        '<div class="flow"><span class="box">snapshot</span><span class="arr">→</span><span class="box">KubeHealth</span><span class="arr">→</span><span class="box">model</span><span class="arr">→</span><span class="box">score</span></div>'],
-      ['<span class="num">' + cross.length + '<small>/ ' + faults.length + ' faults</small></span>', 'The cause is often somewhere else',
-        'The symptom is on one workload, the cause in a dependency. The first prompt is not enough: the model has to go and look. Link-following pre-fetches the named objects in ' + linkedHelps + ' of them.',
-        ex ? '<div class="flow"><span class="box sym">' + esc(ex.anchor.name) + '</span><span class="arr">→</span><span class="box">' + esc((ex.linked && ex.linked[0] ? ex.linked[0].name : 'dependency')) + '</span><span class="arr">→</span><span class="box cause">missing secret</span></div>' : ''],
-      ['<span class="num">' + healthy.length + '<small>healthy</small></span>', 'Healthy controls, with noise',
-        'Objects with nothing to fix, ' + noisy.length + ' of them next to harmless noise: a readiness blip at start-up, a Job that retried, a scale-down. Saying "nothing is wrong" is a real test.', ''],
-      ['<span class="num">' + D.snapshots.length + '<small>clusters</small></span>', 'Frozen, deterministic, offline',
-        objects.toLocaleString() + ' objects and ' + logs + ' container logs, replayed at their recording time, so every run sends identical prompts. Run several seeds to see the spread.', ''],
-      ['<span class="num">AND<small>/ OR</small></span>', 'Scored on meaning, not layout',
-        'Every keyword group must match somewhere in the whole answer. A fix only counts when the answer says what to do. Headings neither help nor hurt.',
-        '<div class="kw"><span class="grp"><span class="w">tidepool-pg</span></span><span class="and">AND</span><span class="grp"><span class="w">refused</span><span class="or">or</span><span class="w">no endpoints</span><span class="or">or</span><span class="w">down</span></span></div>'],
-      ['<span class="num">' + cats.length + '<small>areas</small></span>', 'Broad and private',
-        'Scheduling to RBAC, probes to quotas. Snapshots keep no values: ConfigMaps and Secrets keep key names only, env values and last-applied annotations are dropped.', '']
-    ];
-    $('strengths').innerHTML = S.map(function (s) {
-      return '<div class="str">' + s[0] + '<h3>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p>' + (s[3] ? '<div class="viz">' + s[3] + '</div>' : '') + '</div>';
-    }).join('');
+    $('bench-sub').textContent = 'Each model diagnoses ' + cs.length + ' incidents recorded from real clusters (' + faults.length + ' broken objects, ' +
+      healthy.length + ' healthy ones), through KubeHealth\'s own prompts and tools; the table shows how often its answer names the real cause and the right fix.';
 
     drawResults();
     drawMagos();
@@ -796,7 +741,6 @@ xattr -d com.apple.quarantine kubehealth-embed
     var R = D.results;
     if (!R) return;
     $('results').hidden = false;
-    $('results-intro').innerHTML = (R.intro || []).map(function (p) { return '<p style="margin:0 0 6px">' + md(p) + '</p>'; }).join('');
     var M = R.models, local = M.filter(function (m) { return !m.reference; }).length;
     var h = '<thead><tr class="grp"><th class="chk" scope="col"></th>' +
       '<th colspan="' + local + '" scope="colgroup">KubeHealth\'s local models · 0.6B</th>' +
@@ -844,7 +788,7 @@ xattr -d com.apple.quarantine kubehealth-embed
       });
     }
     $('callouts').innerHTML = out.join('');
-    $('results-notes').innerHTML = (R.notes || []).map(function (n) { return '<p style="margin:6px 0">' + md(n) + '</p>'; }).join('');
+    $('results-notes').innerHTML = (R.intro || []).concat(R.notes || []).map(function (n) { return '<p style="margin:6px 0">' + md(n) + '</p>'; }).join('');
   }
 
   // ── Case grid ──────────────────────────────────────────────────────────────
