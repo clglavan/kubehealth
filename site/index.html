@@ -72,6 +72,32 @@
   .shot { border-radius: var(--radius); border: 1px solid var(--border2); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02); background: var(--bg2); }
   .shot video { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
 
+  /* ── Built-in model band ── */
+  .magos {
+    grid-column: 1 / -1; margin-top: 18px; position: relative; overflow: hidden;
+    display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 32px; align-items: center;
+    padding: 28px 32px; border-radius: 18px; border: 1px solid rgba(139,147,251,0.38);
+    background: radial-gradient(120% 140% at 0% 0%, rgba(99,102,241,0.22), transparent 55%),
+                radial-gradient(90% 120% at 100% 100%, rgba(45,212,191,0.12), transparent 60%), var(--surface);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  @media (max-width: 960px) { .magos { grid-template-columns: minmax(0, 1fr); gap: 22px; padding: 22px; } }
+  .mg-chip { display: inline-flex; align-items: center; gap: 8px; font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--teal); }
+  .mg-chip::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 0 4px rgba(45,212,191,0.18); }
+  .mg-title { font: 700 clamp(30px, 4vw, 44px)/1.05 var(--mono); letter-spacing: -0.03em; margin: 12px 0 10px; }
+  .mg-title span { color: var(--accent-text); }
+  .mg-text p { margin: 0 0 18px; color: #c3cad6; font-size: 16.5px; max-width: 40em; }
+  .mg-cta { display: flex; gap: 10px; flex-wrap: wrap; }
+  .mg-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 520px) { .mg-stats { grid-template-columns: minmax(0, 1fr); } }
+  .mg-stat { background: rgba(11,13,18,0.55); border: 1px solid var(--border2); border-radius: 12px; padding: 16px 16px 14px; }
+  .mg-stat b { display: block; font: 700 34px/1 var(--sans); letter-spacing: -0.03em; color: var(--text); }
+  .mg-stat.win b { color: var(--ok); }
+  .mg-stat span { display: block; margin-top: 8px; font-size: 13px; color: #c3cad6; line-height: 1.35; }
+  .mg-stat small { display: block; margin-top: 6px; font-size: 12px; color: var(--muted); }
+  .mg-note { grid-column: 1 / -1; font-size: 12.5px; color: var(--muted); margin-top: -8px; }
+  @media (max-width: 960px) { .mg-note { margin-top: 0; } }
+
   /* ── Sections ── */
   section { padding: 72px 0; }
   section + section { border-top: 1px solid var(--border); }
@@ -352,6 +378,19 @@
     <div class="shot">
       <video src="assets/demo.mp4" poster="assets/01-overview.png" autoplay muted loop playsinline aria-label="A two-minute walkthrough of KubeHealth on two demo clusters"></video>
     </div>
+    <aside class="magos" aria-labelledby="mg-title">
+      <div class="mg-text">
+        <span class="mg-chip">Built in · runs offline</span>
+        <h2 class="mg-title" id="mg-title">magos-k8s-<span>0.6b</span></h2>
+        <p>A 0.6B model trained for Kubernetes troubleshooting, shipped inside the embed build with llama.cpp. No API key, no GPU cluster, nothing leaves your laptop. It writes the overview note, the analysis and the root cause, using KubeHealth's read-only tools.</p>
+        <div class="mg-cta">
+          <a class="btn primary" href="#results">See the scorecard ↓</a>
+          <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b">Model card ↗</a>
+        </div>
+      </div>
+      <div class="mg-stats" id="mg-stats" aria-live="polite"></div>
+      <div class="mg-note" id="mg-note"></div>
+    </aside>
   </div>
 </header>
 
@@ -583,6 +622,7 @@ xattr -d com.apple.quarantine kubehealth-embed
     }).join('');
 
     drawResults();
+    drawMagos();
 
     $('stats').innerHTML = [
       [cs.length, 'cases'], [faults.length, 'faults'], [cross.length, 'cause in another object'], [healthy.length, 'healthy controls'], [D.snapshots.length, 'recorded clusters']
@@ -612,6 +652,27 @@ xattr -d com.apple.quarantine kubehealth-embed
   function md(t) {
     return esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
       .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>');
+  }
+
+  // The hero's model band: the featured column's headline numbers.
+  function drawMagos() {
+    var R = D.results;
+    if (!R) return;
+    var f = -1;
+    R.models.forEach(function (m, i) { if (m.featured) f = i; });
+    if (f < 0) return;
+    var refs = R.models.map(function (m, i) { return m.reference ? i : -1; }).filter(function (i) { return i >= 0; });
+    var pick = [[/right root cause/i, 'name the right root cause'], [/right fix/i, 'give the right fix'], [/another object/i, 'find a cause that sits in another object']];
+    var tiles = pick.map(function (p) {
+      var row = R.rows.filter(function (r) { return p[0].test(r.check); })[0];
+      if (!row || row.values[f] == null) return '';
+      var v = row.values[f];
+      var rv = refs.map(function (i) { return { m: R.models[i], v: row.values[i] }; }).filter(function (x) { return x.v != null && x.v < v; });
+      return '<div class="mg-stat' + (rv.length ? ' win' : '') + '"><b>' + v + '%</b><span>' + esc(p[1]) + '</span>' +
+        (rv.length ? '<small>' + rv.map(function (x) { return esc(x.m.name) + ': ' + x.v + '%'; }).join(' · ') + '</small>' : '') + '</div>';
+    }).join('');
+    $('mg-stats').innerHTML = tiles;
+    $('mg-note').textContent = R.models[f].name + ' on the ' + D.cases.length + ' KubeHealth-Bench incidents, mean of 3 seeds.';
   }
 
   // The scorecard: one row per check, one column per model, as in the bench
