@@ -31,10 +31,13 @@ ifeq ($(GOOS)/$(GOARCH),linux/arm64)
   LLAMA_ASSET := llama-$(LLAMA_RELEASE)-bin-ubuntu-arm64.tar.gz
 endif
 
-# Source for the magos GGUF. Downloads from HuggingFace by default.
+# Source for the magos GGUF. Downloads from HuggingFace by default, pinned to a
+# model release tag so an embed build always bundles the same model (bump
+# MAGOS_REVISION with each model release).
 # Override with `make MODEL_URL=...` to use a different quantization (q4_k_m, f16)
 # or `make MODEL_SRC=/path/to.gguf` to use a local file (skips the download).
-MODEL_URL ?= https://huggingface.co/clglavan/magos-k8s-0.6b/resolve/main/magos-k8s-0.6b-q8_0.gguf
+MAGOS_REVISION ?= v19
+MODEL_URL ?= https://huggingface.co/clglavan/magos-k8s-0.6b/resolve/$(MAGOS_REVISION)/magos-k8s-0.6b-q8_0.gguf
 MODEL_SRC ?=
 
 # ---- Targets --------------------------------------------------------------

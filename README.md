@@ -54,7 +54,9 @@ event cache (per cluster)
     ├── Namespace view ──► live snapshot, 7 list calls, cached 30 s
     ├── Logs ────────────► GetLogs, current run + previous run
     ├── Correlate ───────► cache only, events ±5 min across namespaces
-    ├── ✦ AI ────────────► events + describe + container state + logs → model, streamed
+    ├── Link-follow ─────► objects the evidence names: claim → StorageClass,
+    │                        unreachable Service → its Pods, missing keys, nodes
+    ├── ✦ AI ────────────► events + describe + container state + logs + linked → model
     └── RCA ─────────────► same, plus tools the model can call:
                              get_pod_logs · get_object_describe
                              get_object_events · get_correlated_events
@@ -72,7 +74,7 @@ Grab a binary from [releases](https://github.com/clglavan/kubehealth/releases):
 **Regular**
 
 ```bash
-tar -xzf kubehealth_v0.2.0_darwin_arm64.tar.gz && cd kubehealth_v0.2.0_darwin_arm64
+tar -xzf kubehealth_v0.3.0_darwin_arm64.tar.gz && cd kubehealth_v0.3.0_darwin_arm64
 xattr -d com.apple.quarantine kubehealth     # macOS, not notarized
 ./kubehealth                                 # http://localhost:8080
 ```
@@ -80,7 +82,7 @@ xattr -d com.apple.quarantine kubehealth     # macOS, not notarized
 **Embed** (AI offline, no setup)
 
 ```bash
-tar -xzf kubehealth-embed_v0.2.0_darwin_arm64.tar.gz && cd kubehealth-embed_v0.2.0_darwin_arm64
+tar -xzf kubehealth-embed_v0.3.0_darwin_arm64.tar.gz && cd kubehealth-embed_v0.3.0_darwin_arm64
 xattr -d com.apple.quarantine kubehealth-embed
 ./kubehealth-embed                           # starts the bundled model on a free local port
 ```
@@ -103,6 +105,7 @@ LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip th
 | `LMSTUDIO_URL` | `http://localhost:1234/v1` |
 | `LMSTUDIO_MODEL` | `qwen/qwen3-4b-2507` |
 | `AI_ENABLED` | `true` |
+| `AI_LINK_FOLLOW` | `true` |
 | `KUBECONFIG` | `~/.kube/config` |
 
 ## AI
@@ -110,12 +113,16 @@ LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip th
 - **Note** on the top problem, on the overview
 - **✦ AI**: one-shot analysis of an object or namespace, streamed
 - **RCA**: agent loop with tools (`get_pod_logs`, `get_object_describe`, `get_object_events`, `get_correlated_events`)
+- **Link-following**: before asking, KubeHealth reads the objects the evidence names (a claim and its StorageClass, the Service a log line can't reach and its Pods, missing ConfigMap or Secret keys, the nodes of a scheduling failure, pull secrets) and adds them to the prompt. Off with `AI_LINK_FOLLOW=false`.
+- Plain questions, no required answer format: what's wrong, the evidence, the fix, how sure. Prompts fit the model's context.
 
-[magos-k8s-0.6b](https://huggingface.co/clglavan/magos-k8s-0.6b) is a small model I'm training for k8s troubleshooting. Decent at short "check this first" notes, RCA still hit or miss at this size. For better RCA, point the regular build at a bigger model. It only sees what KubeHealth hands it; it suggests, you decide.
+[magos-k8s-0.6b](https://huggingface.co/clglavan/magos-k8s-0.6b) is a small model I'm training for KubeHealth; the embed build bundles it. v19 names the right root cause in 88% of the [KubeHealth-Bench](bench/README.md) incidents and, with link-following, finds a cause that sits in another object 78% of the time. It only sees what KubeHealth hands it; it suggests, you decide.
+
+`kubehealth bench` replays recorded incidents through the AI features with no cluster, to compare models: [bench/README.md](bench/README.md).
 
 ## RBAC
 
-Read-only. The built-in `view` ClusterRole covers it, plus `list` on `nodes` and `persistentvolumes` for the cluster-wide view.
+Read-only. The built-in `view` ClusterRole covers it, plus `list` on `nodes` and `persistentvolumes` for the cluster-wide view. Link-following also reads `storageclasses` and `secrets` (key names only, never values) when allowed; without them that evidence is left out.
 
 ## Try it without a cluster
 
@@ -131,7 +138,7 @@ Go 1.25+.
 
 ```bash
 make build           # ./kubehealth
-make embed           # ./kubehealth-embed (downloads model + llama-server)
+make embed           # ./kubehealth-embed (downloads model + llama-server; model pinned by MAGOS_REVISION)
 make release         # archives for every platform in dist/
 make release-embed   # embed archive for this machine
 ```
