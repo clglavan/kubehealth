@@ -70,7 +70,37 @@
   .facts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 26px; font-size: 14px; color: var(--muted); }
   .facts span::before { content: '✓'; color: var(--ok); margin-right: 7px; font-weight: 700; }
   .shot { border-radius: var(--radius); border: 1px solid var(--border2); overflow: hidden; box-shadow: 0 30px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.02); background: var(--bg2); }
-  .shot video { width: 100%; aspect-ratio: 16/10; object-fit: cover; }
+  .shot video { width: 100%; aspect-ratio: 16/10; object-fit: cover; cursor: pointer; }
+  /* ── Video player ── */
+  .player { position: relative; }
+  .player:fullscreen { display: flex; flex-direction: column; background: #000; border-radius: 0; }
+  .player:fullscreen video { flex: 1; min-height: 0; aspect-ratio: auto; object-fit: contain; }
+  /* Under the picture, so the video's own captions stay visible. */
+  .pl-bar { display: flex; align-items: center; gap: 10px; padding: 9px 12px; background: var(--sunk); border-top: 1px solid var(--border); }
+  .pl-btn {
+    flex: none; width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border2);
+    background: var(--raised); color: var(--text); cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  }
+  .pl-btn:hover { background: rgba(255,255,255,0.16); }
+  .pl-btn svg { width: 14px; height: 14px; fill: currentColor; }
+  .pl-speed { width: auto; padding: 0 8px; font: 600 12px var(--mono); }
+  .pl-time { flex: none; font: 12px var(--mono); color: #d6dbe4; font-variant-numeric: tabular-nums; }
+  .pl-track { position: relative; flex: 1; height: 20px; display: flex; align-items: center; }
+  .pl-track::before { content: ''; position: absolute; left: 0; right: 0; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.18); }
+  .pl-fill { position: absolute; left: 0; height: 4px; border-radius: 2px; background: var(--accent-text); width: 0; pointer-events: none; }
+  .pl-tick { position: absolute; width: 2px; height: 8px; margin-left: -1px; background: rgba(255,255,255,0.55); border-radius: 1px; pointer-events: none; }
+  .pl-seek { position: absolute; inset: 0; width: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .pl-track:hover::before, .pl-track:hover .pl-fill { height: 6px; }
+  .pl-knob { position: absolute; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px rgba(139,147,251,0.45); pointer-events: none; left: 0; }
+  .chapters { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .chap {
+    display: inline-flex; gap: 7px; align-items: baseline; padding: 6px 10px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border2); background: var(--surface); color: var(--muted); font-size: 12.5px;
+  }
+  .chap b { font: 500 11.5px var(--mono); color: var(--faint); }
+  .chap:hover { color: var(--text); border-color: var(--muted); }
+  .chap[aria-current="true"] { color: var(--text); border-color: rgba(139,147,251,0.6); background: var(--accent-bg); }
+  .chap[aria-current="true"] b { color: var(--accent-text); }
 
   /* ── Built-in model band ── */
   .magos {
@@ -371,12 +401,26 @@
       <div class="cta">
         <a class="btn primary" href="https://github.com/clglavan/kubehealth/releases/latest">Download</a>
         <a class="btn" href="#bench">See the benchmark</a>
-        <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b">magos-k8s-0.6b ↗</a>
+        <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b" target="_blank" rel="noopener">magos-k8s-0.6b ↗</a>
       </div>
       <div class="facts"><span>Nothing installed in the cluster</span><span>Only reads</span><span>AI optional, offline with the bundled model</span></div>
     </div>
-    <div class="shot">
-      <video src="assets/demo.mp4" poster="assets/01-overview.png" autoplay muted loop playsinline aria-label="A two-minute walkthrough of KubeHealth on two demo clusters"></video>
+    <div>
+      <div class="shot player" id="player" tabindex="0" aria-label="Walkthrough video player">
+        <video id="vid" src="assets/demo.mp4" poster="assets/01-overview.png" muted loop playsinline preload="metadata" aria-label="A two-minute walkthrough of KubeHealth on two demo clusters"></video>
+        <div class="pl-bar">
+          <button class="pl-btn" type="button" id="pl-play" aria-label="Pause"></button>
+          <div class="pl-track" id="pl-track">
+            <div class="pl-fill" id="pl-fill"></div>
+            <div class="pl-knob" id="pl-knob"></div>
+            <input class="pl-seek" id="pl-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek">
+          </div>
+          <span class="pl-time" id="pl-time">0:00 / 0:00</span>
+          <button class="pl-btn pl-speed" type="button" id="pl-speed" aria-label="Playback speed">1×</button>
+          <button class="pl-btn" type="button" id="pl-fs" aria-label="Full screen"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1 1h5v2H3v3H1V1zm9 0h5v5h-2V3h-3V1zM1 10h2v3h3v2H1v-5zm12 3v-3h2v5h-5v-2h3z"/></svg></button>
+        </div>
+      </div>
+      <div class="chapters" id="chapters" role="group" aria-label="Chapters"></div>
     </div>
     <aside class="magos" aria-labelledby="mg-title">
       <div class="mg-text">
@@ -385,7 +429,7 @@
         <p>A 0.6B model trained for Kubernetes troubleshooting, shipped inside the embed build with llama.cpp. No API key, no GPU cluster, nothing leaves your laptop. It writes the overview note, the analysis and the root cause, using KubeHealth's read-only tools.</p>
         <div class="mg-cta">
           <a class="btn primary" href="#results">See the scorecard ↓</a>
-          <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b">Model card ↗</a>
+          <a class="btn" href="https://huggingface.co/clglavan/magos-k8s-0.6b" target="_blank" rel="noopener">Model card ↗</a>
         </div>
       </div>
       <div class="mg-stats" id="mg-stats" aria-live="polite"></div>
@@ -483,7 +527,7 @@ xattr -d com.apple.quarantine kubehealth-embed
 
 <footer>
   <div class="wrap">
-    <div>KubeHealth · <a href="https://github.com/clglavan/kubehealth">GitHub</a> · <a href="https://github.com/clglavan/kubehealth/releases">Releases</a> · <a href="https://github.com/clglavan/kubehealth/tree/main/bench">Bench</a> · <a href="https://huggingface.co/clglavan/magos-k8s-0.6b">magos on HuggingFace</a></div>
+    <div>KubeHealth · <a href="https://github.com/clglavan/kubehealth">GitHub</a> · <a href="https://github.com/clglavan/kubehealth/releases">Releases</a> · <a href="https://github.com/clglavan/kubehealth/tree/main/bench">Bench</a> · <a href="https://huggingface.co/clglavan/magos-k8s-0.6b" target="_blank" rel="noopener">magos on HuggingFace</a></div>
     <div id="built"></div>
   </div>
 </footer>
@@ -544,6 +588,77 @@ xattr -d com.apple.quarantine kubehealth-embed
     return '<figure class="tile" style="margin:0"><button type="button" data-zoom="assets/' + s[0] + '" aria-label="Enlarge: ' + esc(s[1]) + '"><img src="assets/' + s[0] + '" alt="' + esc(s[1]) + '" loading="lazy"></button>' +
       '<figcaption class="cap"><h3>' + esc(s[1]) + '</h3><p>' + esc(s[2]) + '</p></figcaption></figure>';
   }).join('');
+
+  // ── The walkthrough player ─────────────────────────────────────────────────
+  (function () {
+    var CHAPTERS = [[0, 'Overview'], [38, 'Namespace status'], [45, 'Objects & logs'], [57, 'Follow it down'],
+      [66, 'Root cause analysis'], [84, 'Clusters & prod'], [94, 'Docs']];
+    var v = $('vid'), player = $('player'), seek = $('pl-seek'), dragging = false;
+    var ICON = { play: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z"/></svg>', pause: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h4v12H3zM9 2h4v12H9z"/></svg>' };
+    var fmt = function (t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); };
+    $('chapters').innerHTML = CHAPTERS.map(function (c, i) {
+      return '<button type="button" class="chap" data-t="' + c[0] + '" aria-current="' + (i === 0) + '"><b>' + fmt(c[0]) + '</b>' + esc(c[1]) + '</button>';
+    }).join('');
+    function ticks() {
+      if (!v.duration) return;
+      $('pl-track').querySelectorAll('.pl-tick').forEach(function (t) { t.remove(); });
+      CHAPTERS.slice(1).forEach(function (c) {
+        var t = document.createElement('span');
+        t.className = 'pl-tick'; t.style.left = (c[0] / v.duration * 100) + '%';
+        $('pl-track').appendChild(t);
+      });
+    }
+    function sync() {
+      var d = v.duration || 0, p = d ? v.currentTime / d : 0;
+      if (!dragging) seek.value = Math.round(p * 1000);
+      $('pl-fill').style.width = (p * 100) + '%';
+      $('pl-knob').style.left = (p * 100) + '%';
+      $('pl-time').textContent = fmt(v.currentTime) + ' / ' + fmt(d);
+      var cur = 0;
+      CHAPTERS.forEach(function (c, i) { if (v.currentTime >= c[0] - 0.25) cur = i; });
+      [].forEach.call(document.querySelectorAll('.chap'), function (b, i) { b.setAttribute('aria-current', String(i === cur)); });
+    }
+    function state() {
+      $('pl-play').innerHTML = v.paused ? ICON.play : ICON.pause;
+      $('pl-play').setAttribute('aria-label', v.paused ? 'Play' : 'Pause');
+      player.classList.toggle('paused', v.paused);
+    }
+    function toggle() { if (v.paused) v.play(); else v.pause(); }
+    function go(t) { v.currentTime = Math.min(Math.max(0, t), (v.duration || t) - 0.05); sync(); }
+    v.addEventListener('loadedmetadata', function () { ticks(); sync(); });
+    v.addEventListener('timeupdate', sync);
+    v.addEventListener('play', state);
+    v.addEventListener('pause', state);
+    v.addEventListener('click', toggle);
+    $('pl-play').addEventListener('click', toggle);
+    seek.addEventListener('input', function () { dragging = true; go(seek.value / 1000 * (v.duration || 0)); });
+    seek.addEventListener('change', function () { dragging = false; });
+    $('chapters').addEventListener('click', function (e) {
+      var b = e.target.closest('[data-t]'); if (!b) return;
+      go(+b.dataset.t); v.play();
+    });
+    var speeds = [1, 1.5, 2];
+    $('pl-speed').addEventListener('click', function () {
+      var next = speeds[(speeds.indexOf(v.playbackRate) + 1) % speeds.length] || 1;
+      v.playbackRate = next; this.textContent = next + '×';
+    });
+    $('pl-fs').addEventListener('click', function () {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (player.requestFullscreen) player.requestFullscreen();
+      else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();
+    });
+    player.addEventListener('keydown', function (e) {
+      if (e.target !== player && e.target !== seek) return;
+      if (e.key === ' ' || e.key === 'k') { e.preventDefault(); toggle(); }
+      else if (e.key === 'ArrowRight' && e.target === player) { e.preventDefault(); go(v.currentTime + 5); }
+      else if (e.key === 'ArrowLeft' && e.target === player) { e.preventDefault(); go(v.currentTime - 5); }
+    });
+    state();
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () { state(); });
+    }
+  })();
 
   $('pipe').innerHTML = STAGES.map(function (s, i) {
     return '<button type="button" class="stage" role="tab" id="st' + i + '" aria-controls="stage-detail" aria-selected="' + (i === 0) + '" data-i="' + i + '">' +
@@ -651,7 +766,7 @@ xattr -d com.apple.quarantine kubehealth-embed
 
   function md(t) {
     return esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
-      .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>');
+      .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
   }
 
   // The hero's model band: the featured column's headline numbers.
