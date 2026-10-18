@@ -148,24 +148,38 @@
   .kw .or { color: var(--faint); font-size: 10.5px; }
   .kw .and { color: var(--accent-text); font-weight: 700; font-size: 11px; letter-spacing: .05em; }
 
-  /* ── Results chart ── */
+  /* ── Results scorecard ── */
   .results { margin-top: 48px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
-  .results-head { display: flex; gap: 16px; flex-wrap: wrap; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
-  .legend { display: flex; flex-wrap: wrap; gap: 8px; }
-  .lg { display: inline-flex; align-items: center; gap: 7px; padding: 5px 10px; border: 1px solid var(--border2); border-radius: 999px; background: transparent; font-size: 13px; cursor: pointer; color: var(--muted); }
-  .lg[aria-pressed="true"] { color: var(--text); border-color: var(--muted); }
-  .lg i { width: 11px; height: 11px; border-radius: 3px; display: inline-block; }
-  .lg[aria-pressed="false"] i { opacity: .25; }
-  .chart { display: grid; gap: 18px; }
-  .crow .lbl { font-size: 14px; margin-bottom: 7px; color: #cdd3de; }
-  .bars { display: grid; gap: 4px; }
-  .bar { display: grid; grid-template-columns: minmax(0, 1fr) 46px; gap: 10px; align-items: center; }
-  .bar .track { height: 16px; background: var(--sunk); border-radius: 4px; overflow: hidden; position: relative; }
-  .bar .fill { height: 100%; border-radius: 4px; width: 0; transition: width .7s cubic-bezier(.2,.8,.2,1); }
-  .bar .fill.ref { background-image: repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 3px, transparent 3px 7px); }
-  .bar .v { font: 600 13px var(--mono); text-align: right; color: var(--muted); }
-  .bar.top .v { color: var(--text); }
-  .callouts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+  .results h3 { margin-bottom: 6px; }
+  .results .intro { color: var(--muted); font-size: 14px; max-width: 72em; margin: 0 0 18px; }
+  .sc-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; background: var(--bg2); }
+  table.sc { border-collapse: separate; border-spacing: 0; width: 100%; min-width: 980px; font-size: 14px; }
+  table.sc th, table.sc td { padding: 11px 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table.sc tbody tr:last-child > * { border-bottom: 0; }
+  table.sc thead th { position: sticky; top: 0; background: var(--raised); font-weight: 600; font-size: 12.5px; text-align: center; line-height: 1.3; color: var(--text); }
+  table.sc thead tr.grp th { font: 600 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 9px 10px; background: var(--surface); }
+  table.sc thead tr.grp th.ref { color: var(--warn); }
+  table.sc .chk { position: sticky; left: 0; z-index: 1; background: var(--bg2); text-align: left; min-width: 280px; max-width: 340px; border-right: 1px solid var(--border); font-weight: 400; }
+  table.sc thead .chk { background: var(--raised); z-index: 2; }
+  table.sc thead tr.grp .chk { background: var(--surface); }
+  table.sc .chk b { display: block; font-size: 14px; font-weight: 600; color: var(--text); }
+  table.sc .chk span { display: block; margin-top: 3px; font-size: 12.5px; line-height: 1.45; color: var(--muted); }
+  table.sc th.m.ref { font-style: italic; color: #d8c7a6; }
+  table.sc th.m.feat { color: #fff; background: linear-gradient(180deg, rgba(99,102,241,0.55), rgba(99,102,241,0.35)); }
+  table.sc td { text-align: center; font: 500 13.5px var(--mono); color: #cdd3de; white-space: nowrap; }
+  table.sc td.na { color: var(--faint); }
+  table.sc td.best { color: #fff; font-weight: 700; }
+  table.sc td.feat { box-shadow: inset 1px 0 0 rgba(129,140,248,0.55), inset -1px 0 0 rgba(129,140,248,0.55); }
+  table.sc td.ref { font-style: italic; }
+  table.sc tr:hover td, table.sc tr:hover .chk { filter: brightness(1.12); }
+  @media (max-width: 760px) {
+    table.sc { min-width: 0; font-size: 13px; }
+    table.sc .chk { min-width: 136px; max-width: 150px; }
+    table.sc .chk b { font-size: 12.5px; }
+    table.sc .chk span { display: none; }
+    table.sc th, table.sc td { padding: 9px 8px; }
+  }
+  .callouts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 20px; }
   @media (max-width: 760px) { .callouts { grid-template-columns: minmax(0, 1fr); } }
   .callout { border-radius: 10px; padding: 14px 16px; font-size: 14.5px; border: 1px solid var(--border); background: var(--sunk); }
   .callout b { display: block; margin-bottom: 3px; }
@@ -390,11 +404,9 @@ xattr -d com.apple.quarantine kubehealth-embed
     </div>
     <div class="strengths" id="strengths"><div class="loading">Loading the bench…</div></div>
     <div class="results" id="results" hidden>
-      <div class="results-head">
-        <div><h3>Results so far</h3><span class="muted small">Mean of 3 seeds · higher is better · striped bars are much larger hosted reference models</span></div>
-        <div class="legend" id="legend" role="group" aria-label="Models"></div>
-      </div>
-      <div class="chart" id="chart"></div>
+      <h3>Scorecard</h3>
+      <div class="intro" id="results-intro"></div>
+      <div class="sc-wrap"><table class="sc" id="scorecard"></table></div>
       <div class="callouts" id="callouts"></div>
       <div class="notes" id="results-notes"></div>
     </div>
@@ -488,7 +500,6 @@ xattr -d com.apple.quarantine kubehealth-embed
     scheduling: 'Scheduling', storage: 'Storage', images: 'Images', config: 'Config & Secrets', runtime: 'Runtime',
     probes: 'Probes', services: 'Services', policy: 'Policy & access', jobs: 'Jobs & CronJobs', healthy: 'Healthy'
   };
-  var MODEL_COLORS = ['#6b7385', '#8b93fb', '#6366f1', '#f5a524', '#2dd4bf', '#f87171', '#a78bfa'];
 
   $('gallery').innerHTML = SHOTS.map(function (s) {
     return '<figure class="tile" style="margin:0"><button type="button" data-zoom="assets/' + s[0] + '" aria-label="Enlarge: ' + esc(s[1]) + '"><img src="assets/' + s[0] + '" alt="' + esc(s[1]) + '" loading="lazy"></button>' +
@@ -598,61 +609,66 @@ xattr -d com.apple.quarantine kubehealth-embed
     openFromHash();
   }
 
+  function md(t) {
+    return esc(t).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+      .replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>');
+  }
+
+  // The scorecard: one row per check, one column per model, as in the bench
+  // README and the magos model card.
   function drawResults() {
     var R = D.results;
     if (!R) return;
     $('results').hidden = false;
-    var on = R.models.map(function () { return true; });
-    function draw() {
-      $('legend').innerHTML = R.models.map(function (m, i) {
-        return '<button type="button" class="lg" data-m="' + i + '" aria-pressed="' + on[i] + '"><i style="background:' + MODEL_COLORS[i % MODEL_COLORS.length] + (m.reference ? ';background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.35) 0 2px,transparent 2px 4px)' : '') + '"></i>' + esc(m.name) + '</button>';
-      }).join('');
-      $('chart').innerHTML = R.rows.map(function (row) {
-        var best = Math.max.apply(null, row.values.map(function (v, i) { return on[i] && v != null ? v : -1; }));
-        return '<div class="crow"><div class="lbl">' + esc(row.check) + '</div><div class="bars">' + row.values.map(function (v, i) {
-          if (!on[i]) return '';
-          var m = R.models[i];
-          return '<div class="bar' + (v === best ? ' top' : '') + '" title="' + esc(m.name) + '"><div class="track"><div class="fill' + (m.reference ? ' ref' : '') + '" data-w="' + (v == null ? 0 : v) + '" style="background-color:' + MODEL_COLORS[i % MODEL_COLORS.length] + '"></div></div><span class="v">' + (v == null ? '–' : v + '%') + '</span></div>';
-        }).join('') + '</div></div>';
-      }).join('');
-      requestAnimationFrame(function () { [].forEach.call(document.querySelectorAll('#chart .fill'), function (f) { f.style.width = f.dataset.w + '%'; }); });
-    }
-    draw();
-    $('legend').addEventListener('click', function (e) {
-      var b = e.target.closest('[data-m]'); if (!b) return;
-      var i = +b.dataset.m;
-      if (on.filter(Boolean).length === 1 && on[i]) return;
-      on[i] = !on[i]; draw();
+    $('results-intro').innerHTML = (R.intro || []).map(function (p) { return '<p style="margin:0 0 6px">' + md(p) + '</p>'; }).join('');
+    var M = R.models, local = M.filter(function (m) { return !m.reference; }).length;
+    var h = '<thead><tr class="grp"><th class="chk" scope="col"></th>' +
+      '<th colspan="' + local + '" scope="colgroup">KubeHealth\'s local models · 0.6B</th>' +
+      (M.length > local ? '<th colspan="' + (M.length - local) + '" scope="colgroup" class="ref">Hosted references</th>' : '') + '</tr>' +
+      '<tr><th class="chk" scope="col">Check</th>' + M.map(function (m) {
+        return '<th scope="col" class="m' + (m.reference ? ' ref' : '') + (m.featured ? ' feat' : '') + '">' + esc(m.name) + '</th>';
+      }).join('') + '</tr></thead><tbody>';
+    R.rows.forEach(function (row) {
+      var pct = row.unit === '%';
+      var best = pct ? Math.max.apply(null, row.values.map(function (v) { return v == null ? -1 : v; })) : null;
+      h += '<tr><th class="chk" scope="row" title="' + esc(row.description || '') + '"><b>' + esc(row.check) + '</b>' + (row.description ? '<span>' + esc(row.description) + '</span>' : '') + '</th>';
+      row.values.forEach(function (v, i) {
+        var m = M[i], cls = (m.featured ? ' feat' : '') + (m.reference ? ' ref' : '');
+        if (v == null) { h += '<td class="na' + cls + '" title="not measured">–</td>'; return; }
+        var style = pct ? ' style="background-color:rgba(52,211,153,' + (v / 100 * 0.24).toFixed(3) + ')"' : '';
+        h += '<td class="' + (pct && v === best ? 'best' : '') + cls + '"' + style + ' title="' + esc(m.name + ': ' + v + (row.unit || '')) + '">' +
+          (pct ? v + '%' : v.toFixed(1)) + '</td>';
+      });
+      h += '</tr>';
     });
+    $('scorecard').innerHTML = h + '</tbody>';
 
-    // Callouts, computed from the table: where the small model wins, and where it still trails.
-    var refs = R.models.map(function (m, i) { return m.reference ? i : -1; }).filter(function (i) { return i >= 0; });
+    // Callouts, computed from the table: where the featured model leads the
+    // references, and where it still trails.
+    var refs = M.map(function (m, i) { return m.reference ? i : -1; }).filter(function (i) { return i >= 0; });
     var best = -1;
-    R.models.forEach(function (m, i) { if (/link-following/i.test(m.name)) best = i; });
-    if (best < 0) R.models.forEach(function (m, i) { if (!m.reference) best = i; });
+    M.forEach(function (m, i) { if (m.featured) best = i; });
     var out = [];
     if (best >= 0 && refs.length) {
       var wins = [], gaps = [];
       R.rows.forEach(function (row) {
         var v = row.values[best];
-        if (v == null) return;
+        if (row.unit !== '%' || v == null) return;
         var rv = refs.map(function (i) { return row.values[i]; }).filter(function (x) { return x != null; });
-        if (rv.length && v > Math.max.apply(null, rv)) wins.push([row, v, rv]);
-        if (rv.length && v < Math.min.apply(null, rv) - 5) gaps.push([row, v, rv]);
+        if (!rv.length) return;
+        if (v > Math.max.apply(null, rv)) wins.push(row);
+        else if (v < Math.min.apply(null, rv) - 5) gaps.push(row);
       });
-      wins.forEach(function (w) {
-        out.push('<div class="callout win"><b>' + esc(R.models[best].name) + ' leads: ' + esc(w[0].check) + '</b>' + w[1] + '% against ' +
-          refs.map(function (i) { return esc(R.models[i].name) + ' ' + w[0].values[i] + '%'; }).join(' and ') + ', with a 0.6B model running on a laptop.</div>');
+      var vs = function (row) { return refs.map(function (i) { return esc(M[i].name) + ' ' + row.values[i] + '%'; }).join(' and '); };
+      wins.forEach(function (row) {
+        out.push('<div class="callout win"><b>' + esc(M[best].name) + ' leads: ' + esc(row.check) + '</b>' + row.values[best] + '% against ' + vs(row) + ', with a 0.6B model running on a laptop.</div>');
       });
-      gaps.slice(0, 2).forEach(function (g) {
-        out.push('<div class="callout gap"><b>Still behind: ' + esc(g[0].check) + '</b>' + g[1] + '% against ' +
-          refs.map(function (i) { return esc(R.models[i].name) + ' ' + g[0].values[i] + '%'; }).join(' and ') + '. The bench shows where to work next.</div>');
+      gaps.slice(0, 2).forEach(function (row) {
+        out.push('<div class="callout gap"><b>Still behind: ' + esc(row.check) + '</b>' + row.values[best] + '% against ' + vs(row) + '. The bench shows where to work next.</div>');
       });
     }
     $('callouts').innerHTML = out.join('');
-    $('results-notes').innerHTML = (R.notes || []).map(function (n) {
-      return '<p style="margin:6px 0">' + esc(n).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g, '<a href="$2">$1</a>') + '</p>';
-    }).join('');
+    $('results-notes').innerHTML = (R.notes || []).map(function (n) { return '<p style="margin:6px 0">' + md(n) + '</p>'; }).join('');
   }
 
   // ── Case grid ──────────────────────────────────────────────────────────────

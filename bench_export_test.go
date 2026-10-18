@@ -53,11 +53,12 @@ func TestParseResultsTable(t *testing.T) {
 ## Results so far
 
 Mean of 3 seeds.
+Same server.
 
-| Check | base | *reference:* Big |
-|---|---|---|
-| RCA: right root cause | 67% | 99% |
-| Note: on target | n/a | 90% |
+| Check | base | **mine + links** | *reference:* Big |
+|---|---|---|---|
+| **RCA: right root cause**<br><sub>Does it name the cause?</sub> | 67% | **87%** | 99% |
+| **RCA: tool calls per incident**<br><sub>How many lookups.</sub> | 0.0 | – | 1.5 |
 
 Link-following is on
 by default.
@@ -66,13 +67,26 @@ by default.
 | not | this |
 `
 	r := parseResultsTable(strings.NewReader(md))
-	if r == nil || len(r.Models) != 2 || r.Models[1].Name != "Big" || !r.Models[1].Reference || r.Models[0].Reference {
+	if r == nil || len(r.Models) != 3 {
 		t.Fatalf("models: %+v", r)
 	}
-	if len(r.Rows) != 2 || *r.Rows[0].Values[0] != 67 || r.Rows[1].Values[0] != nil || *r.Rows[1].Values[1] != 90 {
+	if m := r.Models; m[0].Featured || m[0].Reference || m[1].Name != "mine + links" || !m[1].Featured || m[2].Name != "Big" || !m[2].Reference {
+		t.Errorf("models: %+v", m)
+	}
+	if len(r.Rows) != 2 {
 		t.Fatalf("rows: %+v", r.Rows)
 	}
+	a, b := r.Rows[0], r.Rows[1]
+	if a.Check != "RCA: right root cause" || a.Description != "Does it name the cause?" || a.Unit != "%" || *a.Values[1] != 87 {
+		t.Errorf("percent row: %+v", a)
+	}
+	if b.Unit != "" || *b.Values[0] != 0 || b.Values[1] != nil || *b.Values[2] != 1.5 {
+		t.Errorf("count row with a gap: %+v", b)
+	}
+	if len(r.Intro) != 1 || r.Intro[0] != "Mean of 3 seeds. Same server." {
+		t.Errorf("intro: %q", r.Intro)
+	}
 	if len(r.Notes) != 1 || r.Notes[0] != "Link-following is on by default." {
-		t.Fatalf("notes: %q", r.Notes)
+		t.Errorf("notes: %q", r.Notes)
 	}
 }

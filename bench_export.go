@@ -76,19 +76,23 @@ type benchExportSnapshot struct {
 }
 
 type benchExportResults struct {
+	Intro  []string           `json:"intro,omitempty"` // the paragraphs above the table
 	Models []benchExportModel `json:"models"`
 	Rows   []benchExportRow   `json:"rows"`
-	Notes  []string           `json:"notes,omitempty"`
+	Notes  []string           `json:"notes,omitempty"` // the paragraphs below it
 }
 
 type benchExportModel struct {
 	Name      string `json:"name"`
-	Reference bool   `json:"reference,omitempty"`
+	Reference bool   `json:"reference,omitempty"` // *reference:* in the header
+	Featured  bool   `json:"featured,omitempty"`  // **bold** in the header
 }
 
 type benchExportRow struct {
-	Check  string     `json:"check"`
-	Values []*float64 `json:"values"`
+	Check       string     `json:"check"`
+	Description string     `json:"description,omitempty"` // the <sub> line under the check
+	Unit        string     `json:"unit,omitempty"`        // "%", or "" for counts
+	Values      []*float64 `json:"values"`                // nil: not measured
 }
 
 func benchExportCmd(args []string) error {
@@ -273,14 +277,31 @@ func benchCategory(bc benchCase) string {
 	return "runtime"
 }
 
-var pctRe = regexp.MustCompile(`^(\d+(?:\.\d+)?)\s*%$`)
+var (
+	numRe = regexp.MustCompile(`^(\d+(?:\.\d+)?)\s*(%?)$`)
+	subRe = regexp.MustCompile(`(?i)<br\s*/?>\s*<sub>(.*?)</sub>`)
+)
 
-// parseResultsTable reads the table under "## Results so far" in the bench
-// README, and the paragraph lines after it.
+// parseResultsTable reads the scorecard under "## Results" in the bench
+// README: the paragraphs around it, the models (a *reference:* prefix marks
+// a reference model, **bold** the featured one), and one row per check with
+// its explanation (<br><sub>…</sub>). A cell that is not a number (–) was
+// not measured.
 func parseResultsTable(r io.Reader) *benchExportResults {
 	sc := bufio.NewScanner(r)
-	in, done, para := false, false, false
+	in, para := false, false
 	var res benchExportResults
+	paragraph := func(dst *[]string, line string) {
+		switch {
+		case line == "":
+			para = false
+		case para:
+			(*dst)[len(*dst)-1] += " " + line
+		default:
+			*dst = append(*dst, line)
+			para = true
+		}
+	}
 	for sc.Scan() {
 		line := strings.TrimSpace(sc.Text())
 		if strings.HasPrefix(line, "## ") {
@@ -294,22 +315,14 @@ func parseResultsTable(r io.Reader) *benchExportResults {
 			continue
 		}
 		if !strings.HasPrefix(line, "|") {
-			if len(res.Rows) > 0 {
-				done = true
-			}
-			// Lines after the table, joined into paragraphs.
-			switch {
-			case !done:
-			case line == "":
-				para = false
-			case para:
-				res.Notes[len(res.Notes)-1] += " " + line
-			default:
-				res.Notes = append(res.Notes, line)
-				para = true
+			if len(res.Models) == 0 {
+				paragraph(&res.Intro, line)
+			} else {
+				paragraph(&res.Notes, line)
 			}
 			continue
 		}
+		para = false
 		cells := strings.Split(strings.Trim(line, "|"), "|")
 		for i := range cells {
 			cells[i] = strings.TrimSpace(cells[i])
@@ -317,19 +330,27 @@ func parseResultsTable(r io.Reader) *benchExportResults {
 		switch {
 		case len(res.Models) == 0:
 			for _, h := range cells[1:] {
-				ref := strings.Contains(h, "reference")
-				h = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(h, "*reference:*", ""), "*", ""))
-				res.Models = append(res.Models, benchExportModel{Name: h, Reference: ref})
+				m := benchExportModel{Reference: strings.Contains(h, "reference:"), Featured: strings.HasPrefix(h, "**")}
+				m.Name = strings.TrimSpace(strings.ReplaceAll(strings.ReplaceAll(h, "*reference:*", ""), "*", ""))
+				res.Models = append(res.Models, m)
 			}
 		case strings.Trim(cells[0], "-: ") == "":
 			// the separator row
 		default:
 			row := benchExportRow{Check: cells[0]}
+			if m := subRe.FindStringSubmatch(row.Check); m != nil {
+				row.Description = strings.TrimSpace(m[1])
+				row.Check = subRe.ReplaceAllString(row.Check, "")
+			}
+			row.Check = strings.TrimSpace(strings.ReplaceAll(row.Check, "**", ""))
 			for _, v := range cells[1:] {
 				var p *float64
-				if m := pctRe.FindStringSubmatch(v); m != nil {
+				if m := numRe.FindStringSubmatch(strings.ReplaceAll(v, "**", "")); m != nil {
 					f, _ := strconv.ParseFloat(m[1], 64)
 					p = &f
+					if m[2] == "%" {
+						row.Unit = "%"
+					}
 				}
 				row.Values = append(row.Values, p)
 			}
