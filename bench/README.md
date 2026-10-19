@@ -95,7 +95,13 @@ model never called a tool: it answered from the evidence it was handed.
 | **Healthy object: no invented fault**<br><sub>On objects that are fine, some with harmless noise (a startup blip, a retried job), does it correctly say nothing is wrong?</sub> | 86% | 86% | 83% | 81% | 57% | 71% | 71% | 95% | 90% |
 | **Note: points to the right first check**<br><sub>The one-line hint on KubeHealth's overview: does it point at the real problem? (only 6 notes, so this row is noisy)</sub> | 33% | 33% | 39% | 39% | 50% | 50% | 50% | 83% | 67% |
 
-Link-following is on by default (`AI_LINK_FOLLOW`, `bench run -link-follow`).
+**Link-following** is a KubeHealth step, not a model tool: before asking the model,
+KubeHealth reads the objects the evidence names (the claim a Pending pod waits on and
+its StorageClass, the Service a log line can't reach and the Pods behind it, a missing
+ConfigMap or Secret key, a scheduling failure's nodes, an image pull secret) and adds a
+short summary to the prompt. On by default (`AI_LINK_FOLLOW`); the **+ links** columns
+show its effect.
+
 [magos](https://huggingface.co/clglavan/magos-k8s-0.6b) is a 0.6B model built for
 KubeHealth; its model card has the same scorecard.
 
