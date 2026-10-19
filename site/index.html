@@ -146,25 +146,43 @@
   .tile .cap { padding: 16px 18px 18px; }
   .tile .cap p { margin: 0; color: var(--muted); font-size: 14.5px; }
 
-  /* ── Pipeline ── */
-  .pipe { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; position: relative; }
-  @media (max-width: 960px) { .pipe { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .stage { text-align: left; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 14px 13px; cursor: pointer; position: relative; transition: border-color .15s, background .15s, transform .15s; }
-  .stage:hover { border-color: var(--border2); transform: translateY(-1px); }
-  .stage[aria-selected="true"] { border-color: var(--accent); background: linear-gradient(180deg, rgba(99,102,241,0.14), rgba(99,102,241,0.04)); }
-  .stage .n { font: 600 11.5px/1 var(--mono); color: var(--faint); }
-  .stage[aria-selected="true"] .n { color: var(--accent-text); }
-  .stage .k { font-weight: 700; margin: 8px 0 3px; font-size: 15.5px; }
-  .stage .t { font-size: 12.5px; color: var(--muted); line-height: 1.4; }
-  .stage-detail { margin-top: 14px; background: var(--sunk); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; min-height: 92px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: start; }
-  .stage-detail .big { font: 700 32px/1 var(--mono); color: var(--accent-text); }
-  .stage-detail p { margin: 0; color: #cdd3de; }
-  .stage-detail .tree { font: 13px/1.55 var(--mono); color: var(--muted); margin-top: 8px; white-space: pre; overflow-x: auto; }
-  .actions { margin-top: 26px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
-  @media (max-width: 960px) { .actions { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  .act { border: 1px dashed var(--border2); border-radius: 10px; padding: 12px 14px; }
-  .act b { display: block; font-size: 14.5px; }
-  .act span { font-size: 13px; color: var(--muted); }
+  /* ── How it works: before → after ── */
+  .ba { display: grid; grid-template-columns: minmax(0, 1fr) 52px minmax(0, 1fr); align-items: stretch; }
+  @media (max-width: 860px) { .ba { grid-template-columns: minmax(0, 1fr); } .ba-arrow { transform: rotate(90deg); height: 44px; } }
+  .ba-side { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); min-width: 0; }
+  .ba-side.raw { background: var(--sunk); }
+  .ba-side.out { border-color: rgba(139,147,251,0.42); box-shadow: 0 16px 40px rgba(0,0,0,0.3); }
+  .ba-h { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); font: 600 12px var(--mono); color: var(--muted); }
+  .ba-h .n { font-weight: 500; color: var(--faint); }
+  .ba-h .n.ok { color: var(--accent-text); }
+  .ba-arrow { display: flex; align-items: center; justify-content: center; font-size: 28px; color: var(--accent-text); }
+  .ev-raw { list-style: none; margin: 0; padding: 8px 0; font: 12px/1.95 var(--mono); }
+  .ev-raw li { padding: 0 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #9aa3b4; }
+  .ev-raw .w { color: var(--warn); }
+  .ev-raw .nrm { color: var(--ok); }
+  .ev-raw .o, .ev-raw .x { color: var(--faint); }
+  .ev-raw .more { color: var(--faint); font-style: italic; }
+  .rows-out { list-style: none; margin: 0; padding: 12px; display: grid; gap: 8px; }
+  .rows-out li { display: grid; grid-template-columns: 78px minmax(0, 1fr); gap: 12px; align-items: center; padding: 12px; border-radius: 9px; background: var(--raised); border: 1px solid var(--border); }
+  .rows-out b { font: 600 14.5px var(--mono); }
+  .rows-out em { font-style: normal; color: var(--muted); font-size: 12.5px; margin-left: 6px; }
+  .rows-out small { display: block; color: #b9c1ce; font-size: 13px; margin-top: 3px; }
+  .rows-out .tier { display: block; }
+  @media (max-width: 560px) {
+    .ba-h .n { display: none; }
+    .rows-out li { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+    .rows-out .tier { justify-self: start; }
+    .rows-out em { display: block; margin: 2px 0 0; }
+  }
+  .how-points { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-top: 26px; }
+  @media (max-width: 960px) { .how-points { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .how-points { grid-template-columns: minmax(0, 1fr); } }
+  .how-points div { padding-left: 14px; border-left: 2px solid var(--accent); }
+  .how-points b { display: block; font-size: 15px; margin-bottom: 4px; }
+  .how-points span { color: var(--muted); font-size: 14px; line-height: 1.5; }
+  #install { padding: 52px 0; }
+  #install .install { margin-top: 14px; }
+  #install p { margin: 6px 0 0; color: var(--muted); }
 
   /* ── Install ── */
   .install { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 30px; }
@@ -427,13 +445,47 @@
 
 <section id="how">
   <div class="wrap">
-    <div class="eyebrow">How it handles events</div>
-    <h2>From thousands of events to a ranked list.</h2>
-    <p class="sub">One background worker reads the cluster gently; everything else is computed from that cache. Pick a step.</p>
-    <div class="pipe" role="tablist" aria-label="Event pipeline" id="pipe"></div>
-    <div class="stage-detail" id="stage-detail" role="tabpanel" aria-live="polite"></div>
-    <div class="actions" id="actions"></div>
+    <div class="eyebrow">How it works</div>
+    <h2>Thousands of events in, a short ranked list out.</h2>
+    <p class="sub">KubeHealth reads your cluster's warning events and turns them into one row per broken workload, newest first.</p>
+    <div class="ba">
+      <div class="ba-side raw">
+        <div class="ba-h"><span>kubectl get events -A</span><span class="n">what Kubernetes gives you</span></div>
+        <ul class="ev-raw">
+          <li><span class="w">Warning</span> BackOff <span class="o">pod/orders-worker-657b5…-wksdm</span> <span class="x">×64</span></li>
+          <li><span class="w">Warning</span> BackOff <span class="o">pod/orders-worker-657b5…-h8zg7</span> <span class="x">×58</span></li>
+          <li><span class="w">Warning</span> FailedScheduling <span class="o">pod/orders-db-0</span> <span class="x">×20</span></li>
+          <li><span class="w">Warning</span> ProvisioningFailed <span class="o">pvc/data-orders-db-0</span> <span class="x">×82</span></li>
+          <li><span class="w">Warning</span> BackOff <span class="o">pod/search-indexer-7f7b7…-26p9t</span> <span class="x">×30</span></li>
+          <li><span class="w">Warning</span> Unhealthy <span class="o">pod/storefront-7654d…-q8w2d</span> <span class="x">×16934</span></li>
+          <li><span class="w">Warning</span> Failed <span class="o">pod/checkout-api-5c4bc…-xfk9f</span> <span class="x">×117</span></li>
+          <li><span class="nrm">Normal</span> Pulled <span class="o">pod/orders-worker-657b5…-wksdm</span> <span class="x">×9</span></li>
+          <li class="more">… and hundreds more, across every namespace</li>
+        </ul>
+      </div>
+      <div class="ba-arrow" aria-hidden="true">→</div>
+      <div class="ba-side out">
+        <div class="ba-h"><span>KubeHealth overview</span><span class="n ok">one row per broken workload</span></div>
+        <ol class="rows-out">
+          <li><span class="tier new">new</span><div><b>search-indexer</b><em>Deployment · search</em><small>BackOff ×30 · ran out of memory · 1 pod</small></div></li>
+          <li><span class="tier ongoing">ongoing</span><div><b>orders-worker</b><em>Deployment · orders</em><small>BackOff ×122 · 3 pods · failing for 5 h</small></div></li>
+          <li><span class="tier chronic">chronic</span><div><b>storefront</b><em>Deployment · frontend</em><small>readiness probe failing ×16,934 · for 2 days</small></div></li>
+        </ol>
+      </div>
+    </div>
+    <div class="how-points">
+      <div><b>Grouped by owner</b><span>Pods, ReplicaSets and Jobs roll up to their Deployment, CronJob or StatefulSet: fifty failing pods are one row.</span></div>
+      <div><b>Ranked by age</b><span>New (under 2 h) first, then ongoing, then chronic, so an old failure never hides a fresh one.</span></div>
+      <div><b>Merged across namespaces</b><span>The same failure in several namespaces at once becomes a single row.</span></div>
+      <div><b>Easy on the cluster</b><span>Read-only: one list call every 2 seconds, everything else from its cache.</span></div>
+    </div>
+  </div>
+</section>
 
+<section id="install">
+  <div class="wrap">
+    <div class="eyebrow">Run it</div>
+    <p>Download a build from the <a href="https://github.com/clglavan/kubehealth/releases/latest" target="_blank" rel="noopener">releases page</a>, then:</p>
     <div class="install">
       <div class="term">
         <div class="term-h"><b>Regular build</b> macOS, Linux, Windows <button type="button" data-copy="t1">Copy</button></div>
@@ -535,20 +587,6 @@ xattr -d com.apple.quarantine kubehealth-embed
     ['10-yaml-why.png', 'YAML that points at the problem', 'The fields the warnings and container state blame are highlighted with the reason, listed on top and scrolled to. Status and other noise stay hidden until you ask.'],
     ['11-yaml-references.png', 'Follow references, column by column', 'Every ConfigMap, Secret, claim, ServiceAccount or owner the YAML names opens to the right: Pod → PVC → a StorageClass that doesn\'t exist. Secrets stay masked until you reveal one key.']
   ];
-  var STAGES = [
-    ['Fetch', '≤ 1 call / 2 s', '2s', 'One worker, at most one list call every 2 seconds. Every 10 s it lists Warning events cluster-wide (fieldSelector=type=Warning); the other ticks refresh the stalest namespace. The client is capped at QPS 5, burst 10.'],
-    ['Group', 'one row per workload', '1', 'Each warning is walked up to its owner, so fifty failing pods become one problem.', 'Pod → ReplicaSet → Deployment\nPod → Job → CronJob\nPod → StatefulSet / DaemonSet / operator CR\nnames give a free first guess; ownerReferences confirm it (≤ 2 GET/s, cached 30 min)'],
-    ['Age', 'new · ongoing · chronic', '2h', 'First seen under 2 h → new, 2–24 h → ongoing, older → chronic, so an old failure never hides a fresh one. Idle after 15 min without a new occurrence. CronJobs use status.lastSuccessfulTime, because run events expire after about an hour.'],
-    ['Merge', 'patterns', '10s', 'Problems in different namespaces become one pattern when they started within 10 s of each other, share a workload and reason, or share an infrastructure reason (pull secrets, scheduling, mounts…) in three or more namespaces. Never across tiers.'],
-    ['Cascade', '▲ whole chain', '▲', 'Warnings at two or more levels of the chain and every leaf failing: the chain is marked as a cascade.'],
-    ['Brief', 'computed, no model', '0', 'A few sentences above the list: start here, what is new, what looks linked, what is old. Computed from the problem list, so it is instant, always accurate, and works with AI turned off.'],
-    ['AI note', 'one suggestion', '30', 'The model gets the top problem\'s events, its container state and up to 30 log lines, and says what to check first. Rewritten only when the top problem changes; it gives up its model slot the moment you start an analysis.']
-  ];
-  var ACTIONS = [
-    ['Logs', 'current and previous run, inline'], ['Correlate', 'events ±5 min across namespaces, from the cache'],
-    ['✦ AI', 'events, describe, container state, logs → one answer'], ['RCA', 'the same, plus four tools the model can call'],
-    ['YAML', 'the fields that explain the failure, references, Secrets masked']
-  ];
   var CATS = {
     scheduling: 'Scheduling', storage: 'Storage', images: 'Images', config: 'Config & Secrets', runtime: 'Runtime',
     probes: 'Probes', services: 'Services', policy: 'Policy & access', jobs: 'Jobs & CronJobs', healthy: 'Healthy'
@@ -629,25 +667,6 @@ xattr -d com.apple.quarantine kubehealth-embed
       if (p && p.catch) p.catch(function () { state(); });
     }
   })();
-
-  $('pipe').innerHTML = STAGES.map(function (s, i) {
-    return '<button type="button" class="stage" role="tab" id="st' + i + '" aria-controls="stage-detail" aria-selected="' + (i === 0) + '" data-i="' + i + '">' +
-      '<div class="n">0' + (i + 1) + '</div><div class="k">' + esc(s[0]) + '</div><div class="t">' + esc(s[1]) + '</div></button>';
-  }).join('');
-  function showStage(i) {
-    var s = STAGES[i];
-    [].forEach.call(document.querySelectorAll('.stage'), function (b) { b.setAttribute('aria-selected', String(+b.dataset.i === i)); });
-    $('stage-detail').innerHTML = '<div class="big">' + esc(s[2]) + '</div><div><p>' + esc(s[3]) + '</p>' + (s[4] ? '<div class="tree">' + esc(s[4]) + '</div>' : '') + '</div>';
-  }
-  showStage(0);
-  $('pipe').addEventListener('click', function (e) { var b = e.target.closest('.stage'); if (b) showStage(+b.dataset.i); });
-  $('pipe').addEventListener('keydown', function (e) {
-    var cur = +(document.activeElement.dataset.i || 0), n = STAGES.length;
-    var to = e.key === 'ArrowRight' ? (cur + 1) % n : e.key === 'ArrowLeft' ? (cur + n - 1) % n : -1;
-    if (to < 0) return;
-    e.preventDefault(); $('st' + to).focus(); showStage(to);
-  });
-  $('actions').innerHTML = ACTIONS.map(function (a) { return '<div class="act"><b>' + esc(a[0]) + '</b><span>' + esc(a[1]) + '</span></div>'; }).join('');
 
   document.addEventListener('click', function (e) {
     var z = e.target.closest('[data-zoom]');
