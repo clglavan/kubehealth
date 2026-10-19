@@ -500,7 +500,7 @@
     </div>
     <div class="vcard">
       <div class="player" id="player" tabindex="0" aria-label="Walkthrough video player">
-        <video id="vid" src="assets/demo.mp4" poster="assets/01-overview.png" muted loop playsinline preload="metadata" aria-label="A two-minute walkthrough of KubeHealth on two demo clusters"></video>
+        <video id="vid" src="assets/demo.mp4" poster="assets/01-overview.png" muted loop playsinline preload="metadata" aria-label="A 90-second walkthrough of KubeHealth on two demo clusters"></video>
         <div class="pl-bar">
           <button class="pl-play" type="button" id="pl-play" aria-label="Pause"></button>
           <div class="pl-track" id="pl-track">
@@ -705,8 +705,8 @@ xattr -d com.apple.quarantine kubehealth-embed
 
   // ── The walkthrough player ─────────────────────────────────────────────────
   (function () {
-    var CHAPTERS = [[0, 'Overview'], [38, 'Namespace status'], [45, 'Objects & logs'], [57, 'Follow it down'],
-      [66, 'Root cause analysis'], [84, 'Clusters & prod'], [94, 'Docs']];
+    var CHAPTERS = [[0, 'Overview'], [24, 'Namespace status'], [30, 'Objects & logs'], [42, 'Follow it down'],
+      [51, 'Root cause analysis'], [68, 'Clusters & prod'], [77, 'Docs']];
     var v = $('vid'), player = $('player'), seek = $('pl-seek'), dragging = false;
     var ICON = { play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>', pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>' };
     var fmt = function (t) { t = Math.max(0, Math.floor(t || 0)); return Math.floor(t / 60) + ':' + ('0' + t % 60).slice(-2); };
