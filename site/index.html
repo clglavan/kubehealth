@@ -87,6 +87,23 @@
   h1 { font: 400 clamp(40px, 5.4vw, 57px)/1.12 var(--sans); letter-spacing: -0.25px; margin: 20px 0 16px; }
   h2 { font: 400 32px/40px var(--sans); margin: 8px 0 0; }
   h3 { font: 500 16px/24px var(--sans); margin: 0; }
+
+  /* ── Section anchors: the title links to its section, the button copies that link ── */
+  .ah-t, .ah-t:hover { color: inherit; }
+  .ah-b { width: 32px; height: 32px; border-radius: 16px; margin: -4px 0 -4px 4px; vertical-align: middle; color: var(--dim); opacity: 0; transition: opacity .15s var(--ease); }
+  .ah-b svg { width: 20px; height: 20px; }
+  h3 > .ah-b, .ov > .ah-b { width: 24px; height: 24px; border-radius: 12px; margin-left: 2px; }
+  h3 > .ah-b svg, .ov > .ah-b svg { width: 16px; height: 16px; }
+  [data-anchor]:hover > .ah-b, .ah-b:focus-visible, .ah-b.done { opacity: 1; }
+  @media (hover: none) { .ah-b { opacity: .7; } }
+  .ah-b.done { color: var(--ok); }
+  .snack {
+    position: fixed; left: 50%; bottom: 24px; z-index: 90; transform: translate(-50%, 16px); opacity: 0; pointer-events: none;
+    display: flex; align-items: center; min-height: 48px; padding: 0 16px; border-radius: 4px; max-width: calc(100vw - 32px);
+    background: var(--on-sf); color: var(--sf); font: 400 14px/20px var(--sans); box-shadow: 0 3px 6px rgba(0,0,0,.3);
+    transition: opacity .2s var(--ease), transform .2s var(--ease);
+  }
+  .snack.show { opacity: 1; transform: translate(-50%, 0); }
   .sub { font: 400 16px/24px var(--sans); color: var(--on-sfv); max-width: 720px; margin: 12px 0 0; }
   .muted { color: var(--dim); }
   .small { font-size: 14px; line-height: 20px; }
@@ -515,10 +532,10 @@
       </div>
       <div class="chapters" id="chapters" role="group" aria-label="Chapters"></div>
     </div>
-    <aside class="magos" aria-labelledby="mg-title">
+    <aside class="magos" id="magos" aria-label="magos-k8s-0.6b">
       <div class="mg-text">
         <span class="chip small"><span class="dot"></span>Built in · runs offline</span>
-        <h2 class="mg-title" id="mg-title">magos-k8s-0.6b</h2>
+        <h2 class="mg-title" data-anchor="magos">magos-k8s-0.6b</h2>
         <p>A 0.6B model trained for Kubernetes troubleshooting, shipped inside the embed build with llama.cpp. No API key, no GPU cluster, nothing leaves your laptop. It writes the overview note, the analysis and the root cause, using KubeHealth's read-only tools.</p>
         <div class="mg-cta">
           <a class="btn btn-f" href="#results"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12l-1.41-1.41L13 16.17V4h-2v12.17l-5.58-5.59L4 12l8 8 8-8z"/></svg>See the scorecard</a>
@@ -534,7 +551,7 @@
 <section id="how">
   <div class="wrap">
     <div class="ov">How it works</div>
-    <h2>Thousands of events in, a short ranked list out.</h2>
+    <h2 data-anchor="how">Thousands of events in, a short ranked list out.</h2>
     <p class="sub">KubeHealth reads your cluster's warning events and turns them into one row per broken workload, newest first.</p>
     <div class="ba">
       <div class="ba-side raw">
@@ -573,7 +590,7 @@
 <section id="features">
   <div class="wrap">
     <div class="ov">What you get</div>
-    <h2>Triage first, details one click away.</h2>
+    <h2 data-anchor="features">Triage first, details one click away.</h2>
     <p class="sub">The namespace list never leaves the screen. Pick a namespace for its live status, pick an object for its ownership chain and full timeline, ask for logs or a root cause without changing pages.</p>
     <div class="gallery" id="gallery"></div>
   </div>
@@ -582,7 +599,7 @@
 <section id="install">
   <div class="wrap">
     <div class="run">
-      <div class="ov">Run it</div>
+      <div class="ov" data-anchor="install">Run it</div>
       <p>Download a build from the <a href="https://github.com/clglavan/kubehealth/releases/latest" target="_blank" rel="noopener">releases page</a>, then:</p>
       <div class="install">
         <div class="term">
@@ -607,7 +624,7 @@ xattr -d com.apple.quarantine kubehealth-embed
 <section id="bench">
   <div class="wrap">
     <div class="ov">KubeHealth-Bench</div>
-    <h2>Scorecard</h2>
+    <h2 data-anchor="bench">Scorecard</h2>
     <p class="sub" id="bench-sub">Each model diagnoses 54 incidents recorded from real clusters, through KubeHealth's own prompts and tools; the table shows how often its answer names the real cause and the right fix.</p>
     <div id="results" hidden>
       <div class="sc-wrap"><table class="sc" id="scorecard"></table></div>
@@ -620,11 +637,11 @@ xattr -d com.apple.quarantine kubehealth-embed
 <section id="cases">
   <div class="wrap">
     <div class="ov">Every case</div>
-    <h2>Inspect all the incidents.</h2>
+    <h2 data-anchor="cases">Inspect all the incidents.</h2>
     <p class="sub">Each case is one object in a recorded cluster, what is really wrong with it, and the words a right answer has to contain. Open one to see exactly what KubeHealth puts in front of the model.</p>
     <div class="stats" id="stats"></div>
     <div class="coverage">
-      <div class="coverage-h"><h3>Failure coverage</h3><div class="cov-legend"><span><i style="background:var(--p)"></i>cause in the object's own evidence</span><span><i style="background:var(--x)"></i>cause in another object</span></div></div>
+      <div class="coverage-h"><h3 id="coverage" data-anchor="coverage">Failure coverage</h3><div class="cov-legend"><span><i style="background:var(--p)"></i>cause in the object's own evidence</span><span><i style="background:var(--x)"></i>cause in another object</span></div></div>
       <div class="cov" id="cov"></div>
     </div>
     <div class="filters">
@@ -641,7 +658,7 @@ xattr -d com.apple.quarantine kubehealth-embed
     <div class="cases" id="grid"></div>
 
     <div class="snaps-h">
-      <h3>The snapshots</h3>
+      <h3 id="snapshots" data-anchor="snapshots">The snapshots</h3>
       <p class="muted small">Each one is a cluster frozen at its recording time: objects, events and container logs, no values. This is how KubeHealth's overview ranks its problems.</p>
     </div>
     <div class="snaps" id="snaps"></div>
@@ -677,12 +694,42 @@ xattr -d com.apple.quarantine kubehealth-embed
 </aside>
 
 <dialog class="lb" id="lb"><img id="lb-img" alt=""></dialog>
+<div class="snack" id="snack" role="status" aria-live="polite"></div>
 
 <script>
 (function () {
   'use strict';
   var $ = function (id) { return document.getElementById(id); };
   function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  function copyText(t) {
+    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(t);
+    return new Promise(function (ok, fail) {
+      var ta = document.createElement('textarea'), done = false;
+      ta.value = t; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta); ta.select();
+      try { done = document.execCommand('copy'); } catch (x) {}
+      ta.remove();
+      if (done) ok(); else fail();
+    });
+  }
+  var snackT = 0;
+  function snack(msg) {
+    var s = $('snack');
+    s.textContent = msg; s.classList.add('show');
+    clearTimeout(snackT); snackT = setTimeout(function () { s.classList.remove('show'); }, 2000);
+  }
+
+  // ── Section anchors ────────────────────────────────────────────────────────
+  var LINK_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>';
+  var DONE_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+  [].forEach.call(document.querySelectorAll('[data-anchor]'), function (h) {
+    var id = h.dataset.anchor, a = document.createElement('a'), b = document.createElement('button');
+    a.className = 'ah-t'; a.href = '#' + id;
+    b.type = 'button'; b.className = 'ic ah-b'; b.dataset.link = id; b.title = 'Copy link';
+    b.setAttribute('aria-label', 'Copy link to "' + h.textContent.trim() + '"'); b.innerHTML = LINK_SVG;
+    while (h.firstChild) a.appendChild(h.firstChild);
+    h.appendChild(a); h.appendChild(b);
+  });
 
   // ── Static content ─────────────────────────────────────────────────────────
   var SHOTS = [
@@ -788,10 +835,18 @@ xattr -d com.apple.quarantine kubehealth-embed
   document.addEventListener('click', function (e) {
     var z = e.target.closest('[data-zoom]');
     if (z) { $('lb-img').src = z.dataset.zoom; $('lb-img').alt = z.getAttribute('aria-label') || ''; $('lb').showModal(); return; }
+    var l = e.target.closest('[data-link]');
+    if (l) {
+      history.replaceState(null, '', '#' + l.dataset.link);
+      copyText(location.href).then(function () {
+        l.classList.add('done'); l.innerHTML = DONE_SVG; snack('Link copied');
+        setTimeout(function () { l.classList.remove('done'); l.innerHTML = LINK_SVG; }, 1400);
+      }, function () { snack('Could not copy. The link is in the address bar.'); });
+      return;
+    }
     var c = e.target.closest('[data-copy]');
     if (c) {
-      var t = $(c.dataset.copy).textContent;
-      (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(function () {
+      copyText($(c.dataset.copy).textContent).then(function () {
         c.textContent = 'Copied'; setTimeout(function () { c.textContent = 'Copy'; }, 1400);
       }, function () {});
     }
@@ -843,6 +898,8 @@ xattr -d com.apple.quarantine kubehealth-embed
     drawSnaps();
     $('built').textContent = 'Bench data built by kubehealth ' + D.kubehealth + ' from bench/cases.';
     openFromHash();
+    var t = /^#[\w-]+$/.test(location.hash) && $(location.hash.slice(1));
+    if (t) t.scrollIntoView();
   }
 
   function md(t) {
