@@ -78,21 +78,22 @@ Mean of 3 seeds on the 54 incidents; every local model on the same llama.cpp ser
 (BF16, 8k context). The **+ links** columns ran with link-following on, the others
 with it off. The reference models are much larger hosted models, run through the
 same prompts and tools (their tool calls go through a JSON protocol instead of
-native function calling) without link-following. – means not measured.
+native function calling) without link-following. In the two tool rows, 0% and 0.0 mean the
+model never called a tool: it answered from the evidence it was handed.
 
 | Check | Qwen3-0.6B (base) | base + links | magos v16 | magos v17 | magos v18 | magos v19 | **magos v19 + links** | *reference:* Claude Haiku 5.5 | *reference:* Gemini 3.8 Flash |
 |---|---|---|---|---|---|---|---|---|---|
 | **RCA: right root cause**<br><sub>Asked "why is this broken?", does the final answer name the real cause?</sub> | 67% | 79% | 64% | 51% | 72% | 88% | 87% | 99% | 89% |
-| **RCA: names the decisive detail**<br><sub>Does it name the exact value that proves it: the wrong image tag, the 48Mi limit, the missing class name?</sub> | 56% | – | 67% | 48% | 52% | 85% | – | 89% | 93% |
+| **RCA: names the decisive detail**<br><sub>Does it name the exact value that proves it: the wrong image tag, the 48Mi limit, the missing class name?</sub> | 56% | 63% | 67% | 48% | 52% | 85% | 89% | 89% | 93% |
 | **RCA: right fix**<br><sub>Does it say what to actually do about the real cause (create, change, roll back …)?</sub> | 56% | 75% | 62% | 48% | 54% | 71% | 87% | 93% | 89% |
-| **RCA: looks further when the cause is elsewhere**<br><sub>When the evidence it was handed isn't enough, does it go and fetch more with a tool?</sub> | 0% | – | 0% | 2% | 0% | 98% | 91% | 0% | 98% |
-| **RCA: tool calls per incident**<br><sub>How many lookups it makes per investigation (KubeHealth allows up to 5).</sub> | 0.0 | – | 0.0 | 0.0 | 0.0 | 1.7 | – | 0.0 | 1.5 |
+| **RCA: looks further when the cause is elsewhere**<br><sub>When the evidence it was handed isn't enough, does it go and fetch more with a tool?</sub> | 0% | 0% | 0% | 2% | 0% | 98% | 91% | 0% | 98% |
+| **RCA: tool calls per incident**<br><sub>How many lookups it makes per investigation (KubeHealth allows up to 5).</sub> | 0.0 | 0.0 | 0.0 | 0.0 | 0.0 | 1.7 | 1.5 | 0.0 | 1.5 |
 | **RCA: finds the cause in another object**<br><sub>The symptom is in one object, the cause in another (the app crashes because its database can't start). Does it name the deeper cause?</sub> | 2% | 49% | 7% | 4% | 2% | 20% | 78% | 44% | 62% |
-| **RCA: finishes with an answer**<br><sub>Does the investigation end with an answer (not an error, a loop or an empty reply)?</sub> | 100% | – | 98% | 99% | 99% | 98% | – | 100% | 92% |
-| **Analysis: right issue**<br><sub>Asked "is anything wrong with this object?", does it name the real problem?</sub> | 79% | – | 68% | 58% | 70% | 91% | 89% | 100% | 97% |
+| **RCA: finishes with an answer**<br><sub>Does the investigation end with an answer (not an error, a loop or an empty reply)?</sub> | 100% | 100% | 98% | 99% | 99% | 98% | 98% | 100% | 92% |
+| **Analysis: right issue**<br><sub>Asked "is anything wrong with this object?", does it name the real problem?</sub> | 79% | 85% | 68% | 58% | 70% | 91% | 89% | 100% | 97% |
 | **Analysis: right action**<br><sub>Does that answer also say what to do about it?</sub> | 64% | 79% | 59% | 55% | 58% | 66% | 88% | 88% | 78% |
 | **Healthy object: no invented fault**<br><sub>On objects that are fine, some with harmless noise (a startup blip, a retried job), does it correctly say nothing is wrong?</sub> | 86% | 86% | 83% | 81% | 57% | 71% | 71% | 95% | 90% |
-| **Note: points to the right first check**<br><sub>The one-line hint on KubeHealth's overview: does it point at the real problem? (only 6 notes, so this row is noisy)</sub> | 33% | – | 39% | 39% | 50% | 50% | – | 83% | 67% |
+| **Note: points to the right first check**<br><sub>The one-line hint on KubeHealth's overview: does it point at the real problem? (only 6 notes, so this row is noisy)</sub> | 33% | 33% | 39% | 39% | 50% | 50% | 50% | 83% | 67% |
 
 Link-following is on by default (`AI_LINK_FOLLOW`, `bench run -link-follow`).
 [magos](https://huggingface.co/clglavan/magos-k8s-0.6b) is a 0.6B model built for
