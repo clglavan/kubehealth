@@ -6,112 +6,110 @@
   .ctx-menu[hidden], .kh-banner[hidden], .crumb[hidden], .crumb-tag[hidden] { display: none !important; }
   .env-stripe { height: 3px; flex-shrink: 0; background: transparent; }
   body[data-env="prod"] .env-stripe { background: var(--prod); }
+  /* Top app bar: on the frame colour, like the rail below it. */
   .kh-header {
-    display: flex; align-items: center; flex-wrap: wrap; gap: 0.6rem 0.9rem;
-    padding: 0.6rem 1rem; background: var(--surface); border-bottom: 1px solid var(--border); flex-shrink: 0;
-    font-size: 14px; line-height: 1.45;
+    display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px;
+    min-height: 64px; padding: 8px 12px 8px 20px; flex-shrink: 0; font-size: 14px; line-height: 20px;
   }
-  .kh-header button { font-family: inherit; }
-  .kh-header .brand { font-weight: 700; font-size: 15px; letter-spacing: -0.3px; white-space: nowrap; text-decoration: none; color: var(--text); }
-  .kh-header .brand span { color: var(--accent-text); }
+  .kh-header .brand { display: flex; align-items: center; gap: 10px; font: 500 18px/24px var(--sans); white-space: nowrap; text-decoration: none; color: var(--text); }
+  .kh-header .brand svg { width: 28px; height: 28px; flex: none; }
   .ctx-wrap { position: relative; min-width: 0; }
   .ctx {
-    display: flex; align-items: center; gap: 0.5rem; min-width: 0; max-width: 460px;
-    background: var(--sunk); border: 1px solid var(--border); border-radius: 7px; padding: 0.28rem 0.6rem;
+    --sl: transparent;
+    display: flex; align-items: center; gap: 8px; min-width: 0; max-width: 460px; height: 40px;
+    background: linear-gradient(var(--sl), var(--sl)) var(--raised); border: 0; border-radius: 20px; padding: 0 10px 0 6px;
     color: var(--text); font-size: 13px; cursor: pointer;
   }
-  .ctx:hover { border-color: var(--accent); }
+  .ctx:hover { --sl: color-mix(in srgb, var(--text) 8%, transparent); }
+  .ctx[aria-expanded="true"] { background-color: var(--sec-c); color: var(--on-sec-c); }
   .ctx:disabled { cursor: progress; opacity: 0.7; }
-  .ctx-glyph, .caret { color: var(--muted); }
-  .caret { font-size: 11px; }
-  .ctx-name { font-family: var(--mono); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .ctx-glyph { color: var(--muted); }
+  .caret { width: 20px; height: 20px; flex: none; background: var(--text-2); -webkit-mask: var(--i-arrow) center/contain no-repeat; mask: var(--i-arrow) center/contain no-repeat; transition: transform .2s var(--ease); }
+  .ctx[aria-expanded="true"] .caret { transform: rotate(180deg); }
+  .ctx-name { font: 400 13px/20px var(--mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   .ctx-menu {
-    position: absolute; top: calc(100% + 6px); left: 0; z-index: 950; width: min(480px, 92vw); max-height: 70vh; overflow-y: auto;
-    background: var(--raised); border: 1px solid var(--border-2); border-radius: 10px;
-    box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7); padding: 0.5rem; display: flex; flex-direction: column; gap: 0.15rem;
+    position: absolute; top: calc(100% + 8px); left: 0; z-index: 950; width: min(480px, 92vw); max-height: 70vh; overflow-y: auto;
+    background: var(--container); border-radius: 16px; box-shadow: var(--shadow-2);
+    padding: 8px; display: flex; flex-direction: column; gap: 2px;
   }
   .ctx-menu input {
-    width: 100%; background: var(--sunk); border: 1px solid var(--border); color: var(--text);
-    border-radius: 6px; padding: 0.38rem 0.6rem; font-family: inherit; font-size: 13px; outline: none;
+    width: 100%; height: 40px; background: var(--raised); border: 0; color: var(--text);
+    border-radius: 20px; padding: 0 16px; font-size: 14px; outline: none; margin-bottom: 4px;
   }
-  .ctx-menu input:focus { border-color: var(--accent); }
-  .ctx-menu input::placeholder { color: var(--muted); }
-  .ctx-group { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0.55rem 0.5rem 0.15rem; }
+  .ctx-menu input:focus { box-shadow: inset 0 0 0 2px var(--accent); }
+  .ctx-menu input::placeholder { color: var(--text-2); }
+  .ctx-group { font: 500 12px/16px var(--sans); letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 12px 12px 4px; }
   .ctx-item {
-    display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left; background: none; border: 0;
-    color: var(--text); padding: 0.38rem 0.5rem; border-radius: 6px; cursor: pointer;
+    display: flex; align-items: center; gap: 10px; width: 100%; min-height: 40px; text-align: left; background: none; border: 0;
+    color: var(--text); padding: 0 12px; border-radius: 20px; cursor: pointer;
   }
-  .ctx-item:hover, .ctx-item:focus-visible { background: var(--accent-bg); }
+  .ctx-item:hover, .ctx-item:focus-visible { background: color-mix(in srgb, var(--text) 8%, transparent); }
+  .ctx-item[aria-current="true"] { background: var(--sec-c); color: var(--on-sec-c); }
   .ctx-item .ctx-name { flex: 1; }
-  .ctx-item .meta { font-size: 11.5px; color: var(--muted); white-space: nowrap; }
-  .ctx-item[aria-current="true"] .meta { color: var(--accent-text); }
-  .ctx-note { font-size: 12px; color: var(--muted); padding: 0.5rem 0.5rem 0.2rem; border-top: 1px solid var(--border); margin-top: 0.3rem; line-height: 1.5; }
-  .ctx-err { color: var(--crit); font-size: 12.5px; padding: 0.35rem 0.5rem; overflow-wrap: anywhere; }
+  .ctx-item .meta { font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .ctx-item[aria-current="true"] .meta { color: var(--on-sec-c); }
+  .ctx-note { font-size: 12px; line-height: 18px; color: var(--muted); padding: 10px 12px 4px; border-top: 1px solid var(--border); margin-top: 6px; }
+  .ctx-err { color: var(--crit); font-size: 13px; padding: 6px 12px; overflow-wrap: anywhere; }
   .env {
-    font-family: var(--mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
-    padding: 1px 6px; border-radius: 4px; border: 1px solid var(--border-2); color: var(--text); white-space: nowrap; flex-shrink: 0;
+    font: 500 11px/16px var(--sans); letter-spacing: .5px;
+    padding: 2px 8px; border-radius: 12px; background: var(--raised-2); color: var(--text-2); white-space: nowrap; flex-shrink: 0;
   }
-  .env.prod { background: var(--prod); border-color: var(--prod); color: var(--on-prod); }
+  .env.prod { background: var(--prod); color: var(--on-prod); }
   .env.local, .env.unknown { color: var(--muted); }
-  .env.unknown { border-style: dashed; }
-  .crumb { display: flex; align-items: center; gap: 0.5rem; min-width: 0; font-weight: 700; font-size: 15px; }
+  .env.unknown { background: transparent; box-shadow: inset 0 0 0 1px var(--border-2); }
+  .crumb { display: flex; align-items: center; gap: 8px; min-width: 0; font: 500 16px/24px var(--sans); }
   .crumb-sep { color: var(--muted); font-weight: 400; }
   .crumb-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .crumb-tag { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
-  .crumb-tag.cascade { background: var(--crit-bg); color: var(--crit); }
-  .crumb-tag.warn { background: var(--warn-bg); color: var(--warn); }
-  .crumb-tag.ok { background: var(--ok-bg); color: var(--ok); }
-  .fresh { display: flex; align-items: center; gap: 0.45rem; font-size: 12.5px; color: var(--muted); white-space: nowrap; }
-  .fresh b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .crumb-tag { font: 500 12px/16px var(--sans); padding: 2px 8px; border-radius: 8px; white-space: nowrap; }
+  .crumb-tag.cascade { background: var(--crit-c); color: var(--on-crit-c); }
+  .crumb-tag.warn { background: var(--warn-c); color: var(--on-warn-c); }
+  .crumb-tag.ok { background: var(--ok-c); color: var(--on-ok-c); }
+  .fresh { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .fresh b { color: var(--text-2); font-weight: 500; font-variant-numeric: tabular-nums; }
   .fresh.err { color: var(--warn); }
   .ring { width: 16px; height: 16px; transform: rotate(-90deg); flex-shrink: 0; }
   .ring circle { fill: none; stroke-width: 3; }
   .ring .bg { stroke: var(--border-2); }
-  .ring .fg { stroke: var(--ok); transition: stroke-dasharray 0.4s; }
+  .ring .fg { stroke: var(--ok); stroke-linecap: round; transition: stroke-dasharray 0.4s; }
   .fresh.err .ring .fg { stroke: var(--warn); }
   .kh-header .spacer { flex: 1; }
+  /* The model: an assist chip. */
   .model {
-    display: flex; align-items: center; gap: 0.45rem; max-width: 340px;
-    background: none; border: 1px solid var(--border); color: var(--text); border-radius: 999px;
-    padding: 0.22rem 0.7rem; font-size: 12.5px; cursor: pointer; white-space: nowrap;
+    --sl: transparent;
+    display: flex; align-items: center; gap: 8px; max-width: 340px; height: 32px;
+    background: linear-gradient(var(--sl), var(--sl)); border: 1px solid var(--border-2); color: var(--text); border-radius: 8px;
+    padding: 0 12px; font: 500 13px/18px var(--sans); cursor: pointer; white-space: nowrap;
   }
-  .model:hover { border-color: var(--accent); }
+  .model:hover { --sl: color-mix(in srgb, var(--text) 8%, transparent); }
   .model .spark { color: var(--accent-text); }
-  .model .m-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  .model .where, .model .state { color: var(--muted); }
-  .model .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex-shrink: 0; }
+  .model .m-name { overflow: hidden; text-overflow: ellipsis; min-width: 0; font-family: var(--mono); font-weight: 400; }
+  .model .where, .model .state { color: var(--muted); font-weight: 400; }
+  .model .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--faint); flex-shrink: 0; }
   .model[data-state="ready"] .dot { background: var(--ok); }
   .model[data-state="busy"] .dot, .model[data-state="not-loaded"] .dot { background: var(--warn); }
   .model[data-state="down"] .dot { background: var(--crit); }
-  .kicon {
-    background: none; border: 1px solid var(--border); color: var(--muted); border-radius: 7px;
-    padding: 0.22rem 0.6rem; font-size: 12.5px; cursor: pointer;
-  }
-  .kicon:hover { color: var(--text); border-color: var(--border-2); }
+  .kh-header .acts { display: flex; align-items: center; gap: 4px; }
   .kh-banner {
-    display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; padding: 0.55rem 1rem; font-size: 13.5px;
-    background: var(--warn-bg); border-bottom: 1px solid rgba(245,158,11,0.3); flex-shrink: 0;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 20px; font-size: 14px;
+    background: var(--warn-c); color: var(--on-warn-c); flex-shrink: 0;
   }
   .kh-banner .msg { flex: 1 1 320px; }
-  .kh-banner b { font-family: var(--mono); font-weight: 600; font-size: 12.5px; overflow-wrap: anywhere; }
-  .kh-banner .kbtn {
-    background: none; border: 1px solid var(--border-2); color: var(--text); border-radius: 6px;
-    padding: 0.18rem 0.6rem; font-size: 12.5px; cursor: pointer; text-decoration: none; white-space: nowrap;
-  }
+  .kh-banner b { font: 500 13px/20px var(--mono); overflow-wrap: anywhere; }
+  .kh-banner .kbtn { border-color: color-mix(in srgb, var(--on-warn-c) 50%, transparent); color: var(--on-warn-c); }
   @media (max-width: 860px) { .ctx { max-width: 70vw; } }
   @media (prefers-reduced-motion: reduce) { .ring .fg { transition: none; } }
 </style>
 
 <div class="env-stripe"></div>
 <header class="kh-header">
-  <a class="brand" href="/?ctx={{.Cluster.Context}}">Kube<span>Health</span></a>
+  <a class="brand" href="/?ctx={{.Cluster.Context}}"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="10" fill="#373D90"/><path d="M6 17h5l3-7 4 13 3-6h5" fill="none" stroke="#E0E0FF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>KubeHealth</a>
   <div class="ctx-wrap">
     <button class="ctx" id="ctx-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="ctx-menu"
             title="Kubernetes context: {{.Cluster.Context}}&#10;API server: {{.Cluster.Server}}&#10;Click to switch cluster">
       <span class="env {{.Cluster.Env}}" id="ctx-env">{{envLabel .Cluster.Env}}</span>
       <span class="ctx-glyph" aria-hidden="true">⎈</span>
       <span class="ctx-name" id="ctx-name">{{.Cluster.Context}}</span>
-      <span class="caret" aria-hidden="true">▾</span>
+      <span class="caret" aria-hidden="true"></span>
     </button>
     <div class="ctx-menu" id="ctx-menu" hidden>
       <input id="ctx-search" type="search" placeholder="Search contexts…" autocomplete="off" aria-label="Search contexts">
@@ -128,8 +126,10 @@
   <button class="model" id="model" type="button" onclick="aimOpen()" title="AI Agent settings" data-state="unknown">
     <span class="spark" aria-hidden="true">✦</span><span class="m-name" id="model-name">AI</span><span class="where" id="model-where"></span><span class="dot" aria-hidden="true"></span><span class="state" id="model-state">checking…</span>
   </button>
-  <button class="kicon" type="button" onclick="stgOpen()" aria-label="Settings" title="Settings">⚙</button>
-  <button class="kicon" type="button" onclick="docsOpen()">Docs</button>
+  <div class="acts">
+    <button class="icon-btn" type="button" onclick="stgOpen()" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
+    <button class="mbtn text" type="button" onclick="docsOpen()">Docs</button>
+  </div>
 </header>
 <div class="kh-banner" id="kh-banner" role="status" hidden></div>
 

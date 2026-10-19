@@ -1,32 +1,21 @@
 {{define "settings_modal"}}
-<!-- ── Settings modal ─────────────────────────────────────────────────────── -->
-<div id="stg-overlay" onclick="stgClose()"
-     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:900"></div>
+<!-- ── Settings dialog ────────────────────────────────────────────────────── -->
+<div id="stg-overlay" class="dlg-scrim" onclick="stgClose()" style="display:none"></div>
 
-<div id="stg" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-     z-index:901;width:min(680px,94vw);
-     background:var(--surface);border:1px solid var(--border);border-radius:14px;
-     box-shadow:0 32px 96px rgba(0,0,0,0.7);flex-direction:column;overflow:hidden">
+<div id="stg" class="dlg stg" role="dialog" aria-modal="true" aria-labelledby="stg-title" style="display:none">
 
-  <!-- header -->
-  <div style="display:flex;align-items:center;justify-content:space-between;
-       padding:1rem 1.4rem 0.9rem;border-bottom:1px solid var(--border)">
-    <div style="font-size:1rem;font-weight:700">Settings</div>
-    <button onclick="stgClose()" style="background:none;border:none;color:var(--muted);
-            font-size:1.4rem;cursor:pointer;line-height:1;padding:0 0.2rem">×</button>
+  <div class="dlg-head">
+    <div class="dlg-title" id="stg-title">Settings</div>
+    <button type="button" class="icon-btn" onclick="stgClose()" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
   </div>
 
-  <!-- body -->
-  <div style="padding:1.2rem 1.4rem;display:flex;flex-direction:column;gap:1.2rem">
+  <div class="dlg-body stg-body">
 
     <div id="stg-env-section" style="display:none">
-      <div class="aim-section-title">This cluster</div>
-      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem;flex-wrap:wrap">
-        <label for="stg-env"
-               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Environment</label>
-        <select id="stg-env"
-                style="background:var(--bg);border:1px solid var(--border);color:var(--text);
-                       padding:0.3rem 0.55rem;border-radius:6px;font-size:0.82rem;outline:none">
+      <div class="dlg-sec">This cluster</div>
+      <div class="stg-row">
+        <label for="stg-env">Environment</label>
+        <select id="stg-env" class="mfield">
           <option value="" id="stg-env-auto">From the context name</option>
           <option value="prod">Production</option>
           <option value="nonprod">Non-production</option>
@@ -35,78 +24,54 @@
           <option value="local">Local</option>
         </select>
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55" id="stg-env-hint">
+      <div class="dlg-hint" id="stg-env-hint">
         Production clusters get a red stripe across the top of every page.
       </div>
     </div>
 
     <div>
-      <div class="aim-section-title">Logs</div>
-      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
-        <label for="stg-log-lines"
-               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Lines per container</label>
-        <input id="stg-log-lines" type="number" min="10" max="5000" value="150"
-               style="width:90px;background:var(--bg);border:1px solid var(--border);
-                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
-                      font-size:0.82rem;outline:none;text-align:right"
-               onfocus="this.style.borderColor='var(--accent)'"
-               onblur="this.style.borderColor='var(--border)'">
+      <div class="dlg-sec">Logs</div>
+      <div class="stg-row">
+        <label for="stg-log-lines">Lines per container</label>
+        <input id="stg-log-lines" class="mfield num" type="number" min="10" max="5000" value="150">
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
-        Number of log lines fetched per container — applies to the <strong style="color:var(--text)">Logs</strong> viewer,
-        <strong style="color:var(--text)">AI pod analysis</strong>, and <strong style="color:var(--text)">RCA</strong>.
+      <div class="dlg-hint">
+        Number of log lines fetched per container — applies to the <strong>Logs</strong> viewer,
+        <strong>AI pod analysis</strong>, and <strong>RCA</strong>.
       </div>
     </div>
 
     <div>
-      <div class="aim-section-title">AI Concurrency</div>
-      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
-        <label for="stg-llm-max"
-               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Max concurrent LLM calls</label>
-        <input id="stg-llm-max" type="number" min="1" max="10" value="3"
-               style="width:70px;background:var(--bg);border:1px solid var(--border);
-                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
-                      font-size:0.82rem;outline:none;text-align:right"
-               onfocus="this.style.borderColor='var(--accent)'"
-               onblur="this.style.borderColor='var(--border)'">
+      <div class="dlg-sec">AI Concurrency</div>
+      <div class="stg-row">
+        <label for="stg-llm-max">Max concurrent LLM calls</label>
+        <input id="stg-llm-max" class="mfield num" type="number" min="1" max="10" value="3">
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+      <div class="dlg-hint">
         Maximum simultaneous requests to LM Studio. Excess requests are rejected immediately
         with an error — they are not queued. Range 1–10, default 3.
       </div>
     </div>
 
     <div>
-      <div class="aim-section-title">AI Request Timeout</div>
-      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
-        <label for="stg-llm-timeout"
-               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Timeout (minutes)</label>
-        <input id="stg-llm-timeout" type="number" min="1" max="60" value="10"
-               style="width:70px;background:var(--bg);border:1px solid var(--border);
-                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
-                      font-size:0.82rem;outline:none;text-align:right"
-               onfocus="this.style.borderColor='var(--accent)'"
-               onblur="this.style.borderColor='var(--border)'">
+      <div class="dlg-sec">AI Request Timeout</div>
+      <div class="stg-row">
+        <label for="stg-llm-timeout">Timeout (minutes)</label>
+        <input id="stg-llm-timeout" class="mfield num" type="number" min="1" max="60" value="10">
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+      <div class="dlg-hint">
         How long to wait for LM Studio to respond. Large objects (e.g. Elasticsearch) can take
         several minutes just for prompt processing. Range 1–60 min, default 10.
       </div>
     </div>
 
     <div>
-      <div class="aim-section-title">RCA Agent</div>
-      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:0.45rem">
-        <label for="stg-rca-iter"
-               style="font-size:0.82rem;color:var(--text);white-space:nowrap">Max iterations</label>
-        <input id="stg-rca-iter" type="number" min="1" max="20" value="5"
-               style="width:70px;background:var(--bg);border:1px solid var(--border);
-                      color:var(--text);padding:0.3rem 0.55rem;border-radius:6px;
-                      font-size:0.82rem;outline:none;text-align:right"
-               onfocus="this.style.borderColor='var(--accent)'"
-               onblur="this.style.borderColor='var(--border)'">
+      <div class="dlg-sec">RCA Agent</div>
+      <div class="stg-row">
+        <label for="stg-rca-iter">Max iterations</label>
+        <input id="stg-rca-iter" class="mfield num" type="number" min="1" max="20" value="5">
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+      <div class="dlg-hint">
         Maximum tool-calling rounds the RCA agent may use before being forced to conclude.
         The agent can stop sooner on its own if it has enough evidence.
         Range 1–20, default 5.
@@ -114,38 +79,36 @@
     </div>
 
     <div>
-      <div class="aim-section-title">Linked evidence</div>
-      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.45rem">
-        <input id="stg-link-follow" type="checkbox" checked style="accent-color:var(--accent)">
-        <label for="stg-link-follow"
-               style="font-size:0.82rem;color:var(--text)">Follow what the evidence names</label>
+      <div class="dlg-sec">Linked evidence</div>
+      <div class="stg-row">
+        <input id="stg-link-follow" type="checkbox" checked>
+        <label for="stg-link-follow">Follow what the evidence names</label>
       </div>
-      <div style="font-size:0.72rem;color:var(--muted);line-height:1.55">
+      <div class="dlg-hint">
         Before asking the model, KubeHealth reads the objects the evidence clearly names — a claim and its StorageClass,
         a Service a log line can't reach and the Pods behind it, a missing ConfigMap or Secret key, the nodes of a
         scheduling failure, image pull secrets — and adds a short block about them to the
-        <strong style="color:var(--text)">AI analysis</strong> and <strong style="color:var(--text)">RCA</strong> prompts.
-        Uses at most 15% of the model's context. Startup default: <code style="font-family:monospace">AI_LINK_FOLLOW</code>.
+        <strong>AI analysis</strong> and <strong>RCA</strong> prompts.
+        Uses at most 15% of the model's context. Startup default: <code>AI_LINK_FOLLOW</code>.
       </div>
     </div>
 
   </div>
 
-  <!-- footer -->
-  <div style="display:flex;align-items:center;justify-content:flex-end;gap:0.75rem;
-       padding:0.85rem 1.4rem;border-top:1px solid var(--border)">
-    <button onclick="stgClose()"
-      style="background:none;border:1px solid var(--border);color:var(--muted);
-             padding:0.35rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.8rem">
-      Cancel
-    </button>
-    <button id="stg-save-btn" onclick="stgSave()"
-      style="background:var(--accent);color:#fff;border:none;
-             padding:0.35rem 1rem;border-radius:6px;cursor:pointer;font-size:0.8rem;font-weight:600">
-      Save
-    </button>
+  <div class="dlg-foot">
+    <button type="button" class="mbtn text" onclick="stgClose()">Cancel</button>
+    <button type="button" id="stg-save-btn" class="mbtn filled" onclick="stgSave()">Save</button>
   </div>
 </div>
+
+<style>
+  .stg { width: min(600px, 94vw); }
+  .stg-body { display: flex; flex-direction: column; gap: 24px; }
+  .stg-row { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .stg-row label { font-size: 14px; color: var(--text); white-space: nowrap; }
+  .stg-row .mfield.num { width: 96px; text-align: right; font-family: var(--mono); }
+  .stg-row select.mfield { min-width: 240px; }
+</style>
 
 <script>
 (function() {
@@ -166,9 +129,9 @@
         var sel = document.getElementById('stg-env');
         sel.value = c.env_source === 'settings' ? c.env : '';
         envLoaded = sel.value;
-        var hint = 'Context <code style="font-family:monospace">' + window.KH_CTX.replace(/</g, '&lt;') + '</code>. ' +
+        var hint = 'Context <code>' + window.KH_CTX.replace(/</g, '&lt;') + '</code>. ' +
           'Production clusters get a red stripe across the top of every page.';
-        if (d.prefs_path) hint += ' Saved in <code style="font-family:monospace">' + d.prefs_path.replace(/</g, '&lt;') + '</code>.';
+        if (d.prefs_path) hint += ' Saved in <code>' + d.prefs_path.replace(/</g, '&lt;') + '</code>.';
         document.getElementById('stg-env-hint').innerHTML = hint;
         section.style.display = '';
       })

@@ -26,6 +26,18 @@ import (
 //go:embed templates/*.html
 var templateFS embed.FS
 
+// staticFS holds the UI's fonts, so the page looks the same offline.
+//
+//go:embed static
+var staticFS embed.FS
+
+// handleStatic serves /static/…, cached for a day: the files only change
+// with the binary.
+func handleStatic(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Cache-Control", "public, max-age=86400")
+	http.FileServer(http.FS(staticFS)).ServeHTTP(w, r)
+}
+
 type Config struct {
 	Namespaces []string
 	Port       string
@@ -543,6 +555,7 @@ func main() {
 	mux.HandleFunc("/", handleDashboard)
 	mux.HandleFunc("/namespace/", handleNamespace)
 	mux.HandleFunc("/object/", handleObject)
+	mux.HandleFunc("/static/", handleStatic)
 	mux.HandleFunc("/api/events", handleAPIEvents)
 	mux.HandleFunc("/api/home", handleAPIHome)
 	mux.HandleFunc("/api/snapshot/", handleAPISnapshot)

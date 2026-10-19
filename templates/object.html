@@ -5,18 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Kind}}/{{.Name}} — KubeHealth</title>
 <style>
-  :root { --bg: #0f1117; --surface: #1a1d27; --border: #2a2d3a; --text: #e2e8f0; --muted: #64748b; --accent: #6366f1; }
+  @font-face { font-family: 'Roboto Flex'; src: url(/static/fonts/RobotoFlex-latin.woff2) format('woff2'); font-weight: 300 700; font-display: swap; }
+  @font-face { font-family: 'Roboto Mono'; src: url(/static/fonts/RobotoMono-latin.woff2) format('woff2'); font-weight: 400 600; font-display: swap; }
+  :root { --bg: #121318; --surface: #1A1B21; --border: #2E2E35; --outline: #46464F; --text: #E3E1E9; --muted: #A8A7B2; --accent: #BEC2FF; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-  header a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
-  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--muted); }
+  body { background: var(--bg); color: var(--text); font-family: 'Roboto Flex', system-ui, -apple-system, 'Segoe UI', sans-serif; -webkit-font-smoothing: antialiased; }
+  header { background: var(--surface); padding: 16px 32px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  header a { color: var(--accent); text-decoration: none; font-size: 14px; }
+  .breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--muted); }
   .breadcrumb a { color: var(--accent); text-decoration: none; }
-  main { padding: 2rem; max-width: 900px; }
-  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 0.8rem; gap: 0.5rem; }
-  .btn { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.35rem 0.9rem; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
-  .btn:hover { border-color: var(--accent); }
-  pre { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; overflow: auto; font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace; font-size: 0.82rem; line-height: 1.7; white-space: pre; color: var(--text); }
+  main { padding: 32px; max-width: 900px; }
+  .toolbar { display: flex; justify-content: flex-end; margin-bottom: 12px; gap: 8px; }
+  .btn { background: transparent; border: 1px solid var(--outline); color: var(--accent); height: 32px; padding: 0 16px; border-radius: 16px; cursor: pointer; font: 500 13px/18px inherit; font-family: inherit; }
+  .btn:hover { background: rgba(190,194,255,0.08); }
+  pre { background: var(--surface); border-radius: 16px; padding: 24px; overflow: auto; font: 400 13px/22px 'Roboto Mono', 'SFMono-Regular', ui-monospace, Menlo, monospace; white-space: pre; color: var(--text); }
 </style>
 </head>
 <body>
