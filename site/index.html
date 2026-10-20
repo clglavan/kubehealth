@@ -185,6 +185,27 @@
   .mg-note { grid-column: 1 / -1; font: 400 12px/16px var(--sans); color: var(--dim); margin-top: -12px; }
   @media (max-width: 960px) { .mg-note { margin-top: -8px; } }
 
+  /* ── Claude Code band: the alternative to the built-in model ── */
+  /* 16px under the magos band: the hero grid's row gap is 48px (32px narrow). */
+  .ccband {
+    grid-column: 1 / -1; margin-top: -32px;
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 32px; align-items: center;
+    padding: 32px; border-radius: 28px; background: var(--sf2);
+  }
+  @media (max-width: 960px) { .ccband { grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px 20px; border-radius: 24px; margin-top: -16px; } }
+  .ccband .chip .dot { background: var(--p); }
+  .cc-title { font: 500 32px/40px var(--mono); letter-spacing: -0.4px; margin: 16px 0 12px; color: var(--on-sf); }
+  @media (max-width: 520px) { .cc-title { font-size: 26px; line-height: 34px; } }
+  .cc-text > p { margin: 0 0 16px; color: var(--on-sfv); max-width: 40em; }
+  .ccband .facts { margin: 0 0 16px; }
+  .cc-leaves { margin: 0 0 24px; padding: 10px 14px; border-radius: 12px; background: rgba(243,192,110,0.1); color: var(--warn); font: 400 13px/18px var(--sans); max-width: 40em; }
+  .cc-shot { margin: 0; }
+  .cc-shot button { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 16px; overflow: hidden; position: relative; }
+  .cc-shot button::after { content: ''; position: absolute; inset: 0; background: var(--on-sf); opacity: 0; transition: opacity .2s var(--ease); }
+  .cc-shot button:hover::after { opacity: .06; }
+  .cc-shot img { width: 100%; aspect-ratio: 16/10; object-fit: cover; object-position: top left; }
+  .cc-shot figcaption { margin-top: 10px; font: 400 12px/16px var(--sans); color: var(--dim); }
+
   /* ── Sections ── */
   section { padding: 56px 0; }
   section + section { border-top: 1px solid var(--olv); }
@@ -544,6 +565,27 @@
       </div>
       <div class="mg-stats" id="mg-stats" aria-live="polite"></div>
       <div class="mg-note" id="mg-note"></div>
+    </aside>
+    <aside class="ccband" id="claude-code" aria-label="Send to Claude Code">
+      <div class="cc-text">
+        <span class="chip small"><span class="dot"></span>New in v0.4.0 · optional</span>
+        <h2 class="cc-title" data-anchor="claude-code">Send to Claude Code</h2>
+        <p>Prefer a frontier model? Flip one switch in the ✦ AI Agent dialog and the note, the analyses and the root cause analysis run through your local <code>claude -p</code> instead of the built-in model: Haiku, Sonnet or Opus, thinking off or up to max effort. Claude gets KubeHealth's prompts and its four read-only tools, served over MCP on localhost, and nothing else.</p>
+        <div class="facts">
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Your own Claude Code sign-in</span>
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>No built-in tools, settings or plugins</span>
+          <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>Nothing saved to your sessions</span>
+        </div>
+        <p class="cc-leaves">With the switch on, events, describe output and logs go to Anthropic. Secret values never do.</p>
+        <div class="mg-cta">
+          <a class="btn btn-t" href="https://github.com/clglavan/kubehealth#send-to-claude-code" target="_blank" rel="noopener">How to turn it on<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a>
+          <a class="btn btn-o" href="https://github.com/clglavan/kubehealth/releases/tag/v0.4.0" target="_blank" rel="noopener">v0.4.0 release<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg></a>
+        </div>
+      </div>
+      <figure class="cc-shot">
+        <button type="button" data-zoom="assets/14-claude-code-rca.png" aria-label="Enlarge: an RCA through Claude Code"><img src="assets/14-claude-code-rca.png" alt="A root cause analysis through Claude Code: Sonnet's five calls to KubeHealth's tools in the evidence trail, then its answer" loading="lazy"></button>
+        <figcaption>An RCA through Claude Code: Sonnet calls KubeHealth's read-only tools, each call a step of the evidence trail.</figcaption>
+      </figure>
     </aside>
   </div>
 </header>
