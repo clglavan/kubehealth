@@ -93,6 +93,7 @@ Results are collapsible panels (expanded by default, except Correlate which is c
 | Linked evidence | Follow what the evidence names before asking the model (see Linked evidence above); default from `AI_LINK_FOLLOW` |
 
 ### AI Agent (✦)
+- **Send to Claude Code** — a switch that sends the overview note, ✦ AI analyses and RCA to the local `claude` CLI instead of LM Studio or the embedded model, with a model choice (Claude Code's default, Haiku, Sonnet, Opus) and a thinking choice (Claude Code's default, off, or low / medium / high / extra-high / max effort). The dialog shows the CLI's version and sign-in (`claude auth status`) and what leaves the machine. The choice is saved in `prefs.json`. See *Claude Code* below.
 - Edit the **system prompt** that is injected as the `system` role message on every AI analysis and RCA call. The overview's AI note uses its own stricter prompt (use only the given facts and log lines, don't guess causes), because the analysis prompt asks for root causes and tempts a small model to invent one.
 - Live **context window estimate** — shows system prompt + events + logs + tool definitions as % of `loaded_context_length` (fetched from LM Studio's `/api/v0/models`)
 - **Response format** is hardcoded in the user message (Summary / Issues / Actions) and cannot be broken by the system prompt
@@ -121,9 +122,33 @@ All AI settings can be overridden at startup:
 | `AI_ENABLED` | `true` | Set to `false` or `0` to disable AI features |
 | `AI_SYSTEM_PROMPT` | *(built-in SRE prompt)* | Default system prompt |
 | `AI_LINK_FOLLOW` | `true` | Set to `false` or `0` to leave out the linked evidence (see AI and RCA) |
+| `AI_BACKEND` | *(saved choice, else `local`)* | `claude-code` sends AI calls to the local `claude` CLI, `local` to LM Studio or the embedded model; overrides the choice saved from the AI Agent dialog |
 | `KUBECONFIG` | `~/.kube/config` | Path to kubeconfig; a colon-separated list of files is merged as kubectl does |
 
 Runtime settings (log lines, timeout, max calls, RCA iterations, linked evidence) are configured in the UI under ⚙ Settings and take effect immediately without restart.
+
+### Claude Code
+
+![Send to Claude Code, in the AI Agent dialog](images/13-claude-code.png)
+
+![An RCA through Claude Code, its tool calls in the evidence trail](images/14-claude-code-rca.png)
+
+With **Send to Claude Code** on, every AI call is one `claude -p` process, run in an empty directory (`~/Library/Caches/kubehealth/claude-code` on macOS) with:
+
+```
+claude -p --output-format stream-json --verbose --include-partial-messages
+  --system-prompt <the AI Agent's prompt> --tools "" --setting-sources ""
+  --strict-mcp-config --disable-slash-commands --no-session-persistence
+  [--model haiku|sonnet|opus]
+  [--effort low|medium|high|xhigh|max, or --settings '{"alwaysThinkingEnabled":false}' for thinking off]
+```
+
+- The prompt goes in on stdin, so it never shows in `ps`. Answers stream into the panels as with a local model; thinking shows as "Thinking…" (claude -p streams thinking without its text, so no reasoning is kept).
+- **Thinking**: effort steers how much Sonnet and Opus think (more is slower and costs more); Haiku thinks about the same at every level. Off turns thinking off for every model. The overview note always runs with thinking off.
+- No built-in tools, none of the user's or project's settings, MCP servers, plugins, skills or slash commands, and no session saved to `~/.claude/projects`. It uses the CLI's own sign-in (claude.ai or `ANTHROPIC_API_KEY`); `--bare` is not used because it ignores a claude.ai sign-in.
+- **RCA**: Claude runs the investigation in one session and calls KubeHealth's four read-only tools through an MCP endpoint on KubeHealth's own server, `/mcp/rca/<token>`: a random token per run, answered only for requests from 127.0.0.1. Each call is a step of the evidence trail. After *Max iterations* calls the tools answer "give your answer now"; a run that keeps calling is stopped.
+- Prompts are budgeted against a 200k context; the log-lines and events settings keep them far smaller. *Max concurrent LLM calls* and *AI Request Timeout* apply (a timeout kills the process and anything it started).
+- What leaves the machine: the events, describe output, logs and linked-object facts in the prompts and tool results. Secret values never are in them.
 
 ### LM Studio setup
 
@@ -216,8 +241,9 @@ Every page sends `X-KubeHealth-Context` with its API calls, so a tab keeps talki
 | `POST /api/ai/analyze/{ns\|object}/{…}` | Trigger AI analysis for a namespace or object |
 | `GET /api/ai/insights/{ns\|object}/{…}` | Poll AI result (`partial`, `content`, `error`) |
 | `POST /api/ai/brief` | Rewrite the overview's AI note now |
-| `GET /api/ai/config` | Read system prompt + LM Studio model info |
-| `POST /api/ai/config` | Update system prompt |
+| `GET /api/ai/config` | Read system prompt, model info, `backend` and `claude_model`; `?claude=1` adds the claude CLI's status (`&fresh=1` re-reads it) |
+| `POST /api/ai/config` | Update `system_prompt`, `embedded_ctx_size`, `backend` (`local` / `claude-code`), `claude_model` or `claude_thinking` (`""`, `off`, `low` … `max`) |
+| `POST /mcp/rca/{token}` | MCP endpoint (JSON-RPC) with the RCA tools, for a Claude Code RCA run; 127.0.0.1 only |
 
 ### RCA
 | Endpoint | Description |
@@ -244,6 +270,8 @@ main.go          — HTTP server, routing, template rendering, per-cluster worke
 cluster.go       — Per-context cluster state, switching, environment tags, saved preferences
 ai.go            — AI streaming (callLMStudio, streamLMStudio), insight cache
 ai_config.go     — System prompt store, LM Studio model-info fetch (/api/v0/models)
+claudecode.go    — Send to Claude Code: the claude -p command line, stream parsing, note/analysis/RCA through it
+mcp.go           — The RCA tools as an MCP endpoint for Claude Code (/mcp/rca/<token>)
 rca.go           — RCA agent loop, tool dispatcher, RCA state store, first-prompt evidence and budget
 linked.go        — Link-following: the objects the evidence names, fetched for the first prompts
 problems.go      — Overview problem model: owner groups, tiers, cascades, patterns, /api/home, /api/status
@@ -262,7 +290,7 @@ templates/
 ├─ header.html         — Shared header: cluster switcher, data age, model status, stale-tab banner
 ├─ app.html            — The page shell: namespace rail, overview (brief, ranked problems), in-place navigation, live updates from /api/home
 ├─ ns_view.html        — Namespace panes: object list, status panel, detail panels, all action buttons, JS agent functions
-├─ ai_modal.html       — AI Agent config modal (system prompt, context window estimate)
+├─ ai_modal.html       — AI Agent config modal (Send to Claude Code, system prompt, context window estimate)
 ├─ settings_modal.html — Settings modal (log lines, timeouts, concurrency, RCA iterations)
 ├─ docs_modal.html     — Interactive architecture diagram with animated data flows
 ├─ yaml_drawer.html    — YAML panel: columns, colouring, folding, hiding noisy fields, references, why-it-fails highlights, copy

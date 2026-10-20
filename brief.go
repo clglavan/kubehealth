@@ -624,7 +624,7 @@ func (c *clusterState) briefPayload(problems []Problem, now time.Time) BriefPayl
 	b := &c.brief
 	b.Lock()
 	defer b.Unlock()
-	n := &BriefNote{Status: b.status, Reason: b.reason, Model: aiConfig.model}
+	n := &BriefNote{Status: b.status, Reason: b.reason, Model: aiModelName()}
 	if n.Status == "" {
 		n.Status = "idle"
 	}

@@ -547,6 +547,7 @@ func main() {
 	// Start watching the kubeconfig's current context. Its worker refreshes one
 	// namespace at a time; its owner resolver confirms workload owners.
 	loadPrefs()
+	initAIBackend()
 	if err := initClusters(); err != nil {
 		log.Fatalf("Failed to start: %v", err)
 	}
@@ -576,6 +577,7 @@ func main() {
 	mux.HandleFunc("/api/correlate/", handleAPICorrelate)
 	mux.HandleFunc("/api/rca/status/", handleAPIRCAStatus)
 	mux.HandleFunc("/api/rca/", handleAPIRCAStart)
+	mux.HandleFunc("/mcp/rca/", handleMCPRCA)
 
 	nsInfo := "all namespaces"
 	if !cfg.AllNS {

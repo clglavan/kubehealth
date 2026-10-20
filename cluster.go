@@ -293,6 +293,12 @@ func envFor(name string) (env, source string) {
 var prefs = struct {
 	sync.Mutex
 	ContextEnv map[string]string `json:"context_env"` // context → env chosen in Settings
+	// Where AI calls go (claudecode.go): "local" or "claude-code", the
+	// Claude model ("" for Claude Code's default; nil if never chosen) and
+	// its thinking ("", "off" or an effort level).
+	AIBackend      string  `json:"ai_backend,omitempty"`
+	ClaudeModel    *string `json:"claude_model,omitempty"`
+	ClaudeThinking string  `json:"claude_thinking,omitempty"`
 }{ContextEnv: map[string]string{}}
 
 func prefsPath() string {
@@ -338,6 +344,11 @@ func setContextEnv(name, env string) error {
 	} else {
 		prefs.ContextEnv[name] = env
 	}
+	return savePrefsLocked()
+}
+
+// savePrefsLocked writes prefs to disk; the caller holds prefs' lock.
+func savePrefsLocked() error {
 	path := prefsPath()
 	if path == "" {
 		return errors.New("no user config directory to save preferences in")

@@ -54,6 +54,12 @@ type AIConfigPayload struct {
 	LogTailLines        int64        `json:"log_tail_lines"`
 	// Embedded mode (only set in the kubehealth-embed build flavor).
 	Embedded bool `json:"embedded"`
+	// Backend is where AI calls go: "local" (LM Studio or embedded) or
+	// "claude-code"; ClaudeModel and Claude describe Claude Code.
+	Backend        string        `json:"backend"`
+	ClaudeModel    string        `json:"claude_model"`
+	ClaudeThinking string        `json:"claude_thinking"`
+	Claude         *ClaudeStatus `json:"claude,omitempty"`
 }
 
 func initSystemPrompt() {
@@ -85,6 +91,17 @@ func setSystemPrompt(s string) {
 func fetchLMModelInfo() *LMModelInfo {
 	if !aiConfig.enabled {
 		return nil
+	}
+	if useClaudeCode() {
+		st := claudeStatus(false)
+		state := "loaded"
+		switch {
+		case !st.Available:
+			state = "not found"
+		case !st.LoggedIn:
+			state = "signed out"
+		}
+		return &LMModelInfo{ID: orDefault(claudeModel()), State: state, MaxContextLength: claudeCtxLen, LoadedContextLength: claudeCtxLen}
 	}
 	if isEmbedded() {
 		ctx, running := embeddedRuntime()
@@ -177,6 +194,16 @@ func handleAPIAIConfig(w http.ResponseWriter, r *http.Request) {
 			ModelInfo:           fetchLMModelInfo(),
 			LogTailLines:        getLogTailLines(),
 			Embedded:            isEmbedded(),
+			Backend:             backendLocal,
+			ClaudeModel:         claudeModel(),
+			ClaudeThinking:      claudeThinkingLevel(),
+		}
+		if useClaudeCode() {
+			payload.Backend = backendClaude
+		}
+		if r.URL.Query().Get("claude") == "1" || useClaudeCode() {
+			st := claudeStatus(r.URL.Query().Get("fresh") == "1")
+			payload.Claude = &st
 		}
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(payload)
@@ -185,6 +212,9 @@ func handleAPIAIConfig(w http.ResponseWriter, r *http.Request) {
 		var body struct {
 			SystemPrompt    *string `json:"system_prompt,omitempty"`
 			EmbeddedCtxSize *int    `json:"embedded_ctx_size,omitempty"`
+			Backend         *string `json:"backend,omitempty"`
+			ClaudeModel     *string `json:"claude_model,omitempty"`
+			ClaudeThinking  *string `json:"claude_thinking,omitempty"`
 		}
 		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
 			http.Error(w, "invalid json", http.StatusBadRequest)
@@ -192,6 +222,24 @@ func handleAPIAIConfig(w http.ResponseWriter, r *http.Request) {
 		}
 		if body.SystemPrompt != nil {
 			setSystemPrompt(*body.SystemPrompt)
+		}
+		if body.ClaudeModel != nil {
+			if err := setClaudeModel(*body.ClaudeModel); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+		}
+		if body.ClaudeThinking != nil {
+			if err := setClaudeThinking(*body.ClaudeThinking); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+		}
+		if body.Backend != nil {
+			if err := setAIBackend(*body.Backend); err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
 		}
 		if body.EmbeddedCtxSize != nil {
 			if !isEmbedded() {

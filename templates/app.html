@@ -127,6 +127,18 @@
   }
   select.mfield option { background: var(--container); color: var(--text); }
   input[type="checkbox"] { accent-color: var(--accent); width: 18px; height: 18px; }
+  /* M3 switch: <button role="switch" aria-checked><span></span></button> */
+  .m3-switch {
+    position: relative; flex: none; width: 52px; height: 32px; padding: 0; border-radius: 16px; cursor: pointer;
+    border: 2px solid var(--outline); background: var(--raised-2); transition: background-color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .m3-switch span {
+    position: absolute; top: 50%; left: 6px; width: 16px; height: 16px; margin-top: -8px; border-radius: 50%;
+    background: var(--outline); transition: left .2s var(--ease), width .2s var(--ease), height .2s var(--ease), margin .2s var(--ease), background-color .2s var(--ease);
+  }
+  .m3-switch[aria-checked="true"] { background: var(--accent); border-color: var(--accent); }
+  .m3-switch[aria-checked="true"] span { left: 22px; width: 24px; height: 24px; margin-top: -12px; background: var(--on-accent); }
+  .m3-switch:disabled { opacity: .5; cursor: progress; }
   /* Dialogs: M3 basic dialog over a scrim. */
   .dlg-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 900; }
   .dlg {

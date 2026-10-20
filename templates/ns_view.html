@@ -344,9 +344,12 @@
   .ai-list { margin: 2px 0 6px; padding: 0; list-style: none; }
   .ai-list li { position: relative; padding-left: 16px; margin-bottom: 4px; line-height: 22px; color: var(--text); }
   .ai-list li::before { content: '›'; position: absolute; left: 1px; color: var(--accent-text); font-weight: 700; }
-  ol.ai-list { counter-reset: ai-n; }
-  ol.ai-list li { padding-left: 22px; counter-increment: ai-n; }
-  ol.ai-list li::before { content: counter(ai-n) '.'; font-weight: 500; font-variant-numeric: tabular-nums; }
+  ol.ai-list li { padding-left: 22px; }
+  ol.ai-list li::before { content: attr(data-n) '.'; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .ai-heading { font: 500 15px/22px var(--sans); color: var(--text); margin: 12px 0 4px; }
+  .ai-content > .ai-heading:first-child, .rca-result-body > .ai-heading:first-child { margin-top: 0; }
+  .ai-hr { border: 0; border-top: 1px solid var(--border); margin: 12px 0; }
+  .ai-list.ai-sub { margin: -2px 0 4px 22px; }
   pre.ai-code {
     margin: 6px 0 8px; padding: 10px 14px;
     background: var(--sunk); border-radius: 8px;
@@ -856,14 +859,14 @@ function fmt(text) {
 function renderMD(text) {
   var lines = text.split('\n');
   var out = '';
-  var inList = '';   // '', 'ul' or 'ol'
+  var inList = '';   // '', 'ul', 'ol' or 'sub' (bullets indented under a step)
   var code = null;   // lines of an open ``` block
-  function closeList() { if (inList) { out += '</' + inList + '>'; inList = ''; } }
-  function openList(tag) {
-    if (inList === tag) return;
+  function closeList() { if (inList) { out += inList === 'ol' ? '</ol>' : '</ul>'; inList = ''; } }
+  function openList(kind) {
+    if (inList === kind) return;
     closeList();
-    out += '<' + tag + ' class="ai-list">';
-    inList = tag;
+    out += kind === 'ol' ? '<ol class="ai-list">' : kind === 'sub' ? '<ul class="ai-list ai-sub">' : '<ul class="ai-list">';
+    inList = kind;
   }
   function closeCode() {
     // Drop blank lines at the ends; a block still streaming is shown as far as it got.
@@ -888,11 +891,26 @@ function renderMD(text) {
       continue;
     }
 
+    // # Heading: a title (#, ##) or a section label (###…); --- is a rule.
+    var h = line.match(/^(#{1,6})\s+(.*)/);
+    if (h) {
+      closeList();
+      var ht = h[2].replace(/^\*\*(.*)\*\*$/, '$1').replace(/:$/, '');
+      out += h[1].length <= 2 ? '<div class="ai-heading">' + fmt(ht) + '</div>'
+        : '<div class="ai-section"><span class="ai-section-label">' + esc(ht) + '</span></div>';
+      continue;
+    }
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(line)) {
+      closeList();
+      out += '<hr class="ai-hr">';
+      continue;
+    }
+
     // **Label**: rest  →  section header + optional inline text
     var m = line.match(/^\*\*([^*]+)\*\*:?\s*(.*)/);
     if (m) {
       closeList();
-      out += '<div class="ai-section"><span class="ai-section-label">' + esc(m[1]) + '</span>';
+      out += '<div class="ai-section"><span class="ai-section-label">' + esc(m[1].replace(/:\s*$/, '')) + '</span>';
       if (m[2]) out += ' ' + fmt(m[2]);
       out += '</div>';
       continue;
@@ -901,16 +919,18 @@ function renderMD(text) {
     // - item  →  list item
     var b = line.match(/^[-•*]\s+(.*)/);
     if (b) {
-      openList('ul');
+      // Indented under a numbered step: keep it under that step.
+      openList(/^\s{2,}/.test(raw) && (inList === 'ol' || inList === 'sub') ? 'sub' : 'ul');
       out += '<li>' + fmt(b[1]) + '</li>';
       continue;
     }
 
-    // 1. item  →  numbered list item
-    var n = line.match(/^\d+[.)]\s+(.*)/);
+    // 1. item  →  numbered list item, keeping its number when bullets
+    // between items split the list
+    var n = line.match(/^(\d+)[.)]\s+(.*)/);
     if (n) {
       openList('ol');
-      out += '<li>' + fmt(n[1]) + '</li>';
+      out += '<li data-n="' + n[1] + '">' + fmt(n[2]) + '</li>';
       continue;
     }
 

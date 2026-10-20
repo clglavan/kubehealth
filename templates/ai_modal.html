@@ -15,6 +15,44 @@
     <!-- ── Left: Config ── -->
     <div class="aim-left">
 
+      <!-- Claude Code: send every AI call to the local claude CLI -->
+      <div class="aim-cc">
+        <div class="aim-cc-row">
+          <div>
+            <div class="aim-cc-title" id="aim-cc-label">Send to Claude Code</div>
+            <div class="dlg-hint">AI analysis, RCA and the overview note run through your local <code>claude -p</code> instead of <span id="aim-cc-local">LM Studio</span>.</div>
+          </div>
+          <button type="button" class="m3-switch" id="aim-cc-switch" role="switch" aria-checked="false" aria-labelledby="aim-cc-label" onclick="aimToggleCC()"><span></span></button>
+        </div>
+        <div class="aim-cc-body" id="aim-cc-body" hidden>
+          <div class="aim-cc-model">
+            <label for="aim-cc-model">Model</label>
+            <select id="aim-cc-model" class="mfield" onchange="aimSetCC('claude_model', this.value)">
+              <option value="">Claude Code's default</option>
+              <option value="haiku">Haiku</option>
+              <option value="sonnet">Sonnet</option>
+              <option value="opus">Opus</option>
+            </select>
+          </div>
+          <div class="aim-cc-model">
+            <label for="aim-cc-thinking">Thinking</label>
+            <select id="aim-cc-thinking" class="mfield" onchange="aimSetCC('claude_thinking', this.value)">
+              <option value="">Claude Code's default</option>
+              <option value="off">Off</option>
+              <option value="low">Low effort</option>
+              <option value="medium">Medium effort</option>
+              <option value="high">High effort</option>
+              <option value="xhigh">Extra-high effort</option>
+              <option value="max">Max effort</option>
+            </select>
+          </div>
+          <div class="dlg-hint">Effort steers how much Sonnet and Opus think before answering: more is slower and costs more. Haiku thinks about the same at every level. The overview note never thinks.</div>
+          <div class="dlg-hint" id="aim-cc-status"></div>
+          <div class="aim-cc-note">Events, describe output, logs and the facts about linked objects go to Anthropic through your Claude Code sign-in. Secret values never do.</div>
+        </div>
+        <div class="dlg-hint aim-cc-err" id="aim-cc-error" hidden></div>
+      </div>
+
       <!-- Model -->
       <div>
         <div class="dlg-sec" id="aim-model-label">LM Studio Model</div>
@@ -194,6 +232,18 @@ In a few short lines: is anything wrong with this namespace? If so, say what, wh
 
 <style>
   .aim { width: min(1300px, 96vw); height: min(82vh, 840px); }
+  .aim-cc { background: var(--container); border-radius: 16px; padding: 14px 16px; }
+  .aim-cc-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .aim-cc-title { font: 500 15px/22px var(--sans); color: var(--text); margin-bottom: 2px; }
+  .aim-cc-body { margin-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .aim-cc-model { display: flex; align-items: center; gap: 12px; }
+  .aim-cc-model label { font-size: 14px; width: 64px; flex: none; }
+  .aim-cc-model select { min-width: 220px; }
+  .aim-cc-note { font-size: 12.5px; line-height: 18px; color: var(--warn); background: var(--warn-bg); border-radius: 8px; padding: 8px 12px; }
+  .aim-cc-err { color: var(--crit); margin-top: 10px; }
+  #aim-cc-status .ok { color: var(--ok); }
+  #aim-cc-status .bad { color: var(--crit); }
+  #aim-cc-status .warn { color: var(--warn); }
   .aim-cols { display: flex; flex: 1; min-height: 0; gap: 0; padding: 0 8px; }
   .aim-left { flex: 1; overflow-y: auto; padding: 4px 20px 16px 16px; display: flex; flex-direction: column; gap: 24px; }
   .aim-right { flex: 1; overflow-y: auto; padding: 16px; margin: 0 0 4px; background: var(--container); border-radius: 16px; }
@@ -262,7 +312,7 @@ In a few short lines: is anything wrong with this namespace? If so, say what, wh
   window.aimOpen = function() {
     document.getElementById('aim-overlay').style.display = '';
     document.getElementById('aim').style.display = 'flex';
-    aimLoadData();
+    aimLoadData(true);
   };
   window.aimClose = function() {
     document.getElementById('aim-overlay').style.display = 'none';
@@ -273,19 +323,71 @@ In a few short lines: is anything wrong with this namespace? If so, say what, wh
     if (e.key === 'Escape') aimClose();
   });
 
-  function aimLoadData() {
-    fetch('/api/ai/config')
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  // The Claude Code switch, its model and the CLI's status.
+  function renderCC(d) {
+    var cc = d.backend === 'claude-code', c = d.claude;
+    document.getElementById('aim-cc-switch').setAttribute('aria-checked', String(cc));
+    document.getElementById('aim-cc-body').hidden = !cc;
+    document.getElementById('aim-cc-local').textContent = d.embedded ? 'the embedded model' : 'LM Studio';
+    document.getElementById('aim-cc-model').value = d.claude_model || '';
+    document.getElementById('aim-cc-thinking').value = d.claude_thinking || '';
+    var st = '';
+    if (c && !c.available) st = '<span class="bad">✗ ' + esc(c.error) + '</span>';
+    else if (c && !c.logged_in) st = '<span class="warn">⚠ claude ' + esc(c.version) + ': ' + esc(c.error || 'not signed in') + '</span>';
+    else if (c) st = '<span class="ok">✓</span> claude ' + esc(c.version) + ' · signed in' + (c.auth_method ? ' via ' + esc(c.auth_method) : '') + (c.email ? ' as ' + esc(c.email) : '');
+    document.getElementById('aim-cc-status').innerHTML = st;
+  }
+  function ccError(msg) {
+    var e = document.getElementById('aim-cc-error');
+    e.textContent = msg;
+    e.hidden = !msg;
+  }
+  function aimPostConfig(body) {
+    return fetch('/api/ai/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function(r) {
+        if (!r.ok) return r.text().then(function(t) { throw new Error(t.trim() || ('HTTP ' + r.status)); });
+        return r.json();
+      });
+  }
+  function afterCCChange() {
+    ccError('');
+    aimLoadData(false);
+    if (window.khHeader && window.khHeader.refreshModel) window.khHeader.refreshModel();
+  }
+  window.aimToggleCC = function() {
+    var sw = document.getElementById('aim-cc-switch');
+    var on = sw.getAttribute('aria-checked') !== 'true';
+    sw.disabled = true;
+    aimPostConfig({ backend: on ? 'claude-code' : 'local' })
+      .then(afterCCChange, function(e) { ccError(e.message); })
+      .then(function() { sw.disabled = false; });
+  };
+  window.aimSetCC = function(field, value) {
+    var body = {};
+    body[field] = value;
+    aimPostConfig(body).then(afterCCChange, function(e) { ccError(e.message); });
+  };
+
+  function aimLoadData(fresh) {
+    fetch('/api/ai/config?claude=1' + (fresh ? '&fresh=1' : ''))
       .then(function(r) { return r.json(); })
       .then(function(d) {
         window.aimData = d;
+        var cc = d.backend === 'claude-code';
+        renderCC(d);
 
         // Dynamic label + editable context size for embedded builds
         document.getElementById('aim-model-label').textContent =
-          d.embedded ? 'Embedded Model' : 'LM Studio Model';
-        document.getElementById('aim-ctx-edit').style.display = d.embedded ? 'flex' : 'none';
+          cc ? 'Claude Code' : d.embedded ? 'Embedded Model' : 'LM Studio Model';
+        document.getElementById('aim-ctx-edit').style.display = d.embedded && !cc ? 'flex' : 'none';
 
         // Model name + arch
-        document.getElementById('aim-model-name').textContent = d.model || 'Not configured';
+        var think = { '': '', off: ' · no thinking', low: ' · low effort', medium: ' · medium effort', high: ' · high effort', xhigh: ' · extra-high effort', max: ' · max effort' };
+        document.getElementById('aim-model-name').textContent = cc
+          ? 'claude · ' + (d.claude_model || 'default model') + (think[d.claude_thinking || ''] || '')
+          : (d.model || 'Not configured');
         var mi = d.model_info;
         if (mi) {
           var parts = [];
@@ -303,7 +405,12 @@ In a few short lines: is anything wrong with this namespace? If so, say what, wh
           }
           document.getElementById('aim-model-state').textContent = stateParts.join(' · ');
 
-          if (d.embedded && mi.loaded_context_length) {
+          if (cc) {
+            var c = d.claude || {};
+            document.getElementById('aim-model-state').textContent = !c.available ? 'claude CLI not found'
+              : !c.logged_in ? 'not signed in' : 'ready · context managed by Claude Code';
+          }
+          if (d.embedded && !cc && mi.loaded_context_length) {
             document.getElementById('aim-ctx-input').value = mi.loaded_context_length;
           }
         } else {

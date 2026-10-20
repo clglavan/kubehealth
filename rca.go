@@ -676,6 +676,13 @@ func runRCAAgent(cl *clusterState, ns, kind, name string, state *RCAState) {
 		upd(func() { state.Steps = append(state.Steps, step) })
 	}
 
+	// Claude Code runs the whole investigation in one session, calling the
+	// same tools through KubeHealth's MCP endpoint (claudecode.go, mcp.go).
+	if useClaudeCode() {
+		runRCAClaude(cl, ns, sp, initCtx.text, state, upd)
+		return
+	}
+
 	estimatedTokens := len(sp)/4 + len(initCtx.text)/4
 
 	maxIter := state.MaxIter

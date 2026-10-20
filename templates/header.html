@@ -215,7 +215,7 @@ window.khHeader = (function() {
     if (aiCfg) {
       var info = aiCfg.model_info;
       name = (info && info.id) || aiCfg.model || 'AI';
-      where = aiCfg.embedded ? 'embedded' : 'LM Studio';
+      where = aiCfg.backend === 'claude-code' ? 'Claude Code' : aiCfg.embedded ? 'embedded' : 'LM Studio';
       if (!aiCfg.enabled) { state = 'off'; name = 'AI'; label = 'off'; where = ''; }
       else if (!info) { state = 'down'; label = 'not reachable'; }
       else if (st.llm_active > 0) { state = 'busy'; label = 'busy · ' + st.llm_active; }
@@ -345,6 +345,7 @@ window.khHeader = (function() {
       t.textContent = tag || '';
       t.className = 'crumb-tag ' + (tagClass || '');
     },
+    refreshModel: loadModel,
     offline: function() {
       $('fresh').classList.add('err');
       $('fresh-text').textContent = 'KubeHealth server not responding';

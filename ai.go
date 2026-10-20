@@ -91,14 +91,14 @@ func handleAPIAIInsights(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	if !ok {
-		json.NewEncoder(w).Encode(AIInsight{Enabled: aiConfig.enabled, Model: aiConfig.model})
+		json.NewEncoder(w).Encode(AIInsight{Enabled: aiConfig.enabled, Model: aiModelName()})
 		return
 	}
 	if v, hit := aiInsightCache.Load(aiStoreKey(cl, key)); hit {
 		json.NewEncoder(w).Encode(v.(*AIInsight))
 		return
 	}
-	json.NewEncoder(w).Encode(AIInsight{Enabled: aiConfig.enabled, Model: aiConfig.model})
+	json.NewEncoder(w).Encode(AIInsight{Enabled: aiConfig.enabled, Model: aiModelName()})
 }
 
 func handleAPIAIAnalyze(w http.ResponseWriter, r *http.Request) {
@@ -250,7 +250,7 @@ func storeAnalysis(key, prompt string) error {
 	// generic "Analyzing…" spinner while LM Studio processes the input tokens.
 	aiInsightCache.Store(key, &AIInsight{
 		Partial:   true,
-		Model:     aiConfig.model,
+		Model:     aiModelName(),
 		UpdatedAt: now(),
 		Enabled:   true,
 	})
@@ -261,7 +261,7 @@ func storeAnalysis(key, prompt string) error {
 			Content:   answer,
 			Partial:   true,
 			Thinking:  answer == "" && (reasoning != "" || strings.Contains(partial, "<think>")),
-			Model:     aiConfig.model,
+			Model:     aiModelName(),
 			UpdatedAt: now(),
 			Enabled:   true,
 		})
@@ -274,7 +274,7 @@ func storeAnalysis(key, prompt string) error {
 		log.Printf("AI analysis [%s]: %v", key, err)
 		aiInsightCache.Store(key, &AIInsight{
 			Error:     err.Error(),
-			Model:     aiConfig.model,
+			Model:     aiModelName(),
 			UpdatedAt: now(),
 			Enabled:   true,
 		})
@@ -283,7 +283,7 @@ func storeAnalysis(key, prompt string) error {
 	aiInsightCache.Store(key, &AIInsight{
 		Content:   cleanLMResponse(content),
 		Reasoning: strings.TrimSpace(reasoning + thinkText(content)),
-		Model:     aiConfig.model,
+		Model:     aiModelName(),
 		UpdatedAt: now(),
 		Enabled:   true,
 	})
@@ -347,6 +347,9 @@ func streamChat(ctx context.Context, prompt string, opts chatOpts, writeFn func(
 // such as llama-server stream before the answer. The reasoning is never
 // part of the answer; with opts.NoThink it is dropped.
 func streamChatMsgs(ctx context.Context, msgs []lmMsg, opts chatOpts, writeFn func(partial, reasoning string)) (string, string, error) {
+	if useClaudeCode() {
+		return ccChat(ctx, msgs, opts, writeFn)
+	}
 	r := lmReq{
 		Model:       aiConfig.model,
 		Messages:    msgs,

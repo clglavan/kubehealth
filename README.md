@@ -129,6 +129,17 @@ LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip th
 
 [magos-k8s-0.6b](https://huggingface.co/clglavan/magos-k8s-0.6b) is a small model I'm training for KubeHealth; the embed build bundles it. v19 names the right root cause in 88% of the [KubeHealth-Bench](bench/README.md) incidents and, with link-following, finds a cause that sits in another object 78% of the time. It only sees what KubeHealth hands it; it suggests, you decide.
 
+### Send to Claude Code
+
+Have [Claude Code](https://claude.com/claude-code) installed and signed in? Click the ✦ model chip in the header and flip **Send to Claude Code**: the note, the ✦ AI analyses and RCA go to your local `claude -p` instead of LM Studio or the bundled model. Pick Haiku, Sonnet or Opus, and how much it thinks (off, or low to max effort).
+
+| | |
+|---|---|
+| ![Send to Claude Code, in the AI Agent dialog](docs/images/13-claude-code.png) | ![An RCA through Claude Code](docs/images/14-claude-code-rca.png) |
+| **The switch**, the model and thinking, the CLI's sign-in, and what leaves your machine. | **RCA through Claude Code**: Sonnet calls KubeHealth's read-only tools, each call a step of the evidence trail. |
+
+Claude gets KubeHealth's prompts and its four read-only RCA tools (served to it over MCP on localhost), nothing else: no built-in tools, none of your settings, plugins or skills, no saved sessions, your own sign-in. Events, describe output and logs then leave your machine; Secret values never do. Details: [docs/reference.md](docs/reference.md#claude-code).
+
 `kubehealth bench` replays recorded incidents through the AI features with no cluster, to compare models: [bench/README.md](bench/README.md).
 
 ## RBAC
