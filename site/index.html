@@ -382,27 +382,54 @@
 
   /* ── Snapshots ── */
   .snaps-h { margin-top: 56px; }
-  .snaps-h p { margin: 4px 0 0; }
-  .snaps { display: grid; gap: 8px; margin-top: 20px; }
+  .snaps-h .sub { margin-top: 8px; }
+  .snap-steps { list-style: none; padding: 0; margin: 24px 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 860px) { .snap-steps { grid-template-columns: minmax(0, 1fr); } }
+  .snap-steps li { display: flex; gap: 16px; align-items: flex-start; padding: 16px; border-radius: 16px; background: var(--sf1); }
+  .snap-steps .n { flex: none; width: 32px; height: 32px; border-radius: 16px; background: var(--pc); color: var(--on-pc); display: inline-flex; align-items: center; justify-content: center; font: 500 14px/20px var(--sans); }
+  .snap-steps b { display: block; font: 500 16px/24px var(--sans); }
+  .snap-steps .d { display: block; color: var(--on-sfv); font: 400 14px/20px var(--sans); margin-top: 2px; }
+  .snap-priv { margin: 12px 0 0; }
+  .snap-legend { margin-top: 28px; }
+  .snap-legend p { margin: 0; }
+  .snap-legend ul { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px 20px; font: 400 13px/20px var(--sans); color: var(--on-sfv); }
+  .snap-legend li { display: flex; align-items: center; gap: 8px; }
+  .snap-legend .tier { padding: 2px 8px; }
+  .snap-legend .muted { margin-top: 8px; }
+  .snaps { display: grid; gap: 8px; margin-top: 16px; }
   details.snap { background: var(--sf1); border-radius: 12px; }
-  details.snap summary { list-style: none; cursor: pointer; padding: 14px 20px; display: grid; grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 0.6fr)) 24px; gap: 12px; align-items: center; font: 400 14px/20px var(--sans); border-radius: 12px; }
-  details.snap summary:hover { background: color-mix(in srgb, var(--on-sf) 5%, transparent); }
-  details.snap summary::-webkit-details-marker { display: none; }
-  details.snap summary::after { content: ''; width: 24px; height: 24px; background: var(--on-sfv); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E") center/contain no-repeat; transition: transform .2s var(--ease); }
-  details.snap[open] summary::after { transform: rotate(180deg); }
-  details.snap summary b { font-family: var(--mono); font-weight: 500; }
-  @media (max-width: 760px) { details.snap summary { grid-template-columns: minmax(0, 1fr) 24px; } details.snap summary .hide-sm { display: none; } }
+  details.snap > summary { list-style: none; cursor: pointer; padding: 14px 20px; display: grid; grid-template-columns: minmax(0, 1.5fr) repeat(4, minmax(0, 0.55fr)) 24px; gap: 12px; align-items: center; font: 400 14px/20px var(--sans); color: var(--on-sfv); border-radius: 12px; }
+  details.snap > summary:hover { background: color-mix(in srgb, var(--on-sf) 5%, transparent); }
+  details.snap > summary::-webkit-details-marker { display: none; }
+  details.snap > summary::after { content: ''; width: 24px; height: 24px; background: var(--on-sfv); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E") center/contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z'/%3E%3C/svg%3E") center/contain no-repeat; transition: transform .2s var(--ease); }
+  details.snap[open] > summary::after { transform: rotate(180deg); }
+  details.snap > summary .sn { min-width: 0; display: flex; flex-direction: column; }
+  details.snap > summary .sn b { font: 500 14px/20px var(--mono); color: var(--on-sf); }
+  details.snap > summary .sn .muted { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 13px; }
+  details.snap > summary .cnt { display: contents; }
+  details.snap > summary .cnt b { font-weight: 500; color: var(--on-sf); }
+  @media (max-width: 760px) {
+    details.snap > summary { grid-template-columns: minmax(0, 1fr) 24px; }
+    details.snap > summary .cnt { display: flex; flex-wrap: wrap; gap: 2px 14px; grid-column: 1; font-size: 13px; }
+  }
   .snap-body { padding: 4px 20px 20px; }
-  .snap-body details summary { color: var(--p); font: 500 14px/20px var(--sans); cursor: pointer; }
-  .rank { display: grid; gap: 4px; margin: 10px 0 14px; }
+  .snap-body > p { margin: 0; }
+  .snap-body code { font-size: 0.85em; }
+  .snap-cap { font: 500 14px/20px var(--sans); margin: 18px 0 0; color: var(--on-sf); }
+  .snap-body .cl { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+  details.np { margin-top: 18px; }
+  details.np > summary { color: var(--p); font: 500 14px/20px var(--sans); cursor: pointer; }
+  details.np > p { margin: 8px 0; }
+  .rank { display: grid; gap: 4px; margin: 8px 0 0; }
   .rk { display: grid; grid-template-columns: 28px 76px minmax(0, 1fr) auto; gap: 12px; align-items: center; font: 400 14px/20px var(--sans); padding: 6px 8px; border-radius: 8px; background: var(--sf0); }
   .rk .i { font: 400 12px/16px var(--mono); color: var(--faint); text-align: right; }
   .rk .t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .rk .t b { font-family: var(--mono); font-weight: 500; }
   .rk .cl { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
-  .rk .cl a { font: 400 12px/16px var(--mono); padding: 2px 8px; border-radius: 6px; background: var(--sc); color: var(--on-sc); }
-  .rk .cl a:hover { background: var(--pc); color: var(--on-pc); }
-  @media (max-width: 640px) { .rk { grid-template-columns: 76px minmax(0, 1fr); } .rk .i, .rk .cl { display: none; } }
+  .cc { display: inline-block; font: 400 12px/16px var(--mono); padding: 2px 8px; border-radius: 6px; background: var(--sc); color: var(--on-sc); }
+  .cc.ok { background: var(--okc); color: var(--on-okc); }
+  a.cc:hover { background: var(--pc); color: var(--on-pc); }
+  @media (max-width: 640px) { .rk { grid-template-columns: 76px minmax(0, 1fr); } .rk .i { display: none; } .rk .cl { grid-column: 1 / -1; justify-content: flex-start; } .rk .cl:empty { display: none; } }
   .tier { display: inline-block; text-align: center; padding: 4px 0; border-radius: 8px; font: 500 11px/16px var(--sans); letter-spacing: .5px; text-transform: uppercase; }
   .tier.new { background: var(--ec); color: var(--on-ec); }
   .tier.ongoing { background: var(--wc); color: var(--on-wc); }
@@ -701,7 +728,24 @@ xattr -d com.apple.quarantine kubehealth-embed
 
     <div class="snaps-h">
       <h3 id="snapshots" data-anchor="snapshots">The snapshots</h3>
-      <p class="muted small">Each one is a cluster frozen at its recording time: objects, events and container logs, no values. This is how KubeHealth's overview ranks its problems.</p>
+      <p class="sub">A snapshot is a cluster saved to files at one moment. The bench runs on these files instead of a live cluster, so every model sees exactly the same evidence, and anyone can run it again without a cluster.</p>
+    </div>
+    <ol class="snap-steps">
+      <li><span class="n">1</span><div><b>Record</b><span class="d"><code>kubehealth bench record</code> reads a live cluster once, read-only: every object KubeHealth looks at, the events, and the last 150 lines of each container's log (and of its previous run).</span></div></li>
+      <li><span class="n">2</span><div><b>Replay</b><span class="d"><code>kubehealth bench run</code> loads the files as a stand-in cluster, with the clock stopped at the recording time: "first seen 8 min ago" reads the same on every run, and the model's tool calls are answered from the files.</span></div></li>
+      <li><span class="n">3</span><div><b>Score</b><span class="d">Each case above points at one object in a snapshot and lists the words a right answer has to contain; the answers are checked against them.</span></div></li>
+    </ol>
+    <p class="muted small snap-priv">Never stored: Secret and ConfigMap values (only their key names), literal environment values, last-applied annotations, and the system namespaces.</p>
+    <div class="snap-legend">
+      <p class="small">Open a snapshot to see what KubeHealth's overview showed for that cluster at the recording time, row by row, in the order it ranked them:</p>
+      <ul>
+        <li><span class="tier new">new</span>first seen under 2 h before</li>
+        <li><span class="tier ongoing">ongoing</span>2 to 24 h</li>
+        <li><span class="tier chronic">chronic</span>longer</li>
+        <li><span class="cc">case</span>a fault case on that row</li>
+        <li><span class="cc ok">case</span>a healthy control</li>
+      </ul>
+      <p class="muted small">A row without a case is a real problem that isn't scored on its own, often the dependency behind another case's symptom.</p>
     </div>
     <div class="snaps" id="snaps"></div>
   </div>
@@ -877,6 +921,14 @@ xattr -d com.apple.quarantine kubehealth-embed
   document.addEventListener('click', function (e) {
     var z = e.target.closest('[data-zoom]');
     if (z) { $('lb-img').src = z.dataset.zoom; $('lb-img').alt = z.getAttribute('aria-label') || ''; $('lb').showModal(); return; }
+    var sn = e.target.closest('[data-snap]');
+    if (sn) {
+      e.preventDefault();
+      var d = $('snap-' + sn.dataset.snap);
+      closeCase();
+      if (d) { d.open = true; history.replaceState(null, '', '#snap-' + sn.dataset.snap); d.scrollIntoView({ block: 'start' }); }
+      return;
+    }
     var l = e.target.closest('[data-link]');
     if (l) {
       history.replaceState(null, '', '#' + l.dataset.link);
@@ -918,7 +970,7 @@ xattr -d com.apple.quarantine kubehealth-embed
     drawMagos();
 
     $('stats').innerHTML = [
-      [cs.length, 'cases'], [faults.length, 'faults'], [cross.length, 'cause in another object'], [healthy.length, 'healthy controls'], [D.snapshots.length, 'recorded clusters']
+      [cs.length, 'cases'], [faults.length, 'faults'], [cross.length, 'cause in another object'], [healthy.length, 'healthy controls'], [D.snapshots.length, 'snapshots']
     ].map(function (s) { return '<div class="stat"><b>' + s[0] + '</b><span>' + esc(s[1]) + '</span></div>'; }).join('');
 
     var max = 0, rows = cats.map(function (k) {
@@ -1075,22 +1127,42 @@ xattr -d com.apple.quarantine kubehealth-embed
 
   // ── Snapshots ──────────────────────────────────────────────────────────────
   function drawSnaps() {
+    var perCtx = {};
+    D.snapshots.forEach(function (s) { perCtx[s.context] = (perCtx[s.context] || 0) + 1; });
+    function chip(c) { return '<a class="cc' + (c.healthy ? ' ok' : '') + '" href="#case=' + esc(c.id) + '" title="' + (c.healthy ? 'Healthy control' : 'Fault') + '">' + esc(c.id) + '</a>'; }
+    function count(k, one, many) { return '<span><b>' + k + '</b> ' + (k === 1 ? one : many) + '</span>'; }
     $('snaps').innerHTML = D.snapshots.map(function (s) {
-      var rows = (s.problems || []).map(function (p, i) {
-        var linked = D.cases.filter(function (c) { return c.snapshot === s.name && c.row_key === p.key; });
+      var probs = s.problems || [], mine = D.cases.filter(function (c) { return c.snapshot === s.name; }), keys = {};
+      probs.forEach(function (p) { keys[p.key] = true; });
+      var rows = probs.map(function (p, i) {
+        var linked = mine.filter(function (c) { return c.row_key === p.key; });
         var reasons = (p.reasons || []).map(function (r) { return r.reason; }).join(', ');
         return '<div class="rk"><span class="i">' + (i + 1) + '</span><span class="tier ' + esc(p.tier) + '">' + esc(p.tier) + '</span>' +
           '<span class="t" title="' + esc(p.title + ' · ' + reasons) + '"><b>' + esc(p.title) + '</b> <span class="muted">' + esc(p.kind || '') + ' · ' + esc(reasons) + '</span></span>' +
-          '<span class="cl">' + linked.map(function (c) { return '<a href="#case=' + esc(c.id) + '">' + esc(c.id) + '</a>'; }).join('') + '</span></div>';
+          '<span class="cl">' + linked.map(chip).join('') + '</span></div>';
       }).join('');
-      var target = D.cases.filter(function (c) { return c.snapshot === s.name && c.note_target; })[0];
-      return '<details class="snap"><summary><span><b>' + esc(s.name) + '</b> <span class="muted small">' + esc(s.context) + '</span></span>' +
-        '<span class="hide-sm muted">' + s.objects + ' objects</span><span class="hide-sm muted">' + s.logs + ' logs</span><span class="hide-sm muted">' + (s.problems || []).length + ' problems</span></summary>' +
-        '<div class="snap-body"><div class="muted small">Recorded ' + esc((s.recorded_at || '').replace('T', ' ').replace('Z', ' UTC')) + ' · namespaces: ' + esc((s.namespaces || []).join(', ')) + '</div>' +
+      var other = mine.filter(function (c) { return !c.row_key || !keys[c.row_key]; });
+      var ns = (s.namespaces || []).filter(function (x) { return x !== 'default'; });
+      var hasDefault = (s.namespaces || []).indexOf('default') >= 0;
+      var target = mine.filter(function (c) { return c.note_target; })[0];
+      return '<details class="snap" id="snap-' + esc(s.name) + '"><summary>' +
+        '<span class="sn"><b>' + esc(s.name) + '</b><span class="muted">cluster ' + esc(s.context) + ' · ' + esc(ns.join(', ')) + '</span></span>' +
+        '<span class="cnt">' + count(s.objects, 'object', 'objects') + count(s.logs, 'container log', 'container logs') +
+        count(probs.length, 'overview row', 'overview rows') + count(mine.length, 'case', 'cases') + '</span></summary>' +
+        '<div class="snap-body"><p class="muted small">Recorded ' + esc((s.recorded_at || '').replace('T', ' ').replace(/:\d\dZ$/, ' UTC')) +
+        ' from the cluster <b>' + esc(s.context) + '</b>' +
+        (perCtx[s.context] > 1 ? ', one of ' + perCtx[s.context] + ' snapshots of it, each with its own namespaces and its own overview note' : '') +
+        '. Namespaces: ' + esc(ns.join(', ')) + (hasDefault ? ', plus <code>default</code>, where the events of cluster-wide objects such as Nodes live' : '') + '.</p>' +
+        '<h4 class="snap-cap">KubeHealth\'s overview at that moment</h4>' +
         '<div class="rank">' + (rows || '<div class="muted small">No problems.</div>') + '</div>' +
-        (s.note_prompt ? '<details><summary>The overview note\'s prompt' + (target ? ' (target: ' + esc(target.id) + ')' : '') + ' · ' + tokens(s.note_prompt) + ' tokens</summary><pre class="code wrap" style="margin-top:8px">' + esc(s.note_prompt) + '</pre></details>' : '') +
+        (other.length ? '<h4 class="snap-cap">Also tested here, with no row on the overview</h4><p class="muted small">Healthy objects, and faults that raise no warning event.</p><div class="cl">' + other.map(chip).join('') + '</div>' : '') +
+        (s.note_prompt ? '<details class="np"><summary>The overview note\'s prompt · ' + tokens(s.note_prompt) + ' tokens</summary>' +
+          '<p class="muted small">KubeHealth asks the model for a one-line hint: the first thing to check in this cluster. This is that exact prompt' +
+          (target ? '; the hint is scored against ' + chip(target) : '') + '.</p><pre class="code wrap">' + esc(s.note_prompt) + '</pre></details>' : '') +
         '</div></details>';
     }).join('');
+    var m = location.hash.match(/^#snap-([\w-]+)$/);
+    if (m && $('snap-' + m[1])) $('snap-' + m[1]).open = true;
   }
 
   // ── Case detail ────────────────────────────────────────────────────────────
@@ -1127,7 +1199,7 @@ xattr -d com.apple.quarantine kubehealth-embed
     var c = VIEW[i], s = snapOf(c.snapshot), a = c.anchor;
     $('p-kind').textContent = a.kind;
     $('p-name').textContent = a.name;
-    $('p-meta').innerHTML = '<span>case <b>' + esc(c.id) + '</b></span><span>namespace <b>' + esc(a.ns === '_cluster' ? 'cluster-wide' : a.ns) + '</b></span><span>snapshot <b>' + esc(c.snapshot) + '</b></span>' + '<span class="badges" style="margin:0">' + badges(c) + '</span>';
+    $('p-meta').innerHTML = '<span>case <b>' + esc(c.id) + '</b></span><span>namespace <b>' + esc(a.ns === '_cluster' ? 'cluster-wide' : a.ns) + '</b></span><span>snapshot <a href="#snap-' + esc(c.snapshot) + '" data-snap="' + esc(c.snapshot) + '"><b>' + esc(c.snapshot) + '</b></a></span>' + '<span class="badges" style="margin:0">' + badges(c) + '</span>';
     $('p-prev').disabled = i === 0; $('p-next').disabled = i === VIEW.length - 1;
 
     var h = '';
