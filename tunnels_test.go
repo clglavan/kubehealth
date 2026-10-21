@@ -554,3 +554,44 @@ current-context: private-gke
 		t.Errorf("without the tunnel: %v (%s)", err, errKind(err))
 	}
 }
+
+// At launch only the current context's tunnel starts; another starts only
+// when its cluster is picked.
+func TestStartupStartsOnlyCurrentTunnel(t *testing.T) {
+	a := fakeTunnelDef(t, "", "0s")
+	addrB := freeAddr(t)
+	b := TunnelDef{Name: "bastion-2", Command: "FAKE_TUNNEL_ADDR=" + addrB + " '" + os.Args[0] + "' -- -D " + addrB,
+		Mode: tunnelProxy, Proxy: "socks5://" + addrB, Contexts: []string{"private-gke-2"}}
+	withTunnels(t, a, b)
+	oldKC := cfg.Kubeconfig
+	cfg.Kubeconfig = testKubeconfig(t, "https://10.255.255.1:443", "private-gke", "private-gke-2") // current: private-gke
+	clusters.Lock()
+	oldActive, oldByName := clusters.active, clusters.byName
+	clusters.active, clusters.byName = nil, map[string]*clusterState{}
+	clusters.Unlock()
+	t.Cleanup(func() {
+		clusters.Lock()
+		for _, c := range clusters.byName {
+			c.stop()
+		}
+		clusters.active, clusters.byName = oldActive, oldByName
+		clusters.Unlock()
+		cfg.Kubeconfig = oldKC
+	})
+
+	if err := initClusters(); err != nil {
+		t.Fatal(err)
+	}
+	waitState(t, a.Name, tsRunning)
+	time.Sleep(300 * time.Millisecond)
+	if st := tunnelState(b.Name); st != tsStopped || portOpen(addrB) {
+		t.Fatalf("a tunnel no cluster in use needs was started at launch: %s", st)
+	}
+
+	rec := httptest.NewRecorder()
+	handleAPIContext(rec, httptest.NewRequest(http.MethodPost, "/api/context", strings.NewReader(`{"name":"private-gke-2"}`)))
+	if rec.Code != http.StatusAccepted {
+		t.Fatalf("picking private-gke-2: %d %s", rec.Code, rec.Body)
+	}
+	waitState(t, b.Name, tsRunning)
+}
