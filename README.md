@@ -105,6 +105,7 @@ First run unpacks the model to `~/Library/Caches/kubehealth/embedded` (~650 MB).
 ```bash
 ./kubehealth -namespaces default,monitoring             # only these namespaces
 ./kubehealth -kubeconfig ~/.kube/staging.yaml -port 9090
+./kubehealth -listen 0.0.0.0                            # serve every interface (default: localhost only)
 AI_ENABLED=false ./kubehealth                           # no AI
 LMSTUDIO_MODEL=qwen/qwen3-4b-2507 ./kubehealth          # your own model in LM Studio
 LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip the bundled model
@@ -118,6 +119,21 @@ LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip th
 | `AI_ENABLED` | `true` |
 | `AI_LINK_FOLLOW` | `true` |
 | `KUBECONFIG` | `~/.kube/config` |
+
+## Tunnels
+
+Private clusters that answer only through a bastion or IAP: when a cluster doesn't answer, KubeHealth asks for the command that opens its tunnel, and from then on starts it itself whenever you pick that cluster.
+
+```bash
+gcloud compute ssh my-bastion \
+  --tunnel-through-iap --zone=europe-west1-b --project=my-project \
+  -- -D 1080 -N -o ServerAliveInterval=30
+```
+
+- Paste the full command. KubeHealth goes through it as a proxy (`-D` fills in `socks5://127.0.0.1:1080`), through a local address for the API server (`-L`), or lets it route traffic itself (sshuttle).
+- It waits for the port, shows the command's output live, restarts a tunnel that drops while you watch its cluster, and stops what it started when it exits. One tunnel can serve every cluster behind the same bastion.
+- ⇄ in the header lists the tunnels: running, stopped, exited and why (an expired `gcloud auth login`, a port in use), with Start, Stop, Edit, Delete.
+- Saved in `prefs.json`, readable by you only; the kubeconfig is never changed. Commands run as you, without a terminal: SSH keys and browser sign-ins work, password and MFA prompts don't. Only this machine's browser, on KubeHealth's own page, can define or start a tunnel.
 
 ## AI
 

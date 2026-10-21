@@ -108,6 +108,7 @@ Pick a feature to see its path through the system (browser, server, per-cluster 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-port` | `8080` | HTTP listen port |
+| `-listen` | `127.0.0.1` | Address to listen on. `0.0.0.0` serves every interface: then anyone who can reach this machine can read your clusters (tunnels still answer this machine only) |
 | `-kubeconfig` | `~/.kube/config` | Path to kubeconfig |
 | `-namespaces` | *(all)* | Comma-separated namespace list |
 | `-version` | | Print the version and exit |
@@ -149,6 +150,20 @@ claude -p --output-format stream-json --verbose --include-partial-messages
 - **RCA**: Claude runs the investigation in one session and calls KubeHealth's four read-only tools through an MCP endpoint on KubeHealth's own server, `/mcp/rca/<token>`: a random token per run, answered only for requests from 127.0.0.1. Each call is a step of the evidence trail. After *Max iterations* calls the tools answer "give your answer now"; a run that keeps calling is stopped.
 - Prompts are budgeted against a 200k context; the log-lines and events settings keep them far smaller. *Max concurrent LLM calls* and *AI Request Timeout* apply (a timeout kills the process and anything it started).
 - What leaves the machine: the events, describe output, logs and linked-object facts in the prompts and tool results. Secret values never are in them.
+
+### Tunnels
+
+Some clusters answer only through a tunnel opened first: `gcloud compute ssh <bastion> --tunnel-through-iap -- -D 1080 -N`, `ssh -L`, an SSM or IAP port-forwarding session. A tunnel in KubeHealth is
+
+- **a command**: the user's full command line, run with `/bin/sh -c` (`cmd /C` on Windows) in the environment KubeHealth was started with, with no stdin and `CLOUDSDK_CORE_DISABLE_PROMPTS=1`, in a process group of its own;
+- **how KubeHealth goes through it**: a **proxy** (`socks5://` or `http://`, set as the cluster client's proxy, as `proxy-url` would), a **local address** for the API server (the client connects there and still checks the certificate against the server's real name), or **nothing** (sshuttle, VPN clients);
+- **the contexts** it serves: one tunnel can serve every cluster behind the same bastion.
+
+When a cluster's API calls fail on the network (DNS, refused, no route, timeout, proxy; not 401/403 or certificate errors), the overview offers to set up a tunnel, once per page; the command's `-D`, `-L`, `--local-host-port` or SSM `localPortNumber` fills in how to go through it, as does the cluster's `proxy-url` in the kubeconfig. Picking a context with a tunnel starts it first: the switcher shows it coming up with its output, then switches when its port answers (up to 60 s), or offers to switch without it. If its port is already open (a tunnel started in a terminal), KubeHealth uses it and doesn't start another.
+
+A tunnel that was up and drops is restarted while a cluster that uses it is watched (after 5 s, 15 s, then every minute); one that fails before it is up shows why (`gcloud auth login` needed, command not found, port in use, SSH key refused) and waits. Stopping or editing a tunnel stops its whole process group (gcloud's ssh and IAP helper included), and KubeHealth stops every tunnel it started when it exits (SIGINT, SIGTERM). Cluster connections use a 10 s connect timeout, so an unreachable private API server shows as such quickly.
+
+Tunnels are saved in `prefs.json` (mode 0600); the kubeconfig is never changed. Their endpoints answer only a loopback client addressing KubeHealth as `localhost` or `127.0.0.1`, and changes only same-origin JSON requests: no other machine, DNS-rebound name or web page can read or define a command.
 
 ### LM Studio setup
 
@@ -230,10 +245,20 @@ To add a case, record a snapshot of a cluster that shows the incident (or reuse 
 | Endpoint | Description |
 |----------|-------------|
 | `GET /api/contexts` | Kubeconfig contexts with environment tags; re-read on every call |
-| `POST /api/context` | Switch the watched cluster: `{"name": "..."}` |
+| `POST /api/context` | Switch the watched cluster: `{"name": "..."}`. A context behind a tunnel that isn't up: starts it and answers 202 `{"status": "tunnel_starting", "tunnel": …}`; `"skip_tunnel": true` switches without it |
 | `POST /api/context/env` | Set a context's environment: `{"name": "...", "env": "prod"}` (`""` reads it from the name) |
 
 Every page sends `X-KubeHealth-Context` with its API calls, so a tab keeps talking to the cluster it was opened on after you switch elsewhere.
+
+### Tunnels
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/tunnels[?context=X]` | Every tunnel with its state, pid, uptime, exit code, why it failed and its last 200 output lines; with a context, its server, kubeconfig `proxy-url`, error and tunnel |
+| `POST /api/tunnels` | Create or edit `{name, command, mode: proxy\|address\|none, proxy, address, contexts, previous, start}` |
+| `DELETE /api/tunnels/{name}` | Stop it (if KubeHealth started it) and delete it |
+| `POST /api/tunnels/{name}/start` · `/stop` | Start or stop it |
+
+Loopback clients addressing `localhost` / `127.0.0.1` only; changes need a same-origin `Origin` and `Content-Type: application/json`.
 
 ### AI
 | Endpoint | Description |
@@ -268,6 +293,8 @@ Every page sends `X-KubeHealth-Context` with its API calls, so a tab keeps talki
 ```
 main.go          — HTTP server, routing, template rendering, per-cluster worker
 cluster.go       — Per-context cluster state, switching, environment tags, saved preferences
+tunnels.go       — Tunnels: saved commands, starting/stopping them, the cluster client through them, /api/tunnels
+shutdown.go      — Stops what KubeHealth started (tunnels, llama-server) when it exits
 ai.go            — AI streaming (callLMStudio, streamLMStudio), insight cache
 ai_config.go     — System prompt store, LM Studio model-info fetch (/api/v0/models)
 claudecode.go    — Send to Claude Code: the claude -p command line, stream parsing, note/analysis/RCA through it
@@ -293,6 +320,7 @@ templates/
 ├─ ai_modal.html       — AI Agent config modal (Send to Claude Code, system prompt, context window estimate)
 ├─ settings_modal.html — Settings modal (log lines, timeouts, concurrency, RCA iterations)
 ├─ docs_modal.html     — Interactive architecture diagram with animated data flows
+├─ tunnels_modal.html  — Tunnels: the list, a tunnel's form ("Can't reach …"), a tunnel coming up with its output
 ├─ yaml_drawer.html    — YAML panel: columns, colouring, folding, hiding noisy fields, references, why-it-fails highlights, copy
 └─ object.html         — YAML as a page (the panel's ↗, or Cmd/Ctrl-click on YAML)
 ```

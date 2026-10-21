@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -44,10 +45,11 @@ type clusterState struct {
 	// worker tracks namespace discovery and the sweep's progress.
 	worker struct {
 		sync.RWMutex
-		total      int
-		namespaces []string // last resolved namespace list, sorted
-		ready      bool     // every known namespace fetched at least once
-		lastErr    string   // last namespace-list error, cleared on success
+		total       int
+		namespaces  []string // last resolved namespace list, sorted
+		ready       bool     // every known namespace fetched at least once
+		lastErr     string   // last namespace-list error, cleared on success
+		lastErrKind string   // what kind of error it is (errKind)
 	}
 
 	feed      warnFeedState
@@ -142,6 +144,12 @@ func newClusterState(name string) (*clusterState, error) {
 	// but this caps incidental bursts (owner lookups, YAML drill-downs).
 	rc.QPS = 5
 	rc.Burst = 10
+	// An unreachable private API server would otherwise hang each call until
+	// the OS gives up on the connection, over a minute later.
+	rc.Dial = (&net.Dialer{Timeout: 10 * time.Second, KeepAlive: 30 * time.Second}).DialContext
+	if t, ok := tunnelForContext(name); ok {
+		applyTunnel(rc, t)
+	}
 	cs, err := kubernetes.NewForConfig(rc)
 	if err != nil {
 		return nil, fmt.Errorf("context %s: %w", name, err)
@@ -163,6 +171,10 @@ func initClusters() error {
 	}
 	if raw.CurrentContext == "" {
 		return errors.New("kubeconfig has no current-context")
+	}
+	// Its tunnel comes up in the background; the worker retries until it does.
+	if name, _, err := startContextTunnel(raw.CurrentContext); err != nil {
+		log.Printf("Tunnel %s: %v", name, err)
 	}
 	_, err = switchCluster(raw.CurrentContext)
 	return err
@@ -230,14 +242,18 @@ type clusterInfo struct {
 	Server    string `json:"server"`
 	Active    bool   `json:"active"` // this cluster is the one being polled
 	Error     string `json:"error,omitempty"`
+	ErrorKind string `json:"error_kind,omitempty"` // unreachable, auth, tls or other (errKind)
+	// Tunnel is the tunnel this context goes through, if any.
+	Tunnel *tunnelBrief `json:"tunnel,omitempty"`
 }
 
 func (c *clusterState) identity() clusterInfo {
 	env, src := envFor(c.name)
 	c.worker.RLock()
-	errMsg := c.worker.lastErr
+	errMsg, kind := c.worker.lastErr, c.worker.lastErrKind
 	c.worker.RUnlock()
-	return clusterInfo{Context: c.name, Env: env, EnvSource: src, Server: c.server, Active: c.isActive(), Error: errMsg}
+	return clusterInfo{Context: c.name, Env: env, EnvSource: src, Server: c.server, Active: c.isActive(),
+		Error: errMsg, ErrorKind: kind, Tunnel: contextTunnelBrief(c.name)}
 }
 
 var validEnvs = map[string]bool{"prod": true, "nonprod": true, "stage": true, "dev": true, "local": true}
@@ -299,6 +315,8 @@ var prefs = struct {
 	AIBackend      string  `json:"ai_backend,omitempty"`
 	ClaudeModel    *string `json:"claude_model,omitempty"`
 	ClaudeThinking string  `json:"claude_thinking,omitempty"`
+	// Tunnels: the commands that open the way to private clusters (tunnels.go).
+	Tunnels []TunnelDef `json:"tunnels,omitempty"`
 }{ContextEnv: map[string]string{}}
 
 func prefsPath() string {
@@ -361,7 +379,8 @@ func savePrefsLocked() error {
 		return err
 	}
 	tmp := path + ".tmp"
-	if err := os.WriteFile(tmp, b, 0o644); err != nil {
+	// Readable by the user only: it holds tunnel commands KubeHealth runs.
+	if err := os.WriteFile(tmp, b, 0o600); err != nil {
 		return err
 	}
 	return os.Rename(tmp, path)
@@ -370,14 +389,15 @@ func savePrefsLocked() error {
 // ---- HTTP ----------------------------------------------------------------
 
 type contextEntry struct {
-	Name      string `json:"name"`
-	Env       string `json:"env"`
-	EnvSource string `json:"env_source"`
-	Server    string `json:"server,omitempty"`
-	Active    bool   `json:"active"`
-	Loaded    bool   `json:"loaded"`           // KubeHealth has data for it in memory
-	IdleSec   int    `json:"idle_s,omitempty"` // seconds since it stopped being polled
-	Detected  string `json:"detected_env"`     // what the name alone says
+	Name      string       `json:"name"`
+	Env       string       `json:"env"`
+	EnvSource string       `json:"env_source"`
+	Server    string       `json:"server,omitempty"`
+	Active    bool         `json:"active"`
+	Loaded    bool         `json:"loaded"`           // KubeHealth has data for it in memory
+	IdleSec   int          `json:"idle_s,omitempty"` // seconds since it stopped being polled
+	Detected  string       `json:"detected_env"`     // what the name alone says
+	Tunnel    *tunnelBrief `json:"tunnel,omitempty"`
 }
 
 // handleAPIContexts lists the kubeconfig's contexts. The kubeconfig is read
@@ -390,7 +410,7 @@ func handleAPIContexts(w http.ResponseWriter, r *http.Request) {
 	}
 	var out []contextEntry
 	for name, kc := range raw.Contexts {
-		e := contextEntry{Name: name, Detected: envOf(name)}
+		e := contextEntry{Name: name, Detected: envOf(name), Tunnel: contextTunnelBrief(name)}
 		e.Env, e.EnvSource = envFor(name)
 		if cl := raw.Clusters[kc.Cluster]; cl != nil {
 			e.Server = cl.Server
@@ -418,7 +438,8 @@ func handleAPIContext(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var body struct {
-		Name string `json:"name"`
+		Name       string `json:"name"`
+		SkipTunnel bool   `json:"skip_tunnel"` // switch now, without starting its tunnel
 	}
 	if err := json.NewDecoder(r.Body).Decode(&body); err != nil || body.Name == "" {
 		http.Error(w, "expected {\"name\": \"<context>\"}", http.StatusBadRequest)
@@ -432,6 +453,27 @@ func handleAPIContext(w http.ResponseWriter, r *http.Request) {
 	if _, ok := raw.Contexts[body.Name]; !ok {
 		http.Error(w, "no context "+body.Name+" in the kubeconfig", http.StatusNotFound)
 		return
+	}
+	// A context behind a tunnel: start the tunnel first. The page shows it
+	// coming up and asks again once it is ready (or to switch without it).
+	if !body.SkipTunnel {
+		if origin := r.Header.Get("Origin"); origin != "" && origin != "http://"+r.Host {
+			http.Error(w, "refused: not a request from KubeHealth's own page", http.StatusForbidden)
+			return
+		}
+		tunnel, ready, err := startContextTunnel(body.Name)
+		if err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusBadGateway)
+			json.NewEncoder(w).Encode(map[string]string{"error": err.Error(), "tunnel": tunnel})
+			return
+		}
+		if !ready {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusAccepted)
+			json.NewEncoder(w).Encode(map[string]string{"status": "tunnel_starting", "tunnel": tunnel, "context": body.Name})
+			return
+		}
 	}
 	c, err := switchCluster(body.Name)
 	if err != nil {

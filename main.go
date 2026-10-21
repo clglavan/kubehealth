@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"html/template"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -40,6 +41,7 @@ func handleStatic(w http.ResponseWriter, r *http.Request) {
 
 type Config struct {
 	Namespaces []string
+	Listen     string // address to listen on: 127.0.0.1 unless -listen says otherwise
 	Port       string
 	Kubeconfig string
 	AllNS      bool
@@ -516,6 +518,7 @@ func main() {
 	var showVersion bool
 	flag.StringVar(&namespaceList, "namespaces", "", "Comma-separated list of namespaces (empty = all)")
 	flag.StringVar(&cfg.Port, "port", "8080", "HTTP server port")
+	flag.StringVar(&cfg.Listen, "listen", "127.0.0.1", "Address to listen on (0.0.0.0 for every interface; then anyone who can reach this machine can read your clusters)")
 	flag.StringVar(&cfg.Kubeconfig, "kubeconfig", defaultKubeconfig(), "Path to kubeconfig")
 	flag.BoolVar(&showVersion, "version", false, "Print the version and exit")
 	flag.Parse()
@@ -523,6 +526,10 @@ func main() {
 		fmt.Println("kubehealth", version)
 		return
 	}
+
+	// What KubeHealth starts (tunnels, the embedded llama-server) stops with it.
+	handleSignals()
+	onShutdown(stopAllTunnels)
 
 	// Embedded build only: extract the bundled llama-server + model and start
 	// it locally. Does nothing in the normal (non-embed) build, and is skipped
@@ -578,13 +585,18 @@ func main() {
 	mux.HandleFunc("/api/rca/status/", handleAPIRCAStatus)
 	mux.HandleFunc("/api/rca/", handleAPIRCAStart)
 	mux.HandleFunc("/mcp/rca/", handleMCPRCA)
+	mux.HandleFunc("/api/tunnels", handleAPITunnels)
+	mux.HandleFunc("/api/tunnels/", handleAPITunnels)
 
 	nsInfo := "all namespaces"
 	if !cfg.AllNS {
 		nsInfo = strings.Join(cfg.Namespaces, ", ")
 	}
-	log.Printf("KubeHealth %s starting on :%s — watching %s", version, cfg.Port, nsInfo)
-	log.Fatal(http.ListenAndServe(":"+cfg.Port, mux))
+	addr := net.JoinHostPort(cfg.Listen, cfg.Port)
+	log.Printf("KubeHealth %s on http://%s — watching %s", version, addr, nsInfo)
+	err := http.ListenAndServe(addr, mux)
+	runShutdown()
+	log.Fatal(err)
 }
 
 func defaultKubeconfig() string {
@@ -701,7 +713,7 @@ func (c *clusterState) runWorker(ctx context.Context) {
 				}
 				log.Printf("Worker [%s]: could not list namespaces: %v", c.name, err)
 				c.worker.Lock()
-				c.worker.lastErr = err.Error()
+				c.worker.lastErr, c.worker.lastErrKind = err.Error(), errKind(err)
 				c.worker.Unlock()
 			} else {
 				namespaces = ns
@@ -709,7 +721,7 @@ func (c *clusterState) runWorker(ctx context.Context) {
 				c.worker.Lock()
 				c.worker.total = len(namespaces)
 				c.worker.namespaces = namespaces
-				c.worker.lastErr = ""
+				c.worker.lastErr, c.worker.lastErrKind = "", ""
 				c.worker.Unlock()
 			}
 		}
@@ -1324,6 +1336,6 @@ func mustParseTemplate(name, file string, extras ...string) *template.Template {
 }
 
 var (
-	appTmpl    = mustParseTemplate("app.html", "templates/app.html", "templates/ns_view.html", "templates/header.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html", "templates/yaml_drawer.html")
+	appTmpl    = mustParseTemplate("app.html", "templates/app.html", "templates/ns_view.html", "templates/header.html", "templates/ai_modal.html", "templates/settings_modal.html", "templates/docs_modal.html", "templates/yaml_drawer.html", "templates/tunnels_modal.html")
 	objectTmpl = mustParseTemplate("object.html", "templates/object.html")
 )

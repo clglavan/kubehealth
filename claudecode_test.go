@@ -16,15 +16,6 @@ import (
 	"time"
 )
 
-// TestMain doubles as a fake claude CLI: tests point claudeBin at the test
-// binary and set GO_WANT_FAKE_CLAUDE, and the process acts as claude -p.
-func TestMain(m *testing.M) {
-	if os.Getenv("GO_WANT_FAKE_CLAUDE") == "1" {
-		os.Exit(fakeClaude(os.Args[1:]))
-	}
-	os.Exit(m.Run())
-}
-
 // fakeClaude behaves like claude -p --output-format stream-json. With
 // --mcp-config it calls KubeHealth's tools the way Claude Code does; it
 // records its arguments and stdin in FAKE_CLAUDE_LOG.

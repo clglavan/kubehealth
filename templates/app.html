@@ -370,6 +370,7 @@
   .note { font-size: 13px; color: var(--warn); background: var(--warn-bg); border-radius: 8px; padding: 8px 12px; overflow-wrap: anywhere; }
   .empty.err .big { color: var(--crit); }
   .empty code { font: 400 12.5px/18px var(--mono); background: var(--sunk); padding: 0 4px; border-radius: 4px; overflow-wrap: anywhere; }
+  .empty .tun-offer { color: var(--text-2); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 
   /* Narrower windows: the rail folds behind a button; then the objects pane stacks above the detail. */
   @media (max-width: 1100px) {
@@ -682,12 +683,29 @@
     var cl = home.cluster;
     if (home.problems.length || home.warnings.checked_at || home.sweep.loaded) return '';
     if (cl.error) {
+      var tunnel = '';
+      if (cl.tunnel) {
+        tunnel = '<p class="tun-offer"><button type="button" class="mbtn tonal small" data-act="tunnel-watch">Tunnel ' + esc(cl.tunnel.name) + ': ' + esc(cl.tunnel.state) + '</button></p>';
+      } else if (cl.error_kind === 'unreachable') {
+        tunnel = '<p class="tun-offer">It doesn\u2019t answer. If it\u2019s a private cluster behind a bastion or IAP, KubeHealth can open its tunnel for you. ' +
+          '<button type="button" class="mbtn tonal small" data-act="tunnel-setup">Set up a tunnel</button></p>';
+      }
       return '<div class="empty err"><span class="big">Can\u2019t read from ' + esc(cl.context) + '</span>' +
-        '<p>' + esc(cl.error) + '</p>' +
+        '<p>' + esc(cl.error) + '</p>' + tunnel +
         '<p>Check your VPN and credentials, for example with <code>kubectl --context ' + esc(cl.context) + ' get namespaces</code>, or switch to another cluster.</p></div>';
     }
     return '<div class="empty"><span class="big">Connecting to ' + esc(cl.context) + '…</span>' +
       '<p>Listing namespaces and warning events. Problems show up as soon as the first warning check returns.</p></div>';
+  }
+
+  // A cluster that doesn't answer and has shown nothing yet: offer its tunnel
+  // once per page (set one up, or show the one it has that is down).
+  function offerTunnel() {
+    var cl = home.cluster;
+    if (state.tunnelOffered || cl.error_kind !== 'unreachable' || !connectingHTML() || !window.khTunnels || window.khTunnels.isOpen()) return;
+    state.tunnelOffered = true;
+    if (!cl.tunnel) window.khTunnels.setup(cl.context);
+    else if (cl.tunnel.state !== 'running' && cl.tunnel.state !== 'starting' && cl.tunnel.state !== 'external') window.khTunnels.watch(cl.tunnel.name, cl.context);
   }
 
   function renderMain() {
@@ -720,6 +738,7 @@
         : active.getAttribute('href') ? 'a[href="' + CSS.escape(active.getAttribute('href')) + '"]' : null;
     }
     $('content').innerHTML = html;
+    offerTunnel();
     if (focusSel) {
       var scope = focusKey ? document.querySelector('.row[data-key="' + CSS.escape(focusKey) + '"]') : $('content');
       var el = scope && scope.querySelector(focusSel);
@@ -900,6 +919,8 @@
 
   // ── Interactions ───────────────────────────────────────────────────────
   $('content').addEventListener('click', function(e) {
+    if (e.target.closest('[data-act="tunnel-setup"]')) { window.khTunnels.setup(home.cluster.context); return; }
+    if (e.target.closest('[data-act="tunnel-watch"]')) { window.khTunnels.watch(home.cluster.tunnel.name, home.cluster.context); return; }
     var cite = e.target.closest('.cite');
     if (cite) { focusRow(cite.dataset.ref); return; }
     if (e.target.closest('[data-act="brief-regen"]')) {
@@ -966,5 +987,6 @@
 {{template "settings_modal" .}}
 {{template "docs_modal" .}}
 {{template "yaml_drawer"}}
+{{template "tunnels_modal"}}
 </body>
 </html>

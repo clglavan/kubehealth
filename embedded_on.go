@@ -13,7 +13,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"os/signal"
 	"path/filepath"
 	"runtime"
 	"sync"
@@ -121,15 +120,11 @@ func startEmbeddedLLM() (func(), error) {
 	}
 	log.Printf("Embedded LLM: ready at %s (model=%s)", baseURL, os.Getenv("LMSTUDIO_MODEL"))
 
-	// Forward SIGINT/SIGTERM to llama-server so it doesn't outlive us.
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-	go func() {
-		<-sigCh
+	// Stop llama-server when KubeHealth exits, so it doesn't outlive us.
+	onShutdown(func() {
 		log.Printf("Embedded LLM: shutting down llama-server")
 		stopLlamaServer()
-		os.Exit(0)
-	}()
+	})
 
 	return stopLlamaServer, nil
 }

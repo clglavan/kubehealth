@@ -89,6 +89,21 @@
   .model[data-state="busy"] .dot, .model[data-state="not-loaded"] .dot { background: var(--warn); }
   .model[data-state="down"] .dot { background: var(--crit); }
   .kh-header .acts { display: flex; align-items: center; gap: 4px; }
+  /* A context's tunnel: the chip by the switcher, the badge in its menu. */
+  .tun-chip {
+    --sl: transparent;
+    display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 8px; border-radius: 8px; flex-shrink: 0;
+    border: 1px solid var(--border-2); background: linear-gradient(var(--sl), var(--sl)); color: var(--text-2); font: 500 12.5px/16px var(--sans); cursor: pointer;
+  }
+  .tun-chip:hover { --sl: color-mix(in srgb, var(--text) 8%, transparent); }
+  .tun-chip svg { width: 18px; height: 18px; fill: currentColor; }
+  .tun-chip.running svg, .tun-chip.external svg, .ctx-tun.running, .ctx-tun.external { color: var(--ok); }
+  .tun-chip.starting svg, .ctx-tun.starting { color: var(--warn); }
+  .tun-chip.exited, .tun-chip.failed { color: var(--crit); border-color: color-mix(in srgb, var(--crit) 45%, transparent); }
+  .ctx-tun.exited, .ctx-tun.failed { color: var(--crit); }
+  .ctx-tun { display: inline-flex; color: var(--muted); }
+  .ctx-tun svg { width: 16px; height: 16px; fill: currentColor; }
+  .ctx-foot { display: flex; padding: 4px 4px 0; }
   .kh-banner {
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 20px; font-size: 14px;
     background: var(--warn-c); color: var(--on-warn-c); flex-shrink: 0;
@@ -114,9 +129,11 @@
     <div class="ctx-menu" id="ctx-menu" hidden>
       <input id="ctx-search" type="search" placeholder="Search contexts…" autocomplete="off" aria-label="Search contexts">
       <div id="ctx-list"></div>
+      <div class="ctx-foot"><button type="button" class="mbtn text small" id="ctx-tunnels"><svg width="18" height="18" style="fill:currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg>Manage tunnels…</button></div>
       <p class="ctx-note">Switching changes which cluster KubeHealth watches. Your kubeconfig's current-context stays as it is. Set a cluster's environment in ⚙ Settings.</p>
     </div>
   </div>
+  <button type="button" class="tun-chip" id="ctx-tunnel" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg><span id="ctx-tunnel-text">tunnel</span></button>
   <h1 class="crumb" id="kh-crumb"{{if not .Crumb}} hidden{{end}}><span class="crumb-sep" aria-hidden="true">›</span><span class="crumb-name" id="kh-crumb-name">{{.Crumb}}</span><span class="crumb-tag {{.CrumbTagClass}}" id="kh-crumb-tag"{{if not .CrumbTag}} hidden{{end}}>{{.CrumbTag}}</span></h1>
   <div class="fresh" id="fresh">
     <svg class="ring" viewBox="0 0 20 20" aria-hidden="true"><circle class="bg" cx="10" cy="10" r="7.5"/><circle class="fg" id="ring-fg" cx="10" cy="10" r="7.5" pathLength="100" stroke-dasharray="0 100"/></svg>
@@ -127,6 +144,7 @@
     <span class="spark" aria-hidden="true">✦</span><span class="m-name" id="model-name">AI</span><span class="where" id="model-where"></span><span class="dot" aria-hidden="true"></span><span class="state" id="model-state">checking…</span>
   </button>
   <div class="acts">
+    <button class="icon-btn" type="button" id="tunnels-btn" aria-label="Tunnels" title="Tunnels"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg></button>
     <button class="icon-btn" type="button" onclick="stgOpen()" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 00-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg></button>
     <button class="mbtn text" type="button" onclick="docsOpen()">Docs</button>
   </div>
@@ -167,7 +185,15 @@ window.khHeader = (function() {
   }
 
   // ── Cluster, data age, banner ────────────────────────────────────────
+  var TUN_LABEL = { running: 'tunnel', external: 'tunnel', starting: 'tunnel starting', exited: 'tunnel down', failed: 'tunnel down', stopped: 'tunnel stopped' };
   function render() {
+    var tn = st.cluster.tunnel, chip = $('ctx-tunnel');
+    chip.hidden = !tn;
+    if (tn) {
+      chip.className = 'tun-chip ' + tn.state;
+      $('ctx-tunnel-text').textContent = TUN_LABEL[tn.state] || 'tunnel';
+      chip.title = 'Tunnel ' + tn.name + ': ' + tn.state + (tn.error ? '. ' + tn.error : '') + '\nClick to see the tunnels';
+    }
     var env = st.cluster.env || 'unknown';
     document.body.dataset.env = env;
     var tag = $('ctx-env');
@@ -257,7 +283,9 @@ window.khHeader = (function() {
         var meta = c.active ? 'watching' : (c.loaded ? 'cached · ' + idleText(c.idle_s) : (c.env === 'unknown' ? 'environment not set' : ''));
         html += '<button type="button" class="ctx-item" data-ctx="' + esc(c.name) + '"' + (c.name === st.cluster.context ? ' aria-current="true"' : '') +
           ' title="' + esc(c.server || '') + '"><span class="env ' + c.env + '">' + (ENV_LABEL[c.env] || '?') + '</span>' +
-          '<span class="ctx-name">' + esc(c.name) + '</span><span class="meta">' + meta + '</span></button>';
+          '<span class="ctx-name">' + esc(c.name) + '</span>' +
+          (c.tunnel ? '<span class="ctx-tun ' + c.tunnel.state + '" title="Tunnel ' + esc(c.tunnel.name) + ': ' + c.tunnel.state + '"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7.77 6.76L6.23 5.48.82 12l5.41 6.52 1.54-1.28L3.42 12l4.35-5.24zM7 13h2v-2H7v2zm10-2h-2v2h2v-2zm-6 2h2v-2h-2v2zm6.77-7.52l-1.54 1.28L20.58 12l-4.35 5.24 1.54 1.28L23.18 12l-5.41-6.52z"/></svg></span>' : '') +
+          '<span class="meta">' + meta + '</span></button>';
       });
     });
     list.innerHTML = (ctxError ? '<div class="ctx-err">' + esc(ctxError) + '</div>' : '') + (html || '<div class="ctx-group">No context matches</div>');
@@ -278,16 +306,34 @@ window.khHeader = (function() {
     openCtxMenu(false);
     ctxError = '';
     if (name === st.active_context) {
-      if (name !== st.cluster.context) location.href = '/';
-      return;
+      if (name !== st.cluster.context) { location.href = '/'; return; }
+      var tn = st.cluster.tunnel; // the same cluster: only its tunnel may need starting
+      if (!tn || tn.state === 'running' || tn.state === 'external' || tn.state === 'starting') return;
     }
     var ctxBtn = $('ctx-btn');
     ctxBtn.disabled = true;
     if (btn) btn.disabled = true;
     $('ctx-name').textContent = 'Switching to ' + name + '…';
     fetch('/api/context', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: name }) })
-      .then(function(r) { if (!r.ok) return r.text().then(function(t) { throw new Error(t || r.status); }); })
-      .then(function() {
+      .then(function(r) {
+        // 202: its tunnel is starting; a 502 naming a tunnel: it didn't start.
+        if (r.status === 202) return r.json();
+        if (!r.ok) return r.text().then(function(t) {
+          var j = null;
+          try { j = JSON.parse(t); } catch (e) {}
+          if (j && j.tunnel) return j;
+          throw new Error((j && j.error) || t || r.status);
+        });
+        return {};
+      })
+      .then(function(res) {
+        if (res.tunnel) {
+          ctxBtn.disabled = false;
+          if (btn) btn.disabled = false;
+          $('ctx-name').textContent = st.cluster.context;
+          window.khTunnels.connect(res.tunnel, name);
+          return;
+        }
         // This page's own cluster: reload in place. Another cluster: open its home.
         if (name === st.cluster.context) location.reload(); else location.href = '/';
       })
@@ -304,8 +350,11 @@ window.khHeader = (function() {
   $('ctx-search').addEventListener('keydown', function(e) {
     if (e.key === 'Enter') { var first = $('ctx-list').querySelector('.ctx-item'); if (first) switchTo(first.dataset.ctx); }
   });
+  $('ctx-tunnel').addEventListener('click', function() { window.khTunnels.openList(); });
+  $('tunnels-btn').addEventListener('click', function() { window.khTunnels.openList(); });
   $('ctx-menu').addEventListener('click', function(e) {
     e.stopPropagation();
+    if (e.target.closest('#ctx-tunnels')) { openCtxMenu(false); window.khTunnels.openList(); return; }
     var item = e.target.closest('.ctx-item');
     if (item) switchTo(item.dataset.ctx);
   });

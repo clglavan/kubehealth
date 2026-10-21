@@ -1,0 +1,420 @@
+{{define "tunnels_modal"}}
+<!-- ── Tunnels: the commands that open the way to private clusters ─────────
+     One dialog, three views: the list of tunnels, a tunnel's form (also
+     "Can't reach <context>"), and a tunnel coming up with its live output.
+     window.khTunnels opens it; the server side is tunnels.go. -->
+<div id="tun-overlay" class="dlg-scrim" style="display:none"></div>
+<div id="tun" class="dlg tun" role="dialog" aria-modal="true" aria-labelledby="tun-title" style="display:none">
+  <div class="dlg-head">
+    <div class="dlg-title" id="tun-title">Tunnels</div>
+    <button type="button" class="icon-btn" id="tun-x" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+  </div>
+
+  <div class="dlg-body tun-body">
+    <!-- List -->
+    <div id="tun-list" hidden>
+      <p class="dlg-hint tun-lead">Commands that open the way to private clusters. KubeHealth starts a cluster's tunnel when you pick the cluster, restarts it if it drops while you watch that cluster, and stops what it started when it exits.</p>
+      <div id="tun-cards" class="tun-cards"></div>
+    </div>
+
+    <!-- Form -->
+    <form id="tun-edit" class="tun-form" hidden autocomplete="off">
+      <div id="tun-why" class="tun-why" hidden></div>
+      <label class="tun-field">
+        <span class="tun-label">Tunnel command</span>
+        <textarea id="tun-cmd" class="mfield tun-cmd" rows="5" spellcheck="false" required
+          placeholder="gcloud compute ssh my-bastion \&#10;  --tunnel-through-iap --zone=europe-west1-b --project=my-project \&#10;  -- -D 1080 -N -o ServerAliveInterval=30"></textarea>
+        <span class="dlg-hint">The full command, as you'd run it in a terminal. It runs as you, with no terminal to answer prompts: a password or MFA prompt can't be answered (gcloud's prompts are turned off), browser sign-ins still work.</span>
+      </label>
+
+      <div class="tun-field">
+        <span class="tun-label">KubeHealth reaches the cluster through it as</span>
+        <div class="tun-seg" role="radiogroup" aria-label="How KubeHealth goes through the tunnel">
+          <button type="button" role="radio" data-mode="proxy" aria-checked="true">Proxy</button>
+          <button type="button" role="radio" data-mode="address" aria-checked="false">Local API address</button>
+          <button type="button" role="radio" data-mode="none" aria-checked="false">Nothing</button>
+        </div>
+        <div data-for="proxy">
+          <input id="tun-proxy" class="mfield tun-wide" placeholder="socks5://127.0.0.1:1080" spellcheck="false">
+          <span class="dlg-hint">For <code>-D</code> (SOCKS, as in the gcloud example) or an HTTP proxy. KubeHealth waits for this port to open.</span>
+        </div>
+        <div data-for="address" hidden>
+          <input id="tun-address" class="mfield tun-wide" placeholder="https://127.0.0.1:16443" spellcheck="false">
+          <span class="dlg-hint">For <code>-L 16443:&lt;api server&gt;:443</code> and port-forwarding sessions: where the API server answers locally. Its certificate is still checked against its real name.</span>
+        </div>
+        <div data-for="none" hidden>
+          <span class="dlg-hint">The command routes traffic itself (sshuttle, a VPN client): KubeHealth starts it and gives it a few seconds.</span>
+        </div>
+      </div>
+
+      <div class="tun-row2">
+        <label class="tun-field">
+          <span class="tun-label">Name</span>
+          <input id="tun-name" class="mfield tun-wide" maxlength="64" spellcheck="false" required>
+        </label>
+      </div>
+
+      <div class="tun-field">
+        <span class="tun-label">Clusters that go through it</span>
+        <div id="tun-ctxs" class="tun-ctxs"></div>
+      </div>
+      <div id="tun-err" class="tun-err" hidden></div>
+    </form>
+
+    <!-- Starting -->
+    <div id="tun-run" hidden>
+      <div id="tun-status" class="tun-status"></div>
+      <pre id="tun-out" class="tun-out"></pre>
+    </div>
+  </div>
+
+  <div class="dlg-foot" id="tun-foot"></div>
+</div>
+
+<style>
+  .tun { width: min(780px, 96vw); }
+  .tun-body { display: flex; flex-direction: column; gap: 16px; min-height: 120px; }
+  .tun-lead { margin-bottom: 12px; }
+  .tun-cards { display: flex; flex-direction: column; gap: 10px; }
+  .tun-card { background: var(--container); border-radius: 16px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .tun-card-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .tun-name { font: 500 15px/22px var(--mono); }
+  .tun-acts { margin-left: auto; display: flex; gap: 4px; }
+  .tun-st { display: inline-flex; align-items: center; gap: 6px; font: 500 12px/16px var(--sans); padding: 2px 10px 2px 8px; border-radius: 8px; background: var(--raised-2); color: var(--text-2); }
+  .tun-st::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--faint); }
+  .tun-st.running::before, .tun-st.external::before { background: var(--ok); }
+  .tun-st.starting::before { background: var(--warn); animation: tun-pulse 1s ease-in-out infinite; }
+  .tun-st.exited::before, .tun-st.failed::before { background: var(--crit); }
+  @keyframes tun-pulse { 50% { opacity: .35; } }
+  .tun-ctx-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tun-ctx-chips span { font: 400 12px/18px var(--mono); padding: 0 8px; border-radius: 6px; border: 1px solid var(--border-2); color: var(--text-2); }
+  .tun-cmdline { font: 400 12px/18px var(--mono); color: var(--text-2); background: var(--sunk); border-radius: 8px; padding: 8px 10px; white-space: pre-wrap; word-break: break-all; max-height: 92px; overflow: auto; }
+  .tun-meta { font: 400 12.5px/18px var(--sans); color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .tun-meta b { font-weight: 500; color: var(--text-2); font-family: var(--mono); }
+  .tun-hint { font-size: 13px; color: var(--crit); }
+  .tun-card details summary { cursor: pointer; font: 500 12.5px/18px var(--sans); color: var(--accent); width: fit-content; }
+  .tun-card details pre { margin-top: 8px; }
+  .tun-empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--border-2); border-radius: 16px; }
+
+  .tun-form { display: flex; flex-direction: column; gap: 18px; }
+  .tun-why { background: var(--crit-bg); color: var(--text); border-radius: 12px; padding: 12px 14px; font-size: 13.5px; line-height: 20px; }
+  .tun-why b { font-family: var(--mono); font-weight: 500; }
+  .tun-why .e { display: block; margin-top: 4px; font: 400 12px/18px var(--mono); color: var(--crit); word-break: break-word; }
+  .tun-field { display: flex; flex-direction: column; gap: 6px; }
+  .tun-label { font: 500 12px/16px var(--sans); letter-spacing: .5px; text-transform: uppercase; color: var(--muted); }
+  .tun-cmd { height: auto; padding: 10px 12px; font: 400 12.5px/19px var(--mono); resize: vertical; min-height: 96px; }
+  .tun-wide { width: 100%; font-family: var(--mono); font-size: 13px; }
+  .tun-field > div[data-for] { display: flex; flex-direction: column; gap: 6px; }
+  .tun-field > div[hidden] { display: none; }
+  .tun-seg { display: inline-flex; border: 1px solid var(--outline); border-radius: 20px; overflow: hidden; height: 36px; width: fit-content; max-width: 100%; }
+  .tun-seg button { --sl: transparent; border: 0; background: linear-gradient(var(--sl), var(--sl)); padding: 0 14px; font: 500 13px/18px var(--sans); color: var(--text); cursor: pointer; white-space: nowrap; }
+  .tun-seg button + button { border-left: 1px solid var(--outline); }
+  .tun-seg button:hover { --sl: color-mix(in srgb, currentColor 8%, transparent); }
+  .tun-seg button[aria-checked="true"] { background-color: var(--sec-c); color: var(--on-sec-c); }
+  .tun-ctxs { display: flex; flex-direction: column; gap: 4px; max-height: 180px; overflow-y: auto; padding: 4px 2px; }
+  .tun-ctxs label { display: flex; align-items: center; gap: 10px; font: 400 13px/20px var(--mono); }
+  .tun-ctxs label.taken { color: var(--faint); }
+  .tun-ctxs .note { font: 400 12px/16px var(--sans); color: var(--faint); }
+  .tun-err { color: var(--crit); font-size: 13px; }
+
+  .tun-status { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .tun-status .ai-spinner { width: 16px; height: 16px; }
+  .tun-status.ok { color: var(--ok); }
+  .tun-status.bad { color: var(--crit); }
+  .tun-out { margin: 0; background: var(--sunk); border-radius: 12px; padding: 10px 14px; font: 400 12px/18px var(--mono); color: var(--text-2);
+    white-space: pre-wrap; word-break: break-word; max-height: 320px; min-height: 120px; overflow: auto; }
+  .tun-out .cmd { color: var(--accent-text); }
+  @media (max-width: 640px) { .tun-acts { margin-left: 0; width: 100%; } }
+</style>
+
+<script>
+window.khTunnels = (function() {
+  var $ = function(id) { return document.getElementById(id); };
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var STATE = { stopped: 'stopped', starting: 'starting', running: 'running', external: 'open (started outside KubeHealth)', exited: 'exited', failed: 'failed' };
+  var ui = { view: '', ctx: null, editing: null, watching: null, onReady: null, poll: 0, tunnels: [], contexts: [], mode: 'proxy', auto: {} };
+
+  function api(method, path, body) {
+    return fetch(path, { method: method, headers: { 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
+      .then(function(r) {
+        return r.json().catch(function() { return {}; }).then(function(d) {
+          if (!r.ok) throw new Error(d.error || ('HTTP ' + r.status));
+          return d;
+        });
+      });
+  }
+  function load(ctx) {
+    return api('GET', '/api/tunnels' + (ctx ? '?context=' + encodeURIComponent(ctx) : '')).then(function(d) {
+      ui.tunnels = d.tunnels || [];
+      return d;
+    });
+  }
+  function find(name) { return ui.tunnels.filter(function(t) { return t.name === name; })[0]; }
+  function uptime(s) { return s < 60 ? s + ' s' : s < 3600 ? Math.floor(s / 60) + ' min ' + (s % 60) + ' s' : Math.floor(s / 3600) + ' h ' + Math.floor((s % 3600) / 60) + ' min'; }
+  function via(t) { return t.mode === 'proxy' ? t.proxy : t.mode === 'address' ? t.address : 'its own routing'; }
+  function outputHTML(lines) {
+    return lines.map(function(l) { return l.indexOf('$ ') === 0 ? '<span class="cmd">' + esc(l) + '</span>' : esc(l); }).join('\n');
+  }
+
+  // ── Dialog frame ──────────────────────────────────────────────────────
+  function show(view, title) {
+    ui.view = view;
+    $('tun-overlay').style.display = '';
+    $('tun').style.display = 'flex';
+    $('tun-title').textContent = title;
+    ['list', 'edit', 'run'].forEach(function(v) { $('tun-' + v).hidden = v !== view; });
+    clearInterval(ui.poll);
+    if (view !== 'edit') ui.poll = setInterval(refresh, 800);
+  }
+  function close() {
+    clearInterval(ui.poll);
+    ui.view = '';
+    $('tun-overlay').style.display = 'none';
+    $('tun').style.display = 'none';
+  }
+  function foot(buttons) {
+    $('tun-foot').innerHTML = buttons.map(function(b) {
+      return '<button type="button" class="mbtn ' + (b.cls || 'text') + '" data-act="' + b.act + '"' + (b.disabled ? ' disabled' : '') + '>' + esc(b.label) + '</button>';
+    }).join('');
+  }
+  function refresh() {
+    load().then(function() {
+      if (ui.view === 'list') renderList();
+      if (ui.view === 'run') renderRun();
+    }).catch(function() {});
+  }
+
+  // ── List ──────────────────────────────────────────────────────────────
+  function openList() {
+    ui.ctx = null; ui.onReady = null;
+    show('list', 'Tunnels');
+    foot([{ act: 'close', label: 'Close' }, { act: 'new', label: 'New tunnel', cls: 'tonal' }]);
+    load().then(renderList, function(e) { $('tun-cards').innerHTML = '<p class="tun-err">' + esc(e.message) + '</p>'; });
+  }
+  function renderList() {
+    if (!ui.tunnels.length) {
+      $('tun-cards').innerHTML = '<div class="tun-empty">No tunnels yet. When a cluster doesn’t answer, KubeHealth offers to set one up; or add one with <b>New tunnel</b>.</div>';
+      return;
+    }
+    var open = {};
+    [].forEach.call(document.querySelectorAll('#tun-cards details[open]'), function(d) { open[d.dataset.name] = true; });
+    $('tun-cards').innerHTML = ui.tunnels.map(function(t) {
+      var on = t.state === 'running' || t.state === 'starting' || t.state === 'external';
+      var meta = ['through <b>' + esc(via(t)) + '</b>'];
+      if (t.pid) meta.push('pid <b>' + t.pid + '</b>');
+      if (t.up_s) meta.push('up ' + uptime(t.up_s));
+      if (t.restarts) meta.push(t.restarts + ' restart' + (t.restarts > 1 ? 's' : ''));
+      return '<div class="tun-card">' +
+        '<div class="tun-card-head"><span class="tun-name">' + esc(t.name) + '</span><span class="tun-st ' + t.state + '">' + esc(STATE[t.state] || t.state) + '</span>' +
+          '<span class="tun-acts">' +
+            (on ? '<button type="button" class="mbtn text small" data-act="stop" data-name="' + esc(t.name) + '">Stop</button>'
+                : '<button type="button" class="mbtn text small" data-act="start" data-name="' + esc(t.name) + '">Start</button>') +
+            '<button type="button" class="mbtn text small" data-act="edit" data-name="' + esc(t.name) + '">Edit</button>' +
+            '<button type="button" class="mbtn text small" data-act="delete" data-name="' + esc(t.name) + '">Delete</button>' +
+          '</span></div>' +
+        '<div class="tun-ctx-chips">' + t.contexts.map(function(c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' +
+        '<div class="tun-cmdline">' + esc(t.command) + '</div>' +
+        '<div class="tun-meta">' + meta.map(function(m) { return '<span>' + m + '</span>'; }).join('') + '</div>' +
+        (t.error && (t.state === 'exited' || t.state === 'failed') ? '<div class="tun-hint">' + esc(t.error) + '</div>' : '') +
+        (t.output.length ? '<details data-name="' + esc(t.name) + '"' + (open[t.name] ? ' open' : '') + '><summary>Output · ' + t.output.length + ' lines</summary><pre class="tun-out">' + outputHTML(t.output.slice(-60)) + '</pre></details>' : '') +
+      '</div>';
+    }).join('');
+  }
+
+  // ── Form ──────────────────────────────────────────────────────────────
+  // What the command says about how to reach the cluster: -D is a SOCKS
+  // proxy; -L, --local-host-port and SSM's localPortNumber are a local port
+  // for the API server; sshuttle routes traffic itself.
+  function suggest(cmd) {
+    var c = cmd.replace(/\\\r?\n/g, ' ');
+    var m = c.match(/(?:^|\s)-[A-Za-z]*D\s*(?:([\w.\-]+|\[[^\]]+\]):)?(\d{2,5})(?=\s|$)/);
+    if (m) return { mode: 'proxy', proxy: 'socks5://' + (m[1] && m[1] !== '*' && m[1] !== '0.0.0.0' ? m[1] : '127.0.0.1') + ':' + m[2] };
+    m = c.match(/(?:^|\s)-[A-Za-z]*L\s*(?:([\w.\-]+|\[[^\]]+\]):)?(\d{2,5}):\S+:\d+/) || c.match(/--local-host-port[=\s]+(?:([\w.\-]+):)?(\d{2,5})/) ||
+        c.match(/localPortNumber\W+()(\d{2,5})/);
+    if (m) return { mode: 'address', address: 'https://' + (m[1] && m[1] !== 'localhost' ? m[1] : '127.0.0.1') + ':' + m[2] };
+    if (/\bsshuttle\b/.test(c)) return { mode: 'none' };
+    return null;
+  }
+  function suggestName(cmd, ctx) {
+    var m = cmd.replace(/\\\r?\n/g, ' ').match(/gcloud\s+compute\s+(?:ssh|start-iap-tunnel)\s+([A-Za-z0-9][A-Za-z0-9._-]*)/);
+    var n = m ? m[1] : (ctx || 'tunnel');
+    return n.replace(/[^A-Za-z0-9._-]+/g, '-').replace(/^[^A-Za-z0-9]+/, '').slice(0, 64) || 'tunnel';
+  }
+  function setMode(mode) {
+    ui.mode = mode;
+    [].forEach.call(document.querySelectorAll('.tun-seg button'), function(b) { b.setAttribute('aria-checked', String(b.dataset.mode === mode)); });
+    [].forEach.call(document.querySelectorAll('.tun-field > div[data-for]'), function(d) { d.hidden = d.dataset.for !== mode; });
+  }
+  function onCommand() {
+    var cmd = $('tun-cmd').value, s = suggest(cmd);
+    if (s) {
+      setMode(s.mode);
+      if (s.proxy && (!$('tun-proxy').value || $('tun-proxy').value === ui.auto.proxy)) $('tun-proxy').value = ui.auto.proxy = s.proxy;
+      if (s.address && (!$('tun-address').value || $('tun-address').value === ui.auto.address)) $('tun-address').value = ui.auto.address = s.address;
+    }
+    if (!ui.editing && (!$('tun-name').value || $('tun-name').value === ui.auto.name)) $('tun-name').value = ui.auto.name = suggestName(cmd, ui.ctx);
+  }
+  function renderContexts(checked) {
+    var mine = ui.editing || '';
+    $('tun-ctxs').innerHTML = ui.contexts.map(function(c) {
+      var other = c.tunnel && c.tunnel.name !== mine ? c.tunnel.name : '';
+      return '<label class="' + (other ? 'taken' : '') + '"><input type="checkbox" value="' + esc(c.name) + '"' +
+        (checked.indexOf(c.name) >= 0 ? ' checked' : '') + (other ? ' disabled' : '') + '>' + esc(c.name) +
+        (other ? ' <span class="note">uses ' + esc(other) + '</span>' : '') + '</label>';
+    }).join('') || '<span class="dlg-hint">No contexts in the kubeconfig.</span>';
+  }
+  // edit opens the form: for a tunnel (name), or a new one, possibly for a
+  // context that doesn't answer (ctx, with its error from the server).
+  function edit(name, ctx) {
+    ui.editing = name || null;
+    ui.ctx = ctx || ui.ctx;
+    ui.auto = {};
+    $('tun-err').hidden = true;
+    var t = name ? find(name) : null;
+    show('edit', t ? 'Edit ' + t.name : ctx ? 'Can’t reach ' + ctx : 'New tunnel');
+    foot(t ? [{ act: 'back', label: 'Cancel' }, { act: 'save', label: 'Save', cls: 'tonal' }]
+      : [{ act: ui.ctx ? 'close' : 'back', label: 'Cancel' }, { act: 'save', label: 'Save' }, { act: 'save-start', label: ui.ctx ? 'Start and connect' : 'Save and start', cls: 'filled' }]);
+    $('tun-cmd').value = t ? t.command : '';
+    $('tun-name').value = t ? t.name : '';
+    $('tun-proxy').value = t && t.proxy || '';
+    $('tun-address').value = t && t.address || '';
+    setMode(t ? t.mode : 'proxy');
+    $('tun-why').hidden = true;
+    var checked = t ? t.contexts.slice() : ctx ? [ctx] : [];
+    Promise.all([fetch('/api/contexts').then(function(r) { return r.json(); }), load(ctx)]).then(function(res) {
+      ui.contexts = res[0].contexts || [];
+      renderContexts(checked);
+      var c = res[1].context;
+      if (c && !t) {
+        if (c.kubeconfig_proxy && !$('tun-proxy').value) { $('tun-proxy').value = ui.auto.proxy = c.kubeconfig_proxy; setMode('proxy'); }
+        if (c.error) {
+          $('tun-why').innerHTML = 'Can’t reach <b>' + esc(c.name) + '</b>' + (c.server ? ' at ' + esc(c.server) : '') + '.' +
+            ' If it’s a private cluster, give the command that opens its tunnel: KubeHealth starts it now, and every time you pick this cluster.' +
+            '<span class="e">' + esc(c.error) + '</span>';
+          $('tun-why').hidden = false;
+        }
+      }
+    }).catch(function(e) { showErr(e.message); });
+    setTimeout(function() { (t ? $('tun-name') : $('tun-cmd')).focus(); }, 50);
+  }
+  function showErr(msg) { $('tun-err').textContent = msg; $('tun-err').hidden = !msg; }
+  function save(start) {
+    var def = {
+      name: $('tun-name').value.trim(), command: $('tun-cmd').value.trim(), mode: ui.mode,
+      proxy: ui.mode === 'proxy' ? $('tun-proxy').value.trim() : '',
+      address: ui.mode === 'address' ? $('tun-address').value.trim() : '',
+      contexts: [].map.call(document.querySelectorAll('#tun-ctxs input:checked'), function(i) { return i.value; }),
+      previous: ui.editing || '', start: !!start
+    };
+    [].forEach.call(document.querySelectorAll('#tun-foot button'), function(b) { b.disabled = true; });
+    api('POST', '/api/tunnels', def).then(function(t) {
+      if (start) {
+        var ctx = ui.ctx && def.contexts.indexOf(ui.ctx) >= 0 ? ui.ctx : null;
+        watch(t.name, ctx, ctx ? (ui.onReady || connectTo(ctx)) : null);
+      } else {
+        openList();
+      }
+    }, function(e) {
+      showErr(e.message);
+      [].forEach.call(document.querySelectorAll('#tun-foot button'), function(b) { b.disabled = false; });
+    });
+  }
+
+  // ── Starting ──────────────────────────────────────────────────────────
+  // watch shows a tunnel coming up; once it's open, onReady runs (switch to
+  // the cluster that needed it).
+  function watch(name, ctx, onReady) {
+    ui.watching = name; ui.ctx = ctx || null; ui.onReady = onReady || null; ui.readyDone = false;
+    show('run', 'Tunnel ' + name);
+    $('tun-out').innerHTML = '';
+    renderRun();
+  }
+  function renderRun() {
+    var t = find(ui.watching);
+    if (!t) { $('tun-status').textContent = 'Starting…'; return; }
+    var out = $('tun-out'), atEnd = out.scrollTop + out.clientHeight >= out.scrollHeight - 8;
+    out.innerHTML = outputHTML(t.output);
+    if (atEnd) out.scrollTop = out.scrollHeight;
+    var st = $('tun-status');
+    if (t.state === 'starting') {
+      st.className = 'tun-status';
+      st.innerHTML = '<span class="ai-spinner"></span><span>Starting' + (t.endpoint ? ': waiting for <b class="mono">' + esc(t.endpoint) + '</b>' : '') + (t.up_s ? ' · ' + t.up_s + ' s' : '') + '</span>';
+      foot([{ act: 'stop', label: 'Stop' }, { act: 'close', label: 'Hide' }]);
+    } else if (t.state === 'running' || t.state === 'external') {
+      st.className = 'tun-status ok';
+      st.innerHTML = '<span>✓ ' + (t.state === 'external' ? 'Using ' + esc(t.endpoint) + ', already open' : 'Open' + (t.endpoint ? ': ' + esc(t.endpoint) : '')) +
+        (ui.onReady ? ' · connecting to ' + esc(ui.ctx) + '…' : '') + '</span>';
+      foot([{ act: 'list', label: 'All tunnels' }, { act: 'close', label: 'Close', cls: 'tonal' }]);
+      if (ui.onReady && !ui.readyDone) { ui.readyDone = true; var f = ui.onReady; setTimeout(f, 400); }
+    } else {
+      st.className = 'tun-status bad';
+      st.innerHTML = '<span>✗ ' + esc(t.error || STATE[t.state] || t.state) + '</span>';
+      var b = [{ act: 'edit-watching', label: 'Edit' }];
+      if (ui.ctx) b.push({ act: 'skip', label: 'Switch without it' });
+      b.push({ act: 'retry', label: 'Retry', cls: 'filled' });
+      foot(b);
+    }
+  }
+  // connectTo switches KubeHealth to ctx once its tunnel is up.
+  function connectTo(ctx) {
+    return function() {
+      if (window.khHeader && window.khHeader.switchTo) window.khHeader.switchTo(ctx);
+      // The page's own cluster: nothing to load, it fills in as data arrives.
+      setTimeout(function() { if (ui.view === 'run') close(); }, 1500);
+    };
+  }
+
+  // ── Events ────────────────────────────────────────────────────────────
+  $('tun-x').addEventListener('click', close);
+  $('tun-overlay').addEventListener('click', close);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && ui.view) close(); });
+  $('tun-cmd').addEventListener('input', onCommand);
+  $('tun-edit').addEventListener('submit', function(e) { e.preventDefault(); });
+  document.querySelector('.tun-seg').addEventListener('click', function(e) {
+    var b = e.target.closest('[data-mode]');
+    if (b) setMode(b.dataset.mode);
+  });
+  $('tun').addEventListener('click', function(e) {
+    var b = e.target.closest('[data-act]');
+    if (!b) return;
+    var name = b.dataset.name;
+    switch (b.dataset.act) {
+      case 'close': close(); break;
+      case 'list': openList(); break;
+      case 'new': edit(null, null); break;
+      case 'back': ui.onReady ? close() : openList(); break;
+      case 'edit': edit(name); break;
+      case 'edit-watching': edit(ui.watching, ui.ctx); break;
+      case 'save': save(false); break;
+      case 'save-start': save(true); break;
+      case 'start': api('POST', '/api/tunnels/' + encodeURIComponent(name) + '/start', {}).then(refresh, function(e) { alert(e.message); }); break;
+      case 'stop':
+        api('POST', '/api/tunnels/' + encodeURIComponent(name || ui.watching) + '/stop', {}).then(refresh, function(e) { alert(e.message); });
+        break;
+      case 'delete':
+        if (confirm('Delete tunnel ' + name + '? KubeHealth stops it if it started it.')) api('DELETE', '/api/tunnels/' + encodeURIComponent(name)).then(refresh, function(e) { alert(e.message); });
+        break;
+      case 'retry':
+        ui.readyDone = false;
+        api('POST', '/api/tunnels/' + encodeURIComponent(ui.watching) + '/start', {}).then(refresh, function(e) { alert(e.message); });
+        break;
+      case 'skip':
+        fetch('/api/context', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: ui.ctx, skip_tunnel: true }) })
+          .then(function() { location.href = '/'; });
+        break;
+    }
+  });
+
+  return {
+    openList: openList,
+    // setup: the form for a context that doesn't answer.
+    setup: function(ctx) { ui.onReady = null; ui.ctx = ctx; edit(null, ctx); },
+    // watch: a tunnel coming up; with ctx, switch to it once open.
+    watch: function(name, ctx) { load().then(function() { watch(name, ctx, ctx ? connectTo(ctx) : null); }); },
+    // connect: from the switcher, a context whose tunnel is starting.
+    connect: function(name, ctx) { load().then(function() { watch(name, ctx, connectTo(ctx)); }); },
+    isOpen: function() { return !!ui.view; }
+  };
+})();
+</script>
+{{end}}
