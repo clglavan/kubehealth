@@ -36,7 +36,7 @@ endif
 # MAGOS_REVISION with each model release).
 # Override with `make MODEL_URL=...` to use a different quantization (q4_k_m, f16)
 # or `make MODEL_SRC=/path/to.gguf` to use a local file (skips the download).
-MAGOS_REVISION ?= v19
+MAGOS_REVISION ?= v20
 MODEL_URL ?= https://huggingface.co/clglavan/magos-k8s-0.6b/resolve/$(MAGOS_REVISION)/magos-k8s-0.6b-q8_0.gguf
 MODEL_SRC ?=
 

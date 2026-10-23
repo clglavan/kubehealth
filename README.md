@@ -127,7 +127,7 @@ LMSTUDIO_URL=http://localhost:1234/v1 ./kubehealth-embed  # embed build, skip th
 - **Link-following**: before asking, KubeHealth reads the objects the evidence names (a claim and its StorageClass, the Service a log line can't reach and its Pods, missing ConfigMap or Secret keys, the nodes of a scheduling failure, pull secrets) and adds them to the prompt. Off with `AI_LINK_FOLLOW=false`.
 - Plain questions, no required answer format: what's wrong, the evidence, the fix, how sure. Prompts fit the model's context.
 
-[magos-k8s-0.6b](https://huggingface.co/clglavan/magos-k8s-0.6b) is a small model I'm training for KubeHealth; the embed build bundles it. v19 names the right root cause in 88% of the [KubeHealth-Bench](bench/README.md) incidents and, with link-following, finds a cause that sits in another object 78% of the time. It only sees what KubeHealth hands it; it suggests, you decide.
+[magos-k8s-0.6b](https://huggingface.co/clglavan/magos-k8s-0.6b) is a small model I'm training for KubeHealth; the embed build bundles it. v20, with link-following on (the default), names the right root cause in 91% of the [KubeHealth-Bench](bench/README.md) incidents, finds a cause that sits in another object 78% of the time, and no longer flags healthy objects with harmless noise as broken (88%). It only sees what KubeHealth hands it; it suggests, you decide.
 
 ### Send to Claude Code
 
